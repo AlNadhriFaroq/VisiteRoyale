@@ -6,11 +6,11 @@ import Patterns.Observateur;
 import javax.swing.*;
 import java.awt.*;
 
-public class PartieGraphique extends JComponent implements Observateur {
+public class JeuGraphique extends JComponent implements Observateur {
     Graphics2D dessin;
     Jeu jeu;
 
-    public PartieGraphique(Jeu jeu) {
+    public JeuGraphique(Jeu jeu) {
         this.jeu = jeu;
     }
 
@@ -27,7 +27,7 @@ public class PartieGraphique extends JComponent implements Observateur {
         dessin = (Graphics2D) graphics;
         dessin.clearRect(0, 0, getWidth(), getHeight());
 
-        /* dessin de la partie */
+        /* dessin du jeu */
 
         jeu.ajouterObservateur(this);
     }

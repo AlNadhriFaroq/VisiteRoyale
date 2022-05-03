@@ -1,15 +1,15 @@
 package Modele;
 
-public class Coup {
+public class Coup implements Cloneable {
+    Jeu jeu;
     /* autres attributs */
-    Partie partie;
 
-    public Coup() {
-        return;
+    public Coup(/* arguments */) {
+        /* a faire */
     }
 
-    public void fixerPartie(Partie partie) {
-        this.partie = partie;
+    public void fixerJeu(Jeu jeu) {
+        this.jeu = jeu;
     }
 
     /* autres methodes */
@@ -20,5 +20,10 @@ public class Coup {
 
     public void desexecuter() {
         return;
+    }
+
+    @Override
+    public Coup clone() {
+        return null;
     }
 }

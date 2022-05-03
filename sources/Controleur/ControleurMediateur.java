@@ -1,12 +1,17 @@
 package Controleur;
 
-import Global.Configuration;
 import Modele.*;
 import Vue.InterfaceGraphique;
 
 public class ControleurMediateur {
+    final int lenteurAttente = 50;
+
     Jeu jeu;
     InterfaceGraphique vue;
+    Joueur[] joueurs;
+    int[] difficultes;
+    int decompte;
+
 
     public ControleurMediateur(Jeu jeu) {
         this.jeu = jeu;
@@ -24,12 +29,6 @@ public class ControleurMediateur {
             case "Refaire":
                 refaire();
                 break;
-            case "Pause":
-                //basculeAnimations();
-                break;
-            case "IA":
-                //basculeIA();
-                break;
             case "PleinEcran":
                 basculerPleinEcran();
                 break;
@@ -46,6 +45,17 @@ public class ControleurMediateur {
 
     public void clicSouris(int x, int y) {
         return;
+    }
+
+    public void tictac() {
+        if (!jeu.estTerminee()) {
+            if (decompte == 0) {
+                joueurs[jeu.joueurCourant()].tempsEcoule();
+                decompte = lenteurAttente;
+            } else {
+                decompte--;
+            }
+        }
     }
 
     public void jouer(Coup coup) {
@@ -66,9 +76,19 @@ public class ControleurMediateur {
         }
     }
 
+    public void basculerIA(int joueur, boolean type) {
+        if (type)
+            joueurs[joueur] = new JoueurIA(joueur, jeu, difficultes[joueur]);
+        else
+            joueurs[joueur] = new JoueurHumain(joueur, jeu);
+    }
+
+    public void changerDifficulte(int joueur, int difficulte) {
+        difficultes[joueur] = difficulte;
+    }
+
     public void basculerPleinEcran() {
-        Configuration.instance().ecrire("PleinEcran", String.valueOf(!Boolean.parseBoolean(Configuration.instance().lire("PleinEcran"))));
-        vue.mettreAJourPleinEcran();
+        vue.basculerPleinEcran();
     }
 
     public void nouvellePartie() {

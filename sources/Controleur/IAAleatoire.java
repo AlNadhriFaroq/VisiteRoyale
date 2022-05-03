@@ -1,22 +1,21 @@
 package Controleur;
 
-import Modele.Coup;
+import Modele.*;
 
 import java.util.*;
 
 class IAAleatoire extends IA {
     Random r;
 
-    public IAAleatoire() {
+    public IAAleatoire(Jeu jeu) {
+        super(jeu);
         r = new Random();
     }
 
     @Override
-    public List<Coup> jouer() {
-        List<Coup> resultat = new ArrayList();
-        Coup coup = null;
+    public Coup elaborerCoup() {
+        Coup resultat = new Coup();
 
-        resultat.add(coup);
         return resultat;
     }
 }
