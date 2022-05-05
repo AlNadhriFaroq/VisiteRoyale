@@ -1,67 +1,71 @@
 package Modele;
 
-import java.util.*;
+public class Carte implements Cloneable, Comparable<Carte> {
+    public static final int DEPLACEMENT_GRD_CENTRE = 3;
+    public static final int DEPLACEMENT_GRD_DEUX = 2;
+    public static final int DEPLACEMENT_FOU_CENTRE = 6;
 
-public class Carte implements Cloneable {
-    public static final int NBCARTES = 54;
+    Type type;
+    int deplacement;
 
-    public static final int TYPEGARDES = 1;
-    public static final int TYPEFOU = 2;
-    public static final int TYPESORCIER = 3;
-    public static final int TYPEROI = 4;
-
-    public static final int EFFETGARDESCENTRE = 0;
-    public static final int EFFETGARDESDEUX = 2;
-    public static final int EFFETFOUCENTRE = 0;
-
-    int carte;
-
-    public Carte(int type, int effet) {
-        carte = type*10 + effet;
+    public Carte(Type type, int deplacement) {
+        this.type = type;
+        this.deplacement = deplacement;
     }
 
-    public int type() {
-        return carte / 10;
+    public int getType() {
+        return type.getType();
     }
 
-    public int effet() {
-        return carte % 10;
+    public int getDeplacement() {
+        return deplacement;
     }
 
-    public static List<Carte> creerPioche() {
-        List<Carte> pioche = new ArrayList<>();
-        Carte carte;
+    public boolean estType(int type) {
+        return this.type.estType(type);
+    }
 
-        for (int r = 0; r < 2; r++) {
-            carte = new Carte(TYPEGARDES, 1);
-            pioche.add(carte);
-            carte = new Carte(TYPEGARDES, EFFETGARDESCENTRE);
-            pioche.add(carte);
-            carte = new Carte(TYPEGARDES, EFFETGARDESDEUX);
-            pioche.add(carte);
+    public static int texteEnValeur(String txt) {
+        if (txt.length() != 2)
+            return -1;
+        return Type.texteEnValeur(txt.charAt(0)) * 10 + Integer.parseInt(txt.substring(1, 1));
+    }
 
-            for (int i = 1; i < 6; i++) {
-                carte = new Carte(TYPEFOU, i);
-                pioche.add(carte);
-            }
-            carte = new Carte(TYPEFOU, EFFETFOUCENTRE);
-            pioche.add(carte);
+    public static String valeurEnTexte(int valeur) {
+        return Type.valeurEnTexte(valeur % 10) + String.valueOf(valeur / 10);
+    }
 
-            for (int i = 1; i < 4; i++) {
-                carte = new Carte(TYPESORCIER, i);
-                pioche.add(carte);
-            }
+    @Override
+    public int compareTo(Carte carte) {
+        return type.compareTo(carte.type)*10 + (deplacement - carte.deplacement);
+    }
 
-            carte = new Carte(TYPEROI, 1);
-            pioche.add(carte);
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
 
-        Collections.shuffle(pioche);
-        return pioche;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Carte carte = (Carte) o;
+
+        return (type.equals(carte.type) && carte.deplacement == deplacement);
     }
 
     @Override
     public Carte clone() {
-        return new Carte(type(), effet());
+        try {
+            Carte resultat = (Carte) super.clone();
+            resultat.type = type.clone();
+            resultat.deplacement = deplacement;
+            return resultat;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Bug interne, carte non clonable");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return type.toString() + deplacement;
     }
 }

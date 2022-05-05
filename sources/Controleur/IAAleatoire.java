@@ -14,7 +14,7 @@ class IAAleatoire extends IA {
 
     @Override
     public Coup elaborerCoup() {
-        Coup resultat = new Coup();
+        Coup resultat = null;
 
         return resultat;
     }

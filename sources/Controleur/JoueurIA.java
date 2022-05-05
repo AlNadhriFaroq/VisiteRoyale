@@ -11,28 +11,21 @@ class JoueurIA extends Joueur {
         super(num, jeu);
         r = new Random();
 
-        switch (difficulte) {
-        case 0:
+        if (difficulte == IA.FACILE)
             IA = new IAAleatoire(jeu);
-            break;
-        case 1:
+        else if (difficulte == IA.MOYEN)
             IA = new IAAleatoire(jeu);
-            break;
-        case 2:
+        else if (difficulte == IA.DIFFICILE)
             IA = new IAAleatoire(jeu);
-            break;
-        default:
+        else
             System.err.println("Bug : IA introuvable");
-            System.exit(1);
-            break;
-        }
     }
 
     @Override
     boolean tempsEcoule() {
         Coup coup = IA.elaborerCoup();
         jeu.jouerCoup(coup);
-        if (jeu.joueurCourant() != num())
+        if (jeu.getJoueurCourant() != num())
             return true;
         return false;
     }

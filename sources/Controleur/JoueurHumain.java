@@ -9,11 +9,9 @@ class JoueurHumain extends Joueur {
 
     @Override
     boolean jouer(Coup coup) {
-        if (jeu.estJouable(coup)) {
-            jeu.jouerCoup(coup);
-            if (jeu.joueurCourant() != num())
-                return true;
-        }
+        jeu.jouerCoup(coup);
+        if (jeu.getJoueurCourant() != num())
+            return true;
         return false;
     }
 }

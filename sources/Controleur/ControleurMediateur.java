@@ -1,13 +1,13 @@
 package Controleur;
 
 import Modele.*;
-import Vue.InterfaceGraphique;
+import Vue.*;
 
 public class ControleurMediateur {
     final int lenteurAttente = 50;
 
     Jeu jeu;
-    InterfaceGraphique vue;
+    InterfaceUtilisateur vue;
     Joueur[] joueurs;
     int[] difficultes;
     int decompte;
@@ -17,8 +17,17 @@ public class ControleurMediateur {
         this.jeu = jeu;
     }
 
-    public void ajouterInterfaceGraphique(InterfaceGraphique vue) {
+    public void ajouterInterfaceUtilisateur(InterfaceUtilisateur vue) {
         this.vue = vue;
+    }
+
+    public void executerCommande(String cmd) {
+        /* typeCoup cartes pions deplacements directions */
+        String[] cmdString = cmd.split(" ");
+        int[][] cmdInt = new int[cmdString.length][];
+        for (int i = 0; i < cmdInt.length; i++)
+            cmdInt[i][0] = Integer.parseInt(cmdString[i]);
+        //Coup coup = jeu.creerCoup(cmdInt[0][0], cmdInt[1], cmdInt[2], cmdInt[3], cmdInt[4]);
     }
 
     public void toucheClavier(String touche) {
@@ -50,7 +59,7 @@ public class ControleurMediateur {
     public void tictac() {
         if (!jeu.estTerminee()) {
             if (decompte == 0) {
-                joueurs[jeu.joueurCourant()].tempsEcoule();
+                joueurs[jeu.getJoueurCourant()].tempsEcoule();
                 decompte = lenteurAttente;
             } else {
                 decompte--;
@@ -92,6 +101,6 @@ public class ControleurMediateur {
     }
 
     public void nouvellePartie() {
-        jeu.nouvellePartie();
+        jeu.nouvellePartie(Jeu.JOUEUR_VERT);
     }
 }

@@ -7,7 +7,7 @@ import Patterns.Observateur;
 import javax.swing.*;
 import java.awt.*;
 
-public class InterfaceGraphique implements Runnable, Observateur {
+public class InterfaceGraphique implements InterfaceUtilisateur, Runnable {
     static final int LARGEURFENETRE = 1000;
     static final int HAUTEURFENETRE = 800;
 
@@ -27,7 +27,7 @@ public class InterfaceGraphique implements Runnable, Observateur {
 
     public static void demarrer(Jeu jeu, ControleurMediateur ctrl) {
         InterfaceGraphique vue = new InterfaceGraphique(jeu, ctrl);
-        ctrl.ajouterInterfaceGraphique(vue);
+        ctrl.ajouterInterfaceUtilisateur(vue);
         SwingUtilities.invokeLater(vue);
     }
 
@@ -44,6 +44,8 @@ public class InterfaceGraphique implements Runnable, Observateur {
         /* Mise en place de l'interface */
         frame.add(jeuGrph);
         jeu.ajouterObservateur(this);
+        Timer timer = new Timer(16, new AdaptateurTemps(ctrl));
+        timer.start();
 
         /* Configuration de la fenetre */
         frame.setTitle("Projet Jeu");
