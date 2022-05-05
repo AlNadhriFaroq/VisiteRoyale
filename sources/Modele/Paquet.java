@@ -20,12 +20,35 @@ public class Paquet implements Cloneable {
         return paquet.get(indiceCarte);
     }
 
+    public Carte getCarte(int type, int deplacement) {
+        for (int i = 0; i < getTaille(); i++)
+            if (getCarte(i).getType() == type && getCarte(i).getDeplacement() == deplacement)
+                return getCarte(i);
+        throw new RuntimeException("Carte non presente dans le paquet");
+    }
+
     public int getIndiceCarte(Carte carte) {
         return paquet.indexOf(carte);
     }
 
     public int getTaille() {
         return paquet.size();
+    }
+
+    public int getNombreTypeCarte(int type) {
+        int nb = 0;
+        for (int i = 0; i < getTaille(); i++)
+            if (paquet.get(i).getType() == type)
+                nb++;
+        return nb;
+    }
+
+    public int getNombreCarte(int type, int deplacement) {
+        int nb = 0;
+        for (int i = 0; i < getTaille(); i++)
+            if (paquet.get(i).getType() == type && paquet.get(i).getDeplacement() == deplacement)
+                nb++;
+        return nb;
     }
 
     public void ajouter(Carte carte) {
@@ -83,6 +106,13 @@ public class Paquet implements Cloneable {
             ajouter(paquet.piocher());
     }
 
+    public void copier(Paquet paquet) {
+        if (!ordonne)
+            throw new RuntimeException("Impossible de transferer des cartes depuis un paquet non ordonne !");
+        for (int i = 0; i < paquet.getTaille(); i++)
+            ajouter(paquet.getCarte(i));
+    }
+
     public void melanger() {
         Collections.shuffle(paquet);
     }
@@ -105,58 +135,30 @@ public class Paquet implements Cloneable {
 
     public static void creerJeuCartes() {
         JEU_CARTES = new Paquet(ORDONNE);
-        Carte carte;
 
-        for (int i = 0; i < 12; i++) {
-            carte = new Carte(new Type(Type.TYPE_ROI), 1);
-            JEU_CARTES.ajouter(carte);
-        }
-        for (int i = 0; i < 4; i++) {
-            carte = new Carte(new Type(Type.TYPE_GRD), 1);
-            JEU_CARTES.ajouter(carte);
-        }
-        for (int i = 0; i < 10; i++) {
-            carte = new Carte(new Type(Type.TYPE_GRD), Carte.DEPLACEMENT_GRD_DEUX);
-            JEU_CARTES.ajouter(carte);
-        }
-        for (int i = 0; i < 2; i++) {
-            carte = new Carte(new Type(Type.TYPE_GRD), Carte.DEPLACEMENT_GRD_CENTRE);
-            JEU_CARTES.ajouter(carte);
-        }
-        for (int i = 0; i < 2; i++) {
-            carte = new Carte(new Type(Type.TYPE_SRC), 1);
-            JEU_CARTES.ajouter(carte);
-        }
-        for (int i = 0; i < 8; i++) {
-            carte = new Carte(new Type(Type.TYPE_SRC), 2);
-            JEU_CARTES.ajouter(carte);
-        }
-        for (int i = 0; i < 2; i++) {
-            carte = new Carte(new Type(Type.TYPE_SRC), 3);
-            JEU_CARTES.ajouter(carte);
-        }
-        carte = new Carte(new Type(Type.TYPE_FOU), 1);
-        JEU_CARTES.ajouter(carte);
-        for (int i = 0; i < 3; i++) {
-            carte = new Carte(new Type(Type.TYPE_FOU), 2);
-            JEU_CARTES.ajouter(carte);
-        }
-        for (int i = 0; i < 5; i++) {
-            carte = new Carte(new Type(Type.TYPE_FOU), 3);
-            JEU_CARTES.ajouter(carte);
-        }
-        for (int i = 0; i < 3; i++) {
-            carte = new Carte(new Type(Type.TYPE_FOU), 4);
-            JEU_CARTES.ajouter(carte);
-        }
-        carte = new Carte(new Type(Type.TYPE_FOU), 5);
-        JEU_CARTES.ajouter(carte);
-        for (int i = 0; i < 2; i++) {
-            carte = new Carte(new Type(Type.TYPE_FOU), Carte.DEPLACEMENT_FOU_CENTRE);
-            JEU_CARTES.ajouter(carte);
-        }
+        creerCartes(12, Type.TYPE_ROI, 1);
+        creerCartes(4, Type.TYPE_GRD, 1);
+        creerCartes(10, Type.TYPE_GRD, Carte.DEPLACEMENT_GRD_DEUX);
+        creerCartes(2, Type.TYPE_GRD, Carte.DEPLACEMENT_GRD_CENTRE);
+        creerCartes(2, Type.TYPE_SRC, 1);
+        creerCartes(8, Type.TYPE_SRC, 2);
+        creerCartes(2, Type.TYPE_SRC, 3);
+        creerCartes(1, Type.TYPE_FOU, 1);
+        creerCartes(3, Type.TYPE_FOU, 2);
+        creerCartes(5, Type.TYPE_FOU, 3);
+        creerCartes(3, Type.TYPE_FOU, 4);
+        creerCartes(1, Type.TYPE_FOU, 5);
+        creerCartes(2, Type.TYPE_FOU, Carte.DEPLACEMENT_FOU_CENTRE);
 
         JEU_CARTES.trier();
+    }
+
+    public static void creerCartes(int nb, int type, int deplacement) {
+        Carte carte;
+        for (int i = 0; i < nb; i++) {
+            carte = new Carte(new Type(type), deplacement);
+            JEU_CARTES.ajouter(carte);
+        }
     }
 
     public static Carte texteEnCarte(String nom) {
@@ -164,8 +166,8 @@ public class Paquet implements Cloneable {
     }
 
     public static Carte entierEnCarte(int valeur) {
-        int type = valeur % 10;
-        int deplacement = valeur / 10;
+        int type = valeur / 10;
+        int deplacement = valeur % 10;
         for (int i = 0; i < JEU_CARTES.getTaille(); i++)
             if (JEU_CARTES.getCarte(i).getType() == type && JEU_CARTES.getCarte(i).getDeplacement() == deplacement)
                 return JEU_CARTES.getCarte(i);

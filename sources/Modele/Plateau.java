@@ -48,6 +48,32 @@ public class Plateau {
         return couronne.getFace();
     }
 
+    int getDeplacementCouronneVert() {
+        int deplacement = 0;
+
+        for (int p = PION_ROI; p <= PION_FOU; p++)
+            if (pionEstDansChateauVert(p))
+                deplacement++;
+
+        if (pionEstDansDucheVert(PION_GRD_VERT) && pionEstDansDucheVert(PION_ROI) && pionEstDansDucheVert(PION_GRD_ROUGE))
+            deplacement++;
+
+        return deplacement;
+    }
+
+    int getDeplacementCouronneRouge() {
+        int deplacement = 0;
+
+        for (int p = PION_ROI; p <= PION_FOU; p++)
+            if (pionEstDansChateauRouge(p))
+                deplacement++;
+
+        if (pionEstDansDucheRouge(PION_GRD_VERT) && pionEstDansDucheRouge(PION_ROI) && pionEstDansDucheRouge(PION_GRD_ROUGE))
+            deplacement++;
+
+        return deplacement;
+    }
+
     public int setPositionPion(int pion, int position) {
         if (pionEstDeplacable(pion, position))
             return pions.get(pion).setPosition(position);
@@ -140,6 +166,38 @@ public class Plateau {
 
     public boolean pionEstDansFontaine(int pion) {
         return getPositionPion(pion) == Plateau.FONTAINE;
+    }
+
+    public boolean pouvoirSrcUtilisable(int pion) {
+        return pion != PION_FOU && pion != PION_SRC && getPositionPion(pion) != getPositionPion(PION_SRC) &&
+               pionEstDeplacable(pion, getPositionPion(PION_SRC));
+    }
+
+    public boolean pouvoirFouUtilisableParVert(int pion, int destination) {
+        return getTypePion(pion) != Type.TYPE_FOU &&
+               getPositionPion(PION_FOU) > CHATEAU_VERT &&
+               getPositionPion(PION_FOU) < getPositionPion(PION_ROI) &&
+               pionEstDeplacable(pion, destination);
+    }
+
+    public boolean pouvoirFouUtilisableParVert(int pion, int deplacement, int direction) {
+        return pouvoirFouUtilisableParVert(pion, getPositionPion(pion) + direction*deplacement);
+    }
+
+    public boolean pouvoirFouUtilisableParRouge(int pion, int destination) {
+        return getTypePion(pion) != Type.TYPE_FOU &&
+               getPositionPion(PION_FOU) > getPositionPion(PION_ROI) &&
+               getPositionPion(PION_FOU) < CHATEAU_ROUGE &&
+               pionEstDeplacable(pion, destination);
+    }
+
+    public boolean pouvoirFouUtilisableParRouge(int pion, int deplacement, int direction) {
+        return pouvoirFouUtilisableParRouge(pion, getPositionPion(pion) + direction*deplacement);
+    }
+
+    public boolean privilegeRoiUtilisable(int direction) {
+        return (direction == VERS_VERT && getPositionPion(PION_GRD_VERT) != BORDURE_VERT) ||
+               (direction == VERS_ROUGE && getPositionPion(PION_GRD_ROUGE) != BORDURE_ROUGE);
     }
 
     public boolean estTerminee() {

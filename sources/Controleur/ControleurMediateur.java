@@ -3,6 +3,8 @@ package Controleur;
 import Modele.*;
 import Vue.*;
 
+import java.sql.SQLOutput;
+
 public class ControleurMediateur {
     final int lenteurAttente = 50;
 
@@ -15,6 +17,9 @@ public class ControleurMediateur {
 
     public ControleurMediateur(Jeu jeu) {
         this.jeu = jeu;
+        joueurs = new Joueur[2];
+        joueurs[0] = new JoueurHumain(Jeu.JOUEUR_VERT, jeu);
+        joueurs[1] = new JoueurHumain(Jeu.JOUEUR_ROUGE, jeu);
     }
 
     public void ajouterInterfaceUtilisateur(InterfaceUtilisateur vue) {
@@ -22,12 +27,26 @@ public class ControleurMediateur {
     }
 
     public void executerCommande(String cmd) {
-        /* typeCoup cartes pions deplacements directions */
-        String[] cmdString = cmd.split(" ");
-        int[][] cmdInt = new int[cmdString.length][];
-        for (int i = 0; i < cmdInt.length; i++)
-            cmdInt[i][0] = Integer.parseInt(cmdString[i]);
-        //Coup coup = jeu.creerCoup(cmdInt[0][0], cmdInt[1], cmdInt[2], cmdInt[3], cmdInt[4]);
+        Coup coup;
+
+        if (cmd.equals("quitter")) {
+            System.exit(0);
+        } else {
+            int typeCoup;
+            int[][] pionDepDir = new int[3][2];
+            Carte[] cartes = new Carte[2];
+
+            String[] cmds = cmd.split(" ");
+            typeCoup = Integer.parseInt(cmds[0]);
+            cartes[0] = Paquet.texteEnCarte(cmds[1]);
+            for (int i = 2; i < cmds.length; i++)
+                pionDepDir[i-2][0] = Integer.parseInt(cmds[i]);
+
+            if ((coup = jeu.creerCoup(typeCoup, cartes, pionDepDir[0], pionDepDir[1], pionDepDir[2])) != null) {
+                coup.fixerJeu(jeu);
+                jouer(coup);
+            }
+        }
     }
 
     public void toucheClavier(String touche) {

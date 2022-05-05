@@ -22,7 +22,7 @@ public class InterfaceTextuelle implements InterfaceUtilisateur {
         Scanner s = new Scanner(System.in);
         while (true) {
             System.out.print("Commande > ");
-            ctrl.executerCommande(s.next());
+            ctrl.executerCommande(s.nextLine());
         }
     }
 

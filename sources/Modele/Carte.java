@@ -28,7 +28,7 @@ public class Carte implements Cloneable, Comparable<Carte> {
     public static int texteEnValeur(String txt) {
         if (txt.length() != 2)
             return -1;
-        return Type.texteEnValeur(txt.charAt(0)) * 10 + Integer.parseInt(txt.substring(1, 1));
+        return Type.texteEnValeur(txt.charAt(0)) * 10 + Character.getNumericValue(txt.charAt(1));
     }
 
     public static String valeurEnTexte(int valeur) {
