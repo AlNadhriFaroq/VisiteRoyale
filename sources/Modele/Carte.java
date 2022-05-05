@@ -35,6 +35,7 @@ public class Carte implements Cloneable, Comparable<Carte> {
         return Type.valeurEnTexte(valeur % 10) + String.valueOf(valeur / 10);
     }
 
+    /* a modifier */
     @Override
     public int compareTo(Carte carte) {
         return type.compareTo(carte.type)*10 + (deplacement - carte.deplacement);

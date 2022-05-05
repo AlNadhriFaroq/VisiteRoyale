@@ -69,13 +69,14 @@ public class Type implements Comparable<Type> {
 
     @Override
     public Type clone() {
-        try {
+        /*try {
             Type resultat = (Type) super.clone();
             resultat.type = type;
             return resultat;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Bug interne, carte non clonable");
-        }
+        }*/
+        return new Type(getType());
     }
 
     @Override

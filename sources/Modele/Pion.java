@@ -39,14 +39,15 @@ public class Pion {
 
     @Override
     public Pion clone() {
-        try {
+        /*try {
             Pion resultat = (Pion) super.clone();
             resultat.position = position;
             resultat.type = type.clone();
             return resultat;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Bug interne, pion non clonable");
-        }
+        }*/
+        return new Pion(new Type(getType()),getPosition());
     }
 
     @Override

@@ -21,7 +21,7 @@ public class Jeu extends Observable implements Cloneable {
     int typeCourant;
 
     public Jeu() {
-        nouvellePartie(1);
+        nouvellePartie(0);
     }
 
     public void nouvellePartie(int joueurQuiCommence) {
@@ -40,7 +40,10 @@ public class Jeu extends Observable implements Cloneable {
         }
 
         Paquet.creerJeuCartes();
+
         pioche = new Paquet(Paquet.ORDONNE);
+        pioche.melanger();
+        
         defausse = new Paquet(Paquet.ORDONNE);
         mainJoueurVert = new Paquet(Paquet.NON_ORDONNE);
         mainJoueurRouge = new Paquet(Paquet.NON_ORDONNE);
@@ -359,9 +362,9 @@ public class Jeu extends Observable implements Cloneable {
         else
             throw new RuntimeException("Joueur inexistant");
 
-        txt += mainJoueurVert.toString() + "\n";
+        txt += "MainVert:  " +  mainJoueurVert.toString() + "\n";
         txt += plateau.toString();
-        txt += mainJoueurRouge.toString() + "\n";
+        txt += "MainRouge: " + mainJoueurRouge.toString() + "\n";
 
         return txt;
     }

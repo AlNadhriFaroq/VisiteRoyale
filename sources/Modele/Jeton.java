@@ -50,23 +50,23 @@ public class Jeton {
 
     @Override
     public Jeton clone() {
-        try {
+       /* try {
             Jeton resultat = (Jeton) super.clone();
             resultat.face = face;
             resultat.position = position;
             return resultat;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Bug interne, jeton non clonable");
-        }
+        }*/
+        return new Jeton(getFace(),getPosition());
     }
 
     @Override
     public String toString() {
         if (face == GRANDE_CRN)
             return "C";
-        else if (face == PETITE_CRN)
-            return "c";
         else
-            return "?";
+            return "c";
     }
+
 }
