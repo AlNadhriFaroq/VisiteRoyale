@@ -48,7 +48,7 @@ public class InterfaceGraphique implements InterfaceUtilisateur, Runnable {
         timer.start();
 
         /* Configuration de la fenetre */
-        frame.setTitle("Projet Jeu");
+        frame.setTitle("Visite Royale");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(LARGEURFENETRE, HAUTEURFENETRE);
         frame.setResizable(true);
