@@ -48,6 +48,7 @@ class CarteTest {
         Assertions.assertTrue(carte3.compareTo(carte4) > 0);
     }
 
+
     @Test
     void testEquals() {
         Carte carte1 = new Carte(Type.FOU,5);

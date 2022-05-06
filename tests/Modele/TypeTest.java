@@ -20,6 +20,7 @@ class TypeTest {
         Assertions.assertEquals(Type.ROI, t.getValeur());
     }
 
+
     @Test
     void testEstType() {
         Type t = new Type(Type.ROI);

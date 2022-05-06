@@ -37,6 +37,7 @@ class PionTest {
         Assertions.assertTrue(p1.equals(p2));
     }
 
+
     @Test
     void testClone() {
         Pion p1 = new Pion(Type.ROI, 6);
