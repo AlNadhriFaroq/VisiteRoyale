@@ -177,7 +177,6 @@ public class Jeu extends Observable implements Cloneable {
             (typeCoup == Coup.POUVOIR_FOU && peutUtiliserPouvoirFou(cartes[0], pions[0], getPositionPion(pions[0]) + directions[0] * deplacements[0])) ||
             (typeCoup == Coup.FIN_TOUR && peutFinirTour()))
             return new Coup(joueurCourant, typeCoup, cartes, pions, deplacements, directions);
-        System.out.println("Coup Null");
         return null;
     }
 
@@ -440,11 +439,11 @@ public class Jeu extends Observable implements Cloneable {
             else
                 throw new RuntimeException("Modele.Jeu.toString() : Joueur courant invalide.");
 
-            txt += selectionJoueurVrt.toString() + "\n";
-            txt += mainJoueurVrt.toString() + "\n";
+            txt += "Vert  : " + mainJoueurVrt.toString() + "\n";
+            txt += "        " + selectionJoueurVrt.toString() + "\n";
             txt += plateau.toString() + "\n";
-            txt += selectionJoueurRge.toString() + "\n";
-            txt += mainJoueurRge.toString() + "\n";
+            txt += "        " + selectionJoueurRge.toString() + "\n";
+            txt += "Rouge : " + mainJoueurRge.toString() + "\n";
         }
 
         return txt;

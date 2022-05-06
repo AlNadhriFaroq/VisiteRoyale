@@ -33,7 +33,7 @@ public class Coup implements Cloneable {
         positionPasse = new int[2];
         nbCartesAPiocher = -1;
         if (typeCoup == FIN_TOUR)
-            this.cartes = new Carte[8];
+            this.cartes = new Carte[Jeu.TAILLE_MAIN];
         else
             this.cartes = cartes;
         defaussePasse = new Paquet(Paquet.ORDONNE);
@@ -91,7 +91,7 @@ public class Coup implements Cloneable {
     }
 
     void executerDeplacement() {
-        jeu.getDefausse().ajouter(jeu.getMain(joueur).defausser(cartes[0]));
+        jeu.getSelection(joueur).ajouter(jeu.getMain(joueur).defausser(cartes[0]));
 
         if (cartes[0].estDeplacementFouCentre()) {
             positionPasse[0] = jeu.getPositionPion(pions[0]);
@@ -126,12 +126,12 @@ public class Coup implements Cloneable {
                 jeu.setPositionPion(pions[i], jeu.getPositionPion(pions[i]) - directions[i] * deplacements[i]);
         }
 
-        jeu.getMain(joueur).ajouter(jeu.getDefausse().piocher());
+        jeu.getMain(joueur).ajouter(jeu.getSelection(joueur).defausser(cartes[0]));
     }
 
     void executerPrivilegeRoi() {
-        jeu.getDefausse().ajouter(jeu.getMain(joueur).defausser(cartes[0]));
-        jeu.getDefausse().ajouter(jeu.getMain(joueur).defausser(cartes[1]));
+        jeu.getSelection(joueur).ajouter(jeu.getMain(joueur).defausser(cartes[0]));
+        jeu.getSelection(joueur).ajouter(jeu.getMain(joueur).defausser(cartes[1]));
 
         jeu.setPositionPion(Pion.GAR_VRT, jeu.getPositionPion(Pion.GAR_VRT) + directions[0]);
         jeu.setPositionPion(Pion.ROI, jeu.getPositionPion(Pion.ROI) + directions[0]);
@@ -151,8 +151,8 @@ public class Coup implements Cloneable {
         jeu.setPositionPion(Pion.ROI, jeu.getPositionPion(Pion.ROI) - directions[0]);
         jeu.setPositionPion(Pion.GAR_VRT, jeu.getPositionPion(Pion.GAR_VRT) - directions[0]);
 
-        jeu.getMain(joueur).ajouter(jeu.getDefausse().piocher());
-        jeu.getMain(joueur).ajouter(jeu.getDefausse().piocher());
+        jeu.getMain(joueur).ajouter(jeu.getSelection(joueur).defausser(cartes[1]));
+        jeu.getMain(joueur).ajouter(jeu.getSelection(joueur).defausser(cartes[0]));
     }
 
     void executerPouvoirSorcier() {
@@ -169,7 +169,7 @@ public class Coup implements Cloneable {
     }
 
     void executerPouvoirFou() {
-        jeu.getDefausse().ajouter(jeu.getMain(joueur).defausser(cartes[0]));
+        jeu.getSelection(joueur).ajouter(jeu.getMain(joueur).defausser(cartes[0]));
 
         if (cartes[0].getDeplacement() == Carte.DEPLACEMENT_FOU_CENTRE) {
             positionPasse[0] = jeu.getPositionPion(pions[0]);
@@ -195,19 +195,22 @@ public class Coup implements Cloneable {
             jeu.setPositionPion(pions[0], jeu.getPositionPion(pions[0]) - directions[0] * deplacements[0]);
         }
 
-        jeu.getMain(joueur).ajouter(jeu.getDefausse().piocher());
+        jeu.getMain(joueur).ajouter(jeu.getSelection(joueur).defausser(cartes[0]));
     }
 
     void executerFinTour() {
-        if (nbCartesAPiocher == -1)
-            nbCartesAPiocher = Jeu.TAILLE_MAIN - jeu.getMain(joueur).getTaille();
-
-        if (joueur == Jeu.JOUEUR_VRT)
+        if (joueur == Jeu.JOUEUR_VRT) {
             jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_VRT * jeu.getDeplacementCouronne(joueur));
-        else if (joueur == Jeu.JOUEUR_RGE)
+        } else if (joueur == Jeu.JOUEUR_RGE) {
             jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.getDeplacementCouronne(joueur));
-        else
+        } else {
             throw new RuntimeException("Modele.Coup.executerFinTour() : Joueur entré invalide.");
+        }
+
+        if (nbCartesAPiocher == -1)
+            nbCartesAPiocher = jeu.getSelection(joueur).getTaille();
+
+        jeu.getDefausse().transferer(jeu.getSelection(joueur));
 
         for (int i = 0; i < nbCartesAPiocher; i++) {
             if (jeu.getPioche().estVide() && (jeu.getFaceCouronne() == Jeton.FACE_GRD_CRN || (jeu.getFaceCouronne() == Jeton.FACE_PTT_CRN && jeu.getPositionPion(Pion.ROI) == Plateau.FONTAINE))) {
@@ -240,13 +243,15 @@ public class Coup implements Cloneable {
         for (int i = nbCartesAPiocher-1; i >= 0; i--) {
             jeu.getPioche().ajouter(jeu.getMain(joueur).defausser(cartes[i]));
             if (i == indiceMelange) {
-                if (faceCouronnePasse) {
+                if (faceCouronnePasse)
                     jeu.setFaceCouronne(Jeton.FACE_GRD_CRN);
-                }
                 jeu.getDefausse().copier(defaussePasse);
                 jeu.getPioche().vider();
             }
         }
+
+        for (int i = nbCartesAPiocher-1; i >= 0; i--)
+            jeu.getSelection(joueur).ajouter(jeu.getDefausse().piocher());
 
         if (joueur == Jeu.JOUEUR_VRT)
             jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.getDeplacementCouronne(joueur));

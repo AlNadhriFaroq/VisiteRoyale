@@ -100,7 +100,7 @@ public class Paquet implements Cloneable {
     }
 
     void transferer(Paquet paquet) {
-        if (ordonne)
+        if (paquet.ordonne)
             while (!paquet.estVide())
                 ajouter(paquet.piocher());
         else

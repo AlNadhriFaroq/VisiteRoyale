@@ -64,6 +64,8 @@ public class ControleurMediateur {
                         System.out.println(Jeu.joueurEnTexte(jeu.getJoueurGagnant()) + " a gagné !");
                         nouvellePartie();
                     }
+                else
+                    System.out.println("Coup non autorisé");
                 break;
             }
         }
