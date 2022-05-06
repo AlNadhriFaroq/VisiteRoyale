@@ -75,7 +75,7 @@ public class Carte implements Cloneable, Comparable<Carte> {
             resultat.deplacement = deplacement;
             return resultat;
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Modele.Carte.clone() : Carte non clonable.");
+            throw new RuntimeException("Modele.Carte.clone(): Carte non clonable.");
         }
     }
 

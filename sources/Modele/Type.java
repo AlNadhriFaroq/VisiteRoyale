@@ -74,7 +74,7 @@ public class Type implements Cloneable, Comparable<Type> {
             resultat.setValeur(valeur);
             return resultat;
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Modele.Type.clone() : Type non clonable.");
+            throw new RuntimeException("Modele.Type.clone(): Type non clonable.");
         }
     }
 

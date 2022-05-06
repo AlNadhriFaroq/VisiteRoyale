@@ -47,7 +47,7 @@ public class Pion implements Cloneable {
             resultat.position = position;
             return resultat;
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Modele.Pion.clone() : Pion non clonable.");
+            throw new RuntimeException("Modele.Pion.clone(): Pion non clonable.");
         }
     }
 

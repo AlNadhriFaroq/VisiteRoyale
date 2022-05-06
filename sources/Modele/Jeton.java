@@ -56,7 +56,7 @@ public class Jeton implements Cloneable {
             resultat.position = position;
             return resultat;
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Modele.Jeton.clone() : Jeton non clonable.");
+            throw new RuntimeException("Modele.Jeton.clone(): Jeton non clonable.");
         }
     }
 
