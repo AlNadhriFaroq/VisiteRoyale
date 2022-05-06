@@ -25,7 +25,11 @@ class IAAleatoire extends IA {
         nettoyer();
         int typeCoup = choixTypeCoup();
         choixCartesDirections(typeCoup);
-        return new Coup(joueur, typeCoup, cartes, pions, deplacements, directions);
+        Coup c;
+        do{
+            c = jeu.creerCoup(typeCoup, cartes, pions, deplacements, directions);
+        }while(c == null);
+        return c;
     }
 
     void choixCartesDirections(int typeCoup){
@@ -87,36 +91,26 @@ class IAAleatoire extends IA {
 
     void choixCartesDeplacement(){
         int direction;
-        int nbGarde = 0;
         Carte carte;
         int pion;
+        boolean carteSpeciale = false;
         do{
             carte = choixCartes();
-            if(carte.estDeplacementGar1Plus1() || carte.estDeplacementGarCentre() || carte.estDeplacementFouCentre()){
-                nbGarde = r.nextInt(2) +1;
-                if (nbGarde == 1)
-                    return;
+            if(carte.estDeplacementGarCentre() || carte.estDeplacementFouCentre()){
+                carteSpeciale = true;
+            }
+            else if(carte.estDeplacementGar1Plus1()){
+                carteSpeciale = estCarteSpeciale(carte);
             }
             direction = choixDirections();
             pion = carte.getType();
-        }while(!jeu.pionEstDeplacable(pion, jeu.getPositionPion(pion) + carte.getDeplacement()));
-        if(carte.getType() == Carte.DEPLACEMENT_GAR_1PLUS1){
-            int rand = 0;
-            if(jeu.pionEstDeplacable(Pion.GAR_RGE, 1) || jeu.pionEstDeplacable(Pion.GAR_RGE, -1)) {
-                rand++;
-                if (jeu.pionEstDeplacable(Pion.GAR_VRT, 1) || jeu.pionEstDeplacable(Pion.GAR_VRT, -1)) {
-                    rand++;
-                }
-            }
-            if(rand == 2)
-                nbGarde = r.nextInt(2);
-
-
+        }while(!carteSpeciale && !jeu.pionEstDeplacable(pion, jeu.getPositionPion(pion) + carte.getDeplacement() * direction));
+        if(!carteSpeciale) {
+            cartes[cartes.length - 1] = carte;
+            directions[directions.length - 1] = direction;
+            pions[pions.length - 1] = pion;
+            deplacements[deplacements.length - 1] = carte.getDeplacement();
         }
-        cartes[cartes.length - 1] = carte;
-        directions[directions.length - 1] = direction;
-        pions[pions.length - 1] = pion;
-        deplacements[deplacements.length - 1] = carte.getDeplacement();
     }
 
     Carte choixCartes(){
@@ -141,7 +135,7 @@ class IAAleatoire extends IA {
 
     void choixCartesPrivilegesRoi(){
         int cartesRoi = 0;
-        for(int i = 0; i < tailleMain && cartesRoi < 2; i++){
+        for(int i = 0; cartesRoi < 2; i++){
             if(jeu.getMain(joueur).getCarte(i).estType(Type.ROI)){
                 cartes[cartesRoi] = jeu.getMain(joueur).getCarte(i);
                 cartesRoi ++;
@@ -149,7 +143,7 @@ class IAAleatoire extends IA {
         }
         int direction;
         do{direction = choixDirections();
-        }while(jeu.peutUtiliserPrivilegeRoi(joueur, cartes, direction));
+        }while(jeu.peutUtiliserPrivilegeRoi(cartes, direction));
         directions[0] = direction;
     }
 
@@ -165,6 +159,7 @@ class IAAleatoire extends IA {
         int direction;
         Carte carte;
         int pion;
+        boolean milieu = false;
         do{
             carte = choixCartes();
             direction = choixDirections();
@@ -172,12 +167,20 @@ class IAAleatoire extends IA {
                 pion = r.nextInt(2) + 1;
             else
                 pion = choixPion();
-        }while(!jeu.pionEstDeplacable(pion, carte.getDeplacement()) && !carte.estType(Type.FOU) && !(jeu.getTypeCourant() == pion));
-        cartes[cartes.length - 1] = carte;
-        directions[directions.length - 1] = direction;
-
-        pions[pions.length - 1] = pion;
-        deplacements[deplacements.length - 1] = carte.getDeplacement();
+            if(carte.estDeplacementFouCentre()){
+                if(jeu.pionEstDeplacable(pion, 8)){
+                    cartes[0] = carte;
+                    pions[0] = pion;
+                    milieu = true;
+                }
+            }
+        }while(!milieu && !jeu.pionEstDeplacable(pion, jeu.getPositionPion(pion) + carte.getDeplacement() * direction) && !carte.estType(Type.FOU) && !(jeu.getTypeCourant() == jeu.getTypePion(pion)));
+        if(!milieu){
+            cartes[cartes.length - 1] = carte;
+            directions[directions.length - 1] = direction;
+            pions[pions.length - 1] = pion;
+            deplacements[deplacements.length - 1] = carte.getDeplacement();
+        }
     }
 
 
@@ -186,5 +189,163 @@ class IAAleatoire extends IA {
         pions = null;
         deplacements = null;
         directions = null;
+    }
+
+    boolean estCarteSpeciale(Carte carte){
+        boolean ok = false;
+        boolean[][] dir = new boolean[2][4];
+        if(jeu.pionEstDeplacable(Pion.GAR_VRT, jeu.getPositionPion(Pion.GAR_VRT) + 1)){
+            dir[0][0] = true;
+        }
+        if(jeu.pionEstDeplacable(Pion.GAR_VRT, jeu.getPositionPion(Pion.GAR_VRT) - 1)){
+            dir[0][1] = true;
+        }
+        if(jeu.pionEstDeplacable(Pion.GAR_VRT, jeu.getPositionPion(Pion.GAR_VRT) + 2)){
+            dir[0][2] = true;
+        }
+        if(jeu.pionEstDeplacable(Pion.GAR_VRT, jeu.getPositionPion(Pion.GAR_VRT) - 2)){
+            dir[0][3] = true;
+        }
+        if(jeu.pionEstDeplacable(Pion.GAR_RGE, jeu.getPositionPion(Pion.GAR_RGE) + 1)){
+            dir[1][0] = true;
+        }
+        if(jeu.pionEstDeplacable(Pion.GAR_RGE, jeu.getPositionPion(Pion.GAR_RGE) - 1)){
+            dir[1][1] = true;
+        }
+        if(jeu.pionEstDeplacable(Pion.GAR_RGE, jeu.getPositionPion(Pion.GAR_RGE) + 2)){
+            dir[1][2] = true;
+        }
+        if(jeu.pionEstDeplacable(Pion.GAR_RGE, jeu.getPositionPion(Pion.GAR_RGE) - 2)){
+            dir[1][3] = true;
+        }
+
+        int i = r.nextInt(2);
+        int j = r.nextInt(4);
+
+        switch (j){
+            case 0:
+                if(i == 0){
+                    if(dir[i][j]){
+                        if(dir[1][j]){
+                            cartes[0] = carte;
+                            directions[0] = -1;
+                            directions[1] = -1;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            deplacements[0] = 1;
+                            deplacements[1] = 1;
+                            ok = true;
+                        }
+                        else if (dir[1][1]) {
+                            cartes[0] = carte;
+                            directions[0] = 1;
+                            directions[1] = -1;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            deplacements[0] = 1;
+                            deplacements[1] = 1;
+                            ok = true;
+                        }
+                    }
+                }
+                else{
+                    if(dir[i][j]){
+                        if(dir[0][j]){
+                            cartes[0] = carte;
+                            directions[0] = 1;
+                            directions[1] = 1;
+                            pions[0] = Pion.GAR_RGE;
+                            pions[1] = Pion.GAR_VRT;
+                            deplacements[0] = 1;
+                            deplacements[1] = 1;
+                            ok = true;
+                        }
+                        else if (dir[i][1]) {
+                            cartes[0] = carte;
+                            directions[0] = 1;
+                            directions[1] = -1;
+                            pions[0] = Pion.GAR_RGE;
+                            pions[1] = Pion.GAR_VRT;
+                            deplacements[0] = 1;
+                            deplacements[1] = 1;
+                            ok = true;
+                        }
+                    }
+                }
+            case 1:
+                if(i == 0){
+                    if(dir[i][j]){
+                        if(dir[1][j]){
+                            cartes[0] = carte;
+                            directions[0] = -1;
+                            directions[1] = -1;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            deplacements[0] = 1;
+                            deplacements[1] = 1;
+                            ok = true;
+                        }
+                        else if (dir[1][0]) {
+                            cartes[0] = carte;
+                            directions[0] = -1;
+                            directions[1] = 1;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            deplacements[0] = 1;
+                            deplacements[1] = 1;
+                            ok = true;
+                        }
+                    }
+                }
+                else{
+                    if(dir[i][j]){
+                        if(dir[0][j]){
+                            cartes[0] = carte;
+                            directions[0] = -1;
+                            directions[1] = -1;
+                            pions[0] = Pion.GAR_RGE;
+                            pions[1] = Pion.GAR_VRT;
+                            deplacements[0] = 1;
+                            deplacements[1] = 1;
+                            ok = true;
+                        }
+                        else if (dir[0][0]) {
+                            cartes[0] = carte;
+                            directions[0] = -1;
+                            directions[1] = 1;
+                            pions[0] = Pion.GAR_RGE;
+                            pions[1] = Pion.GAR_VRT;
+                            deplacements[0] = 1;
+                            deplacements[1] = 1;
+                            ok = true;
+                        }
+                    }
+                }
+            case 2:
+                if(dir[i][j]){
+                    cartes[0] = carte;
+                    directions[0] = 1;
+                    if(i == 0)
+                        pions[0] = Pion.GAR_VRT;
+                    else
+                        pions[0] = Pion.GAR_RGE;
+                    deplacements[0] = 2;
+                    ok = true;
+                }
+                break;
+            case 3:
+                if(dir[i][j]){
+                    cartes[0] = carte;
+                    directions[0] = -1;
+                    if(i == 0)
+                        pions[0] = Pion.GAR_VRT;
+                    else
+                        pions[0] = Pion.GAR_RGE;
+                    deplacements[0] = 2;
+                    ok = true;
+                }
+                break;
+        }
+        return ok;
     }
 }

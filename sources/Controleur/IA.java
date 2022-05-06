@@ -18,4 +18,14 @@ abstract class IA {
     public Coup elaborerCoup() {
         return null;
     }
+
+    public int getFacile(){
+        return  FACILE;
+    }
+    public int getMoyen(){
+        return  MOYEN;
+    }
+    public int getDifficile(){
+        return  DIFFICILE;
+    }
 }
