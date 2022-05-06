@@ -177,6 +177,7 @@ public class Jeu extends Observable implements Cloneable {
             (typeCoup == Coup.POUVOIR_FOU && peutUtiliserPouvoirFou(cartes[0], pions[0], getPositionPion(pions[0]) + directions[0] * deplacements[0])) ||
             (typeCoup == Coup.FIN_TOUR && peutFinirTour()))
             return new Coup(joueurCourant, typeCoup, cartes, pions, deplacements, directions);
+        System.out.println("Coup Null");
         return null;
     }
 
@@ -289,12 +290,16 @@ public class Jeu extends Observable implements Cloneable {
 
     public boolean peutDeplacer(Carte carte, int[] pions, int[] deplacements, int[] directions) {
         boolean utilisable = true;
-        if (carte.getDeplacement() == Carte.DEPLACEMENT_GAR_CENTRE || carte.getDeplacement() == Carte.DEPLACEMENT_FOU_CENTRE)
+        if (carte.estDeplacementGarCentre() || carte.estDeplacementFouCentre())
             utilisable = typeCarteEgalTypePion(carte, plateau.getPion(pions[0]));
+        else if (carte.estDeplacementGar1Plus1())
+            utilisable = typeCarteEgalTypePion(carte, plateau.getPion(pions[0])) &&
+                         pionEstDeplacable(pions[0], getPositionPion(pions[0]) +  directions[0] * deplacements[0]) &&
+                         typeCarteEgalTypePion(carte, plateau.getPion(pions[0])) &&
+                         pionEstDeplacable(pions[0], getPositionPion(pions[0]) +  directions[0] * deplacements[0]);
         else
-            for (int i = 0; i < pions.length; i++)
-                if (!typeCarteEgalTypePion(carte, plateau.getPion(pions[i])) || !pionEstDeplacable(pions[i], getPositionPion(pions[i]) +  directions[i] * deplacements[i]))
-                    utilisable = false;
+            utilisable = typeCarteEgalTypePion(carte, plateau.getPion(pions[0])) &&
+                         pionEstDeplacable(pions[0], getPositionPion(pions[0]) +  directions[0] * deplacements[0]);
 
         return utilisable &&
                !typeCourant.estValeur(Type.FIN) &&
