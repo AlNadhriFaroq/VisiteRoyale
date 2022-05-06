@@ -3,7 +3,7 @@ package Controleur;
 import Modele.*;
 import Vue.*;
 
-import java.sql.SQLOutput;
+import java.util.Random;
 
 public class ControleurMediateur {
     final int lenteurAttente = 50;
@@ -18,8 +18,8 @@ public class ControleurMediateur {
     public ControleurMediateur(Jeu jeu) {
         this.jeu = jeu;
         joueurs = new Joueur[2];
-        joueurs[0] = new JoueurHumain(Jeu.JOUEUR_VERT, jeu);
-        joueurs[1] = new JoueurHumain(Jeu.JOUEUR_ROUGE, jeu);
+        joueurs[0] = new JoueurHumain(Jeu.JOUEUR_VRT, jeu);
+        joueurs[1] = new JoueurHumain(Jeu.JOUEUR_RGE, jeu);
     }
 
     public void ajouterInterfaceUtilisateur(InterfaceUtilisateur vue) {
@@ -29,50 +29,44 @@ public class ControleurMediateur {
     public void executerCommande(String cmd) {
         Coup coup;
 
-        if (cmd.equals("quitter")) {
-            System.exit(0);
-        } else {
-            int typeCoup;
-            int[][] pionDepDir = new int[3][2];
-            Carte[] cartes = new Carte[2];
+        switch (cmd) {
+            case "nouvelle partie" -> nouvellePartie();
+            case "gauche", "droite" -> definirJoueurQuiCommence();
+            case "annuler" -> annuler();
+            case "refaire" -> refaire();
+            case "quitter" -> System.exit(0);
+            default -> {
+                int typeCoup;
+                int[][] pionDepDir = new int[3][2];
+                Carte[] cartes = new Carte[2];
 
-            String[] cmds = cmd.split(" ");
-            typeCoup = Integer.parseInt(cmds[0]);
-            cartes[0] = Paquet.texteEnCarte(cmds[1]);
-            for (int i = 2; i < cmds.length; i++)
-                pionDepDir[i-2][0] = Integer.parseInt(cmds[i]);
+                String[] cmds = cmd.split(" ");
+                typeCoup = Integer.parseInt(cmds[0]);
+                cartes[0] = Paquet.texteEnCarte(cmds[1]);
+                for (int i = 2; i < cmds.length; i++)
+                    pionDepDir[i - 2][0] = Integer.parseInt(cmds[i]);
 
-            if ((coup = jeu.creerCoup(typeCoup, cartes, pionDepDir[0], pionDepDir[1], pionDepDir[2])) != null) {
-                coup.fixerJeu(jeu);
-                jouer(coup);
+                if ((coup = jeu.creerCoup(typeCoup, cartes, pionDepDir[0], pionDepDir[1], pionDepDir[2])) != null) {
+                    coup.fixerJeu(jeu);
+                    jouer(coup);
+                }
             }
         }
     }
 
     public void toucheClavier(String touche) {
         switch (touche) {
-            case "Annuler":
-                annuler();
-                break;
-            case "Refaire":
-                refaire();
-                break;
-            case "PleinEcran":
-                basculerPleinEcran();
-                break;
-            case "NouvellePartie":
-                nouvellePartie();
-                break;
-            case "Quitter":
-                System.exit(0);
-                break;
-            default:
-                System.out.println("Touche inconnue : " + touche);
+            case "Annuler" -> annuler();
+            case "Refaire" -> refaire();
+            case "PleinEcran" -> basculerPleinEcran();
+            case "NouvellePartie" -> nouvellePartie();
+            case "Quitter" -> System.exit(0);
+            default -> System.out.println("Touche inconnue : " + touche);
         }
     }
 
     public void clicSouris(int x, int y) {
-        return;
+        //
     }
 
     public void tictac() {
@@ -93,15 +87,13 @@ public class ControleurMediateur {
     }
 
     public void annuler() {
-        if (jeu.peutAnnuler()) {
-            Coup coup = jeu.annulerCoup();
-        }
+        if (jeu.peutAnnuler())
+            jeu.annulerCoup();
     }
 
     public void refaire() {
-        if (jeu.peutRefaire()) {
-            Coup coup = jeu.refaireCoup();
-        }
+        if (jeu.peutRefaire())
+            jeu.refaireCoup();
     }
 
     public void basculerIA(int joueur, boolean type) {
@@ -120,6 +112,11 @@ public class ControleurMediateur {
     }
 
     public void nouvellePartie() {
-        jeu.nouvellePartie(Jeu.JOUEUR_VERT);
+        jeu.nouvellePartie();
+    }
+
+    public void definirJoueurQuiCommence() {
+        Random r = new Random();
+        jeu.definirJoueurQuiCommence(r.nextInt(2));
     }
 }

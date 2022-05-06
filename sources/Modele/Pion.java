@@ -1,28 +1,30 @@
 package Modele;
 
-public class Pion {
-    Type type;
-    int position;
+public class Pion implements Cloneable {
+    public static final int ROI = 0;
+    public static final int GAR_VRT = 1;
+    public static final int GAR_RGE = 2;
+    public static final int SOR = 3;
+    public static final int FOU = 4;
 
-    public Pion(Type type, int position) {
-        this.type = type;
+    private Type type;
+    private int position;
+
+    Pion(int type, int position) {
+        this.type = new Type(type);
         this.position = position;
     }
 
     public int getType() {
-        return type.getType();
+        return type.getValeur();
     }
 
     public int getPosition() {
         return position;
     }
 
-    public int setPosition(int position) {
-        return this.position = position;
-    }
-
-    public int setPosition(int deplacement, int direction) {
-        return this.position += direction*deplacement;
+    int setPosition(int destination) {
+        return this.position = destination;
     }
 
     @Override
@@ -34,20 +36,19 @@ public class Pion {
             return false;
         Pion pion = (Pion) o;
 
-        return (type.equals(pion.type) && pion.position == position);
+        return (type.equals(pion.type) && position == pion.position);
     }
 
     @Override
     public Pion clone() {
-        /*try {
+        try {
             Pion resultat = (Pion) super.clone();
-            resultat.position = position;
             resultat.type = type.clone();
+            resultat.position = position;
             return resultat;
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Bug interne, pion non clonable");
-        }*/
-        return new Pion(new Type(getType()),getPosition());
+            throw new RuntimeException("Modele.Pion.clone() : Pion non clonable.");
+        }
     }
 
     @Override

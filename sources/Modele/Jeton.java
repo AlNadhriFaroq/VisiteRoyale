@@ -1,14 +1,14 @@
 package Modele;
 
-public class Jeton {
-    public static final boolean GRANDE_CRN = true;
-    public static final boolean PETITE_CRN = false;
+public class Jeton implements Cloneable {
+    public static final boolean FACE_GRD_CRN = false;
+    public static final boolean FACE_PTT_CRN = true;
 
-    boolean face;
-    int position;
+    private boolean face;
+    private int position;
 
-    public Jeton(boolean face, int position) {
-        this.face = face;
+    Jeton(int position) {
+        this.face = FACE_GRD_CRN;
         this.position = position;
     }
 
@@ -20,19 +20,19 @@ public class Jeton {
         return position;
     }
 
-    public boolean setFace(boolean face) {
+    boolean setFace(boolean face) {
         return this.face = face;
     }
 
-    public int setPosition(int position) {
-        return this.position = position;
+    int setPosition(int destination) {
+        return this.position = destination;
     }
 
-    public int setPosition(int deplacement, int direction) {
-        return this.position += direction*deplacement;
+    public boolean estFace(boolean face) {
+        return this.face == face;
     }
 
-    public boolean alternerFace() {
+    boolean tournerFace() {
         return face = !face;
     }
 
@@ -45,25 +45,24 @@ public class Jeton {
             return false;
         Jeton jeton = (Jeton) o;
 
-        return (jeton.face == face && jeton.position == position);
+        return (face == jeton.face && position == jeton.position);
     }
 
     @Override
     public Jeton clone() {
-       /* try {
+       try {
             Jeton resultat = (Jeton) super.clone();
             resultat.face = face;
             resultat.position = position;
             return resultat;
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Bug interne, jeton non clonable");
-        }*/
-        return new Jeton(getFace(),getPosition());
+            throw new RuntimeException("Modele.Jeton.clone() : Jeton non clonable.");
+        }
     }
 
     @Override
     public String toString() {
-        if (face == GRANDE_CRN)
+        if (face == FACE_GRD_CRN)
             return "C";
         else
             return "c";

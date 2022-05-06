@@ -5,8 +5,9 @@ import Patterns.Observable;
 import java.util.*;
 
 public class Jeu extends Observable implements Cloneable {
-    public static final int JOUEUR_VERT = 0;
-    public static final int JOUEUR_ROUGE = 1;
+    public static final int JOUEUR_IND = -1;
+    public static final int JOUEUR_VRT = 0;
+    public static final int JOUEUR_RGE = 1;
     public static final int TAILLE_MAIN = 8;
 
     List<Coup> passe;
@@ -16,46 +17,34 @@ public class Jeu extends Observable implements Cloneable {
     Plateau plateau;
     Paquet pioche;
     Paquet defausse;
-    Paquet mainJoueurVert;
-    Paquet mainJoueurRouge;
-    int typeCourant;
+    Paquet mainJoueurVrt;
+    Paquet mainJoueurRge;
+    Type typeCourant;
 
     public Jeu() {
-        nouvellePartie(0);
+        nouvellePartie();
     }
 
-    public void nouvellePartie(int joueurQuiCommence) {
+    public void nouvellePartie() {
         passe = new ArrayList<>();
         futur = new ArrayList<>();
 
-        if (joueurQuiCommence == JOUEUR_VERT) {
-            joueurCourant = joueurQuiCommence;
-            plateau = new Plateau(Plateau.VERS_VERT);
-        } else if (joueurQuiCommence == JOUEUR_ROUGE) {
-            joueurCourant = joueurQuiCommence;
-            plateau = new Plateau(Plateau.VERS_ROUGE);
-        } else {
-            System.err.println("Joueur inconnu");
-            System.exit(1);
-        }
+        joueurCourant = JOUEUR_IND;
 
         Paquet.creerJeuCartes();
-
         pioche = new Paquet(Paquet.ORDONNE);
-        pioche.melanger();
-        
         defausse = new Paquet(Paquet.ORDONNE);
-        mainJoueurVert = new Paquet(Paquet.NON_ORDONNE);
-        mainJoueurRouge = new Paquet(Paquet.NON_ORDONNE);
+        mainJoueurVrt = new Paquet(Paquet.NON_ORDONNE);
+        mainJoueurRge = new Paquet(Paquet.NON_ORDONNE);
 
         pioche.remplir();
         pioche.melanger();
         for (int c = 0; c < TAILLE_MAIN; c++) {
-            mainJoueurVert.ajouter(pioche.piocher());
-            mainJoueurRouge.ajouter(pioche.piocher());
+            mainJoueurVrt.ajouter(pioche.piocher());
+            mainJoueurRge.ajouter(pioche.piocher());
         }
 
-        typeCourant = Type.TYPE_IND;
+        typeCourant = new Type(Type.IND);
         mettreAJour();
     }
 
@@ -63,20 +52,20 @@ public class Jeu extends Observable implements Cloneable {
         return joueurCourant;
     }
 
-    public int getPositionPion(int pion) {
-        return plateau.getPositionPion(pion);
-    }
-
     public int getTypePion(int pion) {
-        return plateau.getTypePion(pion);
+        return plateau.getPion(pion).getType();
     }
 
-    public int getPositionCouronne() {
-        return plateau.getPositionCouronne();
+    public int getPositionPion(int pion) {
+        return plateau.getPion(pion).getPosition();
     }
 
     public boolean getFaceCouronne() {
-        return plateau.getFaceCouronne();
+        return plateau.getCouronne().getFace();
+    }
+
+    public int getPositionCouronne() {
+        return plateau.getCouronne().getPosition();
     }
 
     public Paquet getPioche() {
@@ -88,10 +77,12 @@ public class Jeu extends Observable implements Cloneable {
     }
 
     public Paquet getMain(int joueur) {
-        if (joueur == JOUEUR_VERT)
-            return mainJoueurVert;
+        if (joueur == JOUEUR_VRT)
+            return mainJoueurVrt;
+        else if (joueur == JOUEUR_RGE)
+            return mainJoueurRge;
         else
-            return mainJoueurRouge;
+            throw new RuntimeException("Modele.Jeu.getMain() : Joueur entré invalide.");
     }
 
     public int getNombreTypeCarte(Paquet paquet, int type) {
@@ -103,56 +94,69 @@ public class Jeu extends Observable implements Cloneable {
     }
 
     public int getTypeCourant() {
-        return typeCourant;
+        return typeCourant.getValeur();
     }
 
     int getDeplacementCouronne(int joueur) {
-        if (joueur == JOUEUR_VERT)
-            return plateau.getDeplacementCouronneVert();
-        else if (joueur == JOUEUR_ROUGE)
-            return plateau.getDeplacementCouronneRouge();
+        if (joueur == JOUEUR_VRT)
+            return plateau.getDeplacementCouronneVrt();
+        else if (joueur == JOUEUR_RGE)
+            return plateau.getDeplacementCouronneRge();
         else
-            throw new RuntimeException("Joueur Inexistant");
+            throw new RuntimeException("Modele.Jeu.getDeplacementCouronne() : Joueur entré invalide.");
     }
 
-    public int setPositionPion(int pion, int position) {
-        return plateau.setPositionPion(pion, position);
+    int setPositionPion(int pion, int destination) {
+        return plateau.getPion(pion).setPosition(destination);
     }
 
-    public int setPositionPion(int pion, int deplacement, int direction) {
-        return plateau.setPositionPion(pion, deplacement, direction);
+    int setPositionPion(int pion, int deplacement, int direction) {
+        return setPositionPion(pion, plateau.getPion(pion).getPosition() + direction * deplacement);
     }
 
-    public int setPositionCouronne(int position) {
-        return plateau.setPositionCouronne(position);
+    boolean setFaceCouronne(boolean face) {
+        return plateau.getCouronne().setFace(face);
     }
 
-    public int setPositionCouronne(int deplacement, int direction) {
-        return plateau.setPositionCouronne(deplacement, direction);
+    int setPositionCouronne(int position) {
+        return plateau.getCouronne().setPosition(position);
     }
 
-    public boolean setFaceCouronne(boolean face) {
-        return plateau.setFaceCouronne(face);
+    int setPositionCouronne(int deplacement, int direction) {
+        return setPositionCouronne(plateau.getCouronne().getPosition() + direction * deplacement);
     }
 
-    public boolean alternerFaceCouronne() {
-        return plateau.alternerFaceCouronne();
+    int setTypeCourant(int type) {
+        return typeCourant.setValeur(type);
     }
 
-    public int setTypeCourant(int type) {
-        return typeCourant = type;
+    public void definirJoueurQuiCommence(int joueur) {
+        if (joueur == JOUEUR_VRT) {
+            joueurCourant = joueur;
+            plateau = new Plateau(Plateau.DIRECTION_VRT);
+        } else if (joueur == JOUEUR_RGE) {
+            joueurCourant = joueur;
+            plateau = new Plateau(Plateau.DIRECTION_RGE);
+        } else {
+            throw new RuntimeException("Modele.Jeu.definirJoueurQuiCommence() : Joueur entré invalide.");
+        }
+        mettreAJour();
     }
 
-    public int alternerJoueurCourant() {
+    int alternerJoueurCourant() {
         return joueurCourant = 1 - joueurCourant;
     }
 
+    boolean tournerFaceCouronne() {
+        return plateau.getCouronne().tournerFace();
+    }
+
     public Coup creerCoup(int typeCoup, Carte[] cartes, int[] pions, int[] deplacements, int[] directions) {
-        if ((typeCoup == Coup.COUP_DEPLACEMENT && peutDeplacer(joueurCourant, cartes[0], pions, deplacements, directions)) ||
-            (typeCoup == Coup.COUP_PRIVILEGE_ROI && peutUtiliserPrivilegeRoi(joueurCourant, cartes, directions[0])) ||
-            (typeCoup == Coup.COUP_POUVOIR_SRC && peutUtiliserPouvoirSorcier(pions[0])) ||
-            (typeCoup == Coup.COUP_POUVOIR_FOU && peutUtiliserPouvoirFou(joueurCourant, cartes[0], pions[0], deplacements[0], directions[0])) ||
-            (typeCoup == Coup.COUP_FIN_TOUR && peutFinirTour()))
+        if ((typeCoup == Coup.DEPLACEMENT && peutDeplacer(joueurCourant, cartes[0], pions, deplacements, directions)) ||
+            (typeCoup == Coup.PRIVILEGE_ROI && peutUtiliserPrivilegeRoi(joueurCourant, cartes, directions[0])) ||
+            (typeCoup == Coup.POUVOIR_SOR && peutUtiliserPouvoirSorcier(pions[0])) ||
+            (typeCoup == Coup.POUVOIR_FOU && peutUtiliserPouvoirFou(joueurCourant, cartes[0], pions[0], deplacements[0], directions[0])) ||
+            (typeCoup == Coup.FIN_TOUR && peutFinirTour()))
             return new Coup(joueurCourant, typeCoup, cartes, pions, deplacements, directions);
         return null;
     }
@@ -185,12 +189,12 @@ public class Jeu extends Observable implements Cloneable {
         return coup;
     }
 
-    public boolean pionEstDeplacable(int pion, int position) {
-        return plateau.pionEstDeplacable(pion, position);
+    public boolean pionEstDeplacable(int pion, int destination) {
+        return plateau.pionEstDeplacable(pion, destination);
     }
 
     public boolean pionEstDeplacable(int pion, int deplacement, int direction) {
-        return plateau.pionEstDeplacable(pion, deplacement, direction);
+        return pionEstDeplacable(pion, plateau.getPion(pion).getPosition() + direction * deplacement);
     }
 
     public boolean couronneEstDeplacable(int position) {
@@ -198,43 +202,43 @@ public class Jeu extends Observable implements Cloneable {
     }
 
     public boolean couronneEstDeplacable(int deplacement, int direction) {
-        return plateau.couronneEstDeplacable(deplacement, direction);
+        return couronneEstDeplacable(plateau.getCouronne().getPosition() + direction * deplacement);
     }
 
-    public boolean pionEstDansDuche(int joueur, int pion) {
-        if (joueur == JOUEUR_VERT)
-            return plateau.pionEstDansDucheVert(pion);
-        else if (joueur == JOUEUR_ROUGE)
-            return plateau.pionEstDansDucheRouge(pion);
+    public boolean pionDansDuche(int joueur, int pion) {
+        if (joueur == JOUEUR_VRT)
+            return plateau.pionDansDucheVrt(pion);
+        else if (joueur == JOUEUR_RGE)
+            return plateau.pionDansDucheRge(pion);
         else
-            throw new RuntimeException("Joueur inexistant");
+            throw new RuntimeException("Modele.Jeu.pionDansDuche() : Joueur entré invalide.");
     }
 
-    public boolean pionEstDansChateau(int joueur, int pion) {
-        if (joueur == JOUEUR_VERT)
-            return plateau.pionEstDansChateauVert(pion);
-        else if (joueur == JOUEUR_ROUGE)
-            return plateau.pionEstDansChateauRouge(pion);
+    public boolean pionDansChateau(int joueur, int pion) {
+        if (joueur == JOUEUR_VRT)
+            return plateau.pionDansChateauVrt(pion);
+        else if (joueur == JOUEUR_RGE)
+            return plateau.pionDansChateauRge(pion);
         else
-            throw new RuntimeException("Joueur inexistant");
+            throw new RuntimeException("Modele.Jeu.pionDansChateau() : Joueur entré invalide.");
     }
 
-    public boolean couronneEstDansChateau(int joueur, int pion) {
-        if (joueur == JOUEUR_VERT)
-            return plateau.couronneEstDansChateauVert();
-        else if (joueur == JOUEUR_ROUGE)
-            return plateau.couronneEstDansChateauRouge();
+    public boolean couronneDansChateau(int joueur) {
+        if (joueur == JOUEUR_VRT)
+            return plateau.couronneDansChateauVrt();
+        else if (joueur == JOUEUR_RGE)
+            return plateau.couronneDansChateauRge();
         else
-            throw new RuntimeException("Joueur inexistant");
+            throw new RuntimeException("Modele.Jeu.couronneDansChateau : Joueur entré invalide.");
     }
 
-    public boolean pionEstDansFontaine(int pion) {
-        return plateau.pionEstDansFontaine(pion);
+    public boolean pionDansFontaine(int pion) {
+        return plateau.pionDansFontaine(pion);
     }
 
     public boolean peutDeplacer(int joueur, Carte carte, int[] pions, int[] deplacements, int[] directions) {
         boolean utilisable = true;
-        if (carte.getDeplacement() == Carte.DEPLACEMENT_GRD_CENTRE || carte.getDeplacement() == Carte.DEPLACEMENT_FOU_CENTRE)
+        if (carte.getDeplacement() == Carte.DEPLACEMENT_GAR_CENTRE || carte.getDeplacement() == Carte.DEPLACEMENT_FOU_CENTRE)
             utilisable = typeCarteEgalTypePion(carte, pions[0]);
         else
             for (int i = 0; i < pions.length; i++)
@@ -242,9 +246,9 @@ public class Jeu extends Observable implements Cloneable {
                     utilisable = false;
 
         return utilisable &&
-               typeCourant != Type.TYPE_FIN &&
-               carteEstDansMain(joueur, carte) &&
-               (carte.getType() == typeCourant || typeCourant == Type.TYPE_IND);
+               !typeCourant.estValeur(Type.FIN) &&
+               carteDansMain(joueur, carte) &&
+               (typeCourant.estValeur(carte.getType()) || typeCourant.estValeur(Type.IND));
     }
 
     public boolean peutUtiliserPrivilegeRoi(int joueur, Carte[] cartes, int direction) {
@@ -253,53 +257,53 @@ public class Jeu extends Observable implements Cloneable {
 
         boolean utilisable = true;
         for (int i = 0; i < 2; i++)
-            if (!carteEstDansMain(joueurCourant, cartes[i]) ||
-                cartes[i].getType() != Type.TYPE_ROI ||
-                (cartes[i].getType() != typeCourant && typeCourant != Type.TYPE_IND))
+            if (!carteDansMain(joueur, cartes[i]) ||
+                cartes[i].getType() != Type.ROI ||
+                (!typeCourant.estValeur(cartes[i].getType()) && !typeCourant.estValeur(Type.IND)))
                 utilisable = false;
 
         return utilisable &&
-               typeCourant != Type.TYPE_FIN &&
-               plateau.privilegeRoiUtilisable(direction);
+               !typeCourant.estValeur(Type.FIN) &&
+               plateau.peutUtiliserPrivilegeRoi(direction);
     }
 
     public boolean peutUtiliserPouvoirSorcier(int pion) {
-        return typeCourant != Type.TYPE_FIN && typeCourant == Type.TYPE_IND &&
-               plateau.pouvoirSrcUtilisable(pion);
+        return !typeCourant.estValeur(Type.FIN) || typeCourant.estValeur(Type.IND) &&
+               plateau.peutUtiliserPouvoirSor(pion);
     }
 
     public boolean peutUtiliserPouvoirFou(int joueur, Carte carte, int pion, int destination) {
         boolean utilisable;
-        if (joueur == JOUEUR_VERT)
-            utilisable = plateau.pouvoirFouUtilisableParVert(pion, destination);
-        else if (joueur == JOUEUR_ROUGE)
-            utilisable = plateau.pouvoirFouUtilisableParRouge(pion, destination);
+        if (joueur == JOUEUR_VRT)
+            utilisable = plateau.vrtPeutUtiliserPouvoirFou(pion, destination);
+        else if (joueur == JOUEUR_RGE)
+            utilisable = plateau.rgePeutUtiliserPouvoirFou(pion, destination);
         else
-            throw new RuntimeException("Joueur inexistant");
+            throw new RuntimeException("Modele.Jeu.peutUtiliserPouvoirFou : Joueur entré invalide.");
 
         return utilisable &&
-               typeCourant != Type.TYPE_FIN &&
-               carteEstDansMain(joueur, carte) &&
-               carte.getType() == Type.TYPE_FOU &&
-               (getTypePion(pion) == typeCourant || typeCourant == Type.TYPE_IND) &&
+               !typeCourant.estValeur(Type.FIN) &&
+               carteDansMain(joueur, carte) &&
+               carte.getType() == Type.FOU &&
+               (typeCourant.estValeur(getTypePion(pion)) || typeCourant.estValeur(Type.IND)) &&
                pionEstDeplacable(pion, destination);
     }
 
     public boolean peutUtiliserPouvoirFou(int joueur, Carte carte, int pion, int deplacement, int direction) {
-        return peutUtiliserPouvoirFou(joueur, carte, pion, getPositionPion(pion) + direction*deplacement);
+        return peutUtiliserPouvoirFou(joueur, carte, pion, getPositionPion(pion) + direction * deplacement);
     }
 
     public boolean peutFinirTour() {
-        return typeCourant == Type.TYPE_IND;
+        return typeCourant.estValeur(Type.IND);
     }
 
-    public boolean carteEstDansMain(int joueur, Carte carte) {
-        if (joueur == JOUEUR_VERT)
-            return mainJoueurVert.contientCarte(carte);
-        else if (joueur == JOUEUR_ROUGE)
-            return mainJoueurRouge.contientCarte(carte);
+    public boolean carteDansMain(int joueur, Carte carte) {
+        if (joueur == JOUEUR_VRT)
+            return mainJoueurVrt.contientCarte(carte);
+        else if (joueur == JOUEUR_RGE)
+            return mainJoueurRge.contientCarte(carte);
         else
-            throw new RuntimeException("Joueur inexistant");
+            throw new RuntimeException("Modele.Jeu.CarteEstDansMain() : Joueur entré invalide.");
     }
 
     public boolean typeCarteEgalTypePion(Carte carte, int pion) {
@@ -308,7 +312,7 @@ public class Jeu extends Observable implements Cloneable {
 
     public boolean estTerminee() {
         return (plateau.estTerminee() ||
-                (pioche.estVide() && getFaceCouronne() == Jeton.PETITE_CRN && !pionEstDansFontaine(Plateau.PION_ROI)));
+                (pioche.estVide() && getFaceCouronne() == Jeton.FACE_PTT_CRN && !pionDansFontaine(Pion.ROI)));
     }
 
     public boolean peutAnnuler() {
@@ -330,7 +334,7 @@ public class Jeu extends Observable implements Cloneable {
 
         return (joueurCourant == jeu.joueurCourant && plateau.equals(jeu.plateau) &&
                 pioche.equals(jeu.pioche) && defausse.equals(jeu.defausse) &&
-                mainJoueurVert.equals(jeu.mainJoueurVert) && mainJoueurRouge.equals(jeu.mainJoueurRouge) &&
+                mainJoueurVrt.equals(jeu.mainJoueurVrt) && mainJoueurRge.equals(jeu.mainJoueurRge) &&
                 typeCourant == jeu.typeCourant);
     }
 
@@ -342,29 +346,35 @@ public class Jeu extends Observable implements Cloneable {
             resultat.plateau = plateau.clone();
             resultat.pioche = pioche.clone();
             resultat.defausse = defausse.clone();
-            resultat.mainJoueurVert = mainJoueurVert.clone();
-            resultat.mainJoueurRouge = mainJoueurRouge.clone();
-            resultat.typeCourant = typeCourant;
+            resultat.mainJoueurVrt = mainJoueurVrt.clone();
+            resultat.mainJoueurRge = mainJoueurRge.clone();
+            resultat.typeCourant = typeCourant.clone();
             return resultat;
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Bug interne, pion non clonable");
+            throw new RuntimeException("Modele.Jeu.clone() : Jeu non clonable.");
         }
     }
 
     @Override
     public String toString() {
-        String txt = "Au tour de : ";
+        String txt = "";
 
-        if (joueurCourant == JOUEUR_VERT)
-            txt += "Joueur vert\n";
-        else if (joueurCourant == JOUEUR_ROUGE)
-            txt += "Joueur rouge\n";
-        else
-            throw new RuntimeException("Joueur inexistant");
+        if (joueurCourant == JOUEUR_IND) {
+            txt += "Tirage du joueur qui commence.\nMain gauche ou main droite ?\n";
+        } else {
+            txt = "Au tour de : ";
 
-        txt += "MainVert:  " +  mainJoueurVert.toString() + "\n";
-        txt += plateau.toString();
-        txt += "MainRouge: " + mainJoueurRouge.toString() + "\n";
+            if (joueurCourant == JOUEUR_VRT)
+                txt += "Joueur vert\n";
+            else if (joueurCourant == JOUEUR_RGE)
+                txt += "Joueur rouge\n";
+            else
+                throw new RuntimeException("Modele.Jeu.toString() : Joueur courant invalide.");
+
+            txt += mainJoueurVrt.toString() + "\n";
+            txt += plateau.toString() + "\n";
+            txt += mainJoueurRge.toString() + "\n";
+        }
 
         return txt;
     }

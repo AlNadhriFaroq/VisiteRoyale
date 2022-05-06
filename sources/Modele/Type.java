@@ -1,58 +1,58 @@
 package Modele;
 
-public class Type implements Comparable<Type> {
-    public static final int TYPE_IND = 0;
-    public static final int TYPE_ROI = 1;
-    public static final int TYPE_GRD = 2;
-    public static final int TYPE_SRC = 3;
-    public static final int TYPE_FOU = 4;
-    public static final int TYPE_FIN = 5;
+public class Type implements Cloneable, Comparable<Type> {
+    public static final int IND = 0;
+    public static final int ROI = 1;
+    public static final int GAR = 2;
+    public static final int SOR = 3;
+    public static final int FOU = 4;
+    public static final int FIN = 5;
 
-    int type;
+    private int valeur;
 
-    public Type(int type) {
-        this.type = type;
+    Type(int valeur) {
+        this.valeur = valeur;
     }
 
-    public int getType() {
-        return type;
+    int getValeur() {
+        return valeur;
     }
 
-    public int setType(int type) {
-        return this.type = type;
+    int setValeur(int valeur) {
+        return this.valeur = valeur;
     }
 
-    public boolean estType(int type) {
-        return this.type == type;
+    boolean estValeur(int valeur) {
+        return this.valeur == valeur;
     }
 
-    public static int texteEnValeur(char txt) {
-        if (txt == 'R')
-            return 1;
-        else if (txt == 'G')
-            return 2;
-        else if (txt == 'S')
-            return 3;
-        else if (txt == 'F')
-            return 4;
-        return -1;
+    static int caractereEnValeur(char car) {
+        if (car == 'R')
+            return ROI;
+        else if (car == 'G')
+            return GAR;
+        else if (car == 'S')
+            return SOR;
+        else if (car == 'F')
+            return FOU;
+        throw new RuntimeException("Modele.Type.texteEnValeur() : Caractère entré invalide.");
     }
 
-    public static char valeurEnTexte(int valeur) {
-        if (valeur == 1)
+    static char valeurEnCaractere(int val) {
+        if (val == ROI)
             return 'R';
-        else if (valeur == 2)
+        else if (val == GAR)
             return 'G';
-        else if (valeur == 3)
+        else if (val == SOR)
             return 'S';
-        else if (valeur == 4)
+        else if (val == FOU)
             return 'F';
-        return '?';
+        throw new RuntimeException("Modele.Type.valeurEnTexte() : Valeur entrée invalide.");
     }
 
     @Override
     public int compareTo(Type type) {
-        return this.type - type.getType();
+        return valeur - type.getValeur();
     }
 
     @Override
@@ -64,32 +64,22 @@ public class Type implements Comparable<Type> {
             return false;
         Type type = (Type) o;
 
-        return (this.type == type.type);
+        return (valeur == type.getValeur());
     }
 
     @Override
     public Type clone() {
-        /*try {
+        try {
             Type resultat = (Type) super.clone();
-            resultat.type = type;
+            resultat.setValeur(valeur);
             return resultat;
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Bug interne, carte non clonable");
-        }*/
-        return new Type(getType());
+            throw new RuntimeException("Modele.Type.clone() : Type non clonable.");
+        }
     }
 
     @Override
     public String toString() {
-        if (type == TYPE_ROI)
-            return "R";
-        else if (type == TYPE_GRD)
-            return "G";
-        else if (type == TYPE_SRC)
-            return "S";
-        else if (type == TYPE_FOU)
-            return "F";
-        else
-            return "?";
+        return Character.toString(valeurEnCaractere(valeur));
     }
 }

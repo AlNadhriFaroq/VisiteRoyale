@@ -8,37 +8,37 @@ public class Paquet implements Cloneable {
     public static final boolean ORDONNE = true;
     public static final boolean NON_ORDONNE = false;
 
-    List<Carte> paquet;
-    boolean ordonne;
+    private List<Carte> cartes;
+    private boolean ordonne;
 
-    public Paquet(boolean ordonne) {
-        paquet = new ArrayList<>();
+    Paquet(boolean ordonne) {
+        cartes = new ArrayList<>();
         this.ordonne = ordonne;
     }
 
-    public Carte getCarte(int indiceCarte) {
-        return paquet.get(indiceCarte);
+    public Carte getCarte(int indice) {
+        return cartes.get(indice);
     }
 
     public Carte getCarte(int type, int deplacement) {
         for (int i = 0; i < getTaille(); i++)
             if (getCarte(i).getType() == type && getCarte(i).getDeplacement() == deplacement)
                 return getCarte(i);
-        throw new RuntimeException("Carte non presente dans le paquet");
+        throw new RuntimeException("Modele.Paquet.getCarte() : Type ou deplacement invalide.");
     }
 
     public int getIndiceCarte(Carte carte) {
-        return paquet.indexOf(carte);
+        return cartes.indexOf(carte);
     }
 
     public int getTaille() {
-        return paquet.size();
+        return cartes.size();
     }
 
     public int getNombreTypeCarte(int type) {
         int nb = 0;
         for (int i = 0; i < getTaille(); i++)
-            if (paquet.get(i).getType() == type)
+            if (cartes.get(i).getType() == type)
                 nb++;
         return nb;
     }
@@ -46,128 +46,132 @@ public class Paquet implements Cloneable {
     public int getNombreCarte(int type, int deplacement) {
         int nb = 0;
         for (int i = 0; i < getTaille(); i++)
-            if (paquet.get(i).getType() == type && paquet.get(i).getDeplacement() == deplacement)
+            if (cartes.get(i).getType() == type && cartes.get(i).getDeplacement() == deplacement)
                 nb++;
         return nb;
     }
 
-    public void ajouter(Carte carte) {
-        paquet.add(carte);
+    void ajouter(Carte carte) {
+        cartes.add(carte);
     }
 
-    public Carte piocher() {
+    Carte piocher() {
         if (!ordonne)
-            throw new RuntimeException("Impossible de piocher une carte dans un paquet non ordonne !");
+            throw new RuntimeException("Modele.Paquet.piocher() : Impossible de piocher une carte dans un paquet non ordonne.");
         if (!estVide())
-            return paquet.remove(paquet.size()-1);
+            return cartes.remove(getTaille()-1);
         return null;
     }
 
-    public Carte defausser(Carte carte) {
+    Carte defausser(Carte carte) {
         if (ordonne)
-            throw new RuntimeException("Impossible de defausser une carte dans un paquet ordonne !");
-        paquet.remove(carte);
+            throw new RuntimeException("Modele.Paquet.defausser() : Impossible de defausser une carte dans un paquet ordonne.");
+        cartes.remove(carte);
         return carte;
     }
 
-    public Carte defausser(int indiceCarte) {
+    Carte defausser(int indiceCarte) {
         if (ordonne)
-            throw new RuntimeException("Impossible de defaussser une carte dans un paquet ordonne !");
-        return paquet.remove(indiceCarte);
+            throw new RuntimeException("Modele.Paquet.defausser() : Impossible de defaussser une carte dans un paquet ordonne.");
+        return cartes.remove(indiceCarte);
     }
 
-    public void permuterCartes(Carte carte1, Carte carte2) {
+    void permuterCartes(Carte carte1, Carte carte2) {
         if (ordonne)
-            throw new RuntimeException("Impossible de permuter des cartes dans un paquet ordonne !");
-        int indiceCarte1 = paquet.indexOf(carte1);
-        int indiceCarte2 = paquet.indexOf(carte2);
-        paquet.set(indiceCarte1, carte2);
-        paquet.set(indiceCarte2, carte1);
+            throw new RuntimeException("Modele.Paquet.permuterCartes() : Impossible de permuter des cartes dans un paquet ordonne.");
+        int indiceCarte1 = cartes.indexOf(carte1);
+        int indiceCarte2 = cartes.indexOf(carte2);
+        cartes.set(indiceCarte1, carte2);
+        cartes.set(indiceCarte2, carte1);
     }
 
-    public void permuterCartes(int indiceCarte1, int indiceCarte2) {
+    void permuterCartes(int indiceCarte1, int indiceCarte2) {
         if (ordonne)
-            throw new RuntimeException("Impossible de permuter des cartes dans un paquet ordonne !");
-        Carte carte1 = paquet.get(indiceCarte1);
-        Carte carte2 = paquet.get(indiceCarte2);
-        paquet.set(indiceCarte1, carte2);
-        paquet.set(indiceCarte2, carte1);
+            throw new RuntimeException("Modele.Paquet.permuterCartes() : Impossible de permuter des cartes dans un paquet ordonne.");
+        Carte carte1 = cartes.get(indiceCarte1);
+        Carte carte2 = cartes.get(indiceCarte2);
+        cartes.set(indiceCarte1, carte2);
+        cartes.set(indiceCarte2, carte1);
     }
 
-    public void remplir() {
+    void remplir() {
         for (int i = 0; i < JEU_CARTES.getTaille(); i++)
             ajouter(JEU_CARTES.getCarte(i));
     }
 
-    public void transferer(Paquet paquet) {
-        if (!ordonne)
-            throw new RuntimeException("Impossible de transferer des cartes depuis un paquet non ordonne !");
-        while (!paquet.estVide())
-            ajouter(paquet.piocher());
+    void transferer(Paquet paquet) {
+        if (ordonne)
+            while (!paquet.estVide())
+                ajouter(paquet.piocher());
+        else
+            while (!paquet.estVide())
+                ajouter(paquet.defausser(paquet.getTaille()-1));
     }
 
-    public void copier(Paquet paquet) {
-        if (!ordonne)
-            throw new RuntimeException("Impossible de transferer des cartes depuis un paquet non ordonne !");
+    void copier(Paquet paquet) {
         for (int i = 0; i < paquet.getTaille(); i++)
             ajouter(paquet.getCarte(i));
     }
 
-    public void melanger() {
-        Collections.shuffle(paquet);
+    void melanger() {
+        Collections.shuffle(cartes);
     }
 
-    public void trier() {
-        Collections.sort(paquet);
+    void trier() {
+        Collections.sort(cartes);
     }
 
-    public void vider() {
-        paquet.clear();
+    void vider() {
+        cartes.clear();
     }
 
     public boolean contientCarte(Carte carte) {
-        return paquet.contains(carte);
+        return cartes.contains(carte);
     }
 
     public boolean estVide() {
-        return paquet.isEmpty();
+        return cartes.isEmpty();
     }
 
-    public static void creerJeuCartes() {
+    static void creerJeuCartes() {
         JEU_CARTES = new Paquet(ORDONNE);
 
-        creerCartes(12, Type.TYPE_ROI, 1);
-        creerCartes(4, Type.TYPE_GRD, 1);
-        creerCartes(10, Type.TYPE_GRD, Carte.DEPLACEMENT_GRD_DEUX);
-        creerCartes(2, Type.TYPE_GRD, Carte.DEPLACEMENT_GRD_CENTRE);
-        creerCartes(2, Type.TYPE_SRC, 1);
-        creerCartes(8, Type.TYPE_SRC, 2);
-        creerCartes(2, Type.TYPE_SRC, 3);
-        creerCartes(1, Type.TYPE_FOU, 1);
-        creerCartes(3, Type.TYPE_FOU, 2);
-        creerCartes(5, Type.TYPE_FOU, 3);
-        creerCartes(3, Type.TYPE_FOU, 4);
-        creerCartes(1, Type.TYPE_FOU, 5);
-        creerCartes(2, Type.TYPE_FOU, Carte.DEPLACEMENT_FOU_CENTRE);
+        creerCartes(12, Type.ROI, 1);
+        creerCartes(4, Type.GAR, 1);
+        creerCartes(10, Type.GAR, Carte.DEPLACEMENT_GAR_1PLUS1);
+        creerCartes(2, Type.GAR, Carte.DEPLACEMENT_GAR_CENTRE);
+        creerCartes(2, Type.SOR, 1);
+        creerCartes(8, Type.SOR, 2);
+        creerCartes(2, Type.SOR, 3);
+        creerCartes(1, Type.FOU, 1);
+        creerCartes(3, Type.FOU, 2);
+        creerCartes(5, Type.FOU, 3);
+        creerCartes(3, Type.FOU, 4);
+        creerCartes(1, Type.FOU, 5);
+        creerCartes(2, Type.FOU, Carte.DEPLACEMENT_FOU_CENTRE);
 
         JEU_CARTES.trier();
     }
 
-    public static void creerCartes(int nb, int type, int deplacement) {
+    private static void creerCartes(int nb, int type, int deplacement) {
         Carte carte;
         for (int i = 0; i < nb; i++) {
-            carte = new Carte(new Type(type), deplacement);
+            carte = new Carte(type, deplacement);
             JEU_CARTES.ajouter(carte);
         }
     }
 
-    public static Carte texteEnCarte(String nom) {
-        return entierEnCarte(Carte.texteEnValeur(nom));
+    public static Carte texteEnCarte(String txt) {
+        try {
+            return entierEnCarte(Carte.texteEnValeur(txt));
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 
-    public static Carte entierEnCarte(int valeur) {
-        int type = valeur / 10;
-        int deplacement = valeur % 10;
+    public static Carte entierEnCarte(int val) {
+        int type = val / 10;
+        int deplacement = val % 10;
         for (int i = 0; i < JEU_CARTES.getTaille(); i++)
             if (JEU_CARTES.getCarte(i).getType() == type && JEU_CARTES.getCarte(i).getDeplacement() == deplacement)
                 return JEU_CARTES.getCarte(i);
@@ -188,15 +192,17 @@ public class Paquet implements Cloneable {
 
         if (ordonne == ORDONNE && paquet.ordonne == ORDONNE) {
             for (int i = 0; i < getTaille(); i++)
-                if (!(getCarte(i) == paquet.getCarte(i)))
+                if (!(getCarte(i).equals(paquet.getCarte(i))))
                     return false;
+            return true;
         } else if (ordonne == NON_ORDONNE && paquet.ordonne == NON_ORDONNE) {
             for (int i = 0; i < getTaille(); i++)
                 if (!(paquet.contientCarte(getCarte(i))))
                     return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -208,7 +214,7 @@ public class Paquet implements Cloneable {
                 resultat.ajouter(getCarte(i).clone());
             return resultat;
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Bug interne, paquet de cartes non clonable");
+            throw new RuntimeException("Modele.Paquet.cloner() : Paquet non clonable.");
         }
     }
 

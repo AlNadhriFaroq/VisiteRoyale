@@ -1,20 +1,20 @@
 package Modele;
 
 public class Carte implements Cloneable, Comparable<Carte> {
-    public static final int DEPLACEMENT_GRD_CENTRE = 3;
-    public static final int DEPLACEMENT_GRD_DEUX = 2;
+    public static final int DEPLACEMENT_GAR_1PLUS1 = 2;
+    public static final int DEPLACEMENT_GAR_CENTRE = 3;
     public static final int DEPLACEMENT_FOU_CENTRE = 6;
 
-    Type type;
-    int deplacement;
+    private Type type;
+    private int deplacement;
 
-    public Carte(Type type, int deplacement) {
-        this.type = type;
+    Carte(int type, int deplacement) {
+        this.type = new Type(type);
         this.deplacement = deplacement;
     }
 
     public int getType() {
-        return type.getType();
+        return type.getValeur();
     }
 
     public int getDeplacement() {
@@ -22,23 +22,37 @@ public class Carte implements Cloneable, Comparable<Carte> {
     }
 
     public boolean estType(int type) {
-        return this.type.estType(type);
+        return this.type.estValeur(type);
+    }
+
+    public boolean estDeplacementGar1Plus1() {
+        return type.estValeur(Type.GAR) && deplacement == DEPLACEMENT_GAR_1PLUS1;
+    }
+
+    public boolean estDeplacementGarCentre() {
+        return type.estValeur(Type.GAR) && deplacement == DEPLACEMENT_GAR_CENTRE;
+    }
+
+    public boolean estDeplacementFouCentre() {
+        return type.estValeur(Type.FOU) && deplacement == DEPLACEMENT_FOU_CENTRE;
     }
 
     public static int texteEnValeur(String txt) {
         if (txt.length() != 2)
-            return -1;
-        return Type.texteEnValeur(txt.charAt(0)) * 10 + Character.getNumericValue(txt.charAt(1));
+            throw new RuntimeException("Modele.Carte.texteEnValeur() : Texte entré invalide.");
+        return Type.caractereEnValeur(txt.charAt(0)) * 10 + Character.getNumericValue(txt.charAt(1));
     }
 
-    public static String valeurEnTexte(int valeur) {
-        return Type.valeurEnTexte(valeur % 10) + String.valueOf(valeur / 10);
+    public static String valeurEnTexte(int val) {
+        if (val < 10 || 99 < val)
+            throw new RuntimeException("Modele.Carte.valeurEnTexte() : Valeur entrée invalide.");
+        return Type.valeurEnCaractere(val / 10) + String.valueOf(val % 10);
     }
 
     /* a modifier */
     @Override
     public int compareTo(Carte carte) {
-        return type.compareTo(carte.type)*10 + (deplacement - carte.deplacement);
+        return type.compareTo(carte.type) * 10 + (deplacement - carte.getDeplacement());
     }
 
     @Override
@@ -50,7 +64,7 @@ public class Carte implements Cloneable, Comparable<Carte> {
             return false;
         Carte carte = (Carte) o;
 
-        return (type.equals(carte.type) && carte.deplacement == deplacement);
+        return (type.equals(carte.type) && deplacement == carte.deplacement);
     }
 
     @Override
@@ -61,7 +75,7 @@ public class Carte implements Cloneable, Comparable<Carte> {
             resultat.deplacement = deplacement;
             return resultat;
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Bug interne, carte non clonable");
+            throw new RuntimeException("Modele.Carte.clone() : Carte non clonable.");
         }
     }
 
