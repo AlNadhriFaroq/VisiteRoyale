@@ -423,6 +423,15 @@ public class Jeu extends Observable implements Cloneable {
         }
     }
 
+    public int getDirectionJoueur(int joueur){
+        int direction;
+        if(joueur == JOUEUR_RGE)
+            direction = 1;
+        else
+            direction = -1;
+        return direction;
+    }
+
     @Override
     public String toString() {
         String txt = "";
