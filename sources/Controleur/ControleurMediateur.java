@@ -30,12 +30,23 @@ public class ControleurMediateur {
         Coup coup;
 
         switch (cmd) {
-            case "nouvelle partie" -> nouvellePartie();
-            case "gauche", "droite" -> definirJoueurQuiCommence();
-            case "annuler" -> annuler();
-            case "refaire" -> refaire();
-            case "quitter" -> System.exit(0);
-            default -> {
+            case "nouvelle partie":
+                nouvellePartie();
+                break;
+            case "gauche":
+            case "droite":
+                definirJoueurQuiCommence();
+                break;
+            case "annuler":
+                annuler();
+                break;
+            case "refaire":
+                refaire();
+                break;
+            case "quitter":
+                System.exit(0);
+                break;
+            default :
                 int typeCoup;
                 int[][] pionDepDir = new int[3][2];
                 Carte[] cartes = new Carte[2];
@@ -49,19 +60,31 @@ public class ControleurMediateur {
                 if ((coup = jeu.creerCoup(typeCoup, cartes, pionDepDir[0], pionDepDir[1], pionDepDir[2])) != null) {
                     coup.fixerJeu(jeu);
                     jouer(coup);
-                }
+                break;
             }
         }
     }
 
     public void toucheClavier(String touche) {
         switch (touche) {
-            case "Annuler" -> annuler();
-            case "Refaire" -> refaire();
-            case "PleinEcran" -> basculerPleinEcran();
-            case "NouvellePartie" -> nouvellePartie();
-            case "Quitter" -> System.exit(0);
-            default -> System.out.println("Touche inconnue : " + touche);
+            case "Annuler":
+                annuler();
+                break;
+            case "Refaire":
+                refaire();
+                break;
+            case "PleinEcran":
+                basculerPleinEcran();
+                break;
+            case "NouvellePartie":
+                nouvellePartie();
+                break;
+            case "Quitter":
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Touche inconnue : " + touche);
+                break;
         }
     }
 
