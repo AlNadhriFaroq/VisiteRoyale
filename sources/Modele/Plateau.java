@@ -116,6 +116,15 @@ public class Plateau implements Cloneable {
                pionEstDeplacable(pion, destination);
     }
 
+    public boolean verPeutUtiliserPouvoirFou(){
+        return getPion(Pion.FOU).getPosition() < getPion(Pion.ROI).getPosition() &&
+                getPion(Pion.FOU).getPosition() > CHATEAU_VRT;
+    }
+    public boolean rgePeutUtiliserPouvoirFou(){
+        return getPion(Pion.FOU).getPosition() > getPion(Pion.ROI).getPosition() &&
+                getPion(Pion.FOU).getPosition() < CHATEAU_RGE;
+    }
+
     public boolean peutUtiliserPrivilegeRoi(int direction) {
         return (direction == DIRECTION_VRT && getPion(Pion.GAR_VRT).getPosition() != BORDURE_VRT) ||
                (direction == DIRECTION_RGE && getPion(Pion.GAR_RGE).getPosition() != BORDURE_RGE);

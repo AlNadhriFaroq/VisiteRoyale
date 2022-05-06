@@ -265,9 +265,18 @@ public class Jeu extends Observable implements Cloneable {
                plateau.peutUtiliserPrivilegeRoi(direction);
     }
 
+    public boolean peutUtiliserPrivilegeRoi(){
+        return getMain(joueurCourant).getNombreTypeCarte(Type.FOU) >= 2 &&
+               (plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_VRT) || plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_RGE));
+    }
+
     public boolean peutUtiliserPouvoirSorcier(int pion) {
         return !typeCourant.estValeur(Type.FIN) || typeCourant.estValeur(Type.IND) &&
                plateau.peutUtiliserPouvoirSor(pion);
+    }
+
+    public boolean peutUtiliserPouvoirSorcier(){
+        return !typeCourant.estValeur(Type.FIN) || typeCourant.estValeur(Type.IND);
     }
 
     public boolean peutUtiliserPouvoirFou(int joueur, Carte carte, int pion, int destination) {
@@ -289,6 +298,16 @@ public class Jeu extends Observable implements Cloneable {
 
     public boolean peutUtiliserPouvoirFou(int joueur, Carte carte, int pion, int deplacement, int direction) {
         return peutUtiliserPouvoirFou(joueur, carte, pion, getPositionPion(pion) + direction * deplacement);
+    }
+
+    public boolean peutUtiliserPouvoirFou(){
+        boolean possible = false;
+        if(getMain(joueurCourant).getNombreTypeCarte(Type.FOU) != 0)
+            if(joueurCourant == JOUEUR_RGE)
+                possible = plateau.rgePeutUtiliserPouvoirFou();
+            else
+                possible = plateau.verPeutUtiliserPouvoirFou();
+        return possible;
     }
 
     public boolean peutFinirTour() {
