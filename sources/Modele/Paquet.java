@@ -145,7 +145,7 @@ public class Paquet implements Cloneable {
         creerCartes(2, Type.SOR, 3);
         creerCartes(1, Type.FOU, 1);
         creerCartes(3, Type.FOU, 2);
-        creerCartes(5, Type.FOU, 3);
+        creerCartes(4, Type.FOU, 3);
         creerCartes(3, Type.FOU, 4);
         creerCartes(1, Type.FOU, 5);
         creerCartes(2, Type.FOU, Carte.DEPLACEMENT_FOU_CENTRE);
@@ -210,6 +210,7 @@ public class Paquet implements Cloneable {
         try {
             Paquet resultat = (Paquet) super.clone();
             resultat.ordonne = ordonne;
+            resultat.cartes = new ArrayList<>();
             for (int i = 0; i < getTaille(); i++)
                 resultat.ajouter(getCarte(i).clone());
             return resultat;

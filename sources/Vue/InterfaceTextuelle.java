@@ -21,6 +21,8 @@ public class InterfaceTextuelle implements InterfaceUtilisateur {
         vue.mettreAJour();
         Scanner s = new Scanner(System.in);
         while (true) {
+            System.out.println("Format commande: TypeDep Car Pio NbDep Dir ");
+            System.out.println("Pion: R = 0, GV = 1, GR = 2, S = 3, F = 4 ");
             System.out.print("Commande > ");
             ctrl.executerCommande(s.nextLine());
         }

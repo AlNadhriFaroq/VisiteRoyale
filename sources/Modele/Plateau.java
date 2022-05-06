@@ -59,7 +59,7 @@ public class Plateau implements Cloneable {
 
     public boolean pionEstDeplacable(int pion, int destination) {
         return destination >= BORDURE_VRT && destination <= BORDURE_RGE &&
-               ((pion == Pion.ROI && destination >= getPion(Pion.GAR_VRT).getPosition() && destination <= getPion(Pion.GAR_RGE).getPosition()) ||
+               ((pion == Pion.ROI && destination > getPion(Pion.GAR_VRT).getPosition() && destination < getPion(Pion.GAR_RGE).getPosition()) ||
                 (pion == Pion.GAR_VRT && destination < getPion(Pion.ROI).getPosition() && destination < getPion(Pion.GAR_RGE).getPosition()) ||
                 (pion == Pion.GAR_RGE && destination > getPion(Pion.ROI).getPosition() && destination > getPion(Pion.GAR_VRT).getPosition()) ||
                 pion == Pion.SOR || pion == Pion.FOU);
@@ -158,6 +158,7 @@ public class Plateau implements Cloneable {
     public Plateau clone() {
         try {
             Plateau resultat = (Plateau) super.clone();
+            resultat.pions = new Pion[pions.length];
             for (int i = 0; i < pions.length; i++)
                 resultat.pions[i] = pions[i].clone();
             resultat.couronne = couronne.clone();
