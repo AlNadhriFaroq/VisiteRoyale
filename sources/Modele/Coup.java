@@ -103,7 +103,7 @@ public class Coup implements Cloneable {
             }
         } else {
             for (int i = 0; i < pions.length; i++)
-                jeu.setPositionPion(pions[i], deplacements[i], directions[i]);
+                jeu.setPositionPion(pions[i], jeu.getPositionPion(pions[i]) + directions[i] * deplacements[i]);
         }
 
         typePasse.setValeur(jeu.getTypeCourant());
@@ -123,7 +123,7 @@ public class Coup implements Cloneable {
             jeu.setPositionPion(pions[1], positionPasse[1]);
         } else {
             for (int i = pions.length-1; i >= 0; i--)
-                jeu.setPositionPion(pions[i], deplacements[i], -directions[i]);
+                jeu.setPositionPion(pions[i], jeu.getPositionPion(pions[i]) - directions[i] * deplacements[i]);
         }
 
         jeu.getMain(joueur).ajouter(jeu.getDefausse().piocher());
@@ -133,9 +133,9 @@ public class Coup implements Cloneable {
         jeu.getDefausse().ajouter(jeu.getMain(joueur).defausser(cartes[0]));
         jeu.getDefausse().ajouter(jeu.getMain(joueur).defausser(cartes[1]));
 
-        jeu.setPositionPion(Pion.GAR_VRT, 1, directions[0]);
-        jeu.setPositionPion(Pion.ROI, 1, directions[0]);
-        jeu.setPositionPion(Pion.GAR_RGE, 1, directions[0]);
+        jeu.setPositionPion(Pion.GAR_VRT, jeu.getPositionPion(Pion.GAR_VRT) + directions[0]);
+        jeu.setPositionPion(Pion.ROI, jeu.getPositionPion(Pion.ROI) + directions[0]);
+        jeu.setPositionPion(Pion.GAR_RGE, jeu.getPositionPion(Pion.GAR_RGE) + directions[0]);
 
         typePasse.setValeur(jeu.getTypeCourant());
         if (jeu.getNombreTypeCarte(jeu.getMain(joueur), cartes[0].getType()) == 0)
@@ -147,9 +147,9 @@ public class Coup implements Cloneable {
     void desexecuterPrivilegeRoi() {
         jeu.setTypeCourant(typePasse.getValeur());
 
-        jeu.setPositionPion(Pion.GAR_RGE, 1, -directions[0]);
-        jeu.setPositionPion(Pion.ROI, 1, -directions[0]);
-        jeu.setPositionPion(Pion.GAR_VRT, 1, -directions[0]);
+        jeu.setPositionPion(Pion.GAR_RGE, jeu.getPositionPion(Pion.GAR_RGE) - directions[0]);
+        jeu.setPositionPion(Pion.ROI, jeu.getPositionPion(Pion.ROI) - directions[0]);
+        jeu.setPositionPion(Pion.GAR_VRT, jeu.getPositionPion(Pion.GAR_VRT) - directions[0]);
 
         jeu.getMain(joueur).ajouter(jeu.getDefausse().piocher());
         jeu.getMain(joueur).ajouter(jeu.getDefausse().piocher());
@@ -175,7 +175,7 @@ public class Coup implements Cloneable {
             positionPasse[0] = jeu.getPositionPion(pions[0]);
             jeu.setPositionPion(pions[0], Plateau.FONTAINE);
         } else {
-            jeu.setPositionPion(pions[0], deplacements[0], directions[0]);
+            jeu.setPositionPion(pions[0], jeu.getPositionPion(pions[0]) + directions[0] * deplacements[0]);
         }
 
         typePasse.setValeur(jeu.getTypeCourant());
@@ -192,7 +192,7 @@ public class Coup implements Cloneable {
             jeu.setPositionPion(pions[0], positionPasse[0]);
         }
         else {
-            jeu.setPositionPion(pions[0], deplacements[0], -directions[0]);
+            jeu.setPositionPion(pions[0], jeu.getPositionPion(pions[0]) - directions[0] * deplacements[0]);
         }
 
         jeu.getMain(joueur).ajouter(jeu.getDefausse().piocher());
@@ -203,9 +203,9 @@ public class Coup implements Cloneable {
             nbCartesAPiocher = Jeu.TAILLE_MAIN - jeu.getMain(joueur).getTaille();
 
         if (joueur == Jeu.JOUEUR_VRT)
-            jeu.setPositionCouronne(jeu.getDeplacementCouronne(joueur), Plateau.DIRECTION_VRT);
+            jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_VRT * jeu.getDeplacementCouronne(joueur));
         else if (joueur == Jeu.JOUEUR_RGE)
-            jeu.setPositionCouronne(jeu.getDeplacementCouronne(joueur), Plateau.DIRECTION_RGE);
+            jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.getDeplacementCouronne(joueur));
         else
             throw new RuntimeException("Modele.Coup.executerFinTour() : Joueur entré invalide.");
 
@@ -249,9 +249,9 @@ public class Coup implements Cloneable {
         }
 
         if (joueur == Jeu.JOUEUR_VRT)
-            jeu.setPositionCouronne(jeu.getDeplacementCouronne(joueur), Plateau.DIRECTION_RGE);
+            jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.getDeplacementCouronne(joueur));
         else if (joueur == Jeu.JOUEUR_RGE)
-            jeu.setPositionCouronne(jeu.getDeplacementCouronne(joueur), Plateau.DIRECTION_VRT);
+            jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_VRT * jeu.getDeplacementCouronne(joueur));
         else
             throw new RuntimeException("Modele.Coup.desexecuterFinTour() : Joueur courant invalide.");
 

@@ -52,6 +52,20 @@ public class Jeu extends Observable implements Cloneable {
         return joueurCourant;
     }
 
+    public int getJoueurGagnant() {
+        if (estTerminee())
+            if (pionDansChateau(JOUEUR_VRT, Pion.ROI) || couronneDansChateau(JOUEUR_VRT))
+                return JOUEUR_VRT;
+            else if (pionDansChateau(JOUEUR_RGE, Pion.ROI) || couronneDansChateau(JOUEUR_RGE))
+                return JOUEUR_VRT;
+            else if (pioche.estVide() && plateau.getCouronne().estFace(Jeton.FACE_PTT_CRN))
+                if (pionDansDuche(JOUEUR_VRT, Pion.ROI))
+                    return JOUEUR_VRT;
+                else
+                    return JOUEUR_RGE;
+        return JOUEUR_IND;
+    }
+
     public int getTypePion(int pion) {
         return plateau.getPion(pion).getType();
     }
@@ -110,20 +124,12 @@ public class Jeu extends Observable implements Cloneable {
         return plateau.getPion(pion).setPosition(destination);
     }
 
-    int setPositionPion(int pion, int deplacement, int direction) {
-        return setPositionPion(pion, plateau.getPion(pion).getPosition() + direction * deplacement);
-    }
-
     boolean setFaceCouronne(boolean face) {
         return plateau.getCouronne().setFace(face);
     }
 
     int setPositionCouronne(int position) {
         return plateau.getCouronne().setPosition(position);
-    }
-
-    int setPositionCouronne(int deplacement, int direction) {
-        return setPositionCouronne(plateau.getCouronne().getPosition() + direction * deplacement);
     }
 
     int setTypeCourant(int type) {
@@ -193,16 +199,8 @@ public class Jeu extends Observable implements Cloneable {
         return plateau.pionEstDeplacable(pion, destination);
     }
 
-    public boolean pionEstDeplacable(int pion, int deplacement, int direction) {
-        return pionEstDeplacable(pion, plateau.getPion(pion).getPosition() + direction * deplacement);
-    }
-
     public boolean couronneEstDeplacable(int position) {
         return plateau.couronneEstDeplacable(position);
-    }
-
-    public boolean couronneEstDeplacable(int deplacement, int direction) {
-        return couronneEstDeplacable(plateau.getCouronne().getPosition() + direction * deplacement);
     }
 
     public boolean pionDansDuche(int joueur, int pion) {
@@ -242,7 +240,7 @@ public class Jeu extends Observable implements Cloneable {
             utilisable = typeCarteEgalTypePion(carte, pions[0]);
         else
             for (int i = 0; i < pions.length; i++)
-                if (!typeCarteEgalTypePion(carte, pions[i]) || !pionEstDeplacable(pions[i], deplacements[i], directions[i]))
+                if (!typeCarteEgalTypePion(carte, pions[i]) || !pionEstDeplacable(pions[i], getPositionPion(pions[i]) +  directions[i] * deplacements[i]))
                     utilisable = false;
 
         return utilisable &&
@@ -321,6 +319,15 @@ public class Jeu extends Observable implements Cloneable {
 
     public boolean peutRefaire() {
         return !futur.isEmpty();
+    }
+
+    public static String joueurEnTexte(int joueur) {
+        if (joueur == JOUEUR_VRT)
+            return "Joueur vert";
+        else if (joueur == JOUEUR_RGE)
+            return "Joueur rouge";
+        else
+            throw new RuntimeException("Modele.Jeu.joueurEnTexte() : Joueur entré invalide.");
     }
 
     @Override

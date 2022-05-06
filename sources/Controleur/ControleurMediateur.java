@@ -60,6 +60,10 @@ public class ControleurMediateur {
                 if ((coup = jeu.creerCoup(typeCoup, cartes, pionDepDir[0], pionDepDir[1], pionDepDir[2])) != null) {
                     coup.fixerJeu(jeu);
                     jouer(coup);
+                    if (jeu.estTerminee()) {
+                        System.out.println(Jeu.joueurEnTexte(jeu.getJoueurGagnant()) + " a gagné !");
+                        nouvellePartie();
+                    }
                 break;
             }
         }
