@@ -48,23 +48,45 @@ public class Coup implements Cloneable {
 
     public void executer() {
         switch (typeCoup) {
-            case DEPLACEMENT -> executerDeplacement();
-            case PRIVILEGE_ROI -> executerPrivilegeRoi();
-            case POUVOIR_SOR -> executerPouvoirSorcier();
-            case POUVOIR_FOU -> executerPouvoirFou();
-            case FIN_TOUR -> executerFinTour();
-            default -> throw new RuntimeException("Modele.Coup.executer() : Coup invalide.");
+            case DEPLACEMENT:
+                executerDeplacement();
+                break;
+            case PRIVILEGE_ROI:
+                executerPrivilegeRoi();
+                break;
+            case POUVOIR_SOR:
+                executerPouvoirSorcier();
+                break;
+            case POUVOIR_FOU:
+                executerPouvoirFou();
+                break;
+            case FIN_TOUR:
+                executerFinTour();
+                break;
+            default:
+                throw new RuntimeException("Modele.Coup.executer() : Coup invalide.");
         }
     }
 
     public void desexecuter() {
         switch (typeCoup) {
-            case DEPLACEMENT -> desexecuterDeplacement();
-            case PRIVILEGE_ROI -> desexecuterPrivilegeRoi();
-            case POUVOIR_SOR -> desexecuterPouvoirSorcier();
-            case POUVOIR_FOU -> desexecuterPouvoirFou();
-            case FIN_TOUR -> desexecuterFinTour();
-            default -> throw new RuntimeException("Modele.Coup.desexecuter() : Coup invalide.");
+            case DEPLACEMENT:
+                desexecuterDeplacement();
+                break;
+            case PRIVILEGE_ROI:
+                desexecuterPrivilegeRoi();
+                break;
+            case POUVOIR_SOR:
+                desexecuterPouvoirSorcier();
+                break;
+            case POUVOIR_FOU:
+                desexecuterPouvoirFou();
+                break;
+            case FIN_TOUR:
+                desexecuterFinTour();
+                break;
+            default:
+                throw new RuntimeException("Modele.Coup.desexecuter() : Coup invalide.");
         }
     }
 

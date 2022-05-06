@@ -294,7 +294,7 @@ public class Jeu extends Observable implements Cloneable {
     }
 
     public boolean peutFinirTour() {
-        return typeCourant.estValeur(Type.IND);
+        return (!typeCourant.estValeur(Type.IND));
     }
 
     public boolean carteDansMain(int joueur, Carte carte) {
