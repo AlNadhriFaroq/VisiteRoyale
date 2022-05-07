@@ -2,30 +2,24 @@ package Controleur;
 
 import Modele.*;
 
-import java.util.Random;
-
 abstract class IA {
     public static final int FACILE = 0;
     public static final int MOYEN = 1;
     public static final int DIFFICILE = 2;
 
+    private Jeu jeuReel;
     protected Jeu jeu;
 
-    public IA (Jeu jeu) {
-        this.jeu = jeu.clone();
+    IA (Jeu jeu) {
+        jeuReel = jeu;
     }
 
-    public Coup elaborerCoup() {
+    final Coup elaborerCoup() {
+        jeu = jeuReel.clone();
+        return calculerCoup();
+    }
+
+    Coup calculerCoup() {
         return null;
-    }
-
-    public int getFacile(){
-        return  FACILE;
-    }
-    public int getMoyen(){
-        return  MOYEN;
-    }
-    public int getDifficile(){
-        return  DIFFICILE;
     }
 }

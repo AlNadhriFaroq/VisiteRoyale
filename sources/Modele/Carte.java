@@ -1,58 +1,70 @@
 package Modele;
 
 public class Carte implements Cloneable, Comparable<Carte> {
-    public static final int DEPLACEMENT_GAR_1PLUS1 = 2;
-    public static final int DEPLACEMENT_GAR_CENTRE = 3;
-    public static final int DEPLACEMENT_FOU_CENTRE = 6;
+    public static final Carte R1 = new Carte(Type.ROI, 1);
+    public static final Carte G1 = new Carte(Type.GAR, 1);
+    public static final Carte G2 = new Carte(Type.GAR, 2);
+    public static final Carte GC = new Carte(Type.GAR, 3);
+    public static final Carte S1 = new Carte(Type.SOR, 1);
+    public static final Carte S2 = new Carte(Type.SOR, 2);
+    public static final Carte S3 = new Carte(Type.SOR, 3);
+    public static final Carte F1 = new Carte(Type.FOU, 1);
+    public static final Carte F2 = new Carte(Type.FOU, 2);
+    public static final Carte F3 = new Carte(Type.FOU, 3);
+    public static final Carte F4 = new Carte(Type.FOU, 4);
+    public static final Carte F5 = new Carte(Type.FOU, 5);
+    public static final Carte FM = new Carte(Type.FOU, 6);
 
     private Type type;
     private int deplacement;
 
-    Carte(int type, int deplacement) {
-        this.type = new Type(type);
+    private Carte(Type type, int deplacement) {
+        this.type = type;
         this.deplacement = deplacement;
     }
 
-    public int getType() {
-        return type.getValeur();
+    public Type getType() {
+        return type;
     }
 
     public int getDeplacement() {
         return deplacement;
     }
 
-    public boolean estType(int type) {
-        return this.type.estValeur(type);
-    }
-
     public boolean estDeplacementGar1Plus1() {
-        return type.estValeur(Type.GAR) && deplacement == DEPLACEMENT_GAR_1PLUS1;
+        return type.equals(Type.GAR) && deplacement == 2;
     }
 
     public boolean estDeplacementGarCentre() {
-        return type.estValeur(Type.GAR) && deplacement == DEPLACEMENT_GAR_CENTRE;
+        return type.equals(Type.GAR) && deplacement == 3;
     }
 
     public boolean estDeplacementFouCentre() {
-        return type.estValeur(Type.FOU) && deplacement == DEPLACEMENT_FOU_CENTRE;
+        return type.equals(Type.FOU) && deplacement == 6;
     }
 
-    public static int texteEnValeur(String txt) {
-        if (txt.length() != 2)
-            throw new RuntimeException("Modele.Carte.texteEnValeur() : Texte entré invalide.");
-        return Type.caractereEnValeur(txt.charAt(0)) * 10 + Character.getNumericValue(txt.charAt(1));
+    public static Carte texteEnCarte(String texte) {
+        switch (texte) {
+            case "R1": return R1;
+            case "G1": return G1;
+            case "G2": return G2;
+            case "GC": return GC;
+            case "S1": return S1;
+            case "S2": return S2;
+            case "S3": return S3;
+            case "F1": return F1;
+            case "F2": return F2;
+            case "F3": return F3;
+            case "F4": return F4;
+            case "F5": return F5;
+            case "FM": return FM;
+            default: throw new RuntimeException("Modele.Carte.texteEnCarte() : Texte entré invalide.");
+        }
     }
 
-    public static String valeurEnTexte(int val) {
-        if (val < 10 || 99 < val)
-            throw new RuntimeException("Modele.Carte.valeurEnTexte() : Valeur entrée invalide.");
-        return Type.valeurEnCaractere(val / 10) + String.valueOf(val % 10);
-    }
-
-    /* a modifier */
     @Override
     public int compareTo(Carte carte) {
-        return type.compareTo(carte.type) * 10 + (deplacement - carte.getDeplacement());
+        return type.compareTo(carte.type) * 10 + (deplacement - carte.deplacement);
     }
 
     @Override
@@ -81,6 +93,13 @@ public class Carte implements Cloneable, Comparable<Carte> {
 
     @Override
     public String toString() {
-        return type.toString() + deplacement;
+        String dep;
+        if (type.equals(Type.GAR) && deplacement == 3)
+            dep = "C";
+        else if (deplacement == 6)
+            dep = "M";
+        else
+            dep = Integer.toString(deplacement);
+        return type + dep;
     }
 }

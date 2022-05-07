@@ -1,5 +1,7 @@
 package Modele;
 
+import java.util.Arrays;
+
 public class Coup implements Cloneable {
     public static final int DEPLACEMENT = 0;
     public static final int PRIVILEGE_ROI = 1;
@@ -12,9 +14,8 @@ public class Coup implements Cloneable {
     int typeCoup;
 
     Type typePasse;
-    int[] pions;
-    int[] deplacements;
-    int[] directions;
+    Pion[] pions;
+    int[] destinations;
     int[] positionPasse;
     int nbCartesAPiocher;
     Carte[] cartes;
@@ -23,23 +24,21 @@ public class Coup implements Cloneable {
     int indiceMelange;
     boolean faceCouronnePasse;
 
-    public Coup(int joueur, int typeCoup, Carte[] cartes, int[] pions, int[] deplacements, int[] directions) {
+    public Coup(int joueur, int typeCoup, Carte[] cartes, Pion[] pions, int[] destinations) {
         this.joueur = joueur;
         this.typeCoup = typeCoup;
-        typePasse = new Type(Type.IND);
+        typePasse = Type.IND;
         this.pions = pions;
-        this.deplacements = deplacements;
-        this.directions = directions;
+        this.destinations = destinations;
         positionPasse = new int[2];
         nbCartesAPiocher = -1;
         if (typeCoup == FIN_TOUR)
             this.cartes = new Carte[Jeu.TAILLE_MAIN];
         else
             this.cartes = cartes;
-        defaussePasse = new Paquet(Paquet.ORDONNE);
-        defausseFutur = new Paquet(Paquet.ORDONNE);
+        defaussePasse = new Paquet();
+        defausseFutur = new Paquet();
         indiceMelange = -1;
-        faceCouronnePasse = false;
     }
 
     public void fixerJeu(Jeu jeu) {
@@ -91,132 +90,131 @@ public class Coup implements Cloneable {
     }
 
     void executerDeplacement() {
-        jeu.getSelection(joueur).ajouter(jeu.getMain(joueur).defausser(cartes[0]));
+        jeu.getSelection(joueur).piocher(jeu.getMain(joueur).defausser(cartes[0]));
 
         if (cartes[0].estDeplacementFouCentre()) {
-            positionPasse[0] = jeu.getPositionPion(pions[0]);
-            jeu.setPositionPion(pions[0], Plateau.FONTAINE);
+            positionPasse[0] = jeu.getPlateau().getPositionPion(pions[0]);
+            jeu.getPlateau().setPositionPion(pions[0], Plateau.FONTAINE);
         } else if (cartes[0].estDeplacementGarCentre()) {
             for (int i = 0; i < pions.length; i++) {
-                positionPasse[i] = jeu.getPositionPion(pions[i]);
-                jeu.setPositionPion(pions[i], Plateau.FONTAINE);
+                positionPasse[i] = jeu.getPlateau().getPositionPion(pions[i]);
+                jeu.getPlateau().setPositionPion(pions[i], Plateau.FONTAINE);
             }
         } else {
             for (int i = 0; i < pions.length; i++)
-                jeu.setPositionPion(pions[i], jeu.getPositionPion(pions[i]) + directions[i] * deplacements[i]);
+                jeu.getPlateau().setPositionPion(pions[i], destinations[i]);
         }
 
-        typePasse.setValeur(jeu.getTypeCourant());
-        if (jeu.getNombreTypeCarte(jeu.getMain(joueur), cartes[0].getType()) == 0)
+        typePasse = jeu.getTypeCourant();
+        if (jeu.getMain(joueur).getNombreTypeCarte(cartes[0].getType()) == 0)
             jeu.setTypeCourant(Type.FIN);
         else
             jeu.setTypeCourant(cartes[0].getType());
     }
 
     void desexecuterDeplacement() {
-        jeu.setTypeCourant(typePasse.getValeur());
+        jeu.setTypeCourant(typePasse);
 
         if (cartes[0].estDeplacementFouCentre()) {
-            jeu.setPositionPion(pions[0], positionPasse[0]);
+            jeu.getPlateau().setPositionPion(pions[0], positionPasse[0]);
         } else if (cartes[0].estDeplacementGarCentre()) {
-            jeu.setPositionPion(pions[0], positionPasse[0]);
-            jeu.setPositionPion(pions[1], positionPasse[1]);
+            jeu.getPlateau().setPositionPion(pions[0], positionPasse[0]);
+            jeu.getPlateau().setPositionPion(pions[1], positionPasse[1]);
         } else {
             for (int i = pions.length-1; i >= 0; i--)
-                jeu.setPositionPion(pions[i], jeu.getPositionPion(pions[i]) - directions[i] * deplacements[i]);
+                jeu.getPlateau().setPositionPion(pions[i], destinations[i]);
         }
 
-        jeu.getMain(joueur).ajouter(jeu.getSelection(joueur).defausser(cartes[0]));
+        jeu.getMain(joueur).piocher(jeu.getSelection(joueur).defausser(cartes[0]));
     }
 
     void executerPrivilegeRoi() {
-        jeu.getSelection(joueur).ajouter(jeu.getMain(joueur).defausser(cartes[0]));
-        jeu.getSelection(joueur).ajouter(jeu.getMain(joueur).defausser(cartes[1]));
+        jeu.getSelection(joueur).piocher(jeu.getMain(joueur).defausser(cartes[0]));
+        jeu.getSelection(joueur).piocher(jeu.getMain(joueur).defausser(cartes[1]));
 
-        jeu.setPositionPion(Pion.GAR_VRT, jeu.getPositionPion(Pion.GAR_VRT) + directions[0]);
-        jeu.setPositionPion(Pion.ROI, jeu.getPositionPion(Pion.ROI) + directions[0]);
-        jeu.setPositionPion(Pion.GAR_RGE, jeu.getPositionPion(Pion.GAR_RGE) + directions[0]);
+        jeu.getPlateau().setPositionPion(Pion.GAR_VRT, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + destinations[0]);
+        jeu.getPlateau().setPositionPion(Pion.ROI, jeu.getPlateau().getPositionPion(Pion.ROI) + destinations[0]);
+        jeu.getPlateau().setPositionPion(Pion.GAR_RGE, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + destinations[0]);
 
-        typePasse.setValeur(jeu.getTypeCourant());
-        if (jeu.getNombreTypeCarte(jeu.getMain(joueur), cartes[0].getType()) == 0)
+        typePasse = jeu.getTypeCourant();
+        if (jeu.getMain(joueur).getNombreTypeCarte(cartes[0].getType()) == 0)
             jeu.setTypeCourant(Type.FIN);
         else
             jeu.setTypeCourant(cartes[0].getType());
     }
 
     void desexecuterPrivilegeRoi() {
-        jeu.setTypeCourant(typePasse.getValeur());
+        jeu.setTypeCourant(typePasse);
 
-        jeu.setPositionPion(Pion.GAR_RGE, jeu.getPositionPion(Pion.GAR_RGE) - directions[0]);
-        jeu.setPositionPion(Pion.ROI, jeu.getPositionPion(Pion.ROI) - directions[0]);
-        jeu.setPositionPion(Pion.GAR_VRT, jeu.getPositionPion(Pion.GAR_VRT) - directions[0]);
+        jeu.getPlateau().setPositionPion(Pion.GAR_RGE, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - destinations[0]);
+        jeu.getPlateau().setPositionPion(Pion.ROI, jeu.getPlateau().getPositionPion(Pion.ROI) - destinations[0]);
+        jeu.getPlateau().setPositionPion(Pion.GAR_VRT, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - destinations[0]);
 
-        jeu.getMain(joueur).ajouter(jeu.getSelection(joueur).defausser(cartes[1]));
-        jeu.getMain(joueur).ajouter(jeu.getSelection(joueur).defausser(cartes[0]));
+        jeu.getMain(joueur).piocher(jeu.getSelection(joueur).defausser(cartes[1]));
+        jeu.getMain(joueur).piocher(jeu.getSelection(joueur).defausser(cartes[0]));
     }
 
     void executerPouvoirSorcier() {
-        positionPasse[0] = jeu.getPositionPion(pions[0]);
-        jeu.setPositionPion(pions[0], jeu.getPositionPion(Pion.SOR));
+        positionPasse[0] = jeu.getPlateau().getPositionPion(pions[0]);
+        jeu.getPlateau().setPositionPion(pions[0], jeu.getPlateau().getPositionPion(Pion.SOR));
 
-        typePasse.setValeur(jeu.getTypeCourant());
+        typePasse = jeu.getTypeCourant();
         jeu.setTypeCourant(Type.FIN);
     }
 
     void desexecuterPouvoirSorcier() {
-        jeu.setTypeCourant(typePasse.getValeur());
-        jeu.setPositionPion(pions[0], positionPasse[0]);
+        jeu.setTypeCourant(typePasse);
+        jeu.getPlateau().setPositionPion(pions[0], positionPasse[0]);
     }
 
     void executerPouvoirFou() {
-        jeu.getSelection(joueur).ajouter(jeu.getMain(joueur).defausser(cartes[0]));
+        jeu.getSelection(joueur).piocher(jeu.getMain(joueur).defausser(cartes[0]));
 
-        if (cartes[0].getDeplacement() == Carte.DEPLACEMENT_FOU_CENTRE) {
-            positionPasse[0] = jeu.getPositionPion(pions[0]);
-            jeu.setPositionPion(pions[0], Plateau.FONTAINE);
+        if (cartes[0].estDeplacementFouCentre()) {
+            positionPasse[0] = jeu.getPlateau().getPositionPion(pions[0]);
+            jeu.getPlateau().setPositionPion(pions[0], Plateau.FONTAINE);
         } else {
-            jeu.setPositionPion(pions[0], jeu.getPositionPion(pions[0]) + directions[0] * deplacements[0]);
+            jeu.getPlateau().setPositionPion(pions[0], destinations[0]);
         }
 
-        typePasse.setValeur(jeu.getTypeCourant());
-        if (jeu.getNombreTypeCarte(jeu.getMain(joueur), Type.FOU) == 0)
+        typePasse = jeu.getTypeCourant();
+        if (jeu.getMain(joueur).getNombreTypeCarte(Type.FOU) == 0)
             jeu.setTypeCourant(Type.FIN);
         else
-            jeu.setTypeCourant(jeu.getTypePion(pions[0]));
+            jeu.setTypeCourant(pions[0].getType());
     }
 
     void desexecuterPouvoirFou() {
-        jeu.setTypeCourant(typePasse.getValeur());
+        jeu.setTypeCourant(typePasse);
 
-        if (cartes[0].getDeplacement() == Carte.DEPLACEMENT_FOU_CENTRE) {
-            jeu.setPositionPion(pions[0], positionPasse[0]);
-        }
-        else {
-            jeu.setPositionPion(pions[0], jeu.getPositionPion(pions[0]) - directions[0] * deplacements[0]);
-        }
+        if (cartes[0].estDeplacementFouCentre())
+            jeu.getPlateau().setPositionPion(pions[0], positionPasse[0]);
+        else
+            jeu.getPlateau().setPositionPion(pions[0], destinations[0]);
 
-        jeu.getMain(joueur).ajouter(jeu.getSelection(joueur).defausser(cartes[0]));
+        jeu.getMain(joueur).piocher(jeu.getSelection(joueur).defausser(cartes[0]));
     }
 
     void executerFinTour() {
-        if (joueur == Jeu.JOUEUR_VRT) {
-            jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_VRT * jeu.getDeplacementCouronne(joueur));
-        } else if (joueur == Jeu.JOUEUR_RGE) {
-            jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.getDeplacementCouronne(joueur));
-        } else {
+        if (joueur == Jeu.JOUEUR_VRT)
+            jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + Plateau.DIRECTION_VRT * jeu.evaluerDeplacementCouronne(joueur));
+        else if (joueur == Jeu.JOUEUR_RGE)
+            jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.evaluerDeplacementCouronne(joueur));
+        else
             throw new RuntimeException("Modele.Coup.executerFinTour() : Joueur entré invalide.");
-        }
 
         if (nbCartesAPiocher == -1)
             nbCartesAPiocher = jeu.getSelection(joueur).getTaille();
 
-        jeu.getDefausse().transferer(jeu.getSelection(joueur));
+        for (int i = 0; i < nbCartesAPiocher; i++)
+            jeu.getDefausse().defausser(jeu.getSelection(joueur).defausser(jeu.getSelection(joueur).getCarte(i)));
 
         for (int i = 0; i < nbCartesAPiocher; i++) {
-            if (jeu.getPioche().estVide() && (jeu.getFaceCouronne() == Jeton.FACE_GRD_CRN || (jeu.getFaceCouronne() == Jeton.FACE_PTT_CRN && jeu.getPositionPion(Pion.ROI) == Plateau.FONTAINE))) {
-                if (jeu.getFaceCouronne() == Jeton.FACE_GRD_CRN)
-                    faceCouronnePasse = true;
-                //jeu.setFaceCouronne(Jeton.FACE_PTT_CRN);
+            if (jeu.getPioche().estVide() && (jeu.getPlateau().getFaceCouronne() == Plateau.FACE_GRD_CRN || (jeu.getPlateau().getFaceCouronne() == Plateau.FACE_PTT_CRN && jeu.getPlateau().getPositionPion(Pion.ROI) == Plateau.FONTAINE))) {
+                faceCouronnePasse = jeu.getPlateau().getFaceCouronne();
+                if (jeu.getPlateau().getFaceCouronne() == Plateau.FACE_GRD_CRN)
+                    jeu.getPlateau().setFaceCouronne(Plateau.FACE_PTT_CRN);
+
                 indiceMelange = i;
                 defaussePasse.copier(jeu.getDefausse());
                 if (defausseFutur.estVide()) {
@@ -228,42 +226,76 @@ public class Coup implements Cloneable {
                 jeu.getPioche().transferer(jeu.getDefausse());
             }
             cartes[i] = jeu.getPioche().piocher();
-            jeu.getMain(joueur).ajouter(cartes[i]);
+            jeu.getMain(joueur).piocher(cartes[i]);
         }
 
-        typePasse.setValeur(jeu.getTypeCourant());
+        typePasse = jeu.getTypeCourant();
         jeu.setTypeCourant(Type.IND);
         jeu.alternerJoueurCourant();
     }
 
     void desexecuterFinTour() {
         jeu.alternerJoueurCourant();
-        jeu.setTypeCourant(typePasse.getValeur());
+        jeu.setTypeCourant(typePasse);
 
         for (int i = nbCartesAPiocher-1; i >= 0; i--) {
-            jeu.getPioche().ajouter(jeu.getMain(joueur).defausser(cartes[i]));
+            jeu.getPioche().defausser(jeu.getMain(joueur).defausser(cartes[i]));
             if (i == indiceMelange) {
-                if (faceCouronnePasse)
-                    jeu.setFaceCouronne(Jeton.FACE_GRD_CRN);
                 jeu.getDefausse().copier(defaussePasse);
                 jeu.getPioche().vider();
+                jeu.getPlateau().setFaceCouronne(faceCouronnePasse);
             }
         }
 
         for (int i = nbCartesAPiocher-1; i >= 0; i--)
-            jeu.getSelection(joueur).ajouter(jeu.getDefausse().piocher());
+            jeu.getSelection(joueur).piocher(jeu.getDefausse().piocher());
 
         if (joueur == Jeu.JOUEUR_VRT)
-            jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.getDeplacementCouronne(joueur));
+            jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.evaluerDeplacementCouronne(joueur));
         else if (joueur == Jeu.JOUEUR_RGE)
-            jeu.setPositionCouronne(jeu.getPositionCouronne() + Plateau.DIRECTION_VRT * jeu.getDeplacementCouronne(joueur));
+            jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + Plateau.DIRECTION_VRT * jeu.evaluerDeplacementCouronne(joueur));
         else
             throw new RuntimeException("Modele.Coup.desexecuterFinTour() : Joueur courant invalide.");
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Coup coup = (Coup) o;
+
+        return jeu.equals(coup.jeu) && joueur == coup.joueur && typeCoup == coup.typeCoup &&
+               typePasse.equals(coup.typePasse) && Arrays.equals(pions, coup.pions) &&
+               Arrays.equals(destinations, coup.destinations) &&
+               Arrays.equals(positionPasse, coup.positionPasse) && nbCartesAPiocher == coup.nbCartesAPiocher &&
+               Arrays.equals(cartes, coup.cartes) &&
+               defaussePasse.equals(coup.defaussePasse) && defausseFutur.equals(coup.defausseFutur) &&
+               indiceMelange == coup.indiceMelange && faceCouronnePasse == coup.faceCouronnePasse;
     }
 
     @Override
     public Coup clone() {
-        return null;
+        try {
+            Coup resultat = (Coup) super.clone();
+            resultat.jeu = jeu.clone();
+            resultat.joueur = joueur;
+            resultat.typeCoup = typeCoup;
+            resultat.typePasse = typePasse.clone();
+            resultat.pions = pions.clone();
+            resultat.destinations = destinations.clone();
+            resultat.positionPasse = positionPasse.clone();
+            resultat.nbCartesAPiocher = nbCartesAPiocher;
+            resultat.cartes = cartes.clone();
+            resultat.defaussePasse = defaussePasse.clone();
+            resultat.defausseFutur = defausseFutur.clone();
+            resultat.indiceMelange = indiceMelange;
+            resultat.faceCouronnePasse = faceCouronnePasse;
+            return resultat;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Modele.Coup.clone() : Coup non clonable.");
+        }
     }
 }

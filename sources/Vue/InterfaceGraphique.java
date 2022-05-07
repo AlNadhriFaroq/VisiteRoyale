@@ -17,7 +17,6 @@ public class InterfaceGraphique implements InterfaceUtilisateur, Runnable {
     ControleurMediateur ctrl;
     JFrame frame;
     JeuGraphique jeuGrph;
-    /* autres attributs, les autres components */
 
     public InterfaceGraphique(Jeu jeu, ControleurMediateur ctrl) {
         this.jeu = jeu;
@@ -27,7 +26,6 @@ public class InterfaceGraphique implements InterfaceUtilisateur, Runnable {
 
     public static void demarrer(Jeu jeu, ControleurMediateur ctrl) {
         InterfaceGraphique vue = new InterfaceGraphique(jeu, ctrl);
-        ctrl.ajouterInterfaceUtilisateur(vue);
         SwingUtilities.invokeLater(vue);
     }
 

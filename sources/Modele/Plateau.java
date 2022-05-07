@@ -1,5 +1,7 @@
 package Modele;
 
+import java.util.Hashtable;
+
 public class Plateau implements Cloneable {
     public static final int BORDURE_VRT = 0;
     public static final int CHATEAU_VRT = 1;
@@ -10,31 +12,52 @@ public class Plateau implements Cloneable {
     public static final int DIRECTION_VRT = -1;
     public static final int DIRECTION_RGE = 1;
 
-    private Pion[] pions;
-    private Jeton couronne;
+    public static final boolean FACE_GRD_CRN = false;
+    public static final boolean FACE_PTT_CRN = true;
+
+    private Hashtable<Pion, Integer> positionsPions;
+    private boolean faceCouronne;
+    private int positionCouronne;
 
     Plateau(int directionQuiCommence) {
-        pions = new Pion[5];
-        pions[Pion.ROI] = new Pion(Type.ROI, FONTAINE);
-        pions[Pion.GAR_VRT] = new Pion(Type.GAR, FONTAINE + 2*DIRECTION_VRT);
-        pions[Pion.GAR_RGE] = new Pion(Type.GAR, FONTAINE + 2*DIRECTION_RGE);
-        pions[Pion.SOR] = new Pion(Type.SOR, FONTAINE + directionQuiCommence);
-        pions[Pion.FOU] = new Pion(Type.FOU, FONTAINE - directionQuiCommence);
-        couronne = new Jeton(FONTAINE);
+        positionsPions = new Hashtable<>();
+        positionsPions.put(Pion.ROI, FONTAINE);
+        positionsPions.put(Pion.GAR_VRT, FONTAINE + 2 * DIRECTION_VRT);
+        positionsPions.put(Pion.GAR_RGE, FONTAINE + 2 * DIRECTION_RGE);
+        positionsPions.put(Pion.SOR, FONTAINE + directionQuiCommence);
+        positionsPions.put(Pion.FOU, FONTAINE - directionQuiCommence);
+        faceCouronne = FACE_GRD_CRN;
+        positionCouronne = FONTAINE;
     }
 
-    public Pion getPion(int pion) {
-        return pions[pion];
+    public int getPositionPion(Pion pion) {
+        return positionsPions.get(pion);
     }
 
-    public Jeton getCouronne() {
-        return couronne;
+    public boolean getFaceCouronne() {
+        return faceCouronne;
     }
 
-    int getDeplacementCouronneVrt() {
+    public int getPositionCouronne() {
+        return positionCouronne;
+    }
+
+    void setPositionPion(Pion pion, int destination) {
+        positionsPions.put(pion, destination);
+    }
+
+    void setPositionCouronne(int destination) {
+        positionCouronne = destination;
+    }
+
+    void setFaceCouronne(boolean face) {
+        faceCouronne = face;
+    }
+
+    int evaluerDeplacementCouronneVrt() {
         int deplacement = 0;
 
-        for (int pion = Pion.ROI; pion <= Pion.FOU; pion++)
+        for (Pion pion : positionsPions.keySet())
             if (pionDansChateauVrt(pion))
                 deplacement++;
 
@@ -44,10 +67,10 @@ public class Plateau implements Cloneable {
         return deplacement;
     }
 
-    int getDeplacementCouronneRge() {
+    int evaluerDeplacementCouronneRge() {
         int deplacement = 0;
 
-        for (int pion = Pion.ROI; pion <= Pion.FOU; pion++)
+        for (Pion pion : positionsPions.keySet())
             if (pionDansChateauRge(pion))
                 deplacement++;
 
@@ -57,82 +80,101 @@ public class Plateau implements Cloneable {
         return deplacement;
     }
 
-    public boolean pionEstDeplacable(int pion, int destination) {
+    public boolean pionDansDucheVrt(Pion pion) {
+        return getPositionPion(pion) < FONTAINE;
+    }
+
+    public boolean pionDansDucheRge(Pion pion) {
+        return getPositionPion(pion) > FONTAINE;
+    }
+
+    public boolean pionDansChateauVrt(Pion pion) {
+        return getPositionPion(pion) <= CHATEAU_VRT;
+    }
+
+    public boolean pionDansChateauRge(Pion pion) {
+        return getPositionPion(pion) >= CHATEAU_RGE;
+    }
+
+    public boolean pionDansFontaine(Pion pion) {
+        return getPositionPion(pion) == FONTAINE;
+    }
+
+    public boolean couronneDansChateauVrt() {
+        return getPositionCouronne() <= CHATEAU_VRT;
+    }
+
+    public boolean couronneDansChateauRge() {
+        return getPositionCouronne() >= CHATEAU_RGE;
+    }
+
+    public boolean pionEstDeplacable(Pion pion, int destination) {
         return destination >= BORDURE_VRT && destination <= BORDURE_RGE &&
-               ((pion == Pion.ROI && destination > getPion(Pion.GAR_VRT).getPosition() && destination < getPion(Pion.GAR_RGE).getPosition()) ||
-                (pion == Pion.GAR_VRT && destination < getPion(Pion.ROI).getPosition() && destination < getPion(Pion.GAR_RGE).getPosition()) ||
-                (pion == Pion.GAR_RGE && destination > getPion(Pion.ROI).getPosition() && destination > getPion(Pion.GAR_VRT).getPosition()) ||
-                pion == Pion.SOR || pion == Pion.FOU);
+               ((pion.equals(Pion.ROI) && destination > getPositionPion(Pion.GAR_VRT) && destination < getPositionPion(Pion.GAR_RGE)) ||
+                (pion.equals(Pion.GAR_VRT) && destination < getPositionPion(Pion.ROI) && destination < getPositionPion(Pion.GAR_RGE)) ||
+                (pion.equals(Pion.GAR_RGE) && destination > getPositionPion(Pion.ROI) && destination > getPositionPion(Pion.GAR_VRT)) ||
+                pion.equals(Pion.SOR) || pion.equals(Pion.FOU));
     }
 
     public boolean couronneEstDeplacable(int destination) {
         return (destination >= BORDURE_VRT && destination <= BORDURE_RGE);
     }
 
-    public boolean pionDansDucheVrt(int pion) {
-        return getPion(pion).getPosition() < FONTAINE;
-    }
-
-    public boolean pionDansDucheRge(int pion) {
-        return getPion(pion).getPosition() > FONTAINE;
-    }
-
-    public boolean pionDansChateauVrt(int pion) {
-        return getPion(pion).getPosition() <= CHATEAU_VRT;
-    }
-
-    public boolean pionDansChateauRge(int pion) {
-        return getPion(pion).getPosition() >= CHATEAU_RGE;
-    }
-
-    public boolean couronneDansChateauVrt() {
-        return getCouronne().getPosition() <= CHATEAU_VRT;
-    }
-
-    public boolean couronneDansChateauRge() {
-        return getCouronne().getPosition() >= CHATEAU_RGE;
-    }
-
-    public boolean pionDansFontaine(int pion) {
-        return getPion(pion).getPosition() == FONTAINE;
-    }
-
     public boolean peutUtiliserPrivilegeRoi(int direction) {
-        return (direction == DIRECTION_VRT && getPion(Pion.GAR_VRT).getPosition() != BORDURE_VRT) ||
-               (direction == DIRECTION_RGE && getPion(Pion.GAR_RGE).getPosition() != BORDURE_RGE);
+        return (direction == DIRECTION_VRT && getPositionPion(Pion.GAR_VRT) != BORDURE_VRT) ||
+               (direction == DIRECTION_RGE && getPositionPion(Pion.GAR_RGE) != BORDURE_RGE);
     }
 
-    public boolean peutUtiliserPouvoirSor(int pion) {
-        return pion != Pion.FOU && pion != Pion.SOR &&
-               getPion(pion).getPosition() != getPion(Pion.SOR).getPosition() &&
-               pionEstDeplacable(pion, getPion(Pion.SOR).getPosition());
+    public boolean peutUtiliserPouvoirSor(Pion pion) {
+        return !pion.equals(Pion.FOU) && !pion.equals(Pion.SOR) &&
+               getPositionPion(pion) != getPositionPion(Pion.SOR) &&
+               pionEstDeplacable(pion, getPositionPion(Pion.SOR));
     }
 
     public boolean vrtPeutUtiliserPouvoirFou() {
-        return getPion(Pion.FOU).getPosition() < getPion(Pion.ROI).getPosition() &&
-               getPion(Pion.FOU).getPosition() > CHATEAU_VRT;
+        return getPositionPion(Pion.FOU) < getPositionPion(Pion.ROI) &&
+               getPositionPion(Pion.FOU) > CHATEAU_VRT;
     }
 
-    public boolean vrtPeutUtiliserPouvoirFou(int pion, int destination) {
+    public boolean vrtPeutUtiliserPouvoirFou(Pion pion, int destination) {
         return vrtPeutUtiliserPouvoirFou() &&
-               getPion(pion).getType() != Type.FOU &&
+               !pion.getType().equals(Type.FOU) &&
                pionEstDeplacable(pion, destination);
     }
 
     public boolean rgePeutUtiliserPouvoirFou() {
-        return getPion(Pion.FOU).getPosition() > getPion(Pion.ROI).getPosition() &&
-               getPion(Pion.FOU).getPosition() < CHATEAU_RGE;
+        return getPositionPion(Pion.FOU) > getPositionPion(Pion.ROI) &&
+               getPositionPion(Pion.FOU) < CHATEAU_RGE;
     }
 
-    public boolean rgePeutUtiliserPouvoirFou(int pion, int destination) {
+    public boolean rgePeutUtiliserPouvoirFou(Pion pion, int destination) {
         return rgePeutUtiliserPouvoirFou() &&
-               getPion(pion).getType() != Type.FOU &&
+               !pion.getType().equals(Type.FOU) &&
                pionEstDeplacable(pion, destination);
     }
 
     public boolean estTerminee() {
         return (pionDansChateauVrt(Pion.ROI) || pionDansChateauRge(Pion.ROI) ||
                 couronneDansChateauVrt() || couronneDansChateauRge());
+    }
+
+    public static int texteEnDirection(String texte) {
+        switch (texte.toUpperCase()) {
+            case "G":
+            case "GAUCHE":
+            case "V":
+            case "VERT":
+            case "-1":
+                return DIRECTION_VRT;
+            case "D":
+            case "DROITE":
+            case "R":
+            case "ROUGE":
+            case "1":
+                return DIRECTION_RGE;
+            default:
+                throw new RuntimeException("Modele.Plateau.texteEnDirection() : Texte entré invalide.");
+        }
     }
 
     @Override
@@ -144,24 +186,18 @@ public class Plateau implements Cloneable {
             return false;
         Plateau plateau = (Plateau) o;
 
-        if (!couronne.equals(plateau.couronne))
-            return false;
-
-        for (int i = 0; i < pions.length; i++)
-            if (!pions[i].equals(plateau.pions[i]))
-                return false;
-
-        return true;
+        return positionsPions.equals(plateau.positionsPions) &&
+               faceCouronne == plateau.faceCouronne &&
+               positionCouronne == plateau.positionCouronne;
     }
 
     @Override
     public Plateau clone() {
         try {
             Plateau resultat = (Plateau) super.clone();
-            resultat.pions = new Pion[pions.length];
-            for (int i = 0; i < pions.length; i++)
-                resultat.pions[i] = pions[i].clone();
-            resultat.couronne = couronne.clone();
+            resultat.positionsPions = (Hashtable<Pion, Integer>) positionsPions.clone();
+            resultat.faceCouronne = faceCouronne;
+            resultat.positionCouronne = positionCouronne;
             return resultat;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Modele.Plateau.clone() : Plateau non clonable.");
@@ -170,31 +206,34 @@ public class Plateau implements Cloneable {
 
     @Override
     public String toString() {
-        String txt = "";
+        StringBuilder txt = new StringBuilder();
 
         for (int l = 0; l < 4; l++) {
             for (int c = BORDURE_VRT; c <= BORDURE_RGE; c++) {
-                if (l == 0 && c == getCouronne().getPosition())
-                    txt += couronne.toString();
-                else if (l == 1 && c == getPion(Pion.SOR).getPosition())
-                    txt += pions[Pion.SOR].toString();
-                else if (l == 2 && c == getPion(Pion.GAR_VRT).getPosition())
-                    txt += pions[Pion.GAR_VRT].toString();
-                else if (l == 2 && c == getPion(Pion.ROI).getPosition())
-                    txt += pions[Pion.ROI].toString();
-                else if (l == 2 && c == getPion(Pion.GAR_RGE).getPosition())
-                    txt += pions[Pion.GAR_RGE].toString();
-                else if (l == 3 && c == getPion(Pion.FOU).getPosition())
-                    txt += pions[Pion.FOU].toString();
+                if (l == 0 && c == getPositionCouronne())
+                    if (faceCouronne == FACE_GRD_CRN)
+                        txt.append("C ");
+                    else
+                        txt.append("c ");
+                else if (l == 1 && c == getPositionPion(Pion.SOR))
+                    txt.append(Pion.SOR).append(" ");
+                else if (l == 2 && c == getPositionPion(Pion.GAR_VRT))
+                    txt.append(Pion.GAR_VRT);
+                else if (l == 2 && c == getPositionPion(Pion.ROI))
+                    txt.append(Pion.ROI).append(" ");
+                else if (l == 2 && c == getPositionPion(Pion.GAR_RGE))
+                    txt.append(Pion.GAR_RGE);
+                else if (l == 3 && c == getPositionPion(Pion.FOU))
+                    txt.append(Pion.FOU).append(" ");
                 else
-                    txt += "_";
+                    txt.append("__");
                 if (c != BORDURE_RGE)
-                    txt += " ";
+                    txt.append(" ");
             }
             if (l != 3)
-                txt += "\n";
+                txt.append("\n");
         }
 
-        return txt;
+        return txt.toString();
     }
 }

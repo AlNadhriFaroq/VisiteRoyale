@@ -2,22 +2,17 @@ package Modele;
 
 import java.util.*;
 
-public class Paquet implements Cloneable {
+public class Main implements Cloneable {
     private List<Carte> cartes;
+    private int tailleMax;
 
-    Paquet() {
+    Main(int tailleMax) {
         cartes = new ArrayList<>();
+        this.tailleMax = tailleMax;
     }
 
     public Carte getCarte(int indice) {
         return cartes.get(indice);
-    }
-
-    public Carte getCarte(Type type, int deplacement) {
-        for (int i = 0; i < getTaille(); i++)
-            if (getCarte(i).getType().equals(type) && getCarte(i).getDeplacement() == deplacement)
-                return getCarte(i);
-        throw new RuntimeException("Modele.Paquet.getCarte() : Type ou deplacement invalide.");
     }
 
     public int getIndiceCarte(Carte carte) {
@@ -28,6 +23,10 @@ public class Paquet implements Cloneable {
         return cartes.size();
     }
 
+    public int getTailleMax() {
+        return tailleMax;
+    }
+
     public int getNombreTypeCarte(Type type) {
         int nb = 0;
         for (int i = 0; i < getTaille(); i++)
@@ -36,58 +35,40 @@ public class Paquet implements Cloneable {
         return nb;
     }
 
-    public int getNombreCarte(Type type, int deplacement) {
+    public int getNombreCarte(Carte carte) {
         int nb = 0;
         for (int i = 0; i < getTaille(); i++)
-            if (getCarte(i).getType().equals(type) && getCarte(i).getDeplacement() == deplacement)
+            if (getCarte(i).equals(carte))
                 nb++;
         return nb;
     }
 
-    void defausser(Carte carte) {
+    void piocher(Carte carte) {
+        if (getTaille() == tailleMax)
+            throw new RuntimeException("Modele.Main.piocher() : Main déjà pleine.");
         cartes.add(carte);
+        trier();
     }
 
-    Carte piocher() {
-        if (!estVide())
-            return cartes.remove(getTaille()-1);
-        return null;
+    Carte defausser(Carte carte) {
+        if (!cartes.contains(carte))
+            throw new RuntimeException("Modele.Main.defausser() : Carte non présente dans la main.");
+        cartes.remove(carte);
+        return carte;
     }
 
-    void remplir() {
-        remplir(12, Carte.R1);
-        remplir(4, Carte.G1);
-        remplir(10, Carte.G2);
-        remplir(2, Carte.GC);
-        remplir(2, Carte.S1);
-        remplir(8, Carte.S2);
-        remplir(2, Carte.S3);
-        remplir(1, Carte.F1);
-        remplir(3, Carte.F2);
-        remplir(4, Carte.F3);
-        remplir(3, Carte.F4);
-        remplir(1, Carte.F5);
-        remplir(2, Carte.FM);
-        melanger();
+    void transferer(Main main) {
+        while (!main.estVide())
+            piocher(main.defausser(main.getCarte(0)));
     }
 
-    private void remplir(int nb, Carte carte) {
-        for (int i = 0; i < nb; i++)
-            defausser(carte);
+    void copier(Main main) {
+        for (int i = 0; i < main.getTaille(); i++)
+            piocher(main.getCarte(i));
     }
 
-    void transferer(Paquet paquet) {
-        while (!paquet.estVide())
-            defausser(paquet.piocher());
-    }
-
-    void copier(Paquet paquet) {
-        for (int i = 0; i < paquet.getTaille(); i++)
-            defausser(paquet.getCarte(i));
-    }
-
-    void melanger() {
-        Collections.shuffle(cartes);
+    void trier() {
+        Collections.sort(cartes);
     }
 
     void vider() {
@@ -109,23 +90,24 @@ public class Paquet implements Cloneable {
 
         if (o == null || getClass() != o.getClass())
             return false;
-        Paquet paquet = (Paquet) o;
+        Main main = (Main) o;
 
-        if (getTaille() != paquet.getTaille())
+        if (getTaille() != main.getTaille())
             return false;
 
         for (int i = 0; i < getTaille(); i++)
-            if (!(getCarte(i).equals(paquet.getCarte(i))))
+            if (getNombreCarte(getCarte(i)) != main.getNombreCarte(getCarte(i)))
                 return false;
         return true;
     }
 
     @Override
-    public Paquet clone() {
+    public Main clone() {
         try {
-            Paquet resultat = (Paquet) super.clone();
+            Main resultat = (Main) super.clone();
             resultat.cartes = new ArrayList<>();
             resultat.copier(this);
+            resultat.tailleMax = tailleMax;
             return resultat;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Modele.Paquet.cloner() : Paquet non clonable.");

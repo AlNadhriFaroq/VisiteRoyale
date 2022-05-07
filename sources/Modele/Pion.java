@@ -1,30 +1,44 @@
 package Modele;
 
 public class Pion implements Cloneable {
-    public static final int ROI = 0;
-    public static final int GAR_VRT = 1;
-    public static final int GAR_RGE = 2;
-    public static final int SOR = 3;
-    public static final int FOU = 4;
+    public static final Pion ROI = new Pion(0, Type.ROI);
+    public static final Pion GAR_VRT = new Pion(1, Type.GAR);
+    public static final Pion GAR_RGE = new Pion(2, Type.GAR);
+    public static final Pion SOR = new Pion(3, Type.SOR);
+    public static final Pion FOU = new Pion(4, Type.FOU);
 
+    private int valeur;
     private Type type;
-    private int position;
 
-    Pion(int type, int position) {
-        this.type = new Type(type);
-        this.position = position;
+    private Pion(int valeur, Type type) {
+        this.valeur = valeur;
+        this.type = type;
     }
 
-    public int getType() {
-        return type.getValeur();
+    public Type getType() {
+        return type;
     }
 
-    public int getPosition() {
-        return position;
+    public static Pion texteEnPion(String texte) {
+        switch (texte) {
+            case "R": return ROI;
+            case "GV": return GAR_VRT;
+            case "GR": return GAR_RGE;
+            case "S": return SOR;
+            case "F": return FOU;
+            default: throw new RuntimeException("Modele.Pion.texteEnPion() : Texte entré invalide.");
+        }
     }
 
-    int setPosition(int destination) {
-        return this.position = destination;
+    public static Pion valeurEnPion(int valeur) {
+        switch (valeur) {
+            case 0: return ROI;
+            case 1: return GAR_VRT;
+            case 2: return GAR_RGE;
+            case 3: return SOR;
+            case 4: return FOU;
+            default: throw new RuntimeException("Modele.Pion.texteEnPion() : Texte entré invalide.");
+        }
     }
 
     @Override
@@ -36,15 +50,15 @@ public class Pion implements Cloneable {
             return false;
         Pion pion = (Pion) o;
 
-        return (type.equals(pion.type) && position == pion.position);
+        return valeur == pion.valeur && type.equals(pion.type);
     }
 
     @Override
     public Pion clone() {
         try {
             Pion resultat = (Pion) super.clone();
+            resultat.valeur = valeur;
             resultat.type = type.clone();
-            resultat.position = position;
             return resultat;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Modele.Pion.clone(): Pion non clonable.");
@@ -53,6 +67,13 @@ public class Pion implements Cloneable {
 
     @Override
     public String toString() {
-        return type.toString();
+        switch (valeur) {
+            case 0: return "R";
+            case 1: return "GV";
+            case 2: return "GR";
+            case 3: return "S";
+            case 4: return "F";
+            default: throw new RuntimeException("Modele.Pion.toString() : Pion non affichable.");
+        }
     }
 }

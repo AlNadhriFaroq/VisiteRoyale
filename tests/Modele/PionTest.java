@@ -3,44 +3,27 @@ package Modele;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class PionTest {
 
     @Test
     void testGetType() {
-        Pion p = new Pion(Type.ROI, 6);
-        Assertions.assertEquals(Type.ROI,p.getType());
-    }
-
-    @Test
-    void testGetPosition() {
-        Pion p = new Pion(Type.ROI, 6);
-        Assertions.assertEquals(6,p.getPosition());
-    }
-
-    @Test
-    void testSetPosition() {
-        Pion p = new Pion(Type.ROI, 6);
-        p.setPosition(12);
-        Assertions.assertEquals(12,p.getPosition());
-        p.setPosition(16);
-        Assertions.assertEquals(16,p.getPosition());
-        p.setPosition(10);
-        Assertions.assertEquals(10,p.getPosition());
+        Pion p = Pion.ROI;
+        Assertions.assertEquals(Type.ROI, p.getType());
+        Assertions.assertNotEquals(Type.FOU, p.getType());
     }
 
     @Test
     void testEquals() {
-        Pion p1 = new Pion(Type.ROI, 6);
-        Pion p2 = new Pion(Type.ROI, 6);
+        Pion p1 = Pion.ROI;
+        Pion p2 = Pion.ROI;
+        Pion p3 = Pion.SOR;
         Assertions.assertTrue(p1.equals(p2));
+        Assertions.assertFalse(p1.equals(p3));
     }
-
 
     @Test
     void testClone() {
-        Pion p1 = new Pion(Type.ROI, 6);
+        Pion p1 = Pion.ROI;
         Pion p2 = p1.clone();
         Assertions.assertTrue(p1.equals(p2));
     }
