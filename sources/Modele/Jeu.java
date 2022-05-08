@@ -49,6 +49,8 @@ public class Jeu extends Observable implements Cloneable {
             mainJoueurVrt.piocher(pioche.piocher());
             mainJoueurRge.piocher(pioche.piocher());
         }
+        mainJoueurVrt.trier();
+        mainJoueurRge.trier();
 
         typeCourant = Type.IND;
         mettreAJour();
@@ -238,8 +240,8 @@ public class Jeu extends Observable implements Cloneable {
     public boolean peutDeplacer(Carte carte, Pion[] pions, int[] destinations) {
         boolean utilisable;
         if (carte.estDeplacementGarCentre() || carte.estDeplacementFouCentre())
-            utilisable = carte.getType().equals(pions[0].getType());
-        else if (carte.estDeplacementGar1Plus1())
+            utilisable = true;
+        else if (carte.estDeplacementGar1Plus1() && pions[1] != null)
             utilisable = carte.getType().equals(pions[0].getType()) && carte.getType().equals(pions[1].getType()) &&
                          plateau.pionEstDeplacable(pions[0], destinations[0]) &&
                          plateau.pionEstDeplacable(pions[1], destinations[1]);
@@ -380,16 +382,17 @@ public class Jeu extends Observable implements Cloneable {
         String txt = "";
 
         if (etatJeu == ETAT_CHOIX_JOUEUR) {
-            txt += "Tirage du joueur qui commence.\nMain gauche ou main droite ?\n";
+            txt += "Tirage du joueur qui commence.\nMain gauche ou main droite ?";
         } else if (etatJeu == ETAT_EN_JEU) {
-            txt = "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase() + "\n";
+            txt = "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase();
+            txt += "              Pioche : " + getPioche().getTaille() + "\n";
             txt += "     Main vert  : " + mainJoueurVrt.toString() + "\n";
             txt += "                  " + selectionJoueurVrt.toString() + "\n";
             txt += plateau.toString() + "\n";
             txt += "                  " + selectionJoueurRge.toString() + "\n";
-            txt += "     Main rouge : " + mainJoueurRge.toString() + "\n";
+            txt += "     Main rouge : " + mainJoueurRge.toString();
         } else if (etatJeu == ETAT_GAME_OVER) {
-            txt += joueurEnTexte(getJoueurGagnant()) + " a gagné !";
+            txt += "VICTOIRE DU " + joueurEnTexte(getJoueurGagnant()).toUpperCase() + " !!!";
         } else {
             throw new RuntimeException("Modele.jeu.tosTring() : Etat de jeu non affichable.");
         }

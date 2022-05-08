@@ -14,12 +14,7 @@ public class Observable {
 	}
 
 	public void mettreAJour() {
-		Iterator<Observateur> it;
-
-		it = observateurs.iterator();
-		while (it.hasNext()) {
-			Observateur o = it.next();
-			o.mettreAJour();
-		}
+		for (Observateur obs : observateurs)
+			obs.mettreAJour();
 	}
 }

@@ -47,7 +47,6 @@ public class Main implements Cloneable {
         if (getTaille() == tailleMax)
             throw new RuntimeException("Modele.Main.piocher() : Main déjà pleine.");
         cartes.add(carte);
-        trier();
     }
 
     Carte defausser(Carte carte) {

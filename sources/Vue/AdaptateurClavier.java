@@ -5,9 +5,11 @@ import Controleur.ControleurMediateur;
 import java.awt.event.*;
 
 public class AdaptateurClavier extends KeyAdapter {
+    InterfaceUtilisateur vue;
     ControleurMediateur ctrl;
 
-    AdaptateurClavier(ControleurMediateur ctrl) {
+    AdaptateurClavier(InterfaceUtilisateur vue, ControleurMediateur ctrl) {
+        this.vue = vue;
         this.ctrl = ctrl;
     }
 
@@ -15,25 +17,25 @@ public class AdaptateurClavier extends KeyAdapter {
     public void keyPressed(KeyEvent event) {
         switch (event.getKeyCode()) {
             case KeyEvent.VK_U:
-                ctrl.toucheClavier("Annuler");
+                ctrl.annuler();
                 break;
             case KeyEvent.VK_R:
-                ctrl.toucheClavier("Refaire");
+                ctrl.refaire();
                 break;
             case KeyEvent.VK_P:
-                ctrl.toucheClavier("Pause");
+                //ctrl.pause();
                 break;
             case KeyEvent.VK_I:
-                ctrl.toucheClavier("IA");
+                ctrl.basculerIA(0, true);
                 break;
             case KeyEvent.VK_ESCAPE:
-                ctrl.toucheClavier("PleinEcran");
+                vue.basculerPleinEcran();
                 break;
             case KeyEvent.VK_N:
-                ctrl.toucheClavier("NouvellePartie");
+                ctrl.nouvellePartie();
             case KeyEvent.VK_Q:
             case KeyEvent.VK_A:
-                ctrl.toucheClavier("Quitter");
+                ctrl.quitter();
                 break;
         }
     }
