@@ -56,8 +56,8 @@ public class Tas<E> {
 		poids.remove(taille);
 		
 		ind = 0;
-		ind1 = ind*2 + 1;
-		ind2 = ind*2 + 2;
+		ind1 = 1;
+		ind2 = 2;
 		while ((ind1 < taille && (poids.get(ind1) < poids.get(ind))) || (ind2 < taille && (poids.get(ind2) < poids.get(ind)))) {
 			if ((ind2 >= taille) || (poids.get(ind1) < poids.get(ind2))) {
 				echanger(ind, ind1);

@@ -1,28 +1,33 @@
 package Vue;
 
+import Modele.Pion;
+
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
 
-public class Zones extends JPanel implements MouseInputListener {
-    private int position;
+public class PionVue extends JPanel implements MouseInputListener {
+    private static String path;
+    private Pion pion;
+    private boolean dragged;
 
+    public PionVue(Pion pion) {
+        this.pion = pion;
+        this.dragged = false;
 
-
-
-
-
-    /* SETTERS/GETTERS */
-
-    public int getPosition() {
-        return position;
+        this.addMouseMotionListener(this);
+        this.addMouseListener(this);
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setDragged(boolean dragged) {
+        this.dragged = dragged;
     }
 
-    /* MOUSE LISTENER */
+    public boolean isDragged() {
+        return dragged;
+    }
+
+    /* MOUSE LISTENER*/
     @Override
     public void mouseClicked(MouseEvent e) {
 

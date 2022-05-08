@@ -13,7 +13,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur {
     GraphicsDevice device;
     boolean pleinEcran;
     JFrame frame;
-    JeuGraphique jeuGrph;
+    JeuVue jeuGrph;
 
     public InterfaceGraphique(Jeu jeu, ControleurMediateur ctrl) {
         super(jeu, ctrl);
@@ -23,7 +23,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur {
 
     private void creerFenetre() {
         frame = new JFrame();
-        jeuGrph = new JeuGraphique(jeu);
+        jeuGrph = new JeuVue(jeu);
 
         /* Creation des autres components */
 

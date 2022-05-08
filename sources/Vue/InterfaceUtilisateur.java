@@ -15,6 +15,5 @@ abstract class InterfaceUtilisateur implements Observateur, Runnable {
     }
 
     public void basculerPleinEcran() {
-        return;
     }
 }

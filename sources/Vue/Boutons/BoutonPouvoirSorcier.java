@@ -4,16 +4,16 @@ import Modele.Jeu;
 
 import java.awt.event.ActionEvent;
 
-public class PouvoirSorcier extends BoutonPouvoir {
+public class BoutonPouvoirSorcier extends BoutonPouvoir {
 
-
-    public PouvoirSorcier(Jeu j) {
-        super(j);
+    public BoutonPouvoirSorcier(Jeu jeu) {
+        super(jeu);
     }
 
     @Override
     void action() {
 
     }
+
     // TODO ajouter appel pouvoir
 }

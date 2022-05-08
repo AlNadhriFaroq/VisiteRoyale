@@ -35,9 +35,8 @@ public class ControleurMediateur {
     }
 
     public void jouer(Coup coup) {
-        if (coup != null) {
-            jeu.jouerCoup(coup);
-        }
+        if (coup != null)
+            joueurs[jeu.getJoueurCourant()].jouer(coup);
     }
 
     public void annuler() {
@@ -59,10 +58,6 @@ public class ControleurMediateur {
 
     public void changerDifficulte(int joueur, int difficulte) {
         difficultes[joueur] = difficulte;
-    }
-
-    public void basculerPleinEcran() {
-        //vue.basculerPleinEcran();
     }
 
     public void nouvellePartie() {

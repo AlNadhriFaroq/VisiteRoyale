@@ -312,8 +312,11 @@ public class Jeu extends Observable implements Cloneable {
     }
 
     public boolean estTerminee() {
-        return (plateau.estTerminee() ||
-                (pioche.estVide() && plateau.getFaceCouronne() == Plateau.FACE_PTT_CRN && !pionDansFontaine(Pion.ROI)));
+        if (etatJeu == ETAT_CHOIX_JOUEUR)
+            return false;
+        else
+            return (plateau.estTerminee() || (pioche.estVide() &&
+                    plateau.getFaceCouronne() == Plateau.FACE_PTT_CRN && !pionDansFontaine(Pion.ROI)));
     }
 
     public boolean peutAnnuler() {

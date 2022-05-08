@@ -24,8 +24,7 @@ public class Configuration {
         } catch (FileNotFoundException e) {
             prop = defaut;
         } catch (IOException e) {
-            System.err.println(e);
-            System.exit(1);
+            throw new RuntimeException(e);
         }
     }
 
@@ -59,9 +58,7 @@ public class Configuration {
             OutputStream out = new FileOutputStream(file);
             prop.store(out, null);
         } catch (IOException e) {
-            System.err.println("Impossible de sauvegarder dans parametres.cfg !");
-            System.err.println(e);
-            System.exit(1);
+            throw new RuntimeException("Impossible de sauvegarder dans parametres.cfg !");
         }
     }
 }

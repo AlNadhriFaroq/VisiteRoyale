@@ -2,9 +2,10 @@ package Vue.Boutons;
 
 import Modele.Jeu;
 
-public class PrivilegeRoi extends BoutonPouvoir{
-    public PrivilegeRoi(Jeu j) {
-        super(j);
+public class BoutonPrivilegeRoi extends BoutonPouvoir {
+
+    public BoutonPrivilegeRoi(Jeu jeu) {
+        super(jeu);
     }
 
     @Override

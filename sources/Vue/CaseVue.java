@@ -4,17 +4,11 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
 
-public class Pion extends JPanel implements MouseInputListener {
+public class CaseVue extends JPanel implements MouseInputListener {
     private int position;
-    private boolean dragged;
 
-    public void setDragged(boolean dragged) {
-        this.dragged = dragged;
-    }
 
-    public boolean isDragged() {
-        return dragged;
-    }
+    /* SETTERS/GETTERS */
 
     public int getPosition() {
         return position;
@@ -24,7 +18,7 @@ public class Pion extends JPanel implements MouseInputListener {
         this.position = position;
     }
 
-    /* MOUSE LISTENER*/
+    /* MOUSE LISTENER */
     @Override
     public void mouseClicked(MouseEvent e) {
 

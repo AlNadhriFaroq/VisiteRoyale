@@ -104,7 +104,18 @@ class IAAleatoire extends IA {
             else if (carte.estDeplacementGar1Plus1())
                 carteSpeciale = estCarteSpeciale(carte);
             direction = choisirDirections();
-            //pion = carte.getType(); /* COMMENT DETERMINER PION SELON CARTE ? */
+
+            if (carte.getType().equals(Type.ROI))
+                pion = Pion.ROI;
+            if (carte.getType().equals(Type.GAR))
+                if (r.nextBoolean())
+                    pion = Pion.GAR_VRT;
+                else
+                    pion = Pion.GAR_RGE;
+            else if (carte.getType().equals(Type.SOR))
+                pion = Pion.SOR;
+            else if (carte.getType().equals(Type.FOU))
+                pion = Pion.FOU;
         } while (!carteSpeciale && !jeu.getPlateau().pionEstDeplacable(pion, jeu.getPlateau().getPositionPion(pion) + carte.getDeplacement() * direction));
 
         if (!carteSpeciale) {
@@ -185,7 +196,6 @@ class IAAleatoire extends IA {
         }
     }
 
-
     private void nettoyer() {
         cartes = null;
         pions = null;
@@ -217,106 +227,104 @@ class IAAleatoire extends IA {
         int j = r.nextInt(4);
 
         switch (j) {
-        case 0:
-            if (i == 0) {
-                if (dir[i][j]) {
-                    if (dir[1][j]) {
-                        cartes[0] = carte;
-                        pions[0] = Pion.GAR_VRT;
-                        pions[1] = Pion.GAR_RGE;
-                        destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
-                        destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
-                        ok = true;
-                    } else if (dir[1][1]) {
-                        cartes[0] = carte;
-                        pions[0] = Pion.GAR_VRT;
-                        pions[1] = Pion.GAR_RGE;
-                        destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1;
-                        destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
-                        ok = true;
-                    }
-                }
-            } else {
-                if (dir[i][j]) {
-                    if (dir[0][j]) {
-                        cartes[0] = carte;
-                        pions[0] = Pion.GAR_VRT;
-                        pions[1] = Pion.GAR_RGE;
-                        destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1;
-                        destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1;
-                        ok = true;
-                    } else if (dir[i][1]) {
-                        cartes[0] = carte;
-                        pions[0] = Pion.GAR_VRT;
-                        pions[1] = Pion.GAR_RGE;
-                        destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
-                        destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1;
-                        ok = true;
-                    }
-                }
-            }
-        case 1:
-            if (i == 0) {
-                if (dir[i][j]) {
-                    if (dir[1][j]) {
-                        cartes[0] = carte;
-                        pions[0] = Pion.GAR_VRT;
-                        pions[1] = Pion.GAR_RGE;
-                        destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
-                        destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
-                        ok = true;
-                    } else if (dir[1][0]) {
-                        cartes[0] = carte;
-                        pions[0] = Pion.GAR_VRT;
-                        pions[1] = Pion.GAR_RGE;
-                        destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
-                        destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1;
-                        ok = true;
-                    }
-                }
-            } else {
-                if (dir[i][j]) {
-                    if (dir[0][j]) {
-                        cartes[0] = carte;
-                        pions[0] = Pion.GAR_VRT;
-                        pions[1] = Pion.GAR_RGE;
-                        destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
-                        destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
-                        ok = true;
-                    } else if (dir[0][0]) {
-                        cartes[0] = carte;
-                        pions[0] = Pion.GAR_VRT;
-                        pions[1] = Pion.GAR_RGE;
-                        destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1;
-                        destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
-                        ok = true;
-                    }
-                }
-            }
-        case 2:
-            if (dir[i][j]) {
-                cartes[0] = carte;
+            case 0:
                 if (i == 0) {
-                    pions[0] = Pion.GAR_VRT;
+                    if (dir[i][j]) {
+                        if (dir[1][j]) {
+                            cartes[0] = carte;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
+                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
+                            ok = true;
+                        } else if (dir[1][1]) {
+                            cartes[0] = carte;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1;
+                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
+                            ok = true;
+                        }
+                    }
+                } else {
+                    if (dir[i][j]) {
+                        if (dir[0][j]) {
+                            cartes[0] = carte;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1;
+                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1;
+                            ok = true;
+                        } else if (dir[i][1]) {
+                            cartes[0] = carte;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
+                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1;
+                            ok = true;
+                        }
+                    }
                 }
-                else {
-                    pions[0] = Pion.GAR_RGE;
+            case 1:
+                if (i == 0) {
+                    if (dir[i][j]) {
+                        if (dir[1][j]) {
+                            cartes[0] = carte;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
+                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
+                            ok = true;
+                        } else if (dir[1][0]) {
+                            cartes[0] = carte;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
+                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1;
+                            ok = true;
+                        }
+                    }
+                } else {
+                    if (dir[i][j]) {
+                        if (dir[0][j]) {
+                            cartes[0] = carte;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
+                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
+                            ok = true;
+                        } else if (dir[0][0]) {
+                            cartes[0] = carte;
+                            pions[0] = Pion.GAR_VRT;
+                            pions[1] = Pion.GAR_RGE;
+                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1;
+                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
+                            ok = true;
+                        }
+                    }
                 }
-                destinations[0] = jeu.getPlateau().getPositionPion(pions[0]) + 2;
-                ok = true;
-            }
-            break;
-        case 3:
-            if (dir[i][j]) {
-                cartes[0] = carte;
-                if (i == 0)
-                    pions[0] = Pion.GAR_VRT;
-                else
-                    pions[0] = Pion.GAR_RGE;
-                destinations[0] = jeu.getPlateau().getPositionPion(pions[0]) - 2;
-                ok = true;
-            }
-            break;
+            case 2:
+                if (dir[i][j]) {
+                    cartes[0] = carte;
+                    if (i == 0)
+                        pions[0] = Pion.GAR_VRT;
+                    else
+                        pions[0] = Pion.GAR_RGE;
+                    destinations[0] = jeu.getPlateau().getPositionPion(pions[0]) + 2;
+                    ok = true;
+                }
+                break;
+            case 3:
+                if (dir[i][j]) {
+                    cartes[0] = carte;
+                    if (i == 0)
+                        pions[0] = Pion.GAR_VRT;
+                    else
+                        pions[0] = Pion.GAR_RGE;
+                    destinations[0] = jeu.getPlateau().getPositionPion(pions[0]) - 2;
+                    ok = true;
+                }
+                break;
         }
         return ok;
     }

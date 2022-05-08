@@ -6,11 +6,11 @@ import Patterns.Observateur;
 import javax.swing.*;
 import java.awt.*;
 
-public class JeuGraphique extends JComponent implements Observateur {
+public class JeuVue extends JComponent implements Observateur {
     Graphics2D dessin;
     Jeu jeu;
 
-    public JeuGraphique(Jeu jeu) {
+    public JeuVue(Jeu jeu) {
         this.jeu = jeu;
     }
 

@@ -1,19 +1,20 @@
 package Vue;
 
+import Modele.Plateau;
+
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Terrain extends JPanel implements MouseInputListener {
-    private static List<Zones> monTerrain;
+public class PlateauVue extends JPanel implements MouseInputListener {
+    private Plateau plateau;
+    private static List<CaseVue> cases;
 
-    public Terrain(List<Zones> zones){
-
-
-
+    public PlateauVue(Plateau plateau){
+        this.plateau = plateau;
     }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
