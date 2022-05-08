@@ -3,6 +3,7 @@ package Vue;
 import Controleur.ControleurMediateur;
 import Modele.*;
 
+import javax.swing.*;
 import java.util.Scanner;
 
 public class InterfaceTextuelle extends InterfaceUtilisateur {
@@ -150,6 +151,9 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
     @Override
     public void run() {
+        Timer timer = new Timer(16, new AdaptateurTemps(ctrl));
+        timer.start();
+
         mettreAJour();
         Scanner s = new Scanner(System.in);
 
