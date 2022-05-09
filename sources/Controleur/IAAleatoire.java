@@ -205,6 +205,13 @@ class IAAleatoire extends IA {
         destinations = null;
     }
 
+    void choixAllEstCarteSpeciale(Carte carte, int d1, int d2){
+        cartes[0] = carte;
+        pions[0] = Pion.GAR_VRT;
+        pions[1] = Pion.GAR_RGE;
+        destinations[0] = d1;
+        destinations[1] = d2;
+    }
     private boolean estCarteSpeciale(Carte carte) {
         boolean ok = false;
         boolean[][] dir = new boolean[2][4];
@@ -234,36 +241,20 @@ class IAAleatoire extends IA {
                 if (i == 0) {
                     if (dir[i][j]) {
                         if (dir[1][j]) {
-                            cartes[0] = carte;
-                            pions[0] = Pion.GAR_VRT;
-                            pions[1] = Pion.GAR_RGE;
-                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
-                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
+                            choixAllEstCarteSpeciale(carte, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1);
                             ok = true;
                         } else if (dir[1][1]) {
-                            cartes[0] = carte;
-                            pions[0] = Pion.GAR_VRT;
-                            pions[1] = Pion.GAR_RGE;
-                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1;
-                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
+                            choixAllEstCarteSpeciale(carte, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1);
                             ok = true;
                         }
                     }
                 } else {
                     if (dir[i][j]) {
                         if (dir[0][j]) {
-                            cartes[0] = carte;
-                            pions[0] = Pion.GAR_VRT;
-                            pions[1] = Pion.GAR_RGE;
-                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1;
-                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1;
+                            choixAllEstCarteSpeciale(carte, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1);
                             ok = true;
                         } else if (dir[i][1]) {
-                            cartes[0] = carte;
-                            pions[0] = Pion.GAR_VRT;
-                            pions[1] = Pion.GAR_RGE;
-                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
-                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1;
+                            choixAllEstCarteSpeciale(carte, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1);
                             ok = true;
                         }
                     }
@@ -272,36 +263,20 @@ class IAAleatoire extends IA {
                 if (i == 0) {
                     if (dir[i][j]) {
                         if (dir[1][j]) {
-                            cartes[0] = carte;
-                            pions[0] = Pion.GAR_VRT;
-                            pions[1] = Pion.GAR_RGE;
-                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
-                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
+                            choixAllEstCarteSpeciale(carte, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1);
                             ok = true;
                         } else if (dir[1][0]) {
-                            cartes[0] = carte;
-                            pions[0] = Pion.GAR_VRT;
-                            pions[1] = Pion.GAR_RGE;
-                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
-                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1;
+                            choixAllEstCarteSpeciale(carte, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + 1);
                             ok = true;
                         }
                     }
                 } else {
                     if (dir[i][j]) {
                         if (dir[0][j]) {
-                            cartes[0] = carte;
-                            pions[0] = Pion.GAR_VRT;
-                            pions[1] = Pion.GAR_RGE;
-                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1;
-                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
+                            choixAllEstCarteSpeciale(carte, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - 1, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1);
                             ok = true;
                         } else if (dir[0][0]) {
-                            cartes[0] = carte;
-                            pions[0] = Pion.GAR_VRT;
-                            pions[1] = Pion.GAR_RGE;
-                            destinations[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1;
-                            destinations[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1;
+                            choixAllEstCarteSpeciale(carte, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + 1, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - 1);
                             ok = true;
                         }
                     }
