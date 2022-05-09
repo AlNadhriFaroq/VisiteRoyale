@@ -2,37 +2,58 @@ package Vue;
 
 import Controleur.ControleurMediateur;
 import Modele.Jeu;
+import Patterns.Observateur;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class InterfaceGraphique extends InterfaceUtilisateur {
-    static final int LARGEURFENETRE = 1000;
-    static final int HAUTEURFENETRE = 800;
+public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable {
+    static final int LARGEURFENETRE = 1600;
+    static final int HAUTEURFENETRE = 900;
 
     GraphicsDevice device;
     boolean pleinEcran;
+    Jeu jeu;
+    ControleurMediateur ctrl;
     JFrame frame;
-    JeuVue jeuGrph;
+    PlateauFrame plateau;
+    JeuGraphique jeuGrph;
+    /* autres attributs, les autres components */
 
     public InterfaceGraphique(Jeu jeu, ControleurMediateur ctrl) {
-        super(jeu, ctrl);
+        this.jeu = jeu;
+        this.ctrl = ctrl;
         pleinEcran = false;
-        creerFenetre();
+        this.plateau = new PlateauFrame(this.jeu);
     }
 
-    private void creerFenetre() {
-        frame = new JFrame();
-        jeuGrph = new JeuVue(jeu);
+    public static void demarrer(Jeu jeu, ControleurMediateur ctrl) {
+        InterfaceGraphique vue = new InterfaceGraphique(jeu, ctrl);
+        //ctrl.ajouterInterfaceUtilisateur(vue);
+        SwingUtilities.invokeLater(vue);
+    }
+
+    public void run() {
+        frame = this.plateau.getFrame();
+        jeuGrph = new JeuGraphique(jeu);
 
         /* Creation des autres components */
-
+        /*
+        CarteVue carteVue = new CarteVue();
+        carteVue.setCarte(this.jeu.getPioche().getCarte(0));
+        carteVue.setBorder(new EmptyBorder(0, 30, 0 ,30));
+        frame.add(carteVue);
+        */
         /* Retransmission des evenements au controleur */
-        frame.addKeyListener(new AdaptateurClavier(this, ctrl));
+        //frame.addKeyListener(new AdaptateurClavier(vue,ctrl));
         jeuGrph.addMouseListener(new AdaptateurSouris(jeuGrph, ctrl));
 
         /* Mise en place de l'interface */
         frame.add(jeuGrph);
+
+
+        jeu.ajouterObservateur(this);
         Timer timer = new Timer(16, new AdaptateurTemps(ctrl));
         timer.start();
 
@@ -44,12 +65,6 @@ public class InterfaceGraphique extends InterfaceUtilisateur {
         frame.setVisible(true);
     }
 
-    @Override
-    public void run() {
-        SwingUtilities.invokeLater(this);
-    }
-
-    @Override
     public void basculerPleinEcran() {
         if (device == null)
             device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();

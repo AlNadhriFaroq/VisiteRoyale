@@ -14,6 +14,9 @@ abstract class InterfaceUtilisateur implements Observateur, Runnable {
         jeu.ajouterObservateur(this);
     }
 
+    protected InterfaceUtilisateur() {
+    }
+
     public void basculerPleinEcran() {
     }
 }

@@ -1,33 +1,27 @@
 package Vue;
 
-import Modele.Pion;
-
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-public class PionVue extends JPanel implements MouseInputListener {
-    private static String path;
-    private Pion pion;
-    private boolean dragged;
+public class Terrain extends JPanel implements MouseInputListener {
+    private List<Zones> monTerrain;
 
-    public PionVue(Pion pion) {
-        this.pion = pion;
-        this.dragged = false;
+    public Terrain(){
+        this.monTerrain = new ArrayList<>();
 
-        this.addMouseMotionListener(this);
-        this.addMouseListener(this);
+
+
     }
 
-    public void setDragged(boolean dragged) {
-        this.dragged = dragged;
-    }
+    private void NomsInitZones(){
+        for (int i=0; i<17; i++){
+            // TODO Nommer les ZONES
+        }
 
-    public boolean isDragged() {
-        return dragged;
     }
-
-    /* MOUSE LISTENER*/
     @Override
     public void mouseClicked(MouseEvent e) {
 
