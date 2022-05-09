@@ -16,36 +16,32 @@ class IAAleatoire extends IA {
         super(jeu);
         r = new Random();
         joueur = jeu.getJoueurCourant();
-        cartes = new Carte[2];
-        pions = new Pion[2];
-        destinations = new int[2];
     }
 
     @Override
     Coup calculerCoup() {
         tailleMain = jeu.getMain(joueur).getTaille();
-        nettoyer();
-
-        int typeCoup = choisirTypeCoup();
-        choisirCartesDirections(typeCoup);
+        cartes = new Carte[2];
+        pions = new Pion[2];
+        destinations = new int[2];
 
         Coup coup;
         do {
+            choisirTypeCoup();
+            choisirCartesDirections();
             coup = jeu.creerCoup(typeCoup, cartes, pions, destinations);
-        } while(coup == null);
+        } while (coup == null);
 
         return coup;
     }
 
-    private int choisirTypeCoup(){
-        int typeCoup = r.nextInt(5);
-        while (!typeCoupEstCorrect(typeCoup)) {
-            typeCoup = r.nextInt(5);
-        }
-        return typeCoup;
+    private void choisirTypeCoup(){
+        do {
+            int typeCoup = r.nextInt(5);
+        } while (!typeCoupEstCorrect());
     }
 
-    private boolean typeCoupEstCorrect(int typeCoup) {
+    private boolean typeCoupEstCorrect() {
         boolean possible;
         switch (typeCoup) {
         case Coup.DEPLACEMENT:
@@ -75,7 +71,7 @@ class IAAleatoire extends IA {
         return possible;
     }
 
-    private void choisirCartesDirections(int typeCoup) {
+    private void choisirCartesDirections() {
         switch(typeCoup) {
         case Coup.DEPLACEMENT:
             choisirCartesDeplacement();
@@ -197,12 +193,6 @@ class IAAleatoire extends IA {
             pions[pions.length - 1] = pion;
             destinations[destinations.length - 1] = jeu.getPlateau().getPositionPion(pion) + direction * carte.getDeplacement();
         }
-    }
-
-    private void nettoyer() {
-        cartes = null;
-        pions = null;
-        destinations = null;
     }
 
     void choixAllEstCarteSpeciale(Carte carte, int d1, int d2){
