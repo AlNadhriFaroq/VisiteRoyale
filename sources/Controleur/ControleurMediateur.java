@@ -15,7 +15,7 @@ public class ControleurMediateur {
     public ControleurMediateur(Jeu jeu) {
         this.jeu = jeu;
         joueurs = new Joueur[2];
-        joueurs[0] = new JoueurHumain(Jeu.JOUEUR_VRT, jeu);
+        joueurs[0] = new JoueurIA(Jeu.JOUEUR_VRT, jeu, IA.FACILE);
         joueurs[1] = new JoueurHumain(Jeu.JOUEUR_RGE, jeu);
     }
 

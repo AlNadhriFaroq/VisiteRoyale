@@ -36,6 +36,7 @@ public class Jeu extends Observable implements Cloneable {
         futur = new ArrayList<>();
 
         etatJeu = ETAT_CHOIX_JOUEUR;
+        plateau = new Plateau(1);
 
         pioche = new Paquet();
         defausse = new Paquet();

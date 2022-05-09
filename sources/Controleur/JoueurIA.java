@@ -23,8 +23,10 @@ class JoueurIA extends Joueur {
 
     @Override
     boolean tempsEcoule() {
-        Coup coup = ia.elaborerCoup();
-        jeu.jouerCoup(coup);
+        if (jeu.getEtatJeu() == Jeu.ETAT_EN_JEU) {
+            Coup coup = ia.elaborerCoup();
+            jeu.jouerCoup(coup);
+        }
         return jeu.getJoueurCourant() != num();
     }
 }

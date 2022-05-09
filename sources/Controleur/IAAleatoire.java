@@ -16,6 +16,9 @@ class IAAleatoire extends IA {
         super(jeu);
         r = new Random();
         joueur = jeu.getJoueurCourant();
+        cartes = new Carte[2];
+        pions = new Pion[2];
+        destinations = new int[2];
     }
 
     @Override
