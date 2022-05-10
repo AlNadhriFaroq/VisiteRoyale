@@ -1,6 +1,8 @@
 package Controleur;
 
 import Modele.*;
+
+import javax.swing.*;
 import java.util.*;
 
 class IAAleatoire extends IA {
@@ -25,19 +27,23 @@ class IAAleatoire extends IA {
         pions = new Pion[2];
         destinations = new int[2];
         Coup coup;
-        do {
-            System.out.println("IA joue");
-            choisirTypeCoup();
-            System.out.println("Type coup est : " + typeCoup);
-            choisirCartesDirections();
-            System.out.println("Type coup = " + typeCoup);
-            System.out.println("cartes = " + cartes[0]);
-            System.out.println("Pions = " + pions[0]);
-            System.out.println("Destination = " + destinations[0]);
+        if(typeCoup == Coup.POUVOIR_SOR) {
+            typeCoup = Coup.FIN_TOUR;
             coup = jeu.creerCoup(typeCoup, cartes, pions, destinations);
-            //coup = null;
-        } while (coup == null);
-
+        }
+        else{
+            do {
+                System.out.println("IA joue");
+                choisirTypeCoup();
+                System.out.println("Type coup est : " + typeCoup);
+                choisirCartesDirections();
+                System.out.println("Type coup = " + typeCoup);
+                System.out.println("cartes = " + cartes[0]);
+                System.out.println("Pions = " + pions[0]);
+                System.out.println("Destination = " + destinations[0]);
+                coup = jeu.creerCoup(typeCoup, cartes, pions, destinations);
+            } while (coup == null);
+        }
         return coup;
     }
 
@@ -48,7 +54,7 @@ class IAAleatoire extends IA {
                 typeCoup = 0;
             else
                 typeCoup -= 5;
-            //typeCoup = 3;
+            //typeCoup = 2;
             System.out.println("type coup choix : " + typeCoup);
         } while (!typeCoupEstCorrect());
     }
@@ -67,6 +73,7 @@ class IAAleatoire extends IA {
                 break;
             case Coup.POUVOIR_SOR:
                 possible = jeu.peutUtiliserPouvoirSorcier();
+                System.out.println("possible = " + possible);
                 this.typeCoup = Coup.POUVOIR_SOR;
                 break;
             case Coup.POUVOIR_FOU:

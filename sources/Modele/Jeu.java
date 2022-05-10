@@ -286,7 +286,10 @@ public class Jeu extends Observable implements Cloneable {
     }
 
     public boolean peutUtiliserPouvoirSorcier() {
-        return !typeCourant.equals(Type.FIN) || typeCourant.equals(Type.IND);
+        return (!typeCourant.equals(Type.FIN) || typeCourant.equals(Type.IND)) &&
+               ((plateau.getPositionPion(Pion.ROI) != plateau.getPositionPion(Pion.SOR)) &&
+               (plateau.getPositionPion(Pion.GAR_VRT) != plateau.getPositionPion(Pion.SOR)) &&
+               (plateau.getPositionPion(Pion.GAR_RGE) != plateau.getPositionPion(Pion.SOR)));
     }
 
     public boolean peutUtiliserPouvoirSorcier(Pion pion) {
