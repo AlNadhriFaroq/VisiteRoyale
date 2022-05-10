@@ -24,12 +24,18 @@ class IAAleatoire extends IA {
         cartes = new Carte[2];
         pions = new Pion[2];
         destinations = new int[2];
-
         Coup coup;
         do {
+            System.out.println("IA joue");
             choisirTypeCoup();
+            System.out.println("Type coup est : " + typeCoup);
             choisirCartesDirections();
+            System.out.println("Type coup = " + typeCoup);
+            System.out.println("cartes = " + cartes[0]);
+            System.out.println("Pions = " + pions[0]);
+            System.out.println("Destination = " + destinations[0]);
             coup = jeu.creerCoup(typeCoup, cartes, pions, destinations);
+            //coup = null;
         } while (coup == null);
 
         return coup;
@@ -37,56 +43,65 @@ class IAAleatoire extends IA {
 
     private void choisirTypeCoup(){
         do {
-            int typeCoup = r.nextInt(5);
+            typeCoup = r.nextInt(10);
+            if(typeCoup <= 5)
+                typeCoup = 0;
+            else
+                typeCoup -= 5;
+            //typeCoup = 3;
+            System.out.println("type coup choix : " + typeCoup);
         } while (!typeCoupEstCorrect());
     }
 
     private boolean typeCoupEstCorrect() {
         boolean possible;
         switch (typeCoup) {
-        case Coup.DEPLACEMENT:
-            possible = jeu.peutDeplacer();
-            this.typeCoup = Coup.DEPLACEMENT;
-            break;
-        case Coup.PRIVILEGE_ROI:
-            possible = jeu.peutUtiliserPrivilegeRoi();
-            this.typeCoup = Coup.PRIVILEGE_ROI;
-            break;
-        case Coup.POUVOIR_SOR:
-            possible = jeu.peutUtiliserPouvoirSorcier();
-            this.typeCoup = Coup.POUVOIR_SOR;
-            break;
-        case Coup.POUVOIR_FOU:
-            possible = jeu.peutUtiliserPouvoirFou();
-            this.typeCoup = Coup.POUVOIR_FOU;
-            break;
-        case Coup.FIN_TOUR:
-            possible = jeu.peutFinirTour();
-            this.typeCoup = Coup.FIN_TOUR;
-            break;
-        default:
-            possible = false;
-            break;
-        }
+            case Coup.DEPLACEMENT:
+                possible = jeu.peutDeplacer();
+                this.typeCoup = Coup.DEPLACEMENT;
+                System.out.println("possible = " + possible);
+                break;
+            case Coup.PRIVILEGE_ROI:
+                possible = jeu.peutUtiliserPrivilegeRoi();
+                this.typeCoup = Coup.PRIVILEGE_ROI;
+                break;
+            case Coup.POUVOIR_SOR:
+                possible = jeu.peutUtiliserPouvoirSorcier();
+                this.typeCoup = Coup.POUVOIR_SOR;
+                break;
+            case Coup.POUVOIR_FOU:
+                possible = jeu.peutUtiliserPouvoirFou();
+                System.out.println("possible = " + possible);
+                this.typeCoup = Coup.POUVOIR_FOU;
+                break;
+            case Coup.FIN_TOUR:
+                possible = jeu.peutFinirTour();
+                this.typeCoup = Coup.FIN_TOUR;
+                break;
+            default:
+                possible = false;
+                break;
+            }
         return possible;
     }
 
     private void choisirCartesDirections() {
         switch(typeCoup) {
-        case Coup.DEPLACEMENT:
-            choisirCartesDeplacement();
-            break;
-        case Coup.PRIVILEGE_ROI:
-            choisirCartesPrivilegesRoi();
-            break;
-        case Coup.POUVOIR_SOR:
-            choisirCartePouvoirSorcier();
-            break;
-        case Coup.POUVOIR_FOU:
-            choisirCartesPouvoirFou();
-            break;
-        default:
-            break;
+            case Coup.DEPLACEMENT:
+                System.out.println("on va aller dans choisir carte deplacements");
+                choisirCartesDeplacement();
+                break;
+            case Coup.PRIVILEGE_ROI:
+                choisirCartesPrivilegesRoi();
+                break;
+            case Coup.POUVOIR_SOR:
+                choisirCartePouvoirSorcier();
+                break;
+            case Coup.POUVOIR_FOU:
+                choisirCartesPouvoirFou();
+                break;
+            default:
+                break;
         }
     }
 
@@ -95,9 +110,10 @@ class IAAleatoire extends IA {
         Carte carte;
         Pion pion = null;
         boolean carteSpeciale = false;
-
-        do {
+        do{
+            //System.out.println("boucle infinie ?");
             carte = choisirCartes();
+            //System.out.println("carte = " + carte);
             if (carte.estDeplacementGarCentre() || carte.estDeplacementFouCentre())
                 carteSpeciale = true;
             else if (carte.estDeplacementGar1Plus1())
@@ -115,20 +131,22 @@ class IAAleatoire extends IA {
                 pion = Pion.SOR;
             else if (carte.getType().equals(Type.FOU))
                 pion = Pion.FOU;
+            //System.out.println("pion est " + pion);
         } while (!carteSpeciale && !jeu.getPlateau().pionEstDeplacable(pion, jeu.getPlateau().getPositionPion(pion) + carte.getDeplacement() * direction));
 
         if (!carteSpeciale) {
-            cartes[cartes.length - 1] = carte;
-            pions[pions.length - 1] = pion;
-            destinations[destinations.length - 1] = jeu.getPlateau().getPositionPion(pion) + direction * carte.getDeplacement();
+            //System.out.println("pas une carte speciale");
+            cartes[0] = carte;
+            pions[0] = pion;
+            destinations[0] = jeu.getPlateau().getPositionPion(pion) + direction * carte.getDeplacement();
         }
     }
 
     private Carte choisirCartes() {
         Carte carte;
         do {
-            carte = jeu.getMain(joueur).getCarte(r.nextInt(Jeu.TAILLE_MAIN));
-        } while (jeu.peutUtiliserCarte(carte));
+            carte = jeu.getMain(joueur).getCarte(r.nextInt(tailleMain));
+        } while (!jeu.peutUtiliserCarte(carte));
         return carte;
     }
 
@@ -154,7 +172,7 @@ class IAAleatoire extends IA {
         int direction;
         do {
             direction = choisirDirections();
-        } while (jeu.peutUtiliserPrivilegeRoi(cartes, direction));
+        } while (!jeu.peutUtiliserPrivilegeRoi(cartes, direction));
         destinations[0] = direction;
     }
 
@@ -162,7 +180,7 @@ class IAAleatoire extends IA {
         Pion pion;
         do {
             pion = choisirPion();
-        } while (jeu.peutUtiliserPouvoirSorcier(pion));
+        } while (!jeu.peutUtiliserPouvoirSorcier(pion));
         pions[0] = pion;
     }
 
@@ -173,8 +191,11 @@ class IAAleatoire extends IA {
         boolean milieu = false;
 
         do {
+            System.out.println("boucle ok");
             carte = choisirCartes();
+            System.out.println("Carte = " + carte);
             direction = choisirDirections();
+            System.out.println("direction = " + direction);
             if (jeu.getTypeCourant() == Type.GAR)
                 pion = Pion.valeurEnPion(r.nextInt(2) + 1);
             else
@@ -189,9 +210,9 @@ class IAAleatoire extends IA {
                  !jeu.getPlateau().pionEstDeplacable(pion, jeu.getPlateau().getPositionPion(pion) + direction * carte.getDeplacement()));
 
         if (!milieu) {
-            cartes[cartes.length - 1] = carte;
-            pions[pions.length - 1] = pion;
-            destinations[destinations.length - 1] = jeu.getPlateau().getPositionPion(pion) + direction * carte.getDeplacement();
+            cartes[0] = carte;
+            pions[0] = pion;
+            destinations[0] = jeu.getPlateau().getPositionPion(pion) + direction * carte.getDeplacement();
         }
     }
 

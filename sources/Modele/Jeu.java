@@ -210,20 +210,35 @@ public class Jeu extends Observable implements Cloneable {
 
     public boolean peutUtiliserCarte(Carte carte) {
         boolean possible = false;
-        if (carte.estDeplacementGar1Plus1())
+        if (carte.estDeplacementGar1Plus1()) {
             possible = peutUtiliserCarte(Pion.GAR_VRT, 2) || peutUtiliserCarte(Pion.GAR_RGE, 2) ||
-                       (peutUtiliserCarte(Pion.GAR_VRT, 1) && peutUtiliserCarte(Pion.GAR_RGE, 1));
-        else if (carte.estDeplacementGarCentre() || carte.estDeplacementFouCentre())
+                    (peutUtiliserCarte(Pion.GAR_VRT, 1) && peutUtiliserCarte(Pion.GAR_RGE, 1));
+            System.out.println("Peut utiliser carte garde 1 1 " + possible);
+        }
+        else if (carte.estDeplacementGarCentre() || carte.estDeplacementFouCentre()){
             possible = true;
-        else if (carte.getType().equals(Type.ROI))
+            System.out.println("Peut utiliser carte deplacement centre " + possible);
+        }
+        else if (carte.getType().equals(Type.ROI)) {
             possible = peutUtiliserCarte(Pion.ROI, carte.getDeplacement());
-        else if (carte.getType().equals(Type.GAR))
+            System.out.println("Peut utiliser carte roi " + possible);
+        }
+        else if (carte.getType().equals(Type.GAR)){
             possible = peutUtiliserCarte(Pion.GAR_VRT, carte.getDeplacement()) || peutUtiliserCarte(Pion.GAR_RGE, carte.getDeplacement());
-        else if (carte.getType().equals(Type.SOR))
+            System.out.println("Peut utiliser carte garde " + possible);
+        }
+        else if (carte.getType().equals(Type.SOR)){
             possible = peutUtiliserCarte(Pion.SOR, carte.getDeplacement());
-        else if (carte.getType().equals(Type.FOU))
+            System.out.println("Peut utiliser carte sorcier " + possible);
+        }
+        else if (carte.getType().equals(Type.FOU)){
             possible = peutUtiliserCarte(Pion.FOU, carte.getDeplacement());
-        return possible && (getTypeCourant() == carte.getType() || getTypeCourant() == Type.IND);
+            System.out.println("Peut utiliser carte fou " + possible);
+        }
+        System.out.println("type courant = " + getTypeCourant());
+        System.out.println("type courant = " + carte.getType());
+        System.out.println("comparaison = " + (possible && (getTypeCourant() == carte.getType() || Objects.equals(getTypeCourant().toString(), "IND"))));
+        return possible && (getTypeCourant().equals(carte.getType())  || Objects.equals(getTypeCourant().toString(), "IND"));
     }
 
     private boolean peutUtiliserCarte(Pion pion, int deplacement) {
@@ -235,6 +250,7 @@ public class Jeu extends Observable implements Cloneable {
         for (int i = 0; i < getMain(joueurCourant).getTaille(); i++)
             if (peutUtiliserCarte(getMain(joueurCourant).getCarte(i)))
                 return true;
+        System.out.println("joueur courant " + joueurCourant);
         return false;
     }
 

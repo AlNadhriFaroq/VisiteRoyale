@@ -16,6 +16,8 @@ public class Type implements Cloneable, Comparable<Type> {
 
     static Type texteEnType(String texte) {
         switch (texte) {
+            case "IND":
+                return  IND;
             case "R":
                 return ROI;
             case "G":
@@ -24,6 +26,8 @@ public class Type implements Cloneable, Comparable<Type> {
                 return SOR;
             case "F":
                 return FOU;
+            case "FIN":
+                return FIN;
             default:
                 throw new RuntimeException("Modele.Type.texteEnType() : Texte entré invalide.");
         }
@@ -60,6 +64,8 @@ public class Type implements Cloneable, Comparable<Type> {
     @Override
     public String toString() {
         switch (valeur) {
+            case 0:
+                return "IND";
             case 1:
                 return "R";
             case 2:
@@ -68,6 +74,8 @@ public class Type implements Cloneable, Comparable<Type> {
                 return "S";
             case 4:
                 return "F";
+            case 5:
+                return "FIN";
             default:
                 throw new RuntimeException("Modele.Type.toString() : Type non affichable.");
         }
