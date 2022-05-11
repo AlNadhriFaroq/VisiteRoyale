@@ -46,7 +46,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
         } else if (cmd.toLowerCase().startsWith("quitter")) {
             ctrl.quitter();
         } else {
-            System.out.println("Commande non reconnue.");
+            System.out.println("Commande invalide.");
         }
     }
 
@@ -114,7 +114,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("Cette carte n'existe pas.");
             }
         } else {
-            System.out.println("Commande non reconnue.");
+            System.out.println("Commande invalide.");
         }
     }
 
@@ -152,7 +152,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("Ce pion n'existe pas.");
             }
         } else {
-            System.out.println("Commande non reconnue.");
+            System.out.println("Commande invalide.");
         }
     }
 
@@ -189,7 +189,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             System.out.println("Quitter  : Quitter le programme.");
         } else if (cmd.toLowerCase().startsWith("quitter")) {
             ctrl.quitter();
-        } else if (cmd.length() == 1) {
+        } else if (cmd.length() <= 6) {
             try {
                 int direction = Plateau.texteEnDirection(cmd);
                 if (jeu.peutSelectionnerDirection(direction))
@@ -197,10 +197,10 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 else
                     System.out.println("Impossible de jouer ce coup dans cette direction.");
             } catch (RuntimeException e) {
-                System.out.println("Cette direction n'existe pas.");
+                System.out.println("Cette direction n'existe pas." + e);
             }
         } else {
-            System.out.println("Commande non reconnue.");
+            System.out.println("Commande invalide.");
         }
     }
 
@@ -217,7 +217,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
         } else if (cmd.equalsIgnoreCase("quitter")) {
             ctrl.quitter();
         } else {
-            System.out.println("Commande non reconnue.");
+            System.out.println("Commande invalide.");
         }
     }
 

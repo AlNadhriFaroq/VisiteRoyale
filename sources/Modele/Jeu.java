@@ -340,7 +340,7 @@ public class Jeu extends Observable implements Cloneable {
             if (activationPouvoirFou && carte.estDeplacementFouCentre())
                 return typeCourant.equals(Type.IND) && !pion.getType().equals(Type.FOU) && plateau.pionEstDeplacable(pion, Plateau.FONTAINE);
             else if (activationPouvoirFou)
-                return typeCourant.equals(Type.IND) && !pion.getType().equals(Type.FOU) && pionDeplacable(pion, carte.getDeplacement());
+                return (typeCourant.equals(Type.IND) || pion.getType().equals(Type.GAR)) && !pion.getType().equals(Type.FOU) && pionDeplacable(pion, carte.getDeplacement());
             else if (carte.getType().equals(Type.GAR) && !carte.estDeplacementGarCentre())
                 return pion.getType().equals(Type.GAR) && getSelectionPions(0) == null && pionDeplacable(pion, 1);
         }

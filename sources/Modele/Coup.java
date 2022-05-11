@@ -256,7 +256,8 @@ public class Coup implements Cloneable {
         Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
 
         Pion pion = null;
-        if (jeu.getTypeCourant().equals(Type.GAR) || carte.estDeplacementGar1Plus1() ||
+        if ((jeu.getTypeCourant().equals(Type.IND) && carte.getType().equals(Type.GAR)) ||
+            jeu.getTypeCourant().equals(Type.GAR) || carte.estDeplacementGar1Plus1() ||
             (jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND)))
             pion = jeu.getSelectionPions(0);
         else if (jeu.getActivationPouvoirFou())
@@ -333,9 +334,9 @@ public class Coup implements Cloneable {
 
         Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
 
-        if (jeu.getActivationPouvoirFou())
+        if (jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND))
             jeu.setTypeCourant(jeu.getSelectionPions(0).getType());
-        else
+        else if (!jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND))
             jeu.setTypeCourant(carte.getType());
     }
 
@@ -415,7 +416,7 @@ public class Coup implements Cloneable {
         typePasse = jeu.getTypeCourant();
         jeu.setTypeCourant(Type.IND);
 
-        if (finPartie)
+        if (finPartie || jeu.getPlateau().estTerminee())
             jeu.setEtatJeu(Jeu.ETAT_FIN_DE_PARTIE);
         else
             jeu.alternerJoueurCourant();
