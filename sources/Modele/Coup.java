@@ -1,12 +1,13 @@
 package Modele;
 
 public class Coup implements Cloneable {
-    public static final int CHOISIR_CARTE = 1;
-    public static final int CHOISIR_PION = 2;
-    public static final int CHOISIR_DIRECTION = 3;
-    public static final int ACTIVER_POUVOIR_SOR = 4;
-    public static final int ACTIVER_POUVOIR_FOU = 5;
-    public static final int FINIR_TOUR = 6;
+    public static final int CHOISIR_CARTE = 0;
+    public static final int ACTIVER_POUVOIR_SOR = 1;
+    public static final int ACTIVER_POUVOIR_FOU = 2;
+    public static final int FINIR_TOUR = 3;
+    public static final int CHOISIR_PION = 4;
+    public static final int CHOISIR_DIRECTION = 5;
+
 
     Jeu jeu;
     int joueur;

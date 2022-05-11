@@ -10,11 +10,11 @@ class JoueurIA extends Joueur {
         super(num, jeu);
 
         if (difficulte == IA.FACILE)
-            ia = new IAAleatoire(jeu);
+            ia = new IAAleatoire2(jeu);
         else if (difficulte == IA.MOYEN)
-            ia = new IAAleatoire(jeu);
+            ia = new IAAleatoire2(jeu);
         else if (difficulte == IA.DIFFICILE)
-            ia = new IAAleatoire(jeu);
+            ia = new IAAleatoire2(jeu);
         else
             System.err.println("Bug : IA introuvable");
     }

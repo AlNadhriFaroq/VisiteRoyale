@@ -298,7 +298,7 @@ public class Jeu extends Observable implements Cloneable {
             return (typeCourant.equals(Type.ROI) || typeCourant.equals(Type.IND)) &&
                    activationPrivilegeRoi == 1 &&
                    (plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_VRT) || plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_RGE));
-        } else if (etatJeu == ETAT_CHOIX_CARTE) {
+        } else if (etatJeu == ETAT_CHOIX_CARTE){
             if (activationPouvoirFou) {
                 if (carte.estDeplacementFouCentre())
                     return typeCourant.equals(Type.IND) ||
@@ -478,4 +478,5 @@ public class Jeu extends Observable implements Cloneable {
 
         return txt;
     }
+
 }
