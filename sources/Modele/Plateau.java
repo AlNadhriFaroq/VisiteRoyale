@@ -10,6 +10,7 @@ public class Plateau implements Cloneable {
     public static final int BORDURE_RGE = 16;
 
     public static final int DIRECTION_VRT = -1;
+    public static final int DIRECTION_IND = 0;
     public static final int DIRECTION_RGE = 1;
 
     public static final boolean FACE_GRD_CRN = false;
@@ -125,32 +126,23 @@ public class Plateau implements Cloneable {
                (direction == DIRECTION_RGE && getPositionPion(Pion.GAR_RGE) != BORDURE_RGE);
     }
 
+    public boolean peutUtiliserPouvoirSor() {
+        return getPositionPion(Pion.GAR_VRT) != getPositionPion(Pion.SOR) &&
+               getPositionPion(Pion.ROI) != getPositionPion(Pion.SOR) &&
+               getPositionPion(Pion.GAR_RGE) != getPositionPion(Pion.SOR);
+    }
+
     public boolean peutUtiliserPouvoirSor(Pion pion) {
         return !pion.equals(Pion.FOU) && !pion.equals(Pion.SOR) &&
-               getPositionPion(pion) != getPositionPion(Pion.SOR) &&
                pionEstDeplacable(pion, getPositionPion(Pion.SOR));
     }
 
     public boolean vrtPeutUtiliserPouvoirFou() {
-        return getPositionPion(Pion.FOU) < getPositionPion(Pion.ROI) &&
-               getPositionPion(Pion.FOU) > CHATEAU_VRT;
-    }
-
-    public boolean vrtPeutUtiliserPouvoirFou(Pion pion, int destination) {
-        return vrtPeutUtiliserPouvoirFou() &&
-               !pion.getType().equals(Type.FOU) &&
-               pionEstDeplacable(pion, destination);
+        return getPositionPion(Pion.FOU) < getPositionPion(Pion.ROI);
     }
 
     public boolean rgePeutUtiliserPouvoirFou() {
-        return getPositionPion(Pion.FOU) > getPositionPion(Pion.ROI) &&
-               getPositionPion(Pion.FOU) < CHATEAU_RGE;
-    }
-
-    public boolean rgePeutUtiliserPouvoirFou(Pion pion, int destination) {
-        return rgePeutUtiliserPouvoirFou() &&
-               !pion.getType().equals(Type.FOU) &&
-               pionEstDeplacable(pion, destination);
+        return getPositionPion(Pion.FOU) > getPositionPion(Pion.ROI);
     }
 
     public boolean estTerminee() {

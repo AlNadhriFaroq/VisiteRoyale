@@ -41,6 +41,17 @@ public class Pion implements Cloneable {
         }
     }
 
+    public static Pion typeEnPion(Type type) {
+        if (type.equals(Type.ROI))
+            return ROI;
+        else if (type.equals(Type.SOR))
+            return SOR;
+        else if (type.equals(Type.FOU))
+            return FOU;
+        else
+            throw new RuntimeException("Modele.Pion.typeEnPion() : Type entré invalide.");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

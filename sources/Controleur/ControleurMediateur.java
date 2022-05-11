@@ -15,7 +15,7 @@ public class ControleurMediateur {
     public ControleurMediateur(Jeu jeu) {
         this.jeu = jeu;
         joueurs = new Joueur[2];
-        joueurs[0] = new JoueurIA(Jeu.JOUEUR_VRT, jeu, IA.FACILE);
+        joueurs[0] = new JoueurHumain(Jeu.JOUEUR_VRT, jeu);
         joueurs[1] = new JoueurHumain(Jeu.JOUEUR_RGE, jeu);
     }
 
@@ -24,14 +24,48 @@ public class ControleurMediateur {
     }
 
     public void tictac() {
-        if (!jeu.estTerminee()) {
+        if (jeu.getJoueurCourant() != Jeu.JOUEUR_IND && !jeu.estTerminee())
             if (decompte == 0) {
                 joueurs[jeu.getJoueurCourant()].tempsEcoule();
                 decompte = lenteurAttente;
             } else {
                 decompte--;
             }
-        }
+    }
+
+    public void definirJoueurQuiCommence() {
+        Random r = new Random();
+        jeu.definirJoueurQuiCommence(r.nextInt(2));
+    }
+
+    public void selectionnerCarte(Carte carte) {
+        Coup coup = new Coup(jeu.getJoueurCourant(), Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
+        jouer(coup);
+    }
+
+    public void selectionnerPion(Pion pion) {
+        Coup coup = new Coup(jeu.getJoueurCourant(), Coup.CHOISIR_PION, null, pion, Plateau.DIRECTION_IND);
+        jouer(coup);
+    }
+
+    public void selectionnerDirection(int direction) {
+        Coup coup = new Coup(jeu.getJoueurCourant(), Coup.CHOISIR_DIRECTION, null, null, direction);
+        jouer(coup);
+    }
+
+    public void activerPouvoirSor() {
+        Coup coup = new Coup(jeu.getJoueurCourant(), Coup.ACTIVER_POUVOIR_SOR, null, null, Plateau.DIRECTION_IND);
+        jouer(coup);
+    }
+
+    public void activerPouvoirFou() {
+        Coup coup = new Coup(jeu.getJoueurCourant(), Coup.ACTIVER_POUVOIR_FOU, null, null, Plateau.DIRECTION_IND);
+        jouer(coup);
+    }
+
+    public void finirTour() {
+        Coup coup = new Coup(jeu.getJoueurCourant(), Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
+        jouer(coup);
     }
 
     public void jouer(Coup coup) {
@@ -66,10 +100,5 @@ public class ControleurMediateur {
 
     public void quitter() {
         System.exit(0);
-    }
-
-    public void definirJoueurQuiCommence() {
-        Random r = new Random();
-        jeu.definirJoueurQuiCommence(r.nextInt(2));
     }
 }

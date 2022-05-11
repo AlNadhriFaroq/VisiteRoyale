@@ -10,16 +10,16 @@ class IAAleatoire extends IA {
     int joueur;
     int tailleMain;
     int typeCoup;
-    Carte[] cartes;
-    Pion[] pions;
-    int[] destinations;
+    Carte carte;
+    Pion pion;
+    int direction;
 
     IAAleatoire(Jeu jeu) {
         super(jeu);
         r = new Random();
         joueur = jeu.getJoueurCourant();
     }
-
+/*
     @Override
     Coup calculerCoup() {
         tailleMain = jeu.getMain(joueur).getTaille();
@@ -324,4 +324,6 @@ class IAAleatoire extends IA {
         }
         return ok;
     }
+
+ */
 }

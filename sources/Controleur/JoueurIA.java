@@ -4,12 +4,10 @@ import java.util.Random;
 import Modele.*;
 
 class JoueurIA extends Joueur {
-    Random r;
     IA ia;
 
     JoueurIA(int num, Jeu jeu, int difficulte) {
         super(num, jeu);
-        r = new Random();
 
         if (difficulte == IA.FACILE)
             ia = new IAAleatoire(jeu);
@@ -23,7 +21,10 @@ class JoueurIA extends Joueur {
 
     @Override
     boolean tempsEcoule() {
-        if (jeu.getEtatJeu() == Jeu.ETAT_EN_JEU) {
+        if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_JOUEUR) {
+            Random r = new Random();
+            jeu.definirJoueurQuiCommence(r.nextInt(2));
+        } else if (jeu.getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE) {
             Coup coup = ia.elaborerCoup();
             jeu.jouerCoup(coup);
         }

@@ -13,139 +13,211 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     }
 
     public void interpreterCommande(String cmd) {
-        if (cmd.toLowerCase().startsWith("quitter"))
-            System.exit(0);
-
         switch (jeu.getEtatJeu()) {
             case Jeu.ETAT_CHOIX_JOUEUR:
-                if (cmd.toLowerCase().startsWith("g") ||
-                        cmd.toLowerCase().startsWith("d") ||
-                        cmd.toLowerCase().startsWith("gauche") ||
-                        cmd.toLowerCase().startsWith("droite") ||
-                        cmd.toLowerCase().startsWith("main gauche") ||
-                        cmd.toLowerCase().startsWith("main droite")) {
-                    ctrl.definirJoueurQuiCommence();
-                } else if (cmd.toLowerCase().startsWith("aide")) {
-                    System.out.println("Gauche  : Choisir la main de gauche.");
-                    System.out.println("Droite  : Choisir la main de droite.");
-                    System.out.println("Aide    : Afficher cette aide.");
-                    System.out.println("Quitter : Quitter le programme.");
-                }
+                interpreterCommandeChoixJoueur(cmd);
                 break;
-
-            case Jeu.ETAT_EN_JEU:
-                String[] cmds = cmd.split(" ");
-                Coup coup;
-                int typeCoup;
-                Carte[] cartes = new Carte[2];
-                Modele.Pion[] pions = new Modele.Pion[2];
-                int[] destinations = new int[2];
-
-                if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
-                    System.out.println("<C> <D>                 : Déplacé le pion indiqué par la carte C dans la direction D.");
-                    System.out.println("G1 <G> <D>              : Déplacer le Garde G d'une case dans la direction D.");
-                    System.out.println("G2 <G> <D>              : Déplacer le Garde G de deux cases dans la direction D.");
-                    System.out.println("G2 <G> <D> <G> <D>      : Déplacer les Gardes G d'une case respectivement dans les directions D données.");
-                    System.out.println("GC                      : Déplacer les Gardes sur les cases adjacentes au Roi.");
-                    System.out.println("FM                      : Déplacer le Fou sur la Fontaine.");
-                    System.out.println("Privilege roi <D>       : Jouer le privilège du Roi, déplacer la Cour dans la direction D.");
-                    System.out.println("Pouvoir sorcier <P>     : Jouer le pouvoir du Sorcier, déplacer le pion P à la position du Sorcier.");
-                    System.out.println("Pouvoir fou FM <P>      : Jouer le pouvoir du Fou, déplacer le pion P sur la Fontaine.");
-                    System.out.println("Pouvoir fou <C> <P> <D> : Jouer le pouvoir du Fou, déplacer le pion P dans la direction D.");
-                    System.out.println("Fin de tour             : Finir son tour.");
-                    System.out.println("Annuler                 : Annuler le dernier coup joué.");
-                    System.out.println("Refaire                 : Refaire le dernier coup joué.");
-                    System.out.println("Nouvelle partie         : Lancer une nouvelle partie.");
-                    System.out.println("Aide                    : Afficher cette aide.");
-                    System.out.println("Quitter                 : Quitter le programme.");
-                    break;
-                } else if (cmd.equalsIgnoreCase("nouvelle partie")) {
-                    ctrl.nouvellePartie();
-                    break;
-                } else if (cmd.equalsIgnoreCase("annuler")) {
-                    ctrl.annuler();
-                    break;
-                } else if (cmd.equalsIgnoreCase("refaire")) {
-                    ctrl.refaire();
-                    break;
-                } else if (cmd.equalsIgnoreCase("fin de tour") || cmd.equalsIgnoreCase("fin tour")) {
-                    typeCoup = Coup.FIN_TOUR;
-                } else if (cmd.toLowerCase().startsWith("privilege roi ") && cmds.length == 3) {
-                    typeCoup = Coup.PRIVILEGE_ROI;
-                    cartes[0] = Carte.texteEnCarte("R1");
-                    cartes[1] = Carte.texteEnCarte("R1");
-                    destinations[0] = Plateau.texteEnDirection(cmds[2]);
-                } else if (cmd.toLowerCase().startsWith("pouvoir sorcier ") && cmds.length == 3) {
-                    typeCoup = Coup.POUVOIR_SOR;
-                    pions[0] = Modele.Pion.texteEnPion(cmds[2]);
-                } else if (cmd.toLowerCase().startsWith("pouvoir fou ") && cmds.length == 5) {
-                    typeCoup = Coup.POUVOIR_FOU;
-                    cartes[0] = Carte.texteEnCarte(cmds[2]);
-                    pions[0] = Modele.Pion.texteEnPion(cmds[3]);
-                    destinations[0] = jeu.getPlateau().getPositionPion(pions[0]) + Plateau.texteEnDirection(cmds[4]) * cartes[0].getDeplacement();
-                } else if (cmd.toLowerCase().startsWith("pouvoir fou ") && cmds.length == 4) {
-                    typeCoup = Coup.POUVOIR_FOU;
-                    cartes[0] = Carte.texteEnCarte(cmds[2]);
-                    pions[0] = Modele.Pion.texteEnPion(cmds[3]);
-                } else if (cmd.equals("GC") || cmd.equals("FM")) {
-                    typeCoup = Coup.DEPLACEMENT;
-                    cartes[0] = Carte.texteEnCarte(cmds[0]);
-                } else if (cmd.startsWith("G2 ") && cmds.length == 5) {
-                    typeCoup = Coup.DEPLACEMENT;
-                    cartes[0] = Carte.texteEnCarte(cmds[0]);
-                    pions[0] = Modele.Pion.texteEnPion(cmds[1]);
-                    destinations[0] = jeu.getPlateau().getPositionPion(pions[0]) + Plateau.texteEnDirection(cmds[2]);
-                    pions[1] = Modele.Pion.texteEnPion(cmds[3]);
-                    destinations[1] = jeu.getPlateau().getPositionPion(pions[1]) + Plateau.texteEnDirection(cmds[4]);
-                } else if (cmd.startsWith("G2 ") && cmds.length == 3) {
-                    typeCoup = Coup.DEPLACEMENT;
-                    cartes[0] = Carte.texteEnCarte(cmds[0]);
-                    pions[0] = Modele.Pion.texteEnPion(cmds[1]);
-                    destinations[0] = jeu.getPlateau().getPositionPion(pions[0]) + Plateau.texteEnDirection(cmds[2]) * 2;
-                } else if (cmd.startsWith("G1 ") && cmds.length == 3) {
-                    typeCoup = Coup.DEPLACEMENT;
-                    cartes[0] = Carte.texteEnCarte(cmds[0]);
-                    pions[0] = Modele.Pion.texteEnPion(cmds[1]);
-                    destinations[0] = jeu.getPlateau().getPositionPion(pions[0]) + Plateau.texteEnDirection(cmds[2]);
-                } else if (cmd.startsWith("R1 ") && cmds.length == 2) {
-                    typeCoup = Coup.DEPLACEMENT;
-                    cartes[0] = Carte.texteEnCarte(cmds[0]);
-                    pions[0] = Modele.Pion.ROI;
-                    destinations[0] = jeu.getPlateau().getPositionPion(Modele.Pion.ROI) + Plateau.texteEnDirection(cmds[1]);
-                } else if (cmd.charAt(0) == 'S' && cmds.length == 2) {
-                    typeCoup = Coup.DEPLACEMENT;
-                    cartes[0] = Carte.texteEnCarte(cmds[0]);
-                    pions[0] = Modele.Pion.SOR;
-                    destinations[0] = jeu.getPlateau().getPositionPion(Modele.Pion.SOR) + Plateau.texteEnDirection(cmds[1]) * cartes[0].getDeplacement();
-                } else if (cmd.charAt(0) == 'F' && cmds.length == 2) {
-                    typeCoup = Coup.DEPLACEMENT;
-                    cartes[0] = Carte.texteEnCarte(cmds[0]);
-                    pions[0] = Modele.Pion.FOU;
-                    destinations[0] = jeu.getPlateau().getPositionPion(Modele.Pion.FOU) + Plateau.texteEnDirection(cmds[1]) * cartes[0].getDeplacement();
-                } else {
-                    break;
-                }
-
-                if ((coup = jeu.creerCoup(typeCoup, cartes, pions, destinations)) != null) {
-                    coup.fixerJeu(jeu);
-                    ctrl.jouer(coup);
-                } else {
-                    System.out.println("Coup non autorisé");
-                }
+            case Jeu.ETAT_CHOIX_CARTE:
+                interpreterCommandeChoixCarte(cmd);
                 break;
-
-            case Jeu.ETAT_GAME_OVER:
-                if (cmd.toLowerCase().startsWith("nouvelle partie")) {
-                    ctrl.nouvellePartie();
-                } else if (cmd.toLowerCase().startsWith("aide")) {
-                    System.out.println("Nouvelle partie : Lancer une nouvelle partie.");
-                    System.out.println("Aide            : Afficher cette aide.");
-                    System.out.println("Quitter         : Quitter le programme.");
-                }
+            case Jeu.ETAT_CHOIX_PION:
+                interpreterCommandeChoixPion(cmd);
                 break;
-
+            case Jeu.ETAT_CHOIX_DIRECTION:
+                interpreterCommandeChoixDirection(cmd);
+                break;
+            case Jeu.ETAT_FIN_DE_PARTIE:
+                interpreterCommandeFinDePartie(cmd);
+                break;
             default:
-                break;
+                throw new RuntimeException("Vue.InterfaceTextuelle.interpreterComande() : Etat du jeu non reconnu.");
+        }
+    }
+
+    void interpreterCommandeChoixJoueur(String cmd) {
+        if (cmd.equalsIgnoreCase("g") || cmd.equalsIgnoreCase("d") ||
+            cmd.equalsIgnoreCase("gauche") || cmd.equalsIgnoreCase("droite")) {
+            ctrl.definirJoueurQuiCommence();
+        } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
+            System.out.println("G / Gauche : Choisir la main de gauche.");
+            System.out.println("D / Droite : Choisir la main de droite.");
+            System.out.println("Aide       : Afficher cette aide.");
+            System.out.println("Quitter    : Quitter le programme.");
+        } else if (cmd.toLowerCase().startsWith("quitter")) {
+            ctrl.quitter();
+        } else {
+            System.out.println("Commande non reconnue.");
+        }
+    }
+
+    void interpreterCommandeChoixCarte(String cmd) {
+        if (jeu.peutUtiliserPouvoirSorcier() && cmd.equalsIgnoreCase("sorcier") && cmd.equalsIgnoreCase("sor")) {
+            ctrl.activerPouvoirSor();
+        } else if (jeu.peutUtiliserPouvoirFou() && cmd.equalsIgnoreCase("fou")) {
+            ctrl.activerPouvoirFou();
+        } else if (jeu.peutFinirTour() && cmd.equalsIgnoreCase("fin") || cmd.equalsIgnoreCase("fin tour")) {
+            ctrl.finirTour();
+        } else if (cmd.equalsIgnoreCase("annuler")) {
+            ctrl.annuler();
+        } else if (cmd.equalsIgnoreCase("refaire")) {
+            ctrl.refaire();
+        } else if (cmd.equalsIgnoreCase("relancer")) {
+            ctrl.nouvellePartie();
+        } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
+            if (jeu.peutSelectionnerCarte(Carte.R1))
+                System.out.println("R1       : Sélectionner une carte Roi pour déplacer le pion Roi d'une case.");
+            if (jeu.peutSelectionnerCarte(Carte.G1))
+                System.out.println("G1       : Sélectionner une carte Garde pour déplacer un pion Garde d'une case.");
+            if (jeu.peutSelectionnerCarte(Carte.G2))
+                System.out.println("G2       : Sélectionner une carte Garde pour déplacer un pion Garde de deux cases ou deux gardes d'une case.");
+            if (jeu.peutSelectionnerCarte(Carte.GC))
+                System.out.println("GC       : Sélectionner une carte Garde pour déplacer les deux pions Gardes sur les cases adjacentes au Roi.");
+            if (jeu.peutSelectionnerCarte(Carte.S1))
+                System.out.println("S1       : Sélectionner une carte Sorcier pour déplacer le pion Sorcier d'une case.");
+            if (jeu.peutSelectionnerCarte(Carte.S2))
+                System.out.println("S2       : Sélectionner une carte Sorcier pour déplacer le pion Sorcier de deux cases.");
+            if (jeu.peutSelectionnerCarte(Carte.S3))
+                System.out.println("S3       : Sélectionner une carte Sorcier pour déplacer le pion Sorcier de trois cases.");
+            if (jeu.peutSelectionnerCarte(Carte.F1))
+                System.out.println("F1       : Sélectionner une carte Fou pour déplacer le pion Fou d'une case.");
+            if (jeu.peutSelectionnerCarte(Carte.F2))
+                System.out.println("F2       : Sélectionner une carte Fou pour déplacer le pion Fou de deux cases.");
+            if (jeu.peutSelectionnerCarte(Carte.F3))
+                System.out.println("F3       : Sélectionner une carte Fou pour déplacer le pion Fou de trois cases.");
+            if (jeu.peutSelectionnerCarte(Carte.F4))
+                System.out.println("F4       : Sélectionner une carte Fou pour déplacer le pion Fou de quatre cases.");
+            if (jeu.peutSelectionnerCarte(Carte.F5))
+                System.out.println("F5       : Sélectionner une carte Fou pour déplacer le pion Fou de cinq cases.");
+            if (jeu.peutSelectionnerCarte(Carte.FM))
+                System.out.println("FM       : Sélectionner une carte Fou pour déplacer le pion Fou sur la Fontaine.");
+            if (jeu.peutUtiliserPouvoirSorcier())
+                System.out.println("Sorcier  : Activer le pouvoir du Sorcier, déplacant un pion P à la position du Sorcier.");
+            if (jeu.peutUtiliserPouvoirFou())
+                System.out.println("Fou      : Activer le pouvoir du Fou, déplacant un pion avec les cartes Fou.");
+            if (jeu.peutFinirTour())
+                System.out.println("Fin      : Finir son tour.");
+            System.out.println("Annuler  : Annuler le dernier coup joué.");
+            System.out.println("Refaire  : Refaire le dernier coup joué.");
+            System.out.println("Relancer : Lancer une nouvelle partie.");
+            System.out.println("Aide     : Afficher cette aide.");
+            System.out.println("Quitter  : Quitter le programme.");
+        } else if (cmd.equalsIgnoreCase("quitter")) {
+            ctrl.quitter();
+        } else if (cmd.length() == 2) {
+            try {
+                Carte carte = Carte.texteEnCarte(cmd.toUpperCase());
+                if (jeu.peutSelectionnerCarte(carte))
+                    ctrl.selectionnerCarte(carte);
+                else
+                    System.out.println("Aucun coup n'est possible pour jouer cette carte.");
+            } catch (RuntimeException e) {
+                System.out.println("Cette carte n'existe pas.");
+            }
+        } else {
+            System.out.println("Commande non reconnue.");
+        }
+    }
+
+    void interpreterCommandeChoixPion(String cmd) {
+        if (cmd.equalsIgnoreCase("annuler")) {
+            ctrl.annuler();
+        } else if (cmd.equalsIgnoreCase("refaire")) {
+            ctrl.refaire();
+        } else if (cmd.equalsIgnoreCase("relancer")) {
+            ctrl.nouvellePartie();
+        } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
+            if (jeu.peutSelectionnerPion(Pion.ROI))
+                System.out.println("R        : Selectionner le pion Roi.");
+            if (jeu.peutSelectionnerPion(Pion.GAR_VRT))
+                System.out.println("GV       : Selectionner le pion Garde qui est du côté du joueur vert.");
+            if (jeu.peutSelectionnerPion(Pion.GAR_RGE))
+                System.out.println("GR       : Selectionner le pion Garde qui est du côté de joueur rouge.");
+            if (jeu.peutSelectionnerPion(Pion.SOR))
+                System.out.println("S        : Selectionner le pion Sorcier.");
+            System.out.println("Annuler  : Annuler le dernier coup joué.");
+            System.out.println("Refaire  : Refaire le dernier coup joué.");
+            System.out.println("Relancer : Lancer une nouvelle partie.");
+            System.out.println("Aide     : Afficher cette aide.");
+            System.out.println("Quitter  : Quitter le programme.");
+        } else if (cmd.toLowerCase().startsWith("quitter")) {
+            ctrl.quitter();
+        } else if (cmd.length() == 1 || cmd.length() == 2) {
+            try {
+                Pion pion = Pion.texteEnPion(cmd.toUpperCase());
+                if (jeu.peutSelectionnerPion(pion))
+                    ctrl.selectionnerPion(pion);
+                else
+                    System.out.println("Impossible de déplacer ce pion.");
+            } catch (RuntimeException e) {
+                System.out.println("Ce pion n'existe pas.");
+            }
+        } else {
+            System.out.println("Commande non reconnue.");
+        }
+    }
+
+    void interpreterCommandeChoixDirection(String cmd) {
+        if (jeu.peutUtiliserPrivilegeRoi() && cmd.equalsIgnoreCase("R1")) {
+            ctrl.selectionnerCarte(Carte.R1);
+        } else if (cmd.equalsIgnoreCase("GV") || cmd.equalsIgnoreCase("GR")) {
+            Pion pion = Pion.texteEnPion(cmd);
+            if (jeu.peutSelectionnerPion(pion))
+                ctrl.selectionnerPion(pion);
+            else
+                System.out.println("Commande non reconnue.");
+        } else if (cmd.equalsIgnoreCase("annuler")) {
+            ctrl.annuler();
+        } else if (cmd.equalsIgnoreCase("refaire")) {
+            ctrl.refaire();
+        } else if (cmd.equalsIgnoreCase("nouvelle partie")) {
+            ctrl.nouvellePartie();
+        } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
+            if (jeu.peutSelectionnerCarte(Carte.R1))
+                System.out.println("R1       : Sélectionner une carte Roi pour déplacer la Cour d'une case.");
+            if (jeu.peutSelectionnerPion(Pion.GAR_VRT))
+                System.out.println("GV       : Sélectionner le pion Garde pour déplacer un deuxième pion Garde d'une case.");
+            if (jeu.peutSelectionnerPion(Pion.GAR_RGE))
+                System.out.println("GR       : Sélectionner le pion Garde pour déplacer un deuxième pion Garde d'une case.");
+            if (jeu.peutSelectionnerDirection(Plateau.DIRECTION_VRT))
+                System.out.println("V / G    : Sélectionner la direction vers le joueur vert, vers la gauche.");
+            if (jeu.peutSelectionnerDirection(Plateau.DIRECTION_RGE))
+                System.out.println("R / D    : Sélectionner la direction vers le joueur rouge, vers la droite.");
+            System.out.println("Annuler  : Annuler le dernier coup joué.");
+            System.out.println("Refaire  : Refaire le dernier coup joué.");
+            System.out.println("Relancer : Lancer une nouvelle partie.");
+            System.out.println("Aide     : Afficher cette aide.");
+            System.out.println("Quitter  : Quitter le programme.");
+        } else if (cmd.toLowerCase().startsWith("quitter")) {
+            ctrl.quitter();
+        } else if (cmd.length() == 1) {
+            try {
+                int direction = Plateau.texteEnDirection(cmd);
+                if (jeu.peutSelectionnerDirection(direction))
+                    ctrl.selectionnerDirection(direction);
+                else
+                    System.out.println("Impossible de jouer ce coup dans cette direction.");
+            } catch (RuntimeException e) {
+                System.out.println("Cette direction n'existe pas.");
+            }
+        } else {
+            System.out.println("Commande non reconnue.");
+        }
+    }
+
+    void interpreterCommandeFinDePartie(String cmd) {
+        if (cmd.equalsIgnoreCase("annuler")) {
+            ctrl.annuler();
+        } else if (cmd.equalsIgnoreCase("relancer")) {
+            ctrl.nouvellePartie();
+        } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
+            System.out.println("Annuler  : Annuler le dernier coup joué.");
+            System.out.println("Relancer : Lancer une nouvelle partie.");
+            System.out.println("Aide     : Afficher cette aide.");
+            System.out.println("Quitter  : Quitter le programme.");
+        } else if (cmd.equalsIgnoreCase("quitter")) {
+            ctrl.quitter();
+        } else {
+            System.out.println("Commande non reconnue.");
         }
     }
 
