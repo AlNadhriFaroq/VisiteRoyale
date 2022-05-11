@@ -51,7 +51,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     }
 
     void interpreterCommandeChoixCarte(String cmd) {
-        if (jeu.peutUtiliserPouvoirSorcier() && cmd.equalsIgnoreCase("sorcier") && cmd.equalsIgnoreCase("sor")) {
+        if (jeu.peutUtiliserPouvoirSorcier() && (cmd.equalsIgnoreCase("sorcier") || cmd.equalsIgnoreCase("sor"))) {
             ctrl.activerPouvoirSor();
         } else if (jeu.peutUtiliserPouvoirFou() && cmd.equalsIgnoreCase("fou")) {
             ctrl.activerPouvoirFou();
