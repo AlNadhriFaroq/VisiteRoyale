@@ -20,7 +20,7 @@ public class Coup implements Cloneable {
     Pion[] pionsPasse;
     int[] positionsPasse;
 
-    boolean activationPouvoirFouPasse;
+    int activationPrivilegeRoiPasse;
     int nbCartesAPiocher;
     Paquet defaussePasse;
     Paquet defausseFutur;
@@ -38,7 +38,7 @@ public class Coup implements Cloneable {
         this.pion = pion;
         this.direction = direction;
 
-        activationPouvoirFouPasse = false;
+        activationPrivilegeRoiPasse = 0;
         typePasse = Type.IND;
         pionsPasse = new Pion[2];
         positionsPasse = new int[2];
@@ -241,7 +241,7 @@ public class Coup implements Cloneable {
             jeu.getPlateau().setPositionPion(Pion.GAR_RGE, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - direction);
             jeu.getPlateau().setPositionPion(Pion.ROI, jeu.getPlateau().getPositionPion(Pion.ROI) - direction);
             jeu.getPlateau().setPositionPion(Pion.GAR_VRT, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - direction);
-        } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null && jeu.getSelectionDirections(1) != Plateau.DIRECTION_IND) {
+        } else if (carte.estDeplacementGar1Plus1() && selectionPionsPasse[1] != null && selectionDirectionsPasse[1] != Plateau.DIRECTION_IND) {
             desexecuterDeplacement();
             jeu.putSelectionDirections(1, Plateau.DIRECTION_IND);
         } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null && jeu.getSelectionDirections(0) != Plateau.DIRECTION_IND) {
@@ -374,6 +374,8 @@ public class Coup implements Cloneable {
         jeu.putSelectionDirections(1, Plateau.DIRECTION_IND);
 
         jeu.setActivationPouvoirFou(false);
+        activationPrivilegeRoiPasse = jeu.getActivationPrivilegeRoi();
+        jeu.setActivationPrivilegeRoi(0);
 
         if (joueur == Jeu.JOUEUR_VRT)
             jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + Plateau.DIRECTION_VRT * jeu.evaluerDeplacementCouronne(joueur));
@@ -444,10 +446,13 @@ public class Coup implements Cloneable {
         else
             throw new RuntimeException("Modele.Coup.desexecuterFinTour() : Joueur courant invalide.");
 
+        jeu.setActivationPrivilegeRoi(activationPrivilegeRoiPasse);
+
         if (!jeu.getSelectionCartes(joueur).estVide() &&
             jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1).getType().equals(Type.FOU) &&
             !typePasse.equals(Type.FOU))
             jeu.setActivationPouvoirFou(true);
+
 
         jeu.putSelectionDirections(1, selectionDirectionsPasse[1]);
         jeu.putSelectionDirections(0, selectionDirectionsPasse[0]);

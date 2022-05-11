@@ -172,7 +172,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
         } else if (cmd.equalsIgnoreCase("nouvelle partie")) {
             ctrl.nouvellePartie();
         } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
-            if (jeu.peutSelectionnerCarte(Carte.R1))
+            if (jeu.peutUtiliserPrivilegeRoi())
                 System.out.println("R1       : Sélectionner une carte Roi pour déplacer la Cour d'une case.");
             if (jeu.peutSelectionnerPion(Pion.GAR_VRT))
                 System.out.println("GV       : Sélectionner le pion Garde pour déplacer un deuxième pion Garde d'une case.");
