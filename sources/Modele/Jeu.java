@@ -299,7 +299,9 @@ public class Jeu extends Observable implements Cloneable {
                    activationPrivilegeRoi == 1 &&
                    (plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_VRT) || plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_RGE));
         } else if (etatJeu == ETAT_CHOIX_CARTE){
-            if (activationPouvoirFou) {
+            if (activationPouvoirFou &&
+                ((joueurCourant == JOUEUR_VRT && plateau.vrtPeutUtiliserPouvoirFou()) ||
+                 (joueurCourant == JOUEUR_RGE && plateau.rgePeutUtiliserPouvoirFou()))) {
                 if (carte.estDeplacementFouCentre())
                     return typeCourant.equals(Type.IND) ||
                            (typeCourant.equals(Type.GAR) && (plateau.pionEstDeplacable(Pion.GAR_VRT, Plateau.FONTAINE) || plateau.pionEstDeplacable(Pion.GAR_RGE, Plateau.FONTAINE))) ||
@@ -308,7 +310,7 @@ public class Jeu extends Observable implements Cloneable {
                     return typeCourant.equals(Type.IND) ||
                            (typeCourant.equals(Type.GAR) && (pionDeplacable(Pion.GAR_VRT, carte.getDeplacement()) || pionDeplacable(Pion.GAR_RGE, carte.getDeplacement()))) ||
                            (!typeCourant.equals(Type.GAR) && pionDeplacable(Pion.typeEnPion(typeCourant), carte.getDeplacement()));
-            } else if (typeCourant.equals(carte.getType()) || typeCourant.equals(Type.IND)) {
+            } else if (!activationPouvoirFou && typeCourant.equals(carte.getType()) || typeCourant.equals(Type.IND)) {
                 if (carte.estDeplacementGarCentre() || carte.estDeplacementFouCentre())
                     return true;
                 else if (carte.estDeplacementGar1Plus1())
