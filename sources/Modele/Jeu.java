@@ -266,6 +266,72 @@ public class Jeu extends Observable implements Cloneable {
             throw new RuntimeException("Modele.Jeu.getDeplacementCouronne() : Joueur entré invalide.");
     }
 
+    public List<Coup> calculerListeCoup() {
+        List<Coup> coups;
+        switch (etatJeu) {
+            case ETAT_CHOIX_CARTE:
+                if (activationPouvoirFou) {
+                    coups = calculerCoupsCartes();
+                    if (coups.isEmpty())
+                        coups.add(new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
+                } else {
+                    coups = calculerCoupsPouvoirs();
+                }
+                break;
+            case ETAT_CHOIX_PION:
+                coups = calculerCoupsPions();
+                break;
+            case ETAT_CHOIX_DIRECTION:
+                coups = calculerCoupsCartes();
+                coups.addAll(calculerCoupsPions());
+                coups.addAll(calculerCoupsDirections());
+                break;
+            default:
+                throw new RuntimeException("Controleur.IAALeatoire.calculerCoup() : Erreur d'etat dans le jeu.");
+        }
+        return coups;
+    }
+
+    private List<Coup> calculerCoupsPouvoirs() {
+        List<Coup> pouvoirsJouables = calculerCoupsCartes();
+        if (peutUtiliserPouvoirSorcier())
+            pouvoirsJouables.add(new Coup(joueurCourant, Coup.ACTIVER_POUVOIR_SOR, null, null, Plateau.DIRECTION_IND));
+        if (peutUtiliserPouvoirFou())
+            pouvoirsJouables.add(new Coup(joueurCourant, Coup.ACTIVER_POUVOIR_FOU, null, null, Plateau.DIRECTION_IND));
+        if (peutFinirTour())
+            pouvoirsJouables.add(new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
+        return pouvoirsJouables;
+    }
+
+    private List<Coup> calculerCoupsCartes() {
+        List<Coup> cartesJouables = new ArrayList<>();
+        for (int i = 0; i < getMain(joueurCourant).getTaille(); i++) {
+            Carte carte = getMain(joueurCourant).getCarte(i);
+            if (peutSelectionnerCarte(carte))
+                cartesJouables.add(new Coup(joueurCourant, Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND));
+        }
+        return cartesJouables;
+    }
+
+    private List<Coup> calculerCoupsPions() {
+        List<Coup> pionsJouables = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Pion pion = Pion.valeurEnPion(i);
+            if (peutSelectionnerPion(pion))
+                pionsJouables.add(new Coup(joueurCourant, Coup.CHOISIR_PION, null, pion, Plateau.DIRECTION_IND));
+        }
+        return pionsJouables;
+    }
+
+    private List<Coup> calculerCoupsDirections() {
+        List<Coup> directionsJouables = new ArrayList<>();
+        if (peutSelectionnerDirection(Plateau.DIRECTION_VRT))
+            directionsJouables.add(new Coup(joueurCourant, Coup.CHOISIR_DIRECTION, null, null, Plateau.DIRECTION_VRT));
+        if (peutSelectionnerDirection(Plateau.DIRECTION_RGE))
+            directionsJouables.add(new Coup(joueurCourant, Coup.CHOISIR_DIRECTION, null, null, Plateau.DIRECTION_RGE));
+        return directionsJouables;
+    }
+
     public void jouerCoup(Coup coup) {
         coup.fixerJeu(this);
         coup.executer();
@@ -357,6 +423,7 @@ public class Jeu extends Observable implements Cloneable {
 
         if (etatJeu == ETAT_CHOIX_DIRECTION) {
             return (typeCourant.equals(Type.ROI) || typeCourant.equals(Type.IND)) &&
+                   carte.getType().equals(Type.ROI) &&
                    activationPrivilegeRoi == 1 &&
                    (plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_VRT) || plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_RGE));
         } else if (etatJeu == ETAT_CHOIX_CARTE){
@@ -401,7 +468,7 @@ public class Jeu extends Observable implements Cloneable {
                    !pion.equals(getSelectionPions(0)) && pionDeplacable(pion, 1);
         } else if (etatJeu == ETAT_CHOIX_PION) {
             if (activationPouvoirFou && carte.estDeplacementFouCentre())
-                return typeCourant.equals(Type.IND) && !pion.getType().equals(Type.FOU) && plateau.pionEstDeplacable(pion, Plateau.FONTAINE);
+                return (typeCourant.equals(Type.IND) || pion.getType().equals(Type.GAR)) && !pion.getType().equals(Type.FOU) && plateau.pionEstDeplacable(pion, Plateau.FONTAINE);
             else if (activationPouvoirFou)
                 return (typeCourant.equals(Type.IND) || pion.getType().equals(Type.GAR)) && !pion.getType().equals(Type.FOU) && pionDeplacable(pion, carte.getDeplacement());
             else if (carte.getType().equals(Type.GAR) && !carte.estDeplacementGarCentre())

@@ -5,7 +5,7 @@ import Modele.*;
 import java.util.Random;
 
 public class ControleurMediateur {
-    final int lenteurAttente = 50;
+    final int lenteurAttente = 10;
 
     Jeu jeu;
     Joueur[] joueurs;
@@ -15,9 +15,10 @@ public class ControleurMediateur {
     public ControleurMediateur(Jeu jeu) {
         this.jeu = jeu;
         joueurs = new Joueur[2];
-        joueurs[0] = new JoueurHumain(Jeu.JOUEUR_VRT, jeu);
-        joueurs[1] = new JoueurIA(Jeu.JOUEUR_RGE, jeu, 0);
+        //joueurs[0] = new JoueurHumain(Jeu.JOUEUR_VRT, jeu);
+        joueurs[0] = new JoueurIA(Jeu.JOUEUR_VRT, jeu, 0);
         //joueurs[1] = new JoueurHumain(Jeu.JOUEUR_RGE, jeu);
+        joueurs[1] = new JoueurIA(Jeu.JOUEUR_RGE, jeu, 0);
     }
 
     public void clicSouris(int x, int y) {

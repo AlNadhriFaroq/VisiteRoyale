@@ -2,11 +2,11 @@ package Modele;
 
 public class Coup implements Cloneable {
     public static final int CHOISIR_CARTE = 0;
-    public static final int ACTIVER_POUVOIR_SOR = 1;
-    public static final int ACTIVER_POUVOIR_FOU = 2;
-    public static final int FINIR_TOUR = 3;
-    public static final int CHOISIR_PION = 4;
-    public static final int CHOISIR_DIRECTION = 5;
+    public static final int CHOISIR_PION = 1;
+    public static final int CHOISIR_DIRECTION = 2;
+    public static final int ACTIVER_POUVOIR_SOR = 3;
+    public static final int ACTIVER_POUVOIR_FOU = 4;
+    public static final int FINIR_TOUR = 5;
 
     Jeu jeu;
     int joueur;
@@ -49,6 +49,22 @@ public class Coup implements Cloneable {
         indiceMelange = -1;
         selectionPionsPasse = new Pion[2];
         selectionDirectionsPasse = new int[2];
+    }
+
+    public int getTypeCoup() {
+        return typeCoup;
+    }
+
+    public Carte getCarte() {
+        return carte;
+    }
+
+    public Pion getPion() {
+        return pion;
+    }
+
+    public int getDirection() {
+        return direction;
     }
 
     public void fixerJeu(Jeu jeu) {
@@ -105,7 +121,7 @@ public class Coup implements Cloneable {
         }
     }
 
-    void executerChoisirCarte() {
+    private void executerChoisirCarte() {
         jeu.getSelectionCartes(joueur).piocher(jeu.getMain(joueur).defausser(carte));
 
         if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_DIRECTION) {
@@ -132,7 +148,7 @@ public class Coup implements Cloneable {
         }
     }
 
-    void desexecuterChoisirCarte() {
+    private void desexecuterChoisirCarte() {
         if (jeu.getActivationPrivilegeRoi() == 2) {
             jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
             jeu.setActivationPrivilegeRoi(1);
@@ -154,7 +170,7 @@ public class Coup implements Cloneable {
         jeu.getMain(joueur).trier();
     }
 
-    void executerChoisirPion() {
+    private void executerChoisirPion() {
         if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_DIRECTION) {
             jeu.putSelectionPions(1, pion);
         } else if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_PION) {
@@ -184,7 +200,7 @@ public class Coup implements Cloneable {
         }
     }
 
-    void desexecuterChoisirPion() {
+    private void desexecuterChoisirPion() {
         if (jeu.getSelectionPions(1) != null) {
             jeu.putSelectionPions(1, null);
             jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
@@ -205,7 +221,7 @@ public class Coup implements Cloneable {
         }
     }
 
-    void executerChoisirDirection() {
+    private void executerChoisirDirection() {
         Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
 
         if (jeu.getActivationPrivilegeRoi() == 2) {
@@ -231,7 +247,7 @@ public class Coup implements Cloneable {
         }
     }
 
-    void desexecuterChoisirDirection() {
+    private void desexecuterChoisirDirection() {
         jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
         Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
 
@@ -344,25 +360,25 @@ public class Coup implements Cloneable {
         jeu.setTypeCourant(typePasse);
     }
 
-    void executerActiverPouvoirSorcier() {
+    private void executerActiverPouvoirSorcier() {
         jeu.setActivationPouvoirSor(true);
         jeu.setEtatJeu(Jeu.ETAT_CHOIX_PION);
     }
 
-    void desexecuterActiverPouvoirSorcier() {
+    private void desexecuterActiverPouvoirSorcier() {
         jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
         jeu.setActivationPouvoirSor(false);
     }
 
-    void executerActiverPouvoirFou() {
+    private void executerActiverPouvoirFou() {
         jeu.setActivationPouvoirFou(true);
     }
 
-    void desexecuterActiverPouvoirFou() {
+    private void desexecuterActiverPouvoirFou() {
         jeu.setActivationPouvoirFou(false);
     }
 
-    void executerFinirTour() {
+    private void executerFinirTour() {
         boolean finPartie = false;
 
         selectionPionsPasse[0] = jeu.getSelectionPions(0);
@@ -423,7 +439,7 @@ public class Coup implements Cloneable {
             jeu.alternerJoueurCourant();
     }
 
-    void desexecuterFinirTour() {
+    private void desexecuterFinirTour() {
         if (jeu.getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE)
             jeu.alternerJoueurCourant();
 
