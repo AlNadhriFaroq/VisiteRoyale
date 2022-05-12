@@ -119,6 +119,7 @@ class IAAleatoire extends IA {
 
     int choisirDirection() {
         List<Integer> directionsJouables = new ArrayList<>();
+        int rand;
         for (int i = 0; i < 2; i++) {
             int direction;
             if (i == 0)
@@ -128,8 +129,30 @@ class IAAleatoire extends IA {
             if (jeu.peutSelectionnerDirection(direction))
                 directionsJouables.add(direction);
         }
-        if (!directionsJouables.isEmpty())
-            return directionsJouables.get(r.nextInt(directionsJouables.size()));
+        if (!directionsJouables.isEmpty()){
+            rand = r.nextInt(9);
+            if(directionsJouables.size() == 1){
+                return directionsJouables.get(0);
+            }
+            else{
+                if(jeu.getJoueurCourant() == Jeu.JOUEUR_VRT){
+                    if(rand <= 7){
+                        return Plateau.DIRECTION_VRT;
+                    }
+                    else{
+                        return Plateau.DIRECTION_RGE;
+                    }
+                }
+                else{
+                    if(rand <= 7){
+                        return Plateau.DIRECTION_RGE;
+                    }
+                    else{
+                        return Plateau.DIRECTION_VRT;
+                    }
+                }
+            }
+        }
         return Plateau.DIRECTION_IND;
     }
 }
