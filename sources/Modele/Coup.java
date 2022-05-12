@@ -392,6 +392,8 @@ public class Coup implements Cloneable {
             jeu.getDefausse().defausser(jeu.getSelectionCartes(joueur).defausser(jeu.getSelectionCartes(joueur).getCarte(0)));
 
         for (int i = 0; i < nbCartesAPiocher; i++) {
+            cartesPiochees[i] = jeu.getPioche().piocher();
+            jeu.getMain(joueur).piocher(cartesPiochees[i]);
             if ((jeu.getPioche().estVide() && jeu.getPlateau().getFaceCouronne() == Plateau.FACE_PTT_CRN && !jeu.pionDansFontaine(Pion.ROI))) {
                 finPartie = true;
                 break;
@@ -409,8 +411,7 @@ public class Coup implements Cloneable {
                 }
                 jeu.getPioche().transferer(jeu.getDefausse());
             }
-            cartesPiochees[i] = jeu.getPioche().piocher();
-            jeu.getMain(joueur).piocher(cartesPiochees[i]);
+
         }
         jeu.getMain(joueur).trier();
 

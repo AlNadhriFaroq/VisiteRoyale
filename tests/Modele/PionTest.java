@@ -12,19 +12,21 @@ class PionTest {
         Assertions.assertNotEquals(Type.FOU, p.getType());
     }
 
+
     @Test
     void testEquals() {
         Pion p1 = Pion.ROI;
         Pion p2 = Pion.ROI;
         Pion p3 = Pion.SOR;
-        Assertions.assertTrue(p1.equals(p2));
-        Assertions.assertFalse(p1.equals(p3));
+        Assertions.assertEquals(p1, p2);
+        Assertions.assertNotEquals(p1, p3);
     }
 
     @Test
     void testClone() {
         Pion p1 = Pion.ROI;
         Pion p2 = p1.clone();
-        Assertions.assertTrue(p1.equals(p2));
+        Assertions.assertEquals(p1, p2);
+
     }
 }

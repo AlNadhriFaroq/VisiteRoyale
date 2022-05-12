@@ -39,7 +39,7 @@ public class Jeu extends Observable implements Cloneable {
 
     public Jeu() {
         //nouvellePartie();
-        nouvellePartiePersonalise(JOUEUR_RGE,14,0, 16,0,8,14,true,20);
+        nouvellePartiePersonalise(JOUEUR_RGE,12,0, 16,1,8,8,true,37);
         //partieAleatoire();
     }
 
@@ -81,6 +81,7 @@ public class Jeu extends Observable implements Cloneable {
         int posRoi = rand.nextInt(2,Plateau.CHATEAU_RGE) ;
         int posGV = rand.nextInt(Plateau.BORDURE_VRT,posRoi);
         int posGR = rand.nextInt(posRoi,Plateau.BORDURE_RGE + 1);
+        System.out.println("Garde Rouge " + posGR);
         int posSor = rand.nextInt(Plateau.BORDURE_VRT,Plateau.BORDURE_RGE + 1);
         int posFou = rand.nextInt(Plateau.BORDURE_VRT,Plateau.BORDURE_RGE + 1);
         int posCouronne = rand.nextInt(Plateau.BORDURE_VRT + 2,Plateau.BORDURE_RGE - 1);
