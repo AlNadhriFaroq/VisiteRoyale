@@ -38,9 +38,9 @@ public class Jeu extends Observable implements Cloneable {
     private int[] selectionDirections;
 
     public Jeu() {
-        //nouvellePartie();
-        nouvellePartiePersonalise(JOUEUR_RGE,12,0, 16,1,8,8,true,37);
+        nouvellePartie();
         //partieAleatoire();
+        //nouvellePartiePersonalise(JOUEUR_RGE,12,0, 16,1,8,8,true,37);
     }
 
     public void nouvellePartie() {
@@ -78,16 +78,16 @@ public class Jeu extends Observable implements Cloneable {
     public  void partieAleatoire(){
         Random rand = new Random();
         int joueur = rand.nextInt(2);
-        int posRoi = rand.nextInt(2,Plateau.CHATEAU_RGE) ;
-        int posGV = rand.nextInt(Plateau.BORDURE_VRT,posRoi);
-        int posGR = rand.nextInt(posRoi,Plateau.BORDURE_RGE + 1);
+        int posRoi = rand.nextInt(Plateau.CHATEAU_RGE - 2) + 2;
+        int posGV = rand.nextInt(posRoi - Plateau.BORDURE_VRT) + Plateau.BORDURE_VRT;
+        int posGR = rand.nextInt(Plateau.BORDURE_RGE + 1 - posRoi) + posRoi;
         System.out.println("Garde Rouge " + posGR);
-        int posSor = rand.nextInt(Plateau.BORDURE_VRT,Plateau.BORDURE_RGE + 1);
-        int posFou = rand.nextInt(Plateau.BORDURE_VRT,Plateau.BORDURE_RGE + 1);
-        int posCouronne = rand.nextInt(Plateau.BORDURE_VRT + 2,Plateau.BORDURE_RGE - 1);
+        int posSor = rand.nextInt(Plateau.BORDURE_RGE + 1);
+        int posFou = rand.nextInt(Plateau.BORDURE_RGE + 1);
+        int posCouronne = rand.nextInt(Plateau.BORDURE_RGE - 3) + 2;
         boolean faceCouronne =  rand.nextBoolean();
         int cartesDefausse = rand.nextInt(27);
-        nouvellePartiePersonalise(joueur, posRoi,posGV, posGR, posSor,  posFou, posCouronne, faceCouronne,  cartesDefausse);
+        nouvellePartiePersonalise(joueur, posRoi, posGV, posGR, posSor, posFou, posCouronne, faceCouronne, cartesDefausse);
     }
 
     public void nouvellePartiePersonalise(int joueur, int posRoi,int posGV, int posGR, int posSor, int posFou, int posCouronne,boolean faceCouronne, int cartesDefausse) {
@@ -107,9 +107,6 @@ public class Jeu extends Observable implements Cloneable {
         plateau.setPositionCouronne(posCouronne);
         plateau.setFaceCouronne(faceCouronne);
 
-        /*
-        *
-        * */
         pioche = new Paquet();
         defausse = new Paquet();
         mainJoueurVrt = new Main(TAILLE_MAIN);
@@ -129,7 +126,6 @@ public class Jeu extends Observable implements Cloneable {
             defausse.ajouter(pioche.piocher());
         }
 
-        /**/
         etatJeu = ETAT_CHOIX_CARTE;
         activationPrivilegeRoi = 0;
         activationPouvoirSor = false;

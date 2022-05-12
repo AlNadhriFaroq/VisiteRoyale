@@ -8,7 +8,6 @@ public class Coup implements Cloneable {
     public static final int CHOISIR_PION = 4;
     public static final int CHOISIR_DIRECTION = 5;
 
-
     Jeu jeu;
     int joueur;
 
