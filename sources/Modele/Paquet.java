@@ -80,6 +80,9 @@ public class Paquet implements Cloneable {
         while (!paquet.estVide())
             defausser(paquet.piocher());
     }
+    public void ajouter(Carte carte){
+        cartes.add(carte);
+    }
 
     void copier(Paquet paquet) {
         for (int i = 0; i < paquet.getTaille(); i++)

@@ -16,8 +16,8 @@ public class ControleurMediateur {
         this.jeu = jeu;
         joueurs = new Joueur[2];
         joueurs[0] = new JoueurHumain(Jeu.JOUEUR_VRT, jeu);
-        joueurs[1] = new JoueurIA(Jeu.JOUEUR_RGE, jeu, 0);
-        //joueurs[1] = new JoueurHumain(Jeu.JOUEUR_RGE, jeu);
+        //joueurs[1] = new JoueurIA(Jeu.JOUEUR_RGE, jeu, 0);
+        joueurs[1] = new JoueurHumain(Jeu.JOUEUR_RGE, jeu);
     }
 
     public void clicSouris(int x, int y) {

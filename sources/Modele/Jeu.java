@@ -38,7 +38,9 @@ public class Jeu extends Observable implements Cloneable {
     private int[] selectionDirections;
 
     public Jeu() {
-        nouvellePartie();
+        //nouvellePartie();
+        nouvellePartiePersonalise(JOUEUR_RGE,14,0, 16,0,8,14,true,20);
+        //partieAleatoire();
     }
 
     public void nouvellePartie() {
@@ -73,6 +75,72 @@ public class Jeu extends Observable implements Cloneable {
         mettreAJour();
     }
 
+    public  void partieAleatoire(){
+        Random rand = new Random();
+        int joueur = rand.nextInt(2);
+        int posRoi = rand.nextInt(2,Plateau.CHATEAU_RGE) ;
+        int posGV = rand.nextInt(Plateau.BORDURE_VRT,posRoi);
+        int posGR = rand.nextInt(posRoi,Plateau.BORDURE_RGE + 1);
+        int posSor = rand.nextInt(Plateau.BORDURE_VRT,Plateau.BORDURE_RGE + 1);
+        int posFou = rand.nextInt(Plateau.BORDURE_VRT,Plateau.BORDURE_RGE + 1);
+        int posCouronne = rand.nextInt(Plateau.BORDURE_VRT + 2,Plateau.BORDURE_RGE - 1);
+        boolean faceCouronne =  rand.nextBoolean();
+        int cartesDefausse = rand.nextInt(27);
+        nouvellePartiePersonalise(joueur, posRoi,posGV, posGR, posSor,  posFou, posCouronne, faceCouronne,  cartesDefausse);
+    }
+
+    public void nouvellePartiePersonalise(int joueur, int posRoi,int posGV, int posGR, int posSor, int posFou, int posCouronne,boolean faceCouronne, int cartesDefausse) {
+        passe = new ArrayList<>();
+        futur = new ArrayList<>();
+
+        joueurCourant = joueur;
+        typeCourant = Type.IND;
+        plateau = new Plateau(getDirectionJoueur(joueurCourant));
+        /* Calcul position pion aléatoirement*/
+        plateau.setPositionPion(Pion.ROI,posRoi);
+        plateau.setPositionPion(Pion.GAR_VRT,posGV);
+        plateau.setPositionPion(Pion.GAR_RGE,posGR);
+        plateau.setPositionPion(Pion.SOR,posSor);
+        plateau.setPositionPion(Pion.FOU,posFou);
+
+        plateau.setPositionCouronne(posCouronne);
+        plateau.setFaceCouronne(faceCouronne);
+
+        /*
+        *
+        * */
+        pioche = new Paquet();
+        defausse = new Paquet();
+        mainJoueurVrt = new Main(TAILLE_MAIN);
+        mainJoueurRge = new Main(TAILLE_MAIN);
+
+        pioche.remplir();
+        for (int c = 0; c < TAILLE_MAIN; c++) {
+            mainJoueurVrt.piocher(pioche.piocher());
+            mainJoueurRge.piocher(pioche.piocher());
+        }
+
+        mainJoueurVrt.trier();
+        mainJoueurRge.trier();
+
+        /* mettre les cartes dans la défausse*/
+        for(int i = 0 ; i < cartesDefausse; i++ ){
+            defausse.ajouter(pioche.piocher());
+        }
+
+        /**/
+        etatJeu = ETAT_CHOIX_CARTE;
+        activationPrivilegeRoi = 0;
+        activationPouvoirSor = false;
+        activationPouvoirFou = false;
+        selectionCartesVrt = new Main(TAILLE_MAIN);
+        selectionCartesRge = new Main(TAILLE_MAIN);
+        selectionPions = new Pion[2];
+        selectionDirections = new int[2];
+
+        mettreAJour();
+    }
+
     public int getJoueurCourant() {
         return joueurCourant;
     }
@@ -86,7 +154,7 @@ public class Jeu extends Observable implements Cloneable {
             if (pionDansChateau(JOUEUR_VRT, Pion.ROI) || couronneDansChateau(JOUEUR_VRT))
                 return JOUEUR_VRT;
             else if (pionDansChateau(JOUEUR_RGE, Pion.ROI) || couronneDansChateau(JOUEUR_RGE))
-                return JOUEUR_VRT;
+                return JOUEUR_RGE;
             else if (pioche.estVide() && plateau.getFaceCouronne() == Plateau.FACE_PTT_CRN)
                 if (pionDansDuche(JOUEUR_VRT, Pion.ROI))
                     return JOUEUR_VRT;
@@ -207,10 +275,6 @@ public class Jeu extends Observable implements Cloneable {
         passe.add(coup);
         futur.clear();
         mettreAJour();
-        if (estTerminee()) {
-            etatJeu = ETAT_FIN_DE_PARTIE;
-            mettreAJour();
-        }
     }
 
     private Coup transfererCoup(List<Coup> source, List<Coup> dest) {
@@ -472,10 +536,17 @@ public class Jeu extends Observable implements Cloneable {
                 txt += "     Main rouge : " + mainJoueurRge.toString();
                 break;
             case ETAT_FIN_DE_PARTIE:
-                txt += "VICTOIRE DU " + joueurEnTexte(getJoueurGagnant()).toUpperCase() + " !!!";
+                txt = "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase();
+                txt += "              Pioche : " + getPioche().getTaille() + "\n";
+                txt += "     Main vert  : " + mainJoueurVrt.toString() + "\n";
+                txt += "                  " + selectionCartesVrt.toString() + "\n";
+                txt += plateau.toString() + "\n";
+                txt += "                  " + selectionCartesRge.toString() + "\n";
+                txt += "     Main rouge : " + mainJoueurRge.toString();
+                txt += "\n\n     VICTOIRE DU " + joueurEnTexte(getJoueurGagnant()).toUpperCase() + " !!!";
                 break;
             default:
-               throw new RuntimeException("Modele.jeu.tosTring() : Etat de jeu non affichable.");
+               throw new RuntimeException("Modele.jeu.toString() : Etat de jeu non affichable.");
         }
 
         return txt;
