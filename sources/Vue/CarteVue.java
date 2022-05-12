@@ -22,7 +22,7 @@ public class CarteVue extends JPanel implements MouseInputListener {
     private static String Mypath = "/Images/Cartes/";
 
     public CarteVue() {
-        this.dos = true;
+        this.dos = false;
         this.jouable = false;
         this.dragged = false;
 
@@ -74,6 +74,9 @@ public class CarteVue extends JPanel implements MouseInputListener {
     }
 
     /* GESTION IMAGE */
+    public void ImagePosition(int x, int y){
+        this.setLocation(x, y);
+    }
     private static BufferedImage getImage(String name) {
         name = Mypath + name + ".png";
         if (!images.containsKey(name))
@@ -91,7 +94,10 @@ public class CarteVue extends JPanel implements MouseInputListener {
         //this.setSize(90, 160);
         //setBounds(0,0, 400, 400);
         super.paintComponent(g);
-        g.drawImage(this.image, this.getX(), this.getY(), 90, 160, this);
+        g.drawImage(this.image, 0, 0, 90, 160, this);
+
+        //g.drawImage(this.image, (int) this.getAlignmentX(), (int) this.getAlignmentY(), 90, 160, this);
+        //g.drawImage(this.image, this.getX(), this.getY(), 90, 160, this);
     }
 
 

@@ -9,8 +9,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable {
-    static final int LARGEURFENETRE = 1600;
-    static final int HAUTEURFENETRE = 900;
+
 
     GraphicsDevice device;
     boolean pleinEcran;
@@ -60,7 +59,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
         /* Configuration de la fenetre */
         frame.setTitle("Visite Royale");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(LARGEURFENETRE, HAUTEURFENETRE);
+
         frame.setResizable(true);
         frame.setVisible(true);
     }

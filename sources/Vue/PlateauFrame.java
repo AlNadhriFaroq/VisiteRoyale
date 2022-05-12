@@ -8,12 +8,15 @@ import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.ListIterator;
 
 public class PlateauFrame extends JComponent {
     Jeu jeu;
     public final JFrame frame;
     static String path;
+    static final int LARGEURFENETRE = 1600;
+    static final int HAUTEURFENETRE = 900;
 
     List<CarteVue> deck;
     List<CarteVue> mainA;
@@ -27,714 +30,26 @@ public class PlateauFrame extends JComponent {
 
     public PlateauFrame(Jeu jeu) {
 
-        this.deck = new List<CarteVue>() {
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<CarteVue> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(CarteVue carteVue) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public CarteVue get(int index) {
-                return null;
-            }
-
-            @Override
-            public CarteVue set(int index, CarteVue element) {
-                return null;
-            }
-
-            @Override
-            public void add(int index, CarteVue element) {
-
-            }
-
-            @Override
-            public CarteVue remove(int index) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator() {
-                return null;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator(int index) {
-                return null;
-            }
-
-            @Override
-            public List<CarteVue> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-        };
-        this.mainA = new List<CarteVue>() {
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<CarteVue> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(CarteVue carteVue) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public CarteVue get(int index) {
-                return null;
-            }
-
-            @Override
-            public CarteVue set(int index, CarteVue element) {
-                return null;
-            }
-
-            @Override
-            public void add(int index, CarteVue element) {
-
-            }
-
-            @Override
-            public CarteVue remove(int index) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator() {
-                return null;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator(int index) {
-                return null;
-            }
-
-            @Override
-            public List<CarteVue> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-        };
-        this.mainB = new List<CarteVue>() {
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<CarteVue> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(CarteVue carteVue) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public CarteVue get(int index) {
-                return null;
-            }
-
-            @Override
-            public CarteVue set(int index, CarteVue element) {
-                return null;
-            }
-
-            @Override
-            public void add(int index, CarteVue element) {
-
-            }
-
-            @Override
-            public CarteVue remove(int index) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator() {
-                return null;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator(int index) {
-                return null;
-            }
-
-            @Override
-            public List<CarteVue> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-        };
-        this.joueesB = new List<CarteVue>() {
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<CarteVue> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(CarteVue carteVue) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public CarteVue get(int index) {
-                return null;
-            }
-
-            @Override
-            public CarteVue set(int index, CarteVue element) {
-                return null;
-            }
-
-            @Override
-            public void add(int index, CarteVue element) {
-
-            }
-
-            @Override
-            public CarteVue remove(int index) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator() {
-                return null;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator(int index) {
-                return null;
-            }
-
-            @Override
-            public List<CarteVue> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-        };
-        this.joueesA = new List<CarteVue>() {
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<CarteVue> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(CarteVue carteVue) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public CarteVue get(int index) {
-                return null;
-            }
-
-            @Override
-            public CarteVue set(int index, CarteVue element) {
-                return null;
-            }
-
-            @Override
-            public void add(int index, CarteVue element) {
-
-            }
-
-            @Override
-            public CarteVue remove(int index) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator() {
-                return null;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator(int index) {
-                return null;
-            }
-
-            @Override
-            public List<CarteVue> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-        };
-        this.defausse = new List<CarteVue>() {
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<CarteVue> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(CarteVue carteVue) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, Collection<? extends CarteVue> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public CarteVue get(int index) {
-                return null;
-            }
-
-            @Override
-            public CarteVue set(int index, CarteVue element) {
-                return null;
-            }
-
-            @Override
-            public void add(int index, CarteVue element) {
-
-            }
-
-            @Override
-            public CarteVue remove(int index) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator() {
-                return null;
-            }
-
-            @Override
-            public ListIterator<CarteVue> listIterator(int index) {
-                return null;
-            }
-
-            @Override
-            public List<CarteVue> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-        };
+        this.deck = new ArrayList<CarteVue>() ;
+        this.mainA = new ArrayList<CarteVue>();
+        this.mainB = new ArrayList<CarteVue>();
+        this.joueesB = new ArrayList<CarteVue>();
+        this.joueesA = new ArrayList<CarteVue>();
+        this.defausse = new ArrayList<CarteVue>();
 
         this.frame = new JFrame();
+        this.frame.setSize(LARGEURFENETRE, HAUTEURFENETRE);
         this.jeu =jeu;
 
         this.heigth = this.frame.getHeight();
         this.width = this.frame.getWidth();
 
-
-        //setLayout(null);
         this.setVisible(true);
 
         this.genererDeck();
+        this.CreerMain(false);
+        this.CreerMain(true);
+        this.afficheMain();
     }
 
     public JFrame getFrame() {
@@ -752,15 +67,19 @@ public class PlateauFrame extends JComponent {
     /* GENERATIONS & GESTION DES LISTES */
     public void genererDeck(){
         int taille = this.jeu.getPioche().getTaille();
+        int x = 20;
+        int y = (this.heigth/2) - (this.carteH/2);
+
         for (int i=0; i<taille; i++){
             CarteVue carteVue = new CarteVue();
-            carteVue.setLocation(0,0);
+            carteVue.setLocation(x,y);
             carteVue.setCarte(this.jeu.getPioche().getCarte(i));
             carteVue.setSize(90,160);
             carteVue.setVisible(true);
-            this.frame.add(carteVue);
             this.deck.add(carteVue);
+            this.frame.add(carteVue);
         }
+
         this.frame.repaint();
     }
 
@@ -811,35 +130,46 @@ public class PlateauFrame extends JComponent {
         }
     }
 
+    public void CreerMain(boolean j){
+        for (int i=0; i<8; i++){
+            this.piocher(1,j);
+        }
+    }
+
     /* AFFICHAGE */
 
 
     void afficheMain(){
         int x, size, taille;
+        this.carteH = this.deck.get(0).getHeight();
+        this.carteW = this.deck.get(0).getWidth();
         int yA = this.heigth-this.carteH-5;
         int yB = 5;
         int yARaised = yA - this.carteH/ 10;
         int yBRaised = yB + this.carteH / 10 ;
 
-        boolean joueur = this.jeu.getJoueurCourant()==1;
-        x = (this.width-((this.width/this.carteW)*8) )/2;
+        //boolean joueur = this.jeu.getJoueurCourant()==1;
+        x =(this.width/2)-(this.carteW*4);
 
-        if (joueur){
+        //if (joueur){
             taille = this.mainA.size();
             for (int i=0; i<taille; i++){
-                this.mainA.get(i).setLocation(x,yB);
+
+                this.mainA.get(i).setLocation(x,yA);
                 this.mainA.get(i).setDos(false);
                 x+=this.carteW;
             }
-        }else{
+        //}else{
             taille = this.mainB.size();
-            for (int i=0; i<taille; i++){
+            x =(this.width/2)-(this.carteW*4);
+
+        for (int i=0; i<taille; i++){
                 this.mainB.get(i).setLocation(x,yB);
                 this.mainB.get(i).setDos(false);
                 x+=this.carteW;
             }
-        }
-
+        //}
+        this.frame.repaint();
 
 
 
