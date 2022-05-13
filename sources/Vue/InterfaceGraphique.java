@@ -38,13 +38,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
         frame = this.plateau.getFrame();
         jeuGrph = new JeuGraphique(prog);
 
-        /* Creation des autres components */
-        /*
-        CarteVue carteVue = new CarteVue();
-        carteVue.setCarte(this.jeu.getPioche().getCarte(0));
-        carteVue.setBorder(new EmptyBorder(0, 30, 0 ,30));
-        frame.add(carteVue);
-        */
+
         /* Retransmission des evenements au controleur */
         //frame.addKeyListener(new AdaptateurClavier(vue,ctrl));
         jeuGrph.addMouseListener(new AdaptateurSouris(jeuGrph, ctrl));
