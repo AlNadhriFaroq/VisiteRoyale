@@ -39,7 +39,7 @@ public class Jeu extends Observable implements Cloneable {
 
     public Jeu() {
         nouvellePartie();
-        //partieAleatoire();
+       // partieAleatoire();
         //nouvellePartiePersonalise(JOUEUR_RGE,12,0, 16,1,8,8,true,37);
     }
 
