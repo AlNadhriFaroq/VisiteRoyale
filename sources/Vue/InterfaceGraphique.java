@@ -62,6 +62,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
 
         frame.setResizable(true);
         frame.setVisible(true);
+
     }
 
     public void basculerPleinEcran() {
