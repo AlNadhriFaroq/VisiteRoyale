@@ -20,61 +20,61 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("Ouverture en cours. Veuillez patienter...");
                 break;
             case Programme.ETAT_MENU_PRINCIPALE:
-                if (cmd.equalsIgnoreCase("1v1")) {
-                    ctrl.nouvellePartie(false, false);
-                } else if (cmd.equalsIgnoreCase("IA")) {
-                    ctrl.nouvellePartie(true, false);
-                } else if (cmd.equalsIgnoreCase("charger")) {
-                    System.out.println("Chargement non implémenté.");
-                } else if (cmd.equalsIgnoreCase("options") || cmd.equalsIgnoreCase("opt")) {
-                    System.out.println("Options non implémenté.");
-                } else if (cmd.equalsIgnoreCase("tutoriel") || cmd.equalsIgnoreCase("tuto")) {
-                    System.out.println("Tutoriel non implémenté.");
-                } else if (cmd.equalsIgnoreCase("credits")) {
-                    System.out.println("UGA - PROG6 - Projet - Groupe 3.");
-                } else if (cmd.equalsIgnoreCase("quitter")) {
-                    ctrl.quitter();
-                } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
-                    System.out.println("1v1      : Lancer une nouvelle partie à deux.");
-                    System.out.println("IA       : Lancer une nouvelle partie contre une IA.");
-                    System.out.println("Charger  : Charger une ancienne partie.");
-                    System.out.println("Options  : Ouvrir le menu des options.");
-                    System.out.println("Tutoriel : Lancer le tutoriel.");
-                    System.out.println("Credits  : Afficher les crédits.");
-                    System.out.println("Aide     : Afficher cette aide.");
-                    System.out.println("Quitter  : Quitter le programme.");
-                    System.out.print("\nCommande > ");
-                } else {
-                    System.out.println("Commande invalide.");
+                switch (cmd) {
+                    case "1":
+                        ctrl.nouvellePartie(false, false);
+                        break;
+                    case "2":
+                        ctrl.nouvellePartie(true, false);
+                        break;
+                    case "3":
+                        System.out.println("Chargement non implémenté.");
+                        break;
+                    case "4":
+                        System.out.println("Options non implémenté.");
+                        break;
+                    case "5":
+                        System.out.println("Tutoriel non implémenté.");
+                        break;
+                    case "6":
+                        ctrl.ouvrirCredits();
+                        break;
+                    case "7":
+                        ctrl.quitter();
+                        break;
+                    default:
+                        System.out.println("Commande invalide.");
+                        System.out.print("Commande > ");
+                        break;
                 }
                 break;
             case Programme.ETAT_EN_JEU:
                 interpreterCommandeEnJeu(cmd);
                 break;
             case Programme.ETAT_MENU_JEU:
-                if (cmd.equalsIgnoreCase("retour")) {
-                    ctrl.reprendrePartie();
-                } else if (cmd.equalsIgnoreCase("nouvelle")) {
-                    ctrl.nouvellePartie(prog.getJoueurVrtEstIA(), prog.getJoueurRgeEstIA());
-                } else if (cmd.equalsIgnoreCase("sauver")) {
-                    System.out.println("Sauvegarde non implémenté.");
-                } else if (cmd.equalsIgnoreCase("options") || cmd.equalsIgnoreCase("opt")) {
-                    System.out.println("Options non implémenté.");
-                } else if (cmd.equalsIgnoreCase("tutoriel") || cmd.equalsIgnoreCase("tuto")) {
-                    System.out.println("Tutoriel non implémenté.");
-                } else if (cmd.equalsIgnoreCase("abandon")) {
-                    ctrl.abandonnerPartie();
-                } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
-                    System.out.println("Retour   : Reprendre la partie.");
-                    System.out.println("Nouvelle : Relancer une nouvelle partie.");
-                    System.out.println("Sauver   : Sauvegarder la partie.");
-                    System.out.println("Options  : Ouvrir le menu des options.");
-                    System.out.println("Tutoriel : Lancer le tutoriel.");
-                    System.out.println("Aide     : Afficher cette aide.");
-                    System.out.println("Abandon  : Abandonner la partie.");
-                    System.out.print("\nCommande > ");
-                } else {
-                    System.out.println("Commande invalide.");
+                switch (cmd) {
+                    case "1":
+                        ctrl.reprendrePartie();
+                        break;
+                    case "2":
+                        ctrl.nouvellePartie(prog.getJoueurVrtEstIA(), prog.getJoueurRgeEstIA());
+                        break;
+                    case "3":
+                        System.out.println("Sauvegarde non implémenté.");
+                        break;
+                    case "4":
+                        System.out.println("Options non implémenté.");
+                        break;
+                    case "5":
+                        System.out.println("Tutoriel non implémenté.");
+                        break;
+                    case "6":
+                        ctrl.abandonnerPartie();
+                        break;
+                    default:
+                        System.out.println("Commande invalide.");
+                        System.out.print("Commande > ");
+                        break;
                 }
                 break;
             case Programme.ETAT_MENU_PARAMETRES:
@@ -84,7 +84,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("Tutoriel non implémenté.");
                 break;
             case Programme.ETAT_CREDITS:
-                System.out.println("Credits non implémenté.");
+                ctrl.retourMenu();
                 break;
             case Programme.ETAT_FIN_APP:
                 break;
