@@ -21,23 +21,35 @@ public class Pion implements Cloneable {
 
     public static Pion texteEnPion(String texte) {
         switch (texte) {
-            case "R": return ROI;
-            case "GV": return GAR_VRT;
-            case "GR": return GAR_RGE;
-            case "S": return SOR;
-            case "F": return FOU;
-            default: throw new RuntimeException("Modele.Pion.texteEnPion() : Texte entré invalide.");
+            case "R":
+                return ROI;
+            case "GV":
+                return GAR_VRT;
+            case "GR":
+                return GAR_RGE;
+            case "S":
+                return SOR;
+            case "F":
+                return FOU;
+            default:
+                throw new RuntimeException("Modele.Pion.texteEnPion() : Texte entré invalide.");
         }
     }
 
     public static Pion valeurEnPion(int valeur) {
         switch (valeur) {
-            case 0: return ROI;
-            case 1: return GAR_VRT;
-            case 2: return GAR_RGE;
-            case 3: return SOR;
-            case 4: return FOU;
-            default: throw new RuntimeException("Modele.Pion.texteEnPion() : Texte entré invalide.");
+            case 0:
+                return ROI;
+            case 1:
+                return GAR_VRT;
+            case 2:
+                return GAR_RGE;
+            case 3:
+                return SOR;
+            case 4:
+                return FOU;
+            default:
+                throw new RuntimeException("Modele.Pion.texteEnPion() : Texte entré invalide.");
         }
     }
 
@@ -79,12 +91,18 @@ public class Pion implements Cloneable {
     @Override
     public String toString() {
         switch (valeur) {
-            case 0: return "R";
-            case 1: return "GV";
-            case 2: return "GR";
-            case 3: return "S";
-            case 4: return "F";
-            default: throw new RuntimeException("Modele.Pion.toString() : Pion non affichable.");
+            case 0:
+                return "R";
+            case 1:
+                return "GV";
+            case 2:
+                return "GR";
+            case 3:
+                return "S";
+            case 4:
+                return "F";
+            default:
+                throw new RuntimeException("Modele.Pion.toString() : Pion non affichable.");
         }
     }
 }

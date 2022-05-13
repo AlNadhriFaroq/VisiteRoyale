@@ -1,5 +1,5 @@
 package Patterns;
 
 public interface Observateur {
-	void mettreAJour();
+    void mettreAJour();
 }

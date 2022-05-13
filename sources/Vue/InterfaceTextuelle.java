@@ -3,8 +3,8 @@ package Vue;
 import Controleur.ControleurMediateur;
 import Modele.*;
 
-import javax.swing.*;
 import java.util.Scanner;
+import javax.swing.*;
 
 public class InterfaceTextuelle extends InterfaceUtilisateur {
     Jeu jeu;
@@ -19,7 +19,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case Programme.ETAT_ACCUEIL:
                 System.out.println("Ouverture en cours. Veuillez patienter...");
                 break;
-            case Programme.ETAT_MENU_PRINCIPALE:
+            case Programme.ETAT_MENU_PRINCIPAL:
                 switch (cmd) {
                     case "1":
                         ctrl.nouvellePartie(false, false);
@@ -28,10 +28,10 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                         ctrl.nouvellePartie(true, false);
                         break;
                     case "3":
-                        System.out.println("Chargement non implémenté.");
+                        System.out.println("Chargement de partie non implémenté.");
                         break;
                     case "4":
-                        System.out.println("Options non implémenté.");
+                        System.out.println("Menu des options non implémenté.");
                         break;
                     case "5":
                         System.out.println("Tutoriel non implémenté.");
@@ -41,6 +41,9 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                         break;
                     case "7":
                         ctrl.quitter();
+                        break;
+                    case "IAvsIA":
+                        ctrl.nouvellePartie(true, true);
                         break;
                     default:
                         System.out.println("Commande invalide.");
@@ -60,16 +63,16 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                         ctrl.nouvellePartie(prog.getJoueurVrtEstIA(), prog.getJoueurRgeEstIA());
                         break;
                     case "3":
-                        System.out.println("Sauvegarde non implémenté.");
+                        System.out.println("Sauvegarde de parties non implémenté.");
                         break;
                     case "4":
-                        System.out.println("Options non implémenté.");
+                        System.out.println("Menu des options non implémenté.");
                         break;
                     case "5":
                         System.out.println("Tutoriel non implémenté.");
                         break;
                     case "6":
-                        ctrl.abandonnerPartie();
+                        ctrl.retourMenuPrincipal();
                         break;
                     default:
                         System.out.println("Commande invalide.");
@@ -77,16 +80,16 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                         break;
                 }
                 break;
-            case Programme.ETAT_MENU_PARAMETRES:
-                System.out.println("Options non implémenté.");
+            case Programme.ETAT_MENU_OPTIONS:
+                System.out.println("Menu des options non implémenté.");
                 break;
             case Programme.ETAT_TUTORIEL:
                 System.out.println("Tutoriel non implémenté.");
                 break;
             case Programme.ETAT_CREDITS:
-                ctrl.retourMenu();
+                ctrl.retourMenuPrincipal();
                 break;
-            case Programme.ETAT_FIN_APP:
+            case Programme.ETAT_FIN_PROGRAMME:
                 break;
             default:
                 throw new RuntimeException("Vue.InterfaceTextuelle.interpreterComande() : Etat du programme non reconnu.");
@@ -281,35 +284,37 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     }
 
     void interpreterCommandeFinDePartie(String cmd) {
-        if (cmd.equalsIgnoreCase("annuler")) {
-            ctrl.annuler();
-        } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
-            System.out.println("Annuler  : Annuler le dernier coup joué.");
-            System.out.println("Aide     : Afficher cette aide.");
-            System.out.println("Pause    : Ouvrir le menu du jeu.");
-            System.out.print("\nCommande > ");
-        } else if (cmd.equalsIgnoreCase("pause")) {
-            ctrl.ouvrirMenuJeu();
-        } else {
-            System.out.println("Commande invalide.");
+        switch (cmd) {
+            case "1":
+                ctrl.nouvellePartie(prog.getJoueurVrtEstIA(), prog.getJoueurRgeEstIA());
+                break;
+            case "2":
+                ctrl.retourMenuPrincipal();
+                break;
+            default:
+                System.out.println("Commande invalide.");
+                break;
         }
     }
 
     @Override
     public void run() {
+        mettreAJour();
+
         Timer timer = new Timer(16, new AdaptateurTemps(ctrl));
         timer.start();
 
-        mettreAJour();
         Scanner s = new Scanner(System.in);
 
-        while (prog.getEtat() != Programme.ETAT_FIN_APP)
+        prog.commencerProgramme();
+        while (prog.getEtat() != Programme.ETAT_FIN_PROGRAMME)
             interpreterCommande(s.nextLine());
     }
 
     @Override
     public void mettreAJour() {
         System.out.println("\n" + prog.toString() + "\n");
-        System.out.print("Commande > ");
+        if (prog.getEtat() != Programme.ETAT_ACCUEIL && prog.getEtat() != Programme.ETAT_FIN_PROGRAMME)
+            System.out.print("Commande > ");
     }
 }

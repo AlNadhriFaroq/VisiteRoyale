@@ -2,6 +2,7 @@ package Controleur;
 
 import Global.Configuration;
 import Modele.*;
+import Vue.Audio;
 
 import java.util.Random;
 
@@ -12,6 +13,7 @@ public class ControleurMediateur {
     Joueur[] joueurs;
     int[] difficultes;
     int decompte;
+    Audio audio;
 
     public ControleurMediateur(Programme prog) {
         this.prog = prog;
@@ -19,6 +21,8 @@ public class ControleurMediateur {
         difficultes = new int[2];
         difficultes[0] = Integer.parseInt(Configuration.instance().lire("DifficulteIAjoueurVrt"));
         difficultes[1] = Integer.parseInt(Configuration.instance().lire("DifficulteIAjoueurRge"));
+        audio = new Audio();
+        audio.boucler();
     }
 
     public void clicSouris(int x, int y) {
@@ -26,7 +30,7 @@ public class ControleurMediateur {
     }
 
     public void tictac() {
-        if (prog.getEtat() == Programme.ETAT_EN_JEU && prog.getJeu().getEtatJeu() != Jeu.ETAT_CHOIX_JOUEUR && prog.getJeu().getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE)
+        if (prog.getEtat() == Programme.ETAT_EN_JEU && prog.getJeu().getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE)
             if (decompte == 0) {
                 joueurs[prog.getJeu().getJoueurCourant()].tempsEcoule();
                 decompte = lenteurAttente;
@@ -39,13 +43,11 @@ public class ControleurMediateur {
         definirJoueurIA(Jeu.JOUEUR_VRT, joueurVrtEstIA);
         definirJoueurIA(Jeu.JOUEUR_RGE, joueurRgeEstIA);
         prog.nouvellePartie(joueurVrtEstIA, joueurRgeEstIA);
+        audio.arreter();
     }
 
     private void definirJoueurIA(int joueur, boolean estIA) {
-        if (estIA)
-            joueurs[joueur] = new JoueurIA(joueur, prog, difficultes[joueur]);
-        else
-            joueurs[joueur] = new JoueurHumain(joueur, prog);
+        joueurs[joueur] = estIA ? new JoueurIA(joueur, prog, difficultes[joueur]) : new JoueurHumain(joueur, prog);
     }
 
     public void definirJoueurQuiCommence() {
@@ -104,25 +106,25 @@ public class ControleurMediateur {
 
     public void ouvrirMenuJeu() {
         prog.ouvrirMenuJeu();
+        audio.boucler();
     }
 
     public void reprendrePartie() {
         prog.reprendrePartie();
-    }
-
-    public void abandonnerPartie() {
-        prog.abandonnerPartie();
+        audio.arreter();
     }
 
     public void ouvrirCredits() {
         prog.ouvrirCredits();
     }
 
-    public void retourMenu() {
-        prog.retourMenu();
+    public void retourMenuPrincipal() {
+        prog.retourMenuPrincipal();
+        audio.boucler();
     }
 
     public void quitter() {
+        prog.quitter();
         System.exit(0);
     }
 }

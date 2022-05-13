@@ -1,7 +1,5 @@
 package Modele;
 
-import Patterns.Observable;
-
 import java.util.*;
 
 public class Jeu extends Historique implements Cloneable {
@@ -11,7 +9,6 @@ public class Jeu extends Historique implements Cloneable {
     public static final int ETAT_CHOIX_DIRECTION = 3;
     public static final int ETAT_FIN_DE_PARTIE = 4;
 
-    public static final int JOUEUR_IND = -1;
     public static final int JOUEUR_VRT = 0;
     public static final int JOUEUR_RGE = 1;
 
@@ -35,15 +32,15 @@ public class Jeu extends Historique implements Cloneable {
     private int[] selectionDirections;
 
     public Jeu() {
-        //nouvellePartie();
-       // partieAleatoire();
-        nouvellePartiePersonalise(JOUEUR_VRT,10,3, 14,4,8,8,Plateau.FACE_GRD_CRN,0);
+        nouvellePartie();
+        //partieAleatoire();
+        //nouvellePartiePersonalise(JOUEUR_VRT, 10, 3, 14, 4, 8, 8, Plateau.FACE_GRD_CRN, 0);
     }
 
     public void nouvellePartie() {
         initialiser();
 
-        joueurCourant = JOUEUR_IND;
+        joueurCourant = JOUEUR_RGE;
         typeCourant = Type.IND;
         plateau = new Plateau(getDirectionJoueur(joueurCourant));
         pioche = new Paquet(54);
@@ -67,7 +64,7 @@ public class Jeu extends Historique implements Cloneable {
         selectionDirections = new int[2];
     }
 
-    public  void partieAleatoire(){
+    public void partieAleatoire() {
         Random rand = new Random();
         int joueur = rand.nextInt(2);
         int posRoi = rand.nextInt(Plateau.CHATEAU_RGE - 2) + 2;
@@ -77,58 +74,33 @@ public class Jeu extends Historique implements Cloneable {
         int posSor = rand.nextInt(Plateau.BORDURE_RGE + 1);
         int posFou = rand.nextInt(Plateau.BORDURE_RGE + 1);
         int posCouronne = rand.nextInt(Plateau.BORDURE_RGE - 3) + 2;
-        boolean faceCouronne =  rand.nextBoolean();
+        boolean faceCouronne = rand.nextBoolean();
         int cartesDefausse = rand.nextInt(27);
         nouvellePartiePersonalise(joueur, posRoi, posGV, posGR, posSor, posFou, posCouronne, faceCouronne, cartesDefausse);
     }
 
-    public void nouvellePartiePersonalise(int joueur, int posRoi,int posGV, int posGR, int posSor, int posFou, int posCouronne,boolean faceCouronne, int cartesDefausse) {
-        initialiser();
+    public void nouvellePartiePersonalise(int joueur, int posRoi, int posGV, int posGR, int posSor, int posFou, int posCouronne, boolean faceCouronne, int nbCartesDefausse) {
+        nouvellePartie();
 
+        etatJeu = ETAT_CHOIX_CARTE;
         joueurCourant = joueur;
-        typeCourant = Type.IND;
-        plateau = new Plateau(getDirectionJoueur(joueurCourant));
-        plateau.setPositionPion(Pion.ROI,posRoi);
-        plateau.setPositionPion(Pion.GAR_VRT,posGV);
-        plateau.setPositionPion(Pion.GAR_RGE,posGR);
-        plateau.setPositionPion(Pion.SOR,posSor);
-        plateau.setPositionPion(Pion.FOU,posFou);
 
+        plateau = new Plateau(getDirectionJoueur(joueurCourant));
+        plateau.setPositionPion(Pion.ROI, posRoi);
+        plateau.setPositionPion(Pion.GAR_VRT, posGV);
+        plateau.setPositionPion(Pion.GAR_RGE, posGR);
+        plateau.setPositionPion(Pion.SOR, posSor);
+        plateau.setPositionPion(Pion.FOU, posFou);
         plateau.setPositionCouronne(posCouronne);
         plateau.setFaceCouronne(faceCouronne);
 
-        pioche = new Paquet(54);
-        defausse = new Paquet(54);
-        mainJoueurVrt = new Paquet(TAILLE_MAIN);
-        mainJoueurRge = new Paquet(TAILLE_MAIN);
-
-        pioche.remplir();
-        for (int c = 0; c < TAILLE_MAIN; c++) {
-            mainJoueurVrt.inserer(pioche.extraire(), true);
-            mainJoueurRge.inserer(pioche.extraire(), true);
-        }
-
-        /* mettre les cartes dans la défausse*/
-        for(int i = 0 ; i < cartesDefausse; i++ ){
+        /* mettre des cartes dans la défausse */
+        for (int i = 0; i < nbCartesDefausse; i++)
             defausse.inserer(pioche.extraire());
-        }
-
-        etatJeu = ETAT_CHOIX_CARTE;
-        activationPrivilegeRoi = 0;
-        activationPouvoirSor = false;
-        activationPouvoirFou = false;
-        selectionCartesVrt = new Paquet(TAILLE_MAIN);
-        selectionCartesRge = new Paquet(TAILLE_MAIN);
-        selectionPions = new Pion[2];
-        selectionDirections = new int[2];
     }
 
     public int getJoueurCourant() {
         return joueurCourant;
-    }
-
-    public Type getTypeCourant() {
-        return typeCourant;
     }
 
     public int getJoueurGagnant() {
@@ -138,11 +110,12 @@ public class Jeu extends Historique implements Cloneable {
             else if (pionDansChateau(JOUEUR_RGE, Pion.ROI) || couronneDansChateau(JOUEUR_RGE))
                 return JOUEUR_RGE;
             else if (pioche.estVide() && plateau.getFaceCouronne() == Plateau.FACE_PTT_CRN)
-                if (pionDansDuche(JOUEUR_VRT, Pion.ROI))
-                    return JOUEUR_VRT;
-                else
-                    return JOUEUR_RGE;
+                return pionDansDuche(JOUEUR_VRT, Pion.ROI) ? JOUEUR_VRT : JOUEUR_RGE;
         return -1;
+    }
+
+    public Type getTypeCourant() {
+        return typeCourant;
     }
 
     public Plateau getPlateau() {
@@ -158,12 +131,7 @@ public class Jeu extends Historique implements Cloneable {
     }
 
     public Paquet getMain(int joueur) {
-        if (joueur == JOUEUR_VRT)
-            return mainJoueurVrt;
-        else if (joueur == JOUEUR_RGE)
-            return mainJoueurRge;
-        else
-            throw new RuntimeException("Modele.Jeu.getMain() : Joueur entré invalide.");
+        return joueur == JOUEUR_VRT ? mainJoueurVrt : mainJoueurRge;
     }
 
     public int getEtatJeu() {
@@ -183,12 +151,7 @@ public class Jeu extends Historique implements Cloneable {
     }
 
     public Paquet getSelectionCartes(int joueur) {
-        if (joueur == JOUEUR_VRT)
-            return selectionCartesVrt;
-        else if (joueur == JOUEUR_RGE)
-            return selectionCartesRge;
-        else
-            throw new RuntimeException("Modele.Jeu.getSelection() : Joueur entré invalide.");
+        return joueur == JOUEUR_VRT ? selectionCartesVrt : selectionCartesRge;
     }
 
     public Pion getSelectionPions(int indice) {
@@ -242,12 +205,7 @@ public class Jeu extends Historique implements Cloneable {
     }
 
     int evaluerDeplacementCouronne(int joueur) {
-        if (joueur == JOUEUR_VRT)
-            return plateau.evaluerDeplacementCouronneVrt();
-        else if (joueur == JOUEUR_RGE)
-            return plateau.evaluerDeplacementCouronneRge();
-        else
-            throw new RuntimeException("Modele.Jeu.getDeplacementCouronne() : Joueur entré invalide.");
+        return joueur == JOUEUR_VRT ? plateau.evaluerDeplacementCouronneVrt() : plateau.evaluerDeplacementCouronneRge();
     }
 
     public List<Coup> calculerListeCoup() {
@@ -323,34 +281,19 @@ public class Jeu extends Historique implements Cloneable {
 
     private boolean pionDeplacable(Pion pion, int deplacement) {
         return plateau.pionEstDeplacable(pion, plateau.getPositionPion(pion) + Plateau.DIRECTION_VRT * deplacement) ||
-               plateau.pionEstDeplacable(pion, plateau.getPositionPion(pion) + Plateau.DIRECTION_RGE * deplacement);
+                plateau.pionEstDeplacable(pion, plateau.getPositionPion(pion) + Plateau.DIRECTION_RGE * deplacement);
     }
 
     public boolean pionDansDuche(int joueur, Pion pion) {
-        if (joueur == JOUEUR_VRT)
-            return plateau.pionDansDucheVrt(pion);
-        else if (joueur == JOUEUR_RGE)
-            return plateau.pionDansDucheRge(pion);
-        else
-            throw new RuntimeException("Modele.Jeu.pionDansDuche() : Joueur entré invalide.");
+        return joueur == JOUEUR_VRT ? plateau.pionDansDucheVrt(pion) : plateau.pionDansDucheRge(pion);
     }
 
     public boolean pionDansChateau(int joueur, Pion pion) {
-        if (joueur == JOUEUR_VRT)
-            return plateau.pionDansChateauVrt(pion);
-        else if (joueur == JOUEUR_RGE)
-            return plateau.pionDansChateauRge(pion);
-        else
-            throw new RuntimeException("Modele.Jeu.pionDansChateau() : Joueur entré invalide.");
+        return joueur == JOUEUR_VRT ? plateau.pionDansChateauVrt(pion) : plateau.pionDansChateauRge(pion);
     }
 
     public boolean couronneDansChateau(int joueur) {
-        if (joueur == JOUEUR_VRT)
-            return plateau.couronneDansChateauVrt();
-        else if (joueur == JOUEUR_RGE)
-            return plateau.couronneDansChateauRge();
-        else
-            throw new RuntimeException("Modele.Jeu.couronneDansChateau : Joueur entré invalide.");
+        return joueur == JOUEUR_VRT ? plateau.couronneDansChateauVrt() : plateau.couronneDansChateauRge();
     }
 
     public boolean pionDansFontaine(Pion pion) {
@@ -359,9 +302,9 @@ public class Jeu extends Historique implements Cloneable {
 
     public boolean peutUtiliserPrivilegeRoi() {
         return (plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_VRT) || plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_RGE)) &&
-               ((etatJeu == ETAT_CHOIX_CARTE && activationPrivilegeRoi == 0 && getMain(joueurCourant).getNombreTypeCarte(Type.ROI) >= 2) ||
-                (etatJeu == ETAT_CHOIX_DIRECTION && activationPrivilegeRoi == 1 && getMain(joueurCourant).getNombreTypeCarte(Type.ROI) >= 1)) &&
-               (getTypeCourant() == Type.ROI || getTypeCourant() == Type.IND);
+                ((etatJeu == ETAT_CHOIX_CARTE && activationPrivilegeRoi == 0 && getMain(joueurCourant).getNombreTypeCarte(Type.ROI) >= 2) ||
+                        (etatJeu == ETAT_CHOIX_DIRECTION && activationPrivilegeRoi == 1 && getMain(joueurCourant).getNombreTypeCarte(Type.ROI) >= 1)) &&
+                (getTypeCourant() == Type.ROI || getTypeCourant() == Type.IND);
     }
 
     public boolean peutUtiliserPouvoirSorcier() {
@@ -370,10 +313,10 @@ public class Jeu extends Historique implements Cloneable {
 
     public boolean peutUtiliserPouvoirFou() {
         return !activationPouvoirFou &&
-               ((joueurCourant == JOUEUR_VRT && plateau.vrtPeutUtiliserPouvoirFou()) ||
-                (joueurCourant == JOUEUR_RGE && plateau.rgePeutUtiliserPouvoirFou())) &&
-               etatJeu == ETAT_CHOIX_CARTE && typeCourant.equals(Type.IND) &&
-               getMain(joueurCourant).getNombreTypeCarte(Type.FOU) > 0;
+                ((joueurCourant == JOUEUR_VRT && plateau.vrtPeutUtiliserPouvoirFou()) ||
+                        (joueurCourant == JOUEUR_RGE && plateau.rgePeutUtiliserPouvoirFou())) &&
+                etatJeu == ETAT_CHOIX_CARTE && typeCourant.equals(Type.IND) &&
+                getMain(joueurCourant).getNombreTypeCarte(Type.FOU) > 0;
     }
 
     public boolean peutFinirTour() {
@@ -386,27 +329,27 @@ public class Jeu extends Historique implements Cloneable {
 
         if (etatJeu == ETAT_CHOIX_DIRECTION) {
             return (typeCourant.equals(Type.ROI) || typeCourant.equals(Type.IND)) &&
-                   carte.getType().equals(Type.ROI) &&
-                   activationPrivilegeRoi == 1 &&
-                   (plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_VRT) || plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_RGE));
-        } else if (etatJeu == ETAT_CHOIX_CARTE){
+                    carte.getType().equals(Type.ROI) &&
+                    activationPrivilegeRoi == 1 &&
+                    (plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_VRT) || plateau.peutUtiliserPrivilegeRoi(Plateau.DIRECTION_RGE));
+        } else if (etatJeu == ETAT_CHOIX_CARTE) {
             if (activationPouvoirFou &&
-                ((joueurCourant == JOUEUR_VRT && plateau.vrtPeutUtiliserPouvoirFou()) ||
-                 (joueurCourant == JOUEUR_RGE && plateau.rgePeutUtiliserPouvoirFou()))) {
+                    ((joueurCourant == JOUEUR_VRT && plateau.vrtPeutUtiliserPouvoirFou()) ||
+                            (joueurCourant == JOUEUR_RGE && plateau.rgePeutUtiliserPouvoirFou()))) {
                 if (carte.estDeplacementFouCentre())
                     return typeCourant.equals(Type.IND) ||
-                           (typeCourant.equals(Type.GAR) && (plateau.pionEstDeplacable(Pion.GAR_VRT, Plateau.FONTAINE) || plateau.pionEstDeplacable(Pion.GAR_RGE, Plateau.FONTAINE))) ||
-                           (!typeCourant.equals(Type.GAR) && plateau.pionEstDeplacable(Pion.typeEnPion(typeCourant), carte.getDeplacement()));
+                            (typeCourant.equals(Type.GAR) && (plateau.pionEstDeplacable(Pion.GAR_VRT, Plateau.FONTAINE) || plateau.pionEstDeplacable(Pion.GAR_RGE, Plateau.FONTAINE))) ||
+                            (!typeCourant.equals(Type.GAR) && plateau.pionEstDeplacable(Pion.typeEnPion(typeCourant), carte.getDeplacement()));
                 else if (carte.getType().equals(Type.FOU))
                     return typeCourant.equals(Type.IND) ||
-                           (typeCourant.equals(Type.GAR) && (pionDeplacable(Pion.GAR_VRT, carte.getDeplacement()) || pionDeplacable(Pion.GAR_RGE, carte.getDeplacement()))) ||
-                           (!typeCourant.equals(Type.GAR) && pionDeplacable(Pion.typeEnPion(typeCourant), carte.getDeplacement()));
+                            (typeCourant.equals(Type.GAR) && (pionDeplacable(Pion.GAR_VRT, carte.getDeplacement()) || pionDeplacable(Pion.GAR_RGE, carte.getDeplacement()))) ||
+                            (!typeCourant.equals(Type.GAR) && pionDeplacable(Pion.typeEnPion(typeCourant), carte.getDeplacement()));
             } else if (!activationPouvoirFou && typeCourant.equals(carte.getType()) || typeCourant.equals(Type.IND)) {
                 if (carte.estDeplacementGarCentre() || carte.estDeplacementFouCentre())
                     return true;
                 else if (carte.estDeplacementGar1Plus1())
                     return pionDeplacable(Pion.GAR_VRT, 2) || pionDeplacable(Pion.GAR_RGE, 2) ||
-                           (pionDeplacable(Pion.GAR_VRT, 1) && pionDeplacable(Pion.GAR_RGE, 1));
+                            (pionDeplacable(Pion.GAR_VRT, 1) && pionDeplacable(Pion.GAR_RGE, 1));
                 else if (carte.getType().equals(Type.GAR))
                     return pionDeplacable(Pion.GAR_VRT, carte.getDeplacement()) || pionDeplacable(Pion.GAR_RGE, carte.getDeplacement());
                 else if (carte.getType().equals(Type.ROI))
@@ -424,11 +367,11 @@ public class Jeu extends Historique implements Cloneable {
         if (etatJeu == ETAT_CHOIX_PION && activationPouvoirSor)
             return plateau.peutUtiliserPouvoirSor(pion) && !pion.getType().equals(Type.FOU) && !pion.getType().equals(Type.SOR);
 
-        Carte carte = getSelectionCartes(joueurCourant).getCarte(getSelectionCartes(joueurCourant).getTaille()-1);
+        Carte carte = getSelectionCartes(joueurCourant).getCarte(getSelectionCartes(joueurCourant).getTaille() - 1);
         if (etatJeu == ETAT_CHOIX_DIRECTION) {
             return carte.estDeplacementGar1Plus1() && pion.getType().equals(Type.GAR) &&
-                   getSelectionPions(0) != null && getSelectionPions(1) == null &&
-                   !pion.equals(getSelectionPions(0)) && pionDeplacable(pion, 1);
+                    getSelectionPions(0) != null && getSelectionPions(1) == null &&
+                    !pion.equals(getSelectionPions(0)) && pionDeplacable(pion, 1);
         } else if (etatJeu == ETAT_CHOIX_PION) {
             if (activationPouvoirFou && carte.estDeplacementFouCentre())
                 return (typeCourant.equals(Type.IND) || pion.getType().equals(Type.GAR)) && !pion.getType().equals(Type.FOU) && plateau.pionEstDeplacable(pion, Plateau.FONTAINE);
@@ -441,7 +384,7 @@ public class Jeu extends Historique implements Cloneable {
     }
 
     public boolean peutSelectionnerDirection(int direction) {
-        Carte carte = getSelectionCartes(joueurCourant).getCarte(getSelectionCartes(joueurCourant).getTaille()-1);
+        Carte carte = getSelectionCartes(joueurCourant).getCarte(getSelectionCartes(joueurCourant).getTaille() - 1);
 
         if (activationPouvoirFou) {
             if ((typeCourant.equals(Type.IND) || typeCourant.equals(Type.GAR)) && getSelectionPions(0) != null)
@@ -468,23 +411,11 @@ public class Jeu extends Historique implements Cloneable {
     }
 
     public static String joueurEnTexte(int joueur) {
-        if (joueur == JOUEUR_VRT)
-            return "Joueur vert";
-        else if (joueur == JOUEUR_RGE)
-            return "Joueur rouge";
-        else
-            throw new RuntimeException("Modele.Jeu.joueurEnTexte() : Joueur entré invalide.");
+        return joueur == JOUEUR_VRT ? "Joueur vert" : "Joueur rouge";
     }
 
     public static int getDirectionJoueur(int joueur) {
-        if (joueur == JOUEUR_VRT)
-            return Plateau.DIRECTION_VRT;
-        else if (joueur == JOUEUR_RGE)
-            return  Plateau.DIRECTION_RGE;
-        else if (joueur == JOUEUR_IND)
-            return Plateau.DIRECTION_IND;
-        else
-            throw new RuntimeException("Modele.Jeu.getDirectionJoueur() : Joueur entré invalide.");
+        return joueur == JOUEUR_VRT ? Plateau.DIRECTION_VRT : Plateau.DIRECTION_RGE;
     }
 
     @Override
@@ -497,17 +428,17 @@ public class Jeu extends Historique implements Cloneable {
         Jeu jeu = (Jeu) o;
 
         return joueurCourant == jeu.joueurCourant &&
-               typeCourant.equals(jeu.typeCourant) &&
-               plateau.equals(jeu.plateau) &&
-               pioche.equals(jeu.pioche) && defausse.equals(jeu.defausse) &&
-               mainJoueurVrt.equals(jeu.mainJoueurVrt) && mainJoueurRge.equals(jeu.mainJoueurRge) &&
-               etatJeu == jeu.etatJeu &&
-               activationPrivilegeRoi == jeu.activationPrivilegeRoi &&
-               activationPouvoirSor == jeu.activationPouvoirSor &&
-               activationPouvoirFou == jeu.activationPouvoirFou &&
-               selectionCartesVrt.equals(jeu.selectionCartesVrt) && selectionCartesRge.equals(jeu.selectionCartesRge) &&
-               Arrays.equals(selectionPions, jeu.selectionPions) &&
-               Arrays.equals(selectionDirections, jeu.selectionDirections);
+                typeCourant.equals(jeu.typeCourant) &&
+                plateau.equals(jeu.plateau) &&
+                pioche.equals(jeu.pioche) && defausse.equals(jeu.defausse) &&
+                mainJoueurVrt.equals(jeu.mainJoueurVrt) && mainJoueurRge.equals(jeu.mainJoueurRge) &&
+                etatJeu == jeu.etatJeu &&
+                activationPrivilegeRoi == jeu.activationPrivilegeRoi &&
+                activationPouvoirSor == jeu.activationPouvoirSor &&
+                activationPouvoirFou == jeu.activationPouvoirFou &&
+                selectionCartesVrt.equals(jeu.selectionCartesVrt) && selectionCartesRge.equals(jeu.selectionCartesRge) &&
+                Arrays.equals(selectionPions, jeu.selectionPions) &&
+                Arrays.equals(selectionDirections, jeu.selectionDirections);
     }
 
     @Override
@@ -546,29 +477,31 @@ public class Jeu extends Historique implements Cloneable {
             case ETAT_CHOIX_CARTE:
             case ETAT_CHOIX_PION:
             case ETAT_CHOIX_DIRECTION:
-                txt = "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase();
-                txt += "              Pioche : " + getPioche().getTaille() + "\n";
-                txt += "     Main vert  : " + mainJoueurVrt.toString() + "\n";
-                txt += "                  " + selectionCartesVrt.toString() + "\n";
-                txt += plateau.toString() + "\n";
-                txt += "                  " + selectionCartesRge.toString() + "\n";
-                txt += "     Main rouge : " + mainJoueurRge.toString();
+                txt += afficherJeu();
                 break;
             case ETAT_FIN_DE_PARTIE:
-                txt = "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase();
-                txt += "              Pioche : " + getPioche().getTaille() + "\n";
-                txt += "     Main vert  : " + mainJoueurVrt.toString() + "\n";
-                txt += "                  " + selectionCartesVrt.toString() + "\n";
-                txt += plateau.toString() + "\n";
-                txt += "                  " + selectionCartesRge.toString() + "\n";
-                txt += "     Main rouge : " + mainJoueurRge.toString();
+                txt += afficherJeu();
                 txt += "\n\n     VICTOIRE DU " + joueurEnTexte(getJoueurGagnant()).toUpperCase() + " !!!";
+                txt += "\n\nFIN DE PARTIE\n";
+                txt += "1. Nouvelle partie\n";
+                txt += "2. Retour au menu principal";
                 break;
             default:
-               throw new RuntimeException("Modele.jeu.toString() : Etat de jeu non affichable.");
+                throw new RuntimeException("Modele.jeu.toString() : Etat de jeu non affichable.");
         }
 
         return txt;
     }
 
+    private String afficherJeu() {
+        String txt = "";
+        txt = "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase();
+        txt += "              Pioche : " + getPioche().getTaille() + "\n";
+        txt += "     Main vert  : " + mainJoueurVrt.toString() + "\n";
+        txt += "                  " + selectionCartesVrt.toString() + "\n";
+        txt += plateau.toString() + "\n";
+        txt += "                  " + selectionCartesRge.toString() + "\n";
+        txt += "     Main rouge : " + mainJoueurRge.toString();
+        return txt;
+    }
 }

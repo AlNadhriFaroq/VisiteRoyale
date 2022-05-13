@@ -4,25 +4,21 @@ import Patterns.Observable;
 
 public class Programme extends Observable {
     public static final int ETAT_ACCUEIL = 0;
-    public static final int ETAT_MENU_PRINCIPALE = 1;
+    public static final int ETAT_MENU_PRINCIPAL = 1;
     public static final int ETAT_EN_JEU = 2;
     public static final int ETAT_MENU_JEU = 3;
-    public static final int ETAT_MENU_PARAMETRES = 4;
+    public static final int ETAT_MENU_OPTIONS = 4;
     public static final int ETAT_TUTORIEL = 5;
     public static final int ETAT_CREDITS = 6;
-    public static final int ETAT_FIN_APP = 7;
+    public static final int ETAT_FIN_PROGRAMME = 7;
 
     int etat;
     Jeu jeu;
-
-    Audio audio;
     boolean joueurVrtEstIA, joueurRgeEstIA;
 
     public Programme(){
         jeu = new Jeu() ;
-        etat = ETAT_MENU_PRINCIPALE;
-        audio = new Audio();
-        jouerMusique();
+        etat = ETAT_ACCUEIL;
     }
 
     public int getEtat() {
@@ -33,14 +29,6 @@ public class Programme extends Observable {
         return jeu;
     }
 
-    void jouerMusique(){
-         audio.boucler();
-    }
-
-    void arreterMusique(){
-        audio.arreter();
-    }
-
     public boolean getJoueurVrtEstIA() {
         return joueurVrtEstIA;
     }
@@ -49,9 +37,13 @@ public class Programme extends Observable {
         return joueurRgeEstIA;
     }
 
+    public void commencerProgramme() {
+        etat = ETAT_MENU_PRINCIPAL;
+        mettreAJour();
+    }
+
     public void nouvellePartie(boolean joueurVrtEstIA, boolean joueurRgeEstIA) {
         etat = ETAT_EN_JEU ;
-        arreterMusique();
         this.joueurVrtEstIA = joueurVrtEstIA;
         this.joueurRgeEstIA = joueurRgeEstIA;
         jeu.nouvellePartie();
@@ -64,27 +56,18 @@ public class Programme extends Observable {
     }
 
     public void sauvegarderPartie() {
-        return;
     }
 
     public void chargerPartie() {
-        return;
     }
 
     public void ouvrirMenuJeu() {
         etat = ETAT_MENU_JEU;
-        jouerMusique();
         mettreAJour();
     }
 
     public void reprendrePartie() {
         etat = ETAT_EN_JEU;
-        arreterMusique();
-        mettreAJour();
-    }
-
-    public void abandonnerPartie() {
-        etat = ETAT_MENU_PRINCIPALE;
         mettreAJour();
     }
 
@@ -93,18 +76,18 @@ public class Programme extends Observable {
         mettreAJour();
     }
 
-    public void retourMenu() {
-        etat = ETAT_MENU_PRINCIPALE;
+    public void retourMenuPrincipal() {
+        etat = ETAT_MENU_PRINCIPAL;
         mettreAJour();
     }
 
     public void parametres() {
-        etat = ETAT_MENU_PARAMETRES;
+        etat = ETAT_MENU_OPTIONS;
         mettreAJour();
     }
 
     public void quitter() {
-        etat = ETAT_FIN_APP;
+        etat = ETAT_FIN_PROGRAMME;
         mettreAJour();
     }
 
@@ -131,7 +114,7 @@ public class Programme extends Observable {
             case ETAT_ACCUEIL:
                 txt += "Ouverture en cours. Veuillez patienter...";
                 break;
-            case ETAT_MENU_PRINCIPALE:
+            case ETAT_MENU_PRINCIPAL:
                 txt += "VISITE ROYALE\n";
                 txt += "1. Nouvelle partie 1v1\n";
                 txt += "2. Nouvelle partie contre IA\n";
@@ -151,9 +134,9 @@ public class Programme extends Observable {
                 txt += "3. Sauvegarder la partie\n";
                 txt += "4. Options\n";
                 txt += "5. Tutoriel\n";
-                txt += "6. Abandonner la partie";
+                txt += "6. Retour au menu principal";
                 break;
-            case ETAT_MENU_PARAMETRES:
+            case ETAT_MENU_OPTIONS:
                 txt += "Retour";
                 break;
             case ETAT_TUTORIEL:
@@ -173,8 +156,8 @@ public class Programme extends Observable {
                 txt += "   Sacha Isaac--Chassande\n";
                 txt += "   Landry Rolland";
                 break;
-            case ETAT_FIN_APP:
-                txt += "Game Over";
+            case ETAT_FIN_PROGRAMME:
+                txt += "Fermeture en cours...";
                 break;
             default:
                 throw new RuntimeException("Modele.Programme.toString() : Etat invalide.");

@@ -1,17 +1,16 @@
-package Modele;
+package Vue;
 
-import javax.sound.sampled.*;
-import java.io.File;
 import java.util.Random;
+import java.io.File;
+import javax.sound.sampled.*;
 
 public class Audio {
-    String[] sons ;
+    String[] sons;
     Clip clip;
     Random rand;
     String path;
 
     public Audio() {
-
         sons = new String[5];
         path = "resources/Audios/Musiques/";
 
@@ -19,32 +18,30 @@ public class Audio {
         sons[1] = path + "intro_mozart.wav";
 
         rand = new Random();
-        chargeClip();
+        chargerClip();
     }
 
-    void chargeClip(){
+    void chargerClip() {
         try {
             File file = new File(sons[rand.nextInt(2)]);
             AudioInputStream audi = AudioSystem.getAudioInputStream(file);
-            clip =AudioSystem.getClip();
+            clip = AudioSystem.getClip();
             clip.open(audi);
-
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Erreur lors du chargement de son : " + e);
         }
     }
 
-    void jouer(){
+    void jouer() {
         clip.start();
     }
 
-    public void boucler(){
+    public void boucler() {
         clip.setMicrosecondPosition(0);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
-    public void arreter(){
+    public void arreter() {
         clip.stop();
     }
-
 }

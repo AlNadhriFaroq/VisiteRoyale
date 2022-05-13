@@ -51,7 +51,7 @@ public class Paquet implements Cloneable {
 
     Carte extraire() {
         if (!estVide())
-            return cartes.remove(getTaille()-1);
+            return cartes.remove(getTaille() - 1);
         return null;
     }
 
@@ -151,7 +151,7 @@ public class Paquet implements Cloneable {
 
         for (int i = 0; i < getTaille(); i++) {
             txt.append(getCarte(i).toString());
-            if (i != getTaille()-1)
+            if (i != getTaille() - 1)
                 txt.append(" ");
         }
 

@@ -8,8 +8,8 @@ class JoueurHumain extends Joueur {
     }
 
     @Override
-    boolean jouer(Coup coup) {
+    void jouer(Coup coup) {
         prog.jouerCoup(coup);
-        return prog.getJeu().getJoueurCourant() != num();
+        num();
     }
 }

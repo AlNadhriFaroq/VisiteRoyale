@@ -1,7 +1,6 @@
 package Modele;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class CarteTest {
@@ -91,6 +90,6 @@ class CarteTest {
     void testClone() {
         Carte carte1 = Carte.F5;
         Carte carte2 = carte1.clone();
-        Assertions.assertTrue(carte1.equals(carte2));
+        Assertions.assertEquals(carte1, carte2);
     }
 }

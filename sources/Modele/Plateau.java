@@ -111,10 +111,10 @@ public class Plateau implements Cloneable {
 
     public boolean pionEstDeplacable(Pion pion, int destination) {
         return destination >= BORDURE_VRT && destination <= BORDURE_RGE &&
-               ((pion.equals(Pion.ROI) && destination > getPositionPion(Pion.GAR_VRT) && destination < getPositionPion(Pion.GAR_RGE)) ||
-                (pion.equals(Pion.GAR_VRT) && destination < getPositionPion(Pion.ROI) && destination < getPositionPion(Pion.GAR_RGE)) ||
-                (pion.equals(Pion.GAR_RGE) && destination > getPositionPion(Pion.ROI) && destination > getPositionPion(Pion.GAR_VRT)) ||
-                pion.equals(Pion.SOR) || pion.equals(Pion.FOU));
+                ((pion.equals(Pion.ROI) && destination > getPositionPion(Pion.GAR_VRT) && destination < getPositionPion(Pion.GAR_RGE)) ||
+                        (pion.equals(Pion.GAR_VRT) && destination < getPositionPion(Pion.ROI) && destination < getPositionPion(Pion.GAR_RGE)) ||
+                        (pion.equals(Pion.GAR_RGE) && destination > getPositionPion(Pion.ROI) && destination > getPositionPion(Pion.GAR_VRT)) ||
+                        pion.equals(Pion.SOR) || pion.equals(Pion.FOU));
     }
 
     public boolean couronneEstDeplacable(int destination) {
@@ -123,18 +123,18 @@ public class Plateau implements Cloneable {
 
     public boolean peutUtiliserPrivilegeRoi(int direction) {
         return (direction == DIRECTION_VRT && getPositionPion(Pion.GAR_VRT) != BORDURE_VRT) ||
-               (direction == DIRECTION_RGE && getPositionPion(Pion.GAR_RGE) != BORDURE_RGE);
+                (direction == DIRECTION_RGE && getPositionPion(Pion.GAR_RGE) != BORDURE_RGE);
     }
 
     public boolean peutUtiliserPouvoirSor() {
         return getPositionPion(Pion.GAR_VRT) != getPositionPion(Pion.SOR) &&
-               getPositionPion(Pion.ROI) != getPositionPion(Pion.SOR) &&
-               getPositionPion(Pion.GAR_RGE) != getPositionPion(Pion.SOR);
+                getPositionPion(Pion.ROI) != getPositionPion(Pion.SOR) &&
+                getPositionPion(Pion.GAR_RGE) != getPositionPion(Pion.SOR);
     }
 
     public boolean peutUtiliserPouvoirSor(Pion pion) {
         return !pion.equals(Pion.FOU) && !pion.equals(Pion.SOR) &&
-               pionEstDeplacable(pion, getPositionPion(Pion.SOR));
+                pionEstDeplacable(pion, getPositionPion(Pion.SOR));
     }
 
     public boolean vrtPeutUtiliserPouvoirFou() {
@@ -179,11 +179,12 @@ public class Plateau implements Cloneable {
         Plateau plateau = (Plateau) o;
 
         return positionsPions.equals(plateau.positionsPions) &&
-               faceCouronne == plateau.faceCouronne &&
-               positionCouronne == plateau.positionCouronne;
+                faceCouronne == plateau.faceCouronne &&
+                positionCouronne == plateau.positionCouronne;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Plateau clone() {
         try {
             Plateau resultat = (Plateau) super.clone();

@@ -67,6 +67,5 @@ class PionTest {
         Pion p1 = Pion.ROI;
         Pion p2 = p1.clone();
         Assertions.assertEquals(p1, p2);
-
     }
 }

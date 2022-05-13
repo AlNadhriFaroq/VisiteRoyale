@@ -45,20 +45,34 @@ public class Carte implements Cloneable, Comparable<Carte> {
 
     public static Carte texteEnCarte(String texte) {
         switch (texte) {
-            case "R1": return R1;
-            case "G1": return G1;
-            case "G2": return G2;
-            case "GC": return GC;
-            case "S1": return S1;
-            case "S2": return S2;
-            case "S3": return S3;
-            case "F1": return F1;
-            case "F2": return F2;
-            case "F3": return F3;
-            case "F4": return F4;
-            case "F5": return F5;
-            case "FM": return FM;
-            default: throw new RuntimeException("Modele.Carte.texteEnCarte() : Texte entré invalide.");
+            case "R1":
+                return R1;
+            case "G1":
+                return G1;
+            case "G2":
+                return G2;
+            case "GC":
+                return GC;
+            case "S1":
+                return S1;
+            case "S2":
+                return S2;
+            case "S3":
+                return S3;
+            case "F1":
+                return F1;
+            case "F2":
+                return F2;
+            case "F3":
+                return F3;
+            case "F4":
+                return F4;
+            case "F5":
+                return F5;
+            case "FM":
+                return FM;
+            default:
+                throw new RuntimeException("Modele.Carte.texteEnCarte() : Texte entré invalide.");
         }
     }
 
@@ -93,13 +107,6 @@ public class Carte implements Cloneable, Comparable<Carte> {
 
     @Override
     public String toString() {
-        String dep;
-        if (type.equals(Type.GAR) && deplacement == 3)
-            dep = "C";
-        else if (deplacement == 6)
-            dep = "M";
-        else
-            dep = Integer.toString(deplacement);
-        return type + dep;
+        return type + (type.equals(Type.GAR) && deplacement == 3 ? "C" : (deplacement == 6 ? "M" : Integer.toString(deplacement)));
     }
 }

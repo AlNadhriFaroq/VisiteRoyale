@@ -18,13 +18,13 @@ class PaquetTest {
         Paquet paquet = new Paquet(54);
         paquet.inserer(Carte.R1);
         paquet.inserer(Carte.S1);
-        Assertions.assertTrue(paquet.getTaille() == 2);
+        Assertions.assertEquals(2, paquet.getTaille());
     }
 
     @Test
     void testGetTailleMax() {
         Paquet paquet = new Paquet(8);
-        Assertions.assertTrue(paquet.getTailleMax() == 8);
+        Assertions.assertEquals(8, paquet.getTailleMax());
     }
 
     @Test
@@ -32,7 +32,7 @@ class PaquetTest {
         Paquet paquet = new Paquet(54);
         paquet.inserer(Carte.S3);
         paquet.inserer(Carte.S1);
-        Assertions.assertTrue(paquet.getNombreTypeCarte(Type.SOR) == 2);
+        Assertions.assertEquals(2, paquet.getNombreTypeCarte(Type.SOR));
     }
 
     @Test
@@ -40,7 +40,7 @@ class PaquetTest {
         Paquet paquet = new Paquet(54);
         paquet.inserer(Carte.S3);
         paquet.inserer(Carte.S1);
-        Assertions.assertTrue(paquet.getNombreCarte(Type.SOR,1) == 1);
+        Assertions.assertEquals(1, paquet.getNombreCarte(Type.SOR, 1));
     }
 
     @Test
@@ -73,7 +73,7 @@ class PaquetTest {
     void testRemplir() {
         Paquet paquet = new Paquet(54);
         paquet.remplir();
-        Assertions.assertTrue(paquet.getTaille() == 54);
+        Assertions.assertEquals(54, paquet.getTaille());
     }
 
     @Test
@@ -92,7 +92,7 @@ class PaquetTest {
         paquet.remplir();
         Paquet paquet2 = new Paquet(54);
         paquet2.copier(paquet);
-        Assertions.assertTrue(paquet.equals(paquet2));
+        Assertions.assertEquals(paquet, paquet2);
     }
 
     @Test
@@ -102,7 +102,7 @@ class PaquetTest {
         Paquet paquet2 = new Paquet(54);
         paquet2.copier(paquet1);
         paquet1.melanger();
-        Assertions.assertFalse(paquet1.equals(paquet2));
+        Assertions.assertNotEquals(paquet1, paquet2);
     }
 
     @Test
@@ -114,7 +114,7 @@ class PaquetTest {
         paquet2.copier(paquet1);
         paquet2.melanger();
         paquet1.trier();
-        Assertions.assertFalse(paquet1.equals(paquet2));
+        Assertions.assertNotEquals(paquet1, paquet2);
     }
 
     @Test
@@ -150,8 +150,8 @@ class PaquetTest {
         paquet1.remplir();
         Assertions.assertFalse(paquet1.estVide());
         Paquet paquet2 = paquet1.clone();
-        Assertions.assertTrue(paquet1.equals(paquet2));
-        Carte carte = paquet1.extraire();
-        Assertions.assertFalse(paquet1.equals(paquet2));
+        Assertions.assertEquals(paquet1, paquet2);
+        paquet1.extraire();
+        Assertions.assertNotEquals(paquet1, paquet2);
     }
 }

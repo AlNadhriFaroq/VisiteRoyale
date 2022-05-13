@@ -15,11 +15,9 @@ abstract class Joueur {
         return num;
     }
 
-    boolean tempsEcoule() {
-        return false;
+    void tempsEcoule() {
     }
 
-    boolean jouer(Coup coup) {
-        return false;
+    void jouer(Coup coup) {
     }
 }

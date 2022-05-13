@@ -24,7 +24,7 @@ class TypeTest {
         Type t2 = Type.SOR;
         Assertions.assertEquals(0, t1.compareTo(t2));
         t1 = Type.FOU;
-        Assertions.assertTrue(t1.compareTo(t2) > 0 );
+        Assertions.assertTrue(t1.compareTo(t2) > 0);
         t1 = Type.ROI;
         Assertions.assertTrue(t1.compareTo(t2) < 0);
     }
@@ -42,8 +42,8 @@ class TypeTest {
     void testClone() {
         Type t1 = Type.SOR;
         Type t2 = t1.clone();
-        Assertions.assertTrue(t1.equals(t2));
+        Assertions.assertEquals(t1, t2);
         t2 = Type.ROI;
-        Assertions.assertFalse(t1.equals(t2));
+        Assertions.assertNotEquals(t1, t2);
     }
 }

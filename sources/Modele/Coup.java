@@ -189,13 +189,12 @@ public class Coup implements Cloneable {
                 else
                     jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
             } else {
-                Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
+                Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
-                if (jeu.getActivationPouvoirFou() && carte.estDeplacementFouCentre()) {
+                if (jeu.getActivationPouvoirFou() && carte.estDeplacementFouCentre())
                     executerDeplacement();
-                } else {
+                else
                     jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
-                }
             }
         }
     }
@@ -212,7 +211,7 @@ public class Coup implements Cloneable {
                 jeu.setTypeCourant(typePasse);
                 jeu.getPlateau().setPositionPion(pion, positionsPasse[0]);
             } else {
-                Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
+                Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
                 if (jeu.getActivationPouvoirFou() && carte.estDeplacementFouCentre())
                     desexecuterDeplacement();
             }
@@ -222,7 +221,7 @@ public class Coup implements Cloneable {
     }
 
     private void executerChoisirDirection() {
-        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
+        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
         if (jeu.getActivationPrivilegeRoi() == 2) {
             jeu.getPlateau().setPositionPion(Pion.GAR_VRT, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + direction);
@@ -249,7 +248,7 @@ public class Coup implements Cloneable {
 
     private void desexecuterChoisirDirection() {
         jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
-        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
+        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
         if (positionsPasse[0] != -1 && carte.getType().equals(Type.ROI)) {
             jeu.setActivationPrivilegeRoi(2);
@@ -269,12 +268,12 @@ public class Coup implements Cloneable {
     }
 
     private void executerDeplacement() {
-        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
+        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
         Pion pion = null;
         if ((jeu.getTypeCourant().equals(Type.IND) && carte.getType().equals(Type.GAR)) ||
-            jeu.getTypeCourant().equals(Type.GAR) || carte.estDeplacementGar1Plus1() ||
-            (jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND)))
+                jeu.getTypeCourant().equals(Type.GAR) || carte.estDeplacementGar1Plus1() ||
+                (jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND)))
             pion = jeu.getSelectionPions(0);
         else if (jeu.getActivationPouvoirFou())
             pion = Pion.typeEnPion(jeu.getTypeCourant());
@@ -323,7 +322,7 @@ public class Coup implements Cloneable {
     }
 
     private void desexecuterDeplacement() {
-        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
+        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
         desexecuterChangerTypeCourant();
 
@@ -348,7 +347,7 @@ public class Coup implements Cloneable {
     private void executerChangerTypeCourant() {
         typePasse = jeu.getTypeCourant();
 
-        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1);
+        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
         if (jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND))
             jeu.setTypeCourant(jeu.getSelectionPions(0).getType());
@@ -445,7 +444,7 @@ public class Coup implements Cloneable {
 
         jeu.setTypeCourant(typePasse);
 
-        for (int i = nbCartesAPiocher-1; i >= 0; i--) {
+        for (int i = nbCartesAPiocher - 1; i >= 0; i--) {
             jeu.getPioche().inserer(jeu.getMain(joueur).extraire(cartesPiochees[i]));
             if (i == indiceMelange) {
                 jeu.getDefausse().copier(defaussePasse);
@@ -454,7 +453,7 @@ public class Coup implements Cloneable {
             }
         }
 
-        for (int i = nbCartesAPiocher-1; i >= 0; i--)
+        for (int i = nbCartesAPiocher - 1; i >= 0; i--)
             jeu.getSelectionCartes(joueur).inserer(jeu.getDefausse().extraire());
 
         if (joueur == Jeu.JOUEUR_VRT)
@@ -467,8 +466,8 @@ public class Coup implements Cloneable {
         jeu.setActivationPrivilegeRoi(activationPrivilegeRoiPasse);
 
         if (!jeu.getSelectionCartes(joueur).estVide() &&
-            jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1).getType().equals(Type.FOU) &&
-            !typePasse.equals(Type.FOU))
+                jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1).getType().equals(Type.FOU) &&
+                !typePasse.equals(Type.FOU))
             jeu.setActivationPouvoirFou(true);
 
 
@@ -488,8 +487,8 @@ public class Coup implements Cloneable {
         Coup coup = (Coup) o;
 
         return jeu.equals(coup.jeu) && joueur == coup.joueur &&
-               typeCoup == coup.typeCoup && carte.equals(coup.carte) &&
-               pion.equals(coup.pion) && direction == coup.direction;
+                typeCoup == coup.typeCoup && carte.equals(coup.carte) &&
+                pion.equals(coup.pion) && direction == coup.direction;
     }
 
     @Override
@@ -505,6 +504,26 @@ public class Coup implements Cloneable {
             return resultat;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Modele.Coup.clone() : Coup non clonable.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        switch (typeCoup) {
+            case CHOISIR_CARTE:
+                return carte.toString();
+            case CHOISIR_PION:
+                return pion.toString();
+            case CHOISIR_DIRECTION:
+                return direction == Plateau.DIRECTION_VRT ? "V" : "R";
+            case ACTIVER_POUVOIR_SOR:
+                return "Sor";
+            case ACTIVER_POUVOIR_FOU:
+                return "Fou";
+            case FINIR_TOUR:
+                return "Fin tour";
+            default:
+                throw new RuntimeException("Modele.Coup.toString() : type de coup invalide.");
         }
     }
 }

@@ -23,7 +23,7 @@ public class Historique {
     }
 
     private Coup transfererCoup(List<Coup> source, List<Coup> dest) {
-        Coup resultat = source.remove(source.size()-1);
+        Coup resultat = source.remove(source.size() - 1);
         dest.add(resultat);
         return resultat;
     }

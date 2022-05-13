@@ -1,15 +1,13 @@
-package Controleur;
+package IA;
 
 import Modele.*;
 
 import java.util.*;
 
-class IAAleatoire extends IA {
-    Random r;
+public class IAAleatoirePonderee extends IAAleatoire {
 
-    IAAleatoire(Jeu jeu) {
+    public IAAleatoirePonderee(Jeu jeu) {
         super(jeu);
-        r = new Random();
     }
 
     @Override
@@ -50,28 +48,7 @@ class IAAleatoire extends IA {
         }
 
         Coup coup = coups.get(r.nextInt(coups.size()));
-
-        switch (coup.getTypeCoup()) {
-            case Coup.CHOISIR_CARTE:
-                System.out.println(coup.getCarte());
-                break;
-            case Coup.CHOISIR_PION:
-                System.out.println(coup.getPion());
-                break;
-            case Coup.CHOISIR_DIRECTION:
-                System.out.println((coup.getDirection() == Plateau.DIRECTION_VRT ? "V" : "R"));
-                break;
-            case Coup.ACTIVER_POUVOIR_SOR:
-                System.out.println("Sor");
-                break;
-            case Coup.ACTIVER_POUVOIR_FOU:
-                System.out.println("Fou");
-                break;
-            case Coup.FINIR_TOUR:
-                System.out.println("Fin tour");
-                break;
-        }
-
+        System.out.println(coup.toString());
         return coup;
     }
 }
