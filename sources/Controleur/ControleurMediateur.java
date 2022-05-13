@@ -114,6 +114,14 @@ public class ControleurMediateur {
         prog.abandonnerPartie();
     }
 
+    public void ouvrirCredits() {
+        prog.ouvrirCredits();
+    }
+
+    public void retourMenu() {
+        prog.retourMenu();
+    }
+
     public void quitter() {
         System.exit(0);
     }
