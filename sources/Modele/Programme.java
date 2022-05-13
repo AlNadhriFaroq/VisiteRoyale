@@ -14,11 +14,15 @@ public class Programme extends Observable {
 
     int etat;
     Jeu jeu;
+
+    Audio audio;
     boolean joueurVrtEstIA, joueurRgeEstIA;
 
     public Programme(){
         jeu = new Jeu() ;
         etat = ETAT_MENU_PRINCIPALE;
+        audio = new Audio();
+        jouerMusique();
     }
 
     public int getEtat() {
@@ -27,6 +31,14 @@ public class Programme extends Observable {
 
     public Jeu getJeu() {
         return jeu;
+    }
+
+    void jouerMusique(){
+         audio.boucler();
+    }
+
+    void arreterMusique(){
+        audio.arreter();
     }
 
     public boolean getJoueurVrtEstIA() {
@@ -39,6 +51,7 @@ public class Programme extends Observable {
 
     public void nouvellePartie(boolean joueurVrtEstIA, boolean joueurRgeEstIA) {
         etat = ETAT_EN_JEU ;
+        arreterMusique();
         this.joueurVrtEstIA = joueurVrtEstIA;
         this.joueurRgeEstIA = joueurRgeEstIA;
         jeu.nouvellePartie();
@@ -60,11 +73,13 @@ public class Programme extends Observable {
 
     public void ouvrirMenuJeu() {
         etat = ETAT_MENU_JEU;
+        jouerMusique();
         mettreAJour();
     }
 
     public void reprendrePartie() {
         etat = ETAT_EN_JEU;
+        arreterMusique();
         mettreAJour();
     }
 
