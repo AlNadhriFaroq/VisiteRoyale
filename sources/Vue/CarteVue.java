@@ -66,7 +66,8 @@ public class CarteVue extends JPanel implements MouseInputListener {
     }
     private void setImage() {
         if (this.isDos()) {
-            this.image = getImage("Back");
+            this.image = getImage("R1_2" +
+                    "");
         } else {
             this.image = getImage(this.carte.toString());
         }

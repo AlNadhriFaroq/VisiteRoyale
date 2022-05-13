@@ -38,9 +38,9 @@ public class Jeu extends Observable implements Cloneable {
     private int[] selectionDirections;
 
     public Jeu() {
-        nouvellePartie();
+        //nouvellePartie();
        // partieAleatoire();
-        //nouvellePartiePersonalise(JOUEUR_RGE,12,0, 16,1,8,8,true,37);
+        nouvellePartiePersonalise(JOUEUR_VRT,10,3, 14,4,8,8,Plateau.FACE_GRD_CRN,0);
     }
 
     public void nouvellePartie() {
@@ -479,7 +479,7 @@ public class Jeu extends Observable implements Cloneable {
             if ((typeCourant.equals(Type.IND) || typeCourant.equals(Type.GAR)) && getSelectionPions(0) != null)
                 return plateau.pionEstDeplacable(getSelectionPions(0), plateau.getPositionPion(getSelectionPions(0)) + direction * carte.getDeplacement());
             else if (!typeCourant.equals(Type.IND) && !typeCourant.equals(Type.GAR))
-                return plateau.pionEstDeplacable(Pion.typeEnPion(carte.getType()), plateau.getPositionPion(Pion.typeEnPion(carte.getType())) + direction * carte.getDeplacement());
+                return plateau.pionEstDeplacable(Pion.typeEnPion(typeCourant), plateau.getPositionPion(Pion.typeEnPion(typeCourant)) + direction * carte.getDeplacement());
         } else {
             if (activationPrivilegeRoi == 2)
                 return plateau.peutUtiliserPrivilegeRoi(direction);
