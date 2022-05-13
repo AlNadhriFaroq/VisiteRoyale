@@ -4,7 +4,7 @@ import Patterns.Observable;
 
 import java.util.*;
 
-public class Jeu extends Observable implements Cloneable {
+public class Jeu extends Historique implements Cloneable {
     public static final int ETAT_CHOIX_JOUEUR = 0;
     public static final int ETAT_CHOIX_CARTE = 1;
     public static final int ETAT_CHOIX_PION = 2;
@@ -16,9 +16,6 @@ public class Jeu extends Observable implements Cloneable {
     public static final int JOUEUR_RGE = 1;
 
     public static final int TAILLE_MAIN = 8;
-
-    private List<Coup> passe;
-    private List<Coup> futur;
 
     private int joueurCourant;
     private Type typeCourant;
@@ -44,8 +41,7 @@ public class Jeu extends Observable implements Cloneable {
     }
 
     public void nouvellePartie() {
-        passe = new ArrayList<>();
-        futur = new ArrayList<>();
+        initialiser();
 
         joueurCourant = JOUEUR_IND;
         typeCourant = Type.IND;
@@ -69,8 +65,6 @@ public class Jeu extends Observable implements Cloneable {
         selectionCartesRge = new Paquet(TAILLE_MAIN);
         selectionPions = new Pion[2];
         selectionDirections = new int[2];
-
-        mettreAJour();
     }
 
     public  void partieAleatoire(){
@@ -89,13 +83,11 @@ public class Jeu extends Observable implements Cloneable {
     }
 
     public void nouvellePartiePersonalise(int joueur, int posRoi,int posGV, int posGR, int posSor, int posFou, int posCouronne,boolean faceCouronne, int cartesDefausse) {
-        passe = new ArrayList<>();
-        futur = new ArrayList<>();
+        initialiser();
 
         joueurCourant = joueur;
         typeCourant = Type.IND;
         plateau = new Plateau(getDirectionJoueur(joueurCourant));
-        /* Calcul position pion aléatoirement*/
         plateau.setPositionPion(Pion.ROI,posRoi);
         plateau.setPositionPion(Pion.GAR_VRT,posGV);
         plateau.setPositionPion(Pion.GAR_RGE,posGR);
@@ -129,8 +121,6 @@ public class Jeu extends Observable implements Cloneable {
         selectionCartesRge = new Paquet(TAILLE_MAIN);
         selectionPions = new Pion[2];
         selectionDirections = new int[2];
-
-        mettreAJour();
     }
 
     public int getJoueurCourant() {
@@ -245,7 +235,6 @@ public class Jeu extends Observable implements Cloneable {
         setJoueurCourant(joueur);
         plateau = new Plateau(getDirectionJoueur(joueur));
         setEtatJeu(ETAT_CHOIX_CARTE);
-        mettreAJour();
     }
 
     void alternerJoueurCourant() {
@@ -329,28 +318,7 @@ public class Jeu extends Observable implements Cloneable {
 
     public void jouerCoup(Coup coup) {
         coup.fixerJeu(this);
-        coup.executer();
-        passe.add(coup);
-        futur.clear();
-        mettreAJour();
-    }
-
-    private Coup transfererCoup(List<Coup> source, List<Coup> dest) {
-        Coup resultat = source.remove(source.size()-1);
-        dest.add(resultat);
-        return resultat;
-    }
-
-    public void annulerCoup() {
-        Coup coup = transfererCoup(passe, futur);
-        coup.desexecuter();
-        mettreAJour();
-    }
-
-    public void refaireCoup() {
-        Coup coup = transfererCoup(futur, passe);
-        coup.executer();
-        mettreAJour();
+        super.jouerCoup(coup);
     }
 
     private boolean pionDeplacable(Pion pion, int deplacement) {
@@ -497,14 +465,6 @@ public class Jeu extends Observable implements Cloneable {
 
     public boolean estTerminee() {
         return etatJeu == ETAT_FIN_DE_PARTIE;
-    }
-
-    public boolean peutAnnuler() {
-        return !passe.isEmpty();
-    }
-
-    public boolean peutRefaire() {
-        return !futur.isEmpty();
     }
 
     public static String joueurEnTexte(int joueur) {

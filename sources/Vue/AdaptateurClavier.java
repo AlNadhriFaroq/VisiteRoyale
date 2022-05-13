@@ -25,14 +25,11 @@ public class AdaptateurClavier extends KeyAdapter {
             case KeyEvent.VK_P:
                 //ctrl.pause();
                 break;
-            case KeyEvent.VK_I:
-                ctrl.basculerIA(0, true);
-                break;
             case KeyEvent.VK_ESCAPE:
                 vue.basculerPleinEcran();
                 break;
             case KeyEvent.VK_N:
-                ctrl.nouvellePartie();
+                ctrl.nouvellePartie(true, true);
             case KeyEvent.VK_Q:
             case KeyEvent.VK_A:
                 ctrl.quitter();

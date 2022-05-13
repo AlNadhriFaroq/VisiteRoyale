@@ -3,11 +3,11 @@ package Controleur;
 import Modele.*;
 
 abstract class Joueur {
-    Jeu jeu;
+    Programme prog;
     int num;
 
-    Joueur(int num, Jeu jeu) {
-        this.jeu = jeu;
+    Joueur(int num, Programme prog) {
+        this.prog = prog;
         this.num = num;
     }
 

@@ -7,12 +7,93 @@ import javax.swing.*;
 import java.util.Scanner;
 
 public class InterfaceTextuelle extends InterfaceUtilisateur {
+    Jeu jeu;
 
-    public InterfaceTextuelle(Jeu jeu, ControleurMediateur ctrl) {
-        super(jeu, ctrl);
+    public InterfaceTextuelle(Programme prog, ControleurMediateur ctrl) {
+        super(prog, ctrl);
+        jeu = prog.getJeu();
     }
 
     public void interpreterCommande(String cmd) {
+        switch (prog.getEtat()) {
+            case Programme.ETAT_ACCUEIL:
+                System.out.println("Ouverture en cours. Veuillez patienter...");
+                break;
+            case Programme.ETAT_MENU_PRINCIPALE:
+                if (cmd.equalsIgnoreCase("1v1")) {
+                    ctrl.nouvellePartie(false, false);
+                } else if (cmd.equalsIgnoreCase("IA")) {
+                    ctrl.nouvellePartie(true, false);
+                } else if (cmd.equalsIgnoreCase("charger")) {
+                    System.out.println("Chargement non implémenté.");
+                } else if (cmd.equalsIgnoreCase("options") || cmd.equalsIgnoreCase("opt")) {
+                    System.out.println("Options non implémenté.");
+                } else if (cmd.equalsIgnoreCase("tutoriel") || cmd.equalsIgnoreCase("tuto")) {
+                    System.out.println("Tutoriel non implémenté.");
+                } else if (cmd.equalsIgnoreCase("credits")) {
+                    System.out.println("UGA - PROG6 - Projet - Groupe 3.");
+                } else if (cmd.equalsIgnoreCase("quitter")) {
+                    ctrl.quitter();
+                } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
+                    System.out.println("1v1      : Lancer une nouvelle partie à deux.");
+                    System.out.println("IA       : Lancer une nouvelle partie contre une IA.");
+                    System.out.println("Charger  : Charger une ancienne partie.");
+                    System.out.println("Options  : Ouvrir le menu des options.");
+                    System.out.println("Tutoriel : Lancer le tutoriel.");
+                    System.out.println("Credits  : Afficher les crédits.");
+                    System.out.println("Aide     : Afficher cette aide.");
+                    System.out.println("Quitter  : Quitter le programme.");
+                    System.out.print("\nCommande > ");
+                } else {
+                    System.out.println("Commande invalide.");
+                }
+                break;
+            case Programme.ETAT_EN_JEU:
+                interpreterCommandeEnJeu(cmd);
+                break;
+            case Programme.ETAT_MENU_JEU:
+                if (cmd.equalsIgnoreCase("retour")) {
+                    ctrl.reprendrePartie();
+                } else if (cmd.equalsIgnoreCase("nouvelle")) {
+                    ctrl.nouvellePartie(prog.getJoueurVrtEstIA(), prog.getJoueurRgeEstIA());
+                } else if (cmd.equalsIgnoreCase("sauver")) {
+                    System.out.println("Sauvegarde non implémenté.");
+                } else if (cmd.equalsIgnoreCase("options") || cmd.equalsIgnoreCase("opt")) {
+                    System.out.println("Options non implémenté.");
+                } else if (cmd.equalsIgnoreCase("tutoriel") || cmd.equalsIgnoreCase("tuto")) {
+                    System.out.println("Tutoriel non implémenté.");
+                } else if (cmd.equalsIgnoreCase("abandon")) {
+                    ctrl.abandonnerPartie();
+                } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
+                    System.out.println("Retour   : Reprendre la partie.");
+                    System.out.println("Nouvelle : Relancer une nouvelle partie.");
+                    System.out.println("Sauver   : Sauvegarder la partie.");
+                    System.out.println("Options  : Ouvrir le menu des options.");
+                    System.out.println("Tutoriel : Lancer le tutoriel.");
+                    System.out.println("Aide     : Afficher cette aide.");
+                    System.out.println("Abandon  : Abandonner la partie.");
+                    System.out.print("\nCommande > ");
+                } else {
+                    System.out.println("Commande invalide.");
+                }
+                break;
+            case Programme.ETAT_MENU_PARAMETRES:
+                System.out.println("Options non implémenté.");
+                break;
+            case Programme.ETAT_TUTORIEL:
+                System.out.println("Tutoriel non implémenté.");
+                break;
+            case Programme.ETAT_CREDITS:
+                System.out.println("Credits non implémenté.");
+                break;
+            case Programme.ETAT_FIN_APP:
+                break;
+            default:
+                throw new RuntimeException("Vue.InterfaceTextuelle.interpreterComande() : Etat du programme non reconnu.");
+        }
+    }
+
+    public void interpreterCommandeEnJeu(String cmd) {
         switch (jeu.getEtatJeu()) {
             case Jeu.ETAT_CHOIX_JOUEUR:
                 interpreterCommandeChoixJoueur(cmd);
@@ -30,21 +111,22 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 interpreterCommandeFinDePartie(cmd);
                 break;
             default:
-                throw new RuntimeException("Vue.InterfaceTextuelle.interpreterComande() : Etat du jeu non reconnu.");
+                throw new RuntimeException("Vue.InterfaceTextuelle.interpreterComandeEnJeu() : Etat du jeu non reconnu.");
         }
     }
 
     void interpreterCommandeChoixJoueur(String cmd) {
         if (cmd.equalsIgnoreCase("g") || cmd.equalsIgnoreCase("d") ||
-            cmd.equalsIgnoreCase("gauche") || cmd.equalsIgnoreCase("droite")) {
+                cmd.equalsIgnoreCase("gauche") || cmd.equalsIgnoreCase("droite")) {
             ctrl.definirJoueurQuiCommence();
         } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
             System.out.println("G / Gauche : Choisir la main de gauche.");
             System.out.println("D / Droite : Choisir la main de droite.");
             System.out.println("Aide       : Afficher cette aide.");
-            System.out.println("Quitter    : Quitter le programme.");
-        } else if (cmd.toLowerCase().startsWith("quitter")) {
-            ctrl.quitter();
+            System.out.println("Pause      : Ouvrir le menu du jeu.");
+            System.out.print("\nCommande > ");
+        } else if (cmd.toLowerCase().startsWith("pause")) {
+            ctrl.ouvrirMenuJeu();
         } else {
             System.out.println("Commande invalide.");
         }
@@ -61,8 +143,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             ctrl.annuler();
         } else if (cmd.equalsIgnoreCase("refaire")) {
             ctrl.refaire();
-        } else if (cmd.equalsIgnoreCase("relancer")) {
-            ctrl.nouvellePartie();
         } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
             if (jeu.peutSelectionnerCarte(Carte.R1))
                 System.out.println("R1       : Sélectionner une carte Roi pour déplacer le pion Roi d'une case.");
@@ -98,11 +178,11 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("Fin      : Finir son tour.");
             System.out.println("Annuler  : Annuler le dernier coup joué.");
             System.out.println("Refaire  : Refaire le dernier coup joué.");
-            System.out.println("Relancer : Lancer une nouvelle partie.");
             System.out.println("Aide     : Afficher cette aide.");
-            System.out.println("Quitter  : Quitter le programme.");
-        } else if (cmd.equalsIgnoreCase("quitter")) {
-            ctrl.quitter();
+            System.out.println("Pause    : Ouvrir le menu du jeu.");
+            System.out.print("\nCommande > ");
+        } else if (cmd.equalsIgnoreCase("pause")) {
+            ctrl.ouvrirMenuJeu();
         } else if (cmd.length() == 2) {
             try {
                 Carte carte = Carte.texteEnCarte(cmd.toUpperCase());
@@ -123,8 +203,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             ctrl.annuler();
         } else if (cmd.equalsIgnoreCase("refaire")) {
             ctrl.refaire();
-        } else if (cmd.equalsIgnoreCase("relancer")) {
-            ctrl.nouvellePartie();
         } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
             if (jeu.peutSelectionnerPion(Pion.ROI))
                 System.out.println("R        : Selectionner le pion Roi.");
@@ -136,11 +214,11 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("S        : Selectionner le pion Sorcier.");
             System.out.println("Annuler  : Annuler le dernier coup joué.");
             System.out.println("Refaire  : Refaire le dernier coup joué.");
-            System.out.println("Relancer : Lancer une nouvelle partie.");
             System.out.println("Aide     : Afficher cette aide.");
-            System.out.println("Quitter  : Quitter le programme.");
-        } else if (cmd.toLowerCase().startsWith("quitter")) {
-            ctrl.quitter();
+            System.out.println("Pause    : Ouvrir le menu du jeu.");
+            System.out.print("\nCommande > ");
+        } else if (cmd.toLowerCase().startsWith("pause")) {
+            ctrl.ouvrirMenuJeu();
         } else if (cmd.length() == 1 || cmd.length() == 2) {
             try {
                 Pion pion = Pion.texteEnPion(cmd.toUpperCase());
@@ -169,8 +247,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             ctrl.annuler();
         } else if (cmd.equalsIgnoreCase("refaire")) {
             ctrl.refaire();
-        } else if (cmd.equalsIgnoreCase("nouvelle partie")) {
-            ctrl.nouvellePartie();
         } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
             if (jeu.peutUtiliserPrivilegeRoi())
                 System.out.println("R1       : Sélectionner une carte Roi pour déplacer la Cour d'une case.");
@@ -179,16 +255,16 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             if (jeu.peutSelectionnerPion(Pion.GAR_RGE))
                 System.out.println("GR       : Sélectionner le pion Garde pour déplacer un deuxième pion Garde d'une case.");
             if (jeu.peutSelectionnerDirection(Plateau.DIRECTION_VRT))
-                System.out.println("V / G    : Sélectionner la direction vers le joueur vert, vers la gauche.");
+                System.out.println("V        : Sélectionner la direction vers le joueur vert, vers la gauche.");
             if (jeu.peutSelectionnerDirection(Plateau.DIRECTION_RGE))
-                System.out.println("R / D    : Sélectionner la direction vers le joueur rouge, vers la droite.");
+                System.out.println("R        : Sélectionner la direction vers le joueur rouge, vers la droite.");
             System.out.println("Annuler  : Annuler le dernier coup joué.");
             System.out.println("Refaire  : Refaire le dernier coup joué.");
-            System.out.println("Relancer : Lancer une nouvelle partie.");
             System.out.println("Aide     : Afficher cette aide.");
-            System.out.println("Quitter  : Quitter le programme.");
-        } else if (cmd.toLowerCase().startsWith("quitter")) {
-            ctrl.quitter();
+            System.out.println("Pause    : Ourvrir le menu du jeu.");
+            System.out.print("\nCommande > ");
+        } else if (cmd.toLowerCase().startsWith("pause")) {
+            ctrl.ouvrirMenuJeu();
         } else if (cmd.length() <= 6) {
             try {
                 int direction = Plateau.texteEnDirection(cmd);
@@ -207,15 +283,13 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     void interpreterCommandeFinDePartie(String cmd) {
         if (cmd.equalsIgnoreCase("annuler")) {
             ctrl.annuler();
-        } else if (cmd.equalsIgnoreCase("relancer")) {
-            ctrl.nouvellePartie();
         } else if (cmd.equalsIgnoreCase("aide") || cmd.equalsIgnoreCase("help")) {
             System.out.println("Annuler  : Annuler le dernier coup joué.");
-            System.out.println("Relancer : Lancer une nouvelle partie.");
             System.out.println("Aide     : Afficher cette aide.");
-            System.out.println("Quitter  : Quitter le programme.");
-        } else if (cmd.equalsIgnoreCase("quitter")) {
-            ctrl.quitter();
+            System.out.println("Pause    : Ouvrir le menu du jeu.");
+            System.out.print("\nCommande > ");
+        } else if (cmd.equalsIgnoreCase("pause")) {
+            ctrl.ouvrirMenuJeu();
         } else {
             System.out.println("Commande invalide.");
         }
@@ -229,14 +303,13 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
         mettreAJour();
         Scanner s = new Scanner(System.in);
 
-        while (true) {
-            System.out.print("Commande > ");
+        while (prog.getEtat() != Programme.ETAT_FIN_APP)
             interpreterCommande(s.nextLine());
-        }
     }
 
     @Override
     public void mettreAJour() {
-        System.out.println("\n" + jeu.toString() + "\n");
+        System.out.println("\n" + prog.toString() + "\n");
+        System.out.print("Commande > ");
     }
 }

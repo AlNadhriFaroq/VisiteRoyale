@@ -1,6 +1,8 @@
 package Modele;
 
-public class Programme {
+import Patterns.Observable;
+
+public class Programme extends Observable {
     public static final int ETAT_ACCUEIL = 0;
     public static final int ETAT_MENU_PRINCIPALE = 1;
     public static final int ETAT_EN_JEU = 2;
@@ -10,30 +12,138 @@ public class Programme {
     public static final int ETAT_CREDITS = 6;
     public static final int ETAT_FIN_APP = 7;
 
-    Jeu jeu;
     int etat;
+    Jeu jeu;
+    boolean joueurVrtEstIA, joueurRgeEstIA;
 
-    public Programme() {
-        jeu = new Jeu();
+    public Programme(){
+        jeu = new Jeu() ;
         etat = ETAT_MENU_PRINCIPALE;
     }
 
-    public void jouer() {
-        jeu.nouvellePartie();
-        etat = ETAT_EN_JEU;
+    public int getEtat() {
+        return etat;
     }
 
+    public Jeu getJeu() {
+        return jeu;
+    }
+
+    public boolean getJoueurVrtEstIA() {
+        return joueurVrtEstIA;
+    }
+
+    public boolean getJoueurRgeEstIA() {
+        return joueurRgeEstIA;
+    }
+
+    public void nouvellePartie(boolean joueurVrtEstIA, boolean joueurRgeEstIA) {
+        etat = ETAT_EN_JEU ;
+        this.joueurVrtEstIA = joueurVrtEstIA;
+        this.joueurRgeEstIA = joueurRgeEstIA;
+        jeu.nouvellePartie();
+        mettreAJour();
+    }
+
+    public void definirJoueurQuiCommence(int joueur) {
+        jeu.definirJoueurQuiCommence(joueur);
+        mettreAJour();
+    }
+
+    public void sauvegarderPartie() {
+        return;
+    }
 
     public void chargerPartie() {
+        return;
+    }
 
+    public void ouvrirMenuJeu() {
+        etat = ETAT_MENU_JEU;
+        mettreAJour();
+    }
+
+    public void reprendrePartie() {
+        etat = ETAT_EN_JEU;
+        mettreAJour();
+    }
+
+    public void abandonnerPartie() {
+        etat = ETAT_MENU_PRINCIPALE;
+        mettreAJour();
     }
 
     public void parametres() {
         etat = ETAT_MENU_PARAMETRES;
-
+        mettreAJour();
     }
 
     public void quitter() {
         etat = ETAT_FIN_APP;
+        mettreAJour();
+    }
+
+    public void jouerCoup(Coup coup) {
+        jeu.jouerCoup(coup);
+        mettreAJour();
+    }
+
+    public void annulerCoup() {
+        jeu.annulerCoup();
+        mettreAJour();
+    }
+
+    public void refaireCoup() {
+        jeu.refaireCoup();
+        mettreAJour();
+    }
+
+    @Override
+    public String toString() {
+        String txt  = "";
+
+        switch (etat) {
+            case ETAT_ACCUEIL:
+                txt += "Ouverture en cours. Veuillez patienter...";
+                break;
+            case ETAT_MENU_PRINCIPALE:
+                txt += "VISITE ROYALE\n";
+                txt += "- Nouvelle partie 1v1\n";
+                txt += "- Nouvelle partie contre IA\n";
+                txt += "- Charger une partie\n";
+                txt += "- Options\n";
+                txt += "- Tutoriel\n";
+                txt += "- Crédits\n";
+                txt += "- Quitter";
+                break;
+            case ETAT_EN_JEU:
+                txt += jeu.toString();
+                break;
+            case ETAT_MENU_JEU:
+                txt += "PAUSE\n";
+                txt += "- Reprende la partie\n";
+                txt += "- Nouvelle partie\n";
+                txt += "- Sauvegarder la partie\n";
+                txt += "- Options\n";
+                txt += "- Tutoriel\n";
+                txt += "- Abandonner la partie";
+                break;
+            case ETAT_MENU_PARAMETRES:
+                txt += "Retour";
+                break;
+            case ETAT_TUTORIEL:
+                txt += "Bonne chance";
+                break;
+            case ETAT_CREDITS:
+                txt += "Groupe 3";
+                break;
+            case ETAT_FIN_APP:
+                txt += "Game Over";
+                break;
+            default:
+                throw new RuntimeException("Modele.Programme.toString() : Etat invalide.");
+        }
+
+        return txt;
     }
 }

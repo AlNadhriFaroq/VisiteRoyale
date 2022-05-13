@@ -2,16 +2,17 @@ package Vue;
 
 import Controleur.ControleurMediateur;
 import Modele.Jeu;
+import Modele.Programme;
 import Patterns.Observateur;
 
 abstract class InterfaceUtilisateur implements Observateur, Runnable {
-    protected Jeu jeu;
+    protected Programme prog;
     protected ControleurMediateur ctrl;
 
-    protected InterfaceUtilisateur(Jeu jeu, ControleurMediateur ctrl) {
-        this.jeu = jeu;
+    protected InterfaceUtilisateur(Programme prog, ControleurMediateur ctrl) {
+        this.prog = prog;
         this.ctrl = ctrl;
-        jeu.ajouterObservateur(this);
+        prog.ajouterObservateur(this);
     }
 
     protected InterfaceUtilisateur() {

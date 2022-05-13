@@ -9,7 +9,7 @@ public class Configuration {
     final String dossierParametres;
 
     protected Configuration() {
-        dossierParametres = System.getProperty("user.home") + File.separator + "ProjetJeu";
+        dossierParametres = System.getProperty("user.home") + File.separator + "VisiteRoyale";
         File dossier = new File(dossierParametres);
         dossier.mkdirs();
 

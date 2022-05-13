@@ -2,6 +2,7 @@ package Vue;
 
 import Controleur.ControleurMediateur;
 import Modele.Jeu;
+import Modele.Programme;
 import Patterns.Observateur;
 
 import javax.swing.*;
@@ -13,29 +14,29 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
 
     GraphicsDevice device;
     boolean pleinEcran;
-    Jeu jeu;
+    Programme prog;
     ControleurMediateur ctrl;
     JFrame frame;
     PlateauFrame plateau;
     JeuGraphique jeuGrph;
     /* autres attributs, les autres components */
 
-    public InterfaceGraphique(Jeu jeu, ControleurMediateur ctrl) {
-        this.jeu = jeu;
+    public InterfaceGraphique(Programme prog, ControleurMediateur ctrl) {
+        this.prog = prog;
         this.ctrl = ctrl;
         pleinEcran = false;
-        this.plateau = new PlateauFrame(this.jeu);
+        this.plateau = new PlateauFrame(this.prog.getJeu());
     }
 
-    public static void demarrer(Jeu jeu, ControleurMediateur ctrl) {
-        InterfaceGraphique vue = new InterfaceGraphique(jeu, ctrl);
+    public static void demarrer(Programme prog, ControleurMediateur ctrl) {
+        InterfaceGraphique vue = new InterfaceGraphique(prog, ctrl);
         //ctrl.ajouterInterfaceUtilisateur(vue);
         SwingUtilities.invokeLater(vue);
     }
 
     public void run() {
         frame = this.plateau.getFrame();
-        jeuGrph = new JeuGraphique(jeu);
+        jeuGrph = new JeuGraphique(prog);
 
         /* Creation des autres components */
         /*
@@ -52,7 +53,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
         frame.add(jeuGrph);
 
 
-        jeu.ajouterObservateur(this);
+        prog.ajouterObservateur(this);
         Timer timer = new Timer(16, new AdaptateurTemps(ctrl));
         timer.start();
 

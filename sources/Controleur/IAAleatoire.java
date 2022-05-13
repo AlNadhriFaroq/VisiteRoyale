@@ -53,22 +53,22 @@ class IAAleatoire extends IA {
 
         switch (coup.getTypeCoup()) {
             case Coup.CHOISIR_CARTE:
-                System.out.println(Jeu.joueurEnTexte(jeu.getJoueurCourant()) + " sélectionne la carte " + coup.getCarte() + ".");
+                System.out.println(coup.getCarte());
                 break;
             case Coup.CHOISIR_PION:
-                System.out.println(Jeu.joueurEnTexte(jeu.getJoueurCourant()) + " sélectionne le pion " + coup.getPion() + ".");
+                System.out.println(coup.getPion());
                 break;
             case Coup.CHOISIR_DIRECTION:
-                System.out.println(Jeu.joueurEnTexte(jeu.getJoueurCourant()) + " sélectionne la direction " + coup.getDirection() + ".");
+                System.out.println((coup.getDirection() == Plateau.DIRECTION_VRT ? "V" : "R"));
                 break;
             case Coup.ACTIVER_POUVOIR_SOR:
-                System.out.println(Jeu.joueurEnTexte(jeu.getJoueurCourant()) + " active le pouvoir du Sorcier.");
+                System.out.println("Sor");
                 break;
             case Coup.ACTIVER_POUVOIR_FOU:
-                System.out.println(Jeu.joueurEnTexte(jeu.getJoueurCourant()) + " active le pouvoir du Fou.");
+                System.out.println("Fou");
                 break;
             case Coup.FINIR_TOUR:
-                System.out.println(Jeu.joueurEnTexte(jeu.getJoueurCourant()) + " fini son tour.");
+                System.out.println("Fin tour");
                 break;
         }
 

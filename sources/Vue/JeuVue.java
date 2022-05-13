@@ -8,10 +8,10 @@ import java.awt.*;
 
 public class JeuVue extends JComponent implements Observateur {
     Graphics2D dessin;
-    Jeu jeu;
+    Programme prog;
 
-    public JeuVue(Jeu jeu) {
-        this.jeu = jeu;
+    public JeuVue(Programme prog) {
+        this.prog = prog;
     }
 
     public int hauteur() {
@@ -29,7 +29,7 @@ public class JeuVue extends JComponent implements Observateur {
 
         /* dessin du jeu */
 
-        jeu.ajouterObservateur(this);
+        prog.ajouterObservateur(this);
     }
 
     @Override
