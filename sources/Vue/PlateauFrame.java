@@ -40,7 +40,8 @@ public class PlateauFrame extends JComponent {
         this.defausse = new ArrayList<CarteVue>();
 
         this.frame = new JFrame();
-        this.frame.setSize(LARGEURFENETRE, HAUTEURFENETRE);
+        this.frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        //this.frame.setSize(LARGEURFENETRE, HAUTEURFENETRE);
         this.jeu =jeu;
 
         this.heigth = this.frame.getHeight();
@@ -214,7 +215,6 @@ public class PlateauFrame extends JComponent {
         decaler(this.joueesA);
         c.setLocation(x, y);
     }
-
 
 
 
