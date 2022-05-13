@@ -26,6 +26,9 @@ public class PlateauFrame extends JComponent {
     List<CarteVue> joueesB;
     List<CarteVue> defausse;
 
+    Terrain terrain;
+
+
     int heigth, width, carteH, carteW, TerrainH, TerrainW;
     private static int OFFSET = 20;
 
@@ -39,10 +42,13 @@ public class PlateauFrame extends JComponent {
         this.joueesA = new ArrayList<CarteVue>();
         this.defausse = new ArrayList<CarteVue>();
 
+
         this.frame = new JFrame();
         this.frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         //this.frame.setSize(LARGEURFENETRE, HAUTEURFENETRE);
         this.jeu =jeu;
+
+        this.terrain = new Terrain(this.jeu.getPlateau());
 
         this.heigth = this.frame.getHeight();
         this.width = this.frame.getWidth();
@@ -53,6 +59,7 @@ public class PlateauFrame extends JComponent {
         this.CreerMain(false);
         this.CreerMain(true);
         this.afficheMain();
+        this.afficheTerrain();
     }
 
     public JFrame getFrame() {
@@ -63,6 +70,7 @@ public class PlateauFrame extends JComponent {
     @Override
     public void paintComponent(Graphics g){
         this.afficheMain();
+        this.afficheTerrain();
         super.paintComponent(g);
 
     }
@@ -216,6 +224,23 @@ public class PlateauFrame extends JComponent {
         c.setLocation(x, y);
     }
 
+    public void afficheTerrain(){
+
+        int x = (3*this.carteH);
+        int y = (2*this.carteH);
+
+        int w = carteW*10;
+        int h = carteH*2 + carteH/2;
+
+        if(!(w%17==0)){
+            w -= w%17;
+        }
+
+        terrain.setBounds(x, y, w, h);
+        terrain.setVisible(true);
+        this.frame.add(terrain);
+        terrain.repaint();
+    }
 
 
 }
