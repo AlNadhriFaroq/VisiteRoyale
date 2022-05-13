@@ -12,7 +12,7 @@ class JoueurIA extends Joueur {
         if (difficulte == IA.FACILE)
             ia = new IAAleatoire(jeu);
         else if (difficulte == IA.MOYEN)
-            ia = new IAAleatoire(jeu);
+            ia = new IAMoyenne(jeu);
         else if (difficulte == IA.DIFFICILE)
             ia = new IAAleatoire(jeu);
         else
