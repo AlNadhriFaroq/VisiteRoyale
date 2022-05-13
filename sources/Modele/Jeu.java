@@ -25,15 +25,15 @@ public class Jeu extends Observable implements Cloneable {
     private Plateau plateau;
     private Paquet pioche;
     private Paquet defausse;
-    private Main mainJoueurVrt;
-    private Main mainJoueurRge;
+    private Paquet mainJoueurVrt;
+    private Paquet mainJoueurRge;
 
     private int etatJeu;
     private int activationPrivilegeRoi;
     private boolean activationPouvoirSor;
     private boolean activationPouvoirFou;
-    private Main selectionCartesVrt;
-    private Main selectionCartesRge;
+    private Paquet selectionCartesVrt;
+    private Paquet selectionCartesRge;
     private Pion[] selectionPions;
     private int[] selectionDirections;
 
@@ -50,25 +50,23 @@ public class Jeu extends Observable implements Cloneable {
         joueurCourant = JOUEUR_IND;
         typeCourant = Type.IND;
         plateau = new Plateau(getDirectionJoueur(joueurCourant));
-        pioche = new Paquet();
-        defausse = new Paquet();
-        mainJoueurVrt = new Main(TAILLE_MAIN);
-        mainJoueurRge = new Main(TAILLE_MAIN);
+        pioche = new Paquet(54);
+        defausse = new Paquet(54);
+        mainJoueurVrt = new Paquet(TAILLE_MAIN);
+        mainJoueurRge = new Paquet(TAILLE_MAIN);
 
         pioche.remplir();
         for (int c = 0; c < TAILLE_MAIN; c++) {
-            mainJoueurVrt.piocher(pioche.piocher());
-            mainJoueurRge.piocher(pioche.piocher());
+            mainJoueurVrt.inserer(pioche.extraire(), true);
+            mainJoueurRge.inserer(pioche.extraire(), true);
         }
-        mainJoueurVrt.trier();
-        mainJoueurRge.trier();
 
         etatJeu = ETAT_CHOIX_JOUEUR;
         activationPrivilegeRoi = 0;
         activationPouvoirSor = false;
         activationPouvoirFou = false;
-        selectionCartesVrt = new Main(TAILLE_MAIN);
-        selectionCartesRge = new Main(TAILLE_MAIN);
+        selectionCartesVrt = new Paquet(TAILLE_MAIN);
+        selectionCartesRge = new Paquet(TAILLE_MAIN);
         selectionPions = new Pion[2];
         selectionDirections = new int[2];
 
@@ -107,31 +105,28 @@ public class Jeu extends Observable implements Cloneable {
         plateau.setPositionCouronne(posCouronne);
         plateau.setFaceCouronne(faceCouronne);
 
-        pioche = new Paquet();
-        defausse = new Paquet();
-        mainJoueurVrt = new Main(TAILLE_MAIN);
-        mainJoueurRge = new Main(TAILLE_MAIN);
+        pioche = new Paquet(54);
+        defausse = new Paquet(54);
+        mainJoueurVrt = new Paquet(TAILLE_MAIN);
+        mainJoueurRge = new Paquet(TAILLE_MAIN);
 
         pioche.remplir();
         for (int c = 0; c < TAILLE_MAIN; c++) {
-            mainJoueurVrt.piocher(pioche.piocher());
-            mainJoueurRge.piocher(pioche.piocher());
+            mainJoueurVrt.inserer(pioche.extraire(), true);
+            mainJoueurRge.inserer(pioche.extraire(), true);
         }
-
-        mainJoueurVrt.trier();
-        mainJoueurRge.trier();
 
         /* mettre les cartes dans la défausse*/
         for(int i = 0 ; i < cartesDefausse; i++ ){
-            defausse.ajouter(pioche.piocher());
+            defausse.inserer(pioche.extraire());
         }
 
         etatJeu = ETAT_CHOIX_CARTE;
         activationPrivilegeRoi = 0;
         activationPouvoirSor = false;
         activationPouvoirFou = false;
-        selectionCartesVrt = new Main(TAILLE_MAIN);
-        selectionCartesRge = new Main(TAILLE_MAIN);
+        selectionCartesVrt = new Paquet(TAILLE_MAIN);
+        selectionCartesRge = new Paquet(TAILLE_MAIN);
         selectionPions = new Pion[2];
         selectionDirections = new int[2];
 
@@ -172,7 +167,7 @@ public class Jeu extends Observable implements Cloneable {
         return defausse;
     }
 
-    public Main getMain(int joueur) {
+    public Paquet getMain(int joueur) {
         if (joueur == JOUEUR_VRT)
             return mainJoueurVrt;
         else if (joueur == JOUEUR_RGE)
@@ -197,7 +192,7 @@ public class Jeu extends Observable implements Cloneable {
         return activationPouvoirFou;
     }
 
-    public Main getSelectionCartes(int joueur) {
+    public Paquet getSelectionCartes(int joueur) {
         if (joueur == JOUEUR_VRT)
             return selectionCartesVrt;
         else if (joueur == JOUEUR_RGE)

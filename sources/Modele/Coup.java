@@ -43,8 +43,8 @@ public class Coup implements Cloneable {
         pionsPasse = new Pion[2];
         positionsPasse = new int[2];
         nbCartesAPiocher = -1;
-        defaussePasse = new Paquet();
-        defausseFutur = new Paquet();
+        defaussePasse = new Paquet(54);
+        defausseFutur = new Paquet(54);
         cartesPiochees = new Carte[Jeu.TAILLE_MAIN];
         indiceMelange = -1;
         selectionPionsPasse = new Pion[2];
@@ -122,7 +122,7 @@ public class Coup implements Cloneable {
     }
 
     private void executerChoisirCarte() {
-        jeu.getSelectionCartes(joueur).piocher(jeu.getMain(joueur).defausser(carte));
+        jeu.getSelectionCartes(joueur).inserer(jeu.getMain(joueur).extraire(carte));
 
         if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_DIRECTION) {
             jeu.setActivationPrivilegeRoi(2);
@@ -166,7 +166,7 @@ public class Coup implements Cloneable {
             }
         }
 
-        jeu.getMain(joueur).piocher(jeu.getSelectionCartes(joueur).defausser(carte));
+        jeu.getMain(joueur).inserer(jeu.getSelectionCartes(joueur).extraire(carte), true);
         jeu.getMain(joueur).trier();
     }
 
@@ -404,11 +404,11 @@ public class Coup implements Cloneable {
         nbCartesAPiocher = jeu.getSelectionCartes(joueur).getTaille();
 
         for (int i = 0; i < nbCartesAPiocher; i++)
-            jeu.getDefausse().defausser(jeu.getSelectionCartes(joueur).defausser(jeu.getSelectionCartes(joueur).getCarte(0)));
+            jeu.getDefausse().inserer(jeu.getSelectionCartes(joueur).extraire(jeu.getSelectionCartes(joueur).getCarte(0)));
 
         for (int i = 0; i < nbCartesAPiocher; i++) {
-            cartesPiochees[i] = jeu.getPioche().piocher();
-            jeu.getMain(joueur).piocher(cartesPiochees[i]);
+            cartesPiochees[i] = jeu.getPioche().extraire();
+            jeu.getMain(joueur).inserer(cartesPiochees[i], true);
             if ((jeu.getPioche().estVide() && jeu.getPlateau().getFaceCouronne() == Plateau.FACE_PTT_CRN && !jeu.pionDansFontaine(Pion.ROI))) {
                 finPartie = true;
                 break;
@@ -446,7 +446,7 @@ public class Coup implements Cloneable {
         jeu.setTypeCourant(typePasse);
 
         for (int i = nbCartesAPiocher-1; i >= 0; i--) {
-            jeu.getPioche().defausser(jeu.getMain(joueur).defausser(cartesPiochees[i]));
+            jeu.getPioche().inserer(jeu.getMain(joueur).extraire(cartesPiochees[i]));
             if (i == indiceMelange) {
                 jeu.getDefausse().copier(defaussePasse);
                 jeu.getPioche().vider();
@@ -455,7 +455,7 @@ public class Coup implements Cloneable {
         }
 
         for (int i = nbCartesAPiocher-1; i >= 0; i--)
-            jeu.getSelectionCartes(joueur).piocher(jeu.getDefausse().piocher());
+            jeu.getSelectionCartes(joueur).inserer(jeu.getDefausse().extraire());
 
         if (joueur == Jeu.JOUEUR_VRT)
             jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.evaluerDeplacementCouronne(joueur));

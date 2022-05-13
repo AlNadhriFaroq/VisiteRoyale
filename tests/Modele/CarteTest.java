@@ -23,26 +23,58 @@ class CarteTest {
     }
 
     @Test
-    void compareTo() {
-        Carte carte1 = Carte.R1;
-        Carte carte2 = Carte.R1;
-        Assertions.assertEquals(0, carte1.compareTo(carte2));
-        Carte carte3 = Carte.S3;
-        Carte carte4 = Carte.F5;
-        Assertions.assertTrue(carte3.compareTo(carte4) < 0);
-        Carte carte5 = Carte.F5;
-        Carte carte6 = Carte.S2;
-        Assertions.assertTrue(carte5.compareTo(carte6) > 0);
+    void testEstDeplacementGar1Plus1() {
+        Carte carte1 = Carte.G2;
+        Carte carte2 = Carte.G1;
+        Assertions.assertTrue(carte1.estDeplacementGar1Plus1());
+        Assertions.assertFalse(carte2.estDeplacementGar1Plus1());
     }
 
     @Test
-    void compareToMemeTypeDiffDep() {
-        Carte carte1 = Carte.F3;
-        Carte carte2 = Carte.F5;
+    void testEstDeplacementGarCentre() {
+        Carte carte1 = Carte.GC;
+        Carte carte2 = Carte.S3;
+        Assertions.assertTrue(carte1.estDeplacementGarCentre());
+        Assertions.assertFalse(carte2.estDeplacementGarCentre());
+    }
+
+    @Test
+    void testEstDeplacementFouCentre() {
+        Carte carte1 = Carte.FM;
+        Carte carte2 = Carte.F1;
+        Assertions.assertTrue(carte1.estDeplacementFouCentre());
+        Assertions.assertFalse(carte2.estDeplacementFouCentre());
+    }
+
+    @Test
+    void testTexteEnCarte() {
+        Carte carte;
+        carte = Carte.texteEnCarte("R1");
+        Assertions.assertEquals(Carte.R1, carte);
+        carte = Carte.texteEnCarte("G2");
+        Assertions.assertEquals(Carte.G2, carte);
+        carte = Carte.texteEnCarte("FM");
+        Assertions.assertEquals(Carte.FM, carte);
+    }
+
+    @Test
+    void testCompareTo() {
+        Carte carte1, carte2;
+        carte1 = Carte.R1;
+        carte2 = Carte.R1;
+        Assertions.assertEquals(0, carte1.compareTo(carte2));
+        carte1 = Carte.S3;
+        carte2 = Carte.F5;
         Assertions.assertTrue(carte1.compareTo(carte2) < 0);
-        Carte carte3 = Carte.F5;
-        Carte carte4 = Carte.F3;
-        Assertions.assertTrue(carte3.compareTo(carte4) > 0);
+        carte1 = Carte.F5;
+        carte2 = Carte.S2;
+        Assertions.assertTrue(carte1.compareTo(carte2) > 0);
+        carte1 = Carte.F3;
+        carte2 = Carte.F5;
+        Assertions.assertTrue(carte1.compareTo(carte2) < 0);
+        carte1 = Carte.F5;
+        carte2 = Carte.F3;
+        Assertions.assertTrue(carte1.compareTo(carte2) > 0);
     }
 
     @Test

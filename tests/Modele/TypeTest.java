@@ -6,7 +6,20 @@ import org.junit.jupiter.api.Test;
 class TypeTest {
 
     @Test
-    void compareTo() {
+    void testTexteEnType() {
+        Type type;
+        type = Type.texteEnType("R");
+        Assertions.assertEquals(Type.ROI, type);
+        type = Type.texteEnType("G");
+        Assertions.assertEquals(Type.GAR, type);
+        type = Type.texteEnType("S");
+        Assertions.assertEquals(Type.SOR, type);
+        type = Type.texteEnType("F");
+        Assertions.assertEquals(Type.FOU, type);
+    }
+
+    @Test
+    void testCompareTo() {
         Type t1 = Type.SOR;
         Type t2 = Type.SOR;
         Assertions.assertEquals(0, t1.compareTo(t2));

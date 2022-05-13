@@ -4,28 +4,23 @@ import java.util.*;
 
 public class Paquet implements Cloneable {
     private List<Carte> cartes;
+    private int tailleMax;
 
-    Paquet() {
+    Paquet(int tailleMax) {
         cartes = new ArrayList<>();
+        this.tailleMax = tailleMax;
     }
 
     public Carte getCarte(int indice) {
         return cartes.get(indice);
     }
 
-    public Carte getCarte(Type type, int deplacement) {
-        for (int i = 0; i < getTaille(); i++)
-            if (getCarte(i).getType().equals(type) && getCarte(i).getDeplacement() == deplacement)
-                return getCarte(i);
-        throw new RuntimeException("Modele.Paquet.getCarte() : Type ou deplacement invalide.");
-    }
-
-    public int getIndiceCarte(Carte carte) {
-        return cartes.indexOf(carte);
-    }
-
     public int getTaille() {
         return cartes.size();
+    }
+
+    public int getTailleMax() {
+        return tailleMax;
     }
 
     public int getNombreTypeCarte(Type type) {
@@ -44,14 +39,27 @@ public class Paquet implements Cloneable {
         return nb;
     }
 
-    void defausser(Carte carte) {
+    void inserer(Carte carte) {
         cartes.add(carte);
     }
 
-    Carte piocher() {
+    void inserer(Carte carte, boolean trier) {
+        inserer(carte);
+        if (trier)
+            trier();
+    }
+
+    Carte extraire() {
         if (!estVide())
             return cartes.remove(getTaille()-1);
         return null;
+    }
+
+    Carte extraire(Carte carte) {
+        if (!cartes.contains(carte))
+            throw new RuntimeException("Modele.Main.defausser() : Carte non présente dans la main.");
+        cartes.remove(carte);
+        return carte;
     }
 
     void remplir() {
@@ -73,24 +81,25 @@ public class Paquet implements Cloneable {
 
     private void remplir(int nb, Carte carte) {
         for (int i = 0; i < nb; i++)
-            defausser(carte);
+            inserer(carte);
     }
 
     void transferer(Paquet paquet) {
         while (!paquet.estVide())
-            defausser(paquet.piocher());
-    }
-    public void ajouter(Carte carte){
-        cartes.add(carte);
+            inserer(paquet.extraire());
     }
 
     void copier(Paquet paquet) {
         for (int i = 0; i < paquet.getTaille(); i++)
-            defausser(paquet.getCarte(i));
+            inserer(paquet.getCarte(i));
     }
 
     void melanger() {
         Collections.shuffle(cartes);
+    }
+
+    void trier() {
+        Collections.sort(cartes);
     }
 
     void vider() {
@@ -129,6 +138,7 @@ public class Paquet implements Cloneable {
             Paquet resultat = (Paquet) super.clone();
             resultat.cartes = new ArrayList<>();
             resultat.copier(this);
+            resultat.tailleMax = tailleMax;
             return resultat;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Modele.Paquet.cloner() : Paquet non clonable.");

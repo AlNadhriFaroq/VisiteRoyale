@@ -12,6 +12,46 @@ class PionTest {
         Assertions.assertNotEquals(Type.FOU, p.getType());
     }
 
+    @Test
+    void testTexteEnPion() {
+        Pion pion;
+        pion = Pion.texteEnPion("R");
+        Assertions.assertEquals(Pion.ROI, pion);
+        pion = Pion.texteEnPion("GV");
+        Assertions.assertEquals(Pion.GAR_VRT, pion);
+        pion = Pion.texteEnPion("GR");
+        Assertions.assertEquals(Pion.GAR_RGE, pion);
+        pion = Pion.texteEnPion("S");
+        Assertions.assertEquals(Pion.SOR, pion);
+        pion = Pion.texteEnPion("F");
+        Assertions.assertEquals(Pion.FOU, pion);
+    }
+
+    @Test
+    void testValeurEnPion() {
+        Pion pion;
+        pion = Pion.valeurEnPion(0);
+        Assertions.assertEquals(Pion.ROI, pion);
+        pion = Pion.valeurEnPion(1);
+        Assertions.assertEquals(Pion.GAR_VRT, pion);
+        pion = Pion.valeurEnPion(2);
+        Assertions.assertEquals(Pion.GAR_RGE, pion);
+        pion = Pion.valeurEnPion(3);
+        Assertions.assertEquals(Pion.SOR, pion);
+        pion = Pion.valeurEnPion(4);
+        Assertions.assertEquals(Pion.FOU, pion);
+    }
+
+    @Test
+    void testTypeEnPion() {
+        Pion pion;
+        pion = Pion.typeEnPion(Type.ROI);
+        Assertions.assertEquals(Pion.ROI, pion);
+        pion = Pion.typeEnPion(Type.SOR);
+        Assertions.assertEquals(Pion.SOR, pion);
+        pion = Pion.typeEnPion(Type.FOU);
+        Assertions.assertEquals(Pion.FOU, pion);
+    }
 
     @Test
     void testEquals() {

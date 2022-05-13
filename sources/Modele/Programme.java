@@ -1,6 +1,6 @@
 package Modele;
 
-public class MenuPrincipale {
+public class Programme {
     public static final int ETAT_ACCUEIL=  0 ;
     public static final int ETAT_MENU_PRINCIPALE =  1 ;
     public static final int ETAT_EN_JEU =  2 ;
@@ -13,7 +13,7 @@ public class MenuPrincipale {
     Jeu jeu;
     int etat;
 
-    public MenuPrincipale(){
+    public Programme(){
         jeu = new Jeu() ;
         etat = ETAT_MENU_PRINCIPALE;
     }
