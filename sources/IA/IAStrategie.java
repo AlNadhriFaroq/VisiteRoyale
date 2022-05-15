@@ -202,13 +202,15 @@ public class IAStrategie extends IA {
                     coup = choisirCarte(lc, Type.SOR);
                 }
             } else if ((pionsChateauAdverse & fou) == fou && (jeu.getTypeCourant().equals(Type.FOU) || jeu.getTypeCourant().equals(Type.IND))) {
-                if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.FOU) >= 1 && jeu.getMain(joueurCourant).contientCarte(Carte.FM)) {
-                    coup = choisirCarte(lc, Type.FOU);
-                }
-                else{
-                    for(Coup c : lc){
-                        if(c.getCarte().estDeplacementFouCentre()){
-                            return c;
+                if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.FOU) >= 1) {
+                    if(!jeu.getMain(joueurCourant).contientCarte(Carte.FM)){
+                        coup = choisirCarte(lc, Type.FOU);
+                    }
+                    else {
+                        for(Coup c : lc){
+                            if(c.getCarte().estDeplacementFouCentre()){
+                                return c;
+                            }
                         }
                     }
                 }
