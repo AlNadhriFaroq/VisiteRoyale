@@ -19,8 +19,8 @@ public class ControleurMediateur {
         this.prog = prog;
         joueurs = new Joueur[2];
         difficultes = new int[2];
-        difficultes[0] = Integer.parseInt(Configuration.instance().lire("DifficulteIAjoueurVrt"));
-        difficultes[1] = Integer.parseInt(Configuration.instance().lire("DifficulteIAjoueurRge"));
+        difficultes[0] = Integer.parseInt(Configuration.instance().lire("NiveauDifficulte"));
+        difficultes[1] = Integer.parseInt(Configuration.instance().lire("NiveauDifficulte2"));
         audio = new Audio();
         audio.boucler();
     }

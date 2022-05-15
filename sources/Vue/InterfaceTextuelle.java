@@ -241,7 +241,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
         if (jeu.peutUtiliserPrivilegeRoi() && cmd.equalsIgnoreCase("R1")) {
             ctrl.selectionnerCarte(Carte.R1);
         } else if (cmd.equalsIgnoreCase("GV") || cmd.equalsIgnoreCase("GR")) {
-            Pion pion = Pion.texteEnPion(cmd);
+            Pion pion = Pion.texteEnPion(cmd.toUpperCase());
             if (jeu.peutSelectionnerPion(pion))
                 ctrl.selectionnerPion(pion);
             else
