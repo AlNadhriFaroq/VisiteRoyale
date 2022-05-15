@@ -40,7 +40,7 @@ public class IAStrategie extends IA {
         posGardeVert = jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
         posGardeRouge = jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
         posSorcier = jeu.getPlateau().getPositionPion(Pion.SOR);
-        Coup coup = null;
+        Coup coup;
         List<Coup> lc = jeu.calculerListeCoup();
         if (lc.size() == 1) {
             return lc.get(0);
@@ -67,12 +67,23 @@ public class IAStrategie extends IA {
 
     private Coup choisirCarte(List<Coup> lc) {
         Coup coup = null;
+        //coup = carteEnFonctionNombreEtDistance();
+        if(!jeu.getTypeCourant().equals(Type.IND)){
+            coup = choisirCarte(lc, jeu.getTypeCourant());
+        }
+        if(coup != null)
+            return coup;
         if (pionsChateauAdverse == 0) { //pas de pions dans le chateau adverse
+            System.out.println("Aucun pion dans le chateau adverse");
             if (pionsDucheAdverse == 0) { //pas de pions dans le duche adverse
+                System.out.println("Aucun pion dans duche adverse");
                 if (pionsChateau == 0) { // pas de pions dans notre chateau
+                    System.out.println("Aucun pion dans notre chateau");
                     if (pionsSurFontaine == 0) { // aucun pion dans la fontaine, tout dans notre duche
+                        System.out.println("Aucun pion dans la fontaine");
                         return choisirCoupAleaCarte(lc);
                     } else {//pion sur fontaine
+                        System.out.println("Pion dans la fontaine");
                         if ((pionsSurFontaine & sorcier) == sorcier && (jeu.getTypeCourant().equals(Type.SOR) || jeu.getTypeCourant().equals(Type.IND))) {
                             if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.SOR) >= 1) {
                                 coup = choisirCarteFontaine(lc, Pion.SOR);
@@ -94,13 +105,14 @@ public class IAStrategie extends IA {
                         }
                     }
                 } else {
+                    System.out.println("Pion dans notre chateau");
                     if (((pionsChateau & sorcier) == sorcier && (pionsChateau & gardeVert) == 0 && joueurCourant == Jeu.JOUEUR_VRT) ||
-                            (posSorcier < posRoi && posGardeVert + 4 <= posSorcier)) {
+                            (posSorcier < posRoi && posGardeVert + 3 <= posSorcier)) {
                         if (jeu.peutUtiliserPouvoirSorcier()) {
                             coup = choisirPouvoirSorcier(lc);
                         }
                     } else if (((pionsChateau & sorcier) == sorcier && (pionsChateau & gardeRouge) == 0 && joueurCourant == Jeu.JOUEUR_RGE && (jeu.getTypeCourant().equals(Type.SOR) || jeu.getTypeCourant().equals(Type.IND))) ||
-                            (posSorcier > posRoi && posGardeVert - 4 >= posSorcier)) {
+                            (posSorcier > posRoi && posGardeVert - 3 >= posSorcier)) {
                         if (jeu.peutUtiliserPouvoirSorcier()) {
                             coup = choisirPouvoirSorcier(lc);
                         }
@@ -117,6 +129,7 @@ public class IAStrategie extends IA {
                     }
                 }
             } else {
+                System.out.println("Pion dans duche adverse");
                 if ((pionsDucheAdverse & sorcier) == sorcier && (jeu.getTypeCourant().equals(Type.SOR) || jeu.getTypeCourant().equals(Type.IND))) {
                     if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.SOR) >= 1) {
                         coup = choisirCarte(lc, Type.SOR);
@@ -141,13 +154,27 @@ public class IAStrategie extends IA {
                     if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
                         coup = choisirCarte(lc, Type.GAR);
                     }
+                    if((pionsDucheAdverse & roi) == roi){
+                        if(coup != null && coup.getCarte().estDeplacementGarCentre() && posRoi < Plateau.FONTAINE - 1){
+                            lc.remove(coup);
+                            coup = choisirCarte(lc, Type.GAR);
+                        }
+                    }
                 } else if ((pionsDucheAdverse & gardeRouge) == gardeRouge && joueurCourant == Jeu.JOUEUR_VRT && (jeu.getTypeCourant().equals(Type.GAR) || jeu.getTypeCourant().equals(Type.IND))) {
                     if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
                         coup = choisirCarte(lc, Type.GAR);
                     }
+                    if((pionsDucheAdverse & roi) == roi){
+                        if(coup != null && coup.getCarte().estDeplacementGarCentre() && posRoi > Plateau.FONTAINE + 1){
+                            lc.remove(coup);
+                            coup = choisirCarte(lc, Type.GAR);
+                        }
+                    }
+
                 }
             }
         } else {
+            System.out.println("Pion dans le chateau adverse");
             if ((pionsChateauAdverse & sorcier) == sorcier && (jeu.getTypeCourant().equals(Type.SOR) || jeu.getTypeCourant().equals(Type.IND))) {
                 if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.SOR) >= 1) {
                     coup = choisirCarte(lc, Type.SOR);
@@ -156,11 +183,11 @@ public class IAStrategie extends IA {
                 if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.FOU) >= 1) {
                     coup = choisirCarte(lc, Type.FOU);
                 }
-            } else if ((pionsChateauAdverse & gardeRouge) == gardeRouge && joueurCourant == Jeu.JOUEUR_RGE && (jeu.getTypeCourant().equals(Type.GAR) || jeu.getTypeCourant().equals(Type.IND))) {
+            } else if ((pionsChateauAdverse & gardeVert) == gardeVert && joueurCourant == Jeu.JOUEUR_RGE && (jeu.getTypeCourant().equals(Type.GAR) || jeu.getTypeCourant().equals(Type.IND))) {
                 if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
                     coup = choisirCarte(lc, Type.GAR);
                 }
-            } else if ((pionsChateauAdverse & gardeVert) == gardeVert && joueurCourant == Jeu.JOUEUR_VRT && (jeu.getTypeCourant().equals(Type.SOR) || jeu.getTypeCourant().equals(Type.IND))) {
+            } else if ((pionsChateauAdverse & gardeRouge) == gardeRouge && joueurCourant == Jeu.JOUEUR_VRT && (jeu.getTypeCourant().equals(Type.GAR) || jeu.getTypeCourant().equals(Type.IND))) {
                 if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
                     coup = choisirCarte(lc, Type.GAR);
                 }
@@ -188,7 +215,7 @@ public class IAStrategie extends IA {
                 pions |= fou;
             }
         } else {
-            if (jeu.getPlateau().pionDansChateauRge(Pion.GAR_VRT)) {
+            if (jeu.getPlateau().pionDansChateauRge(Pion.GAR_RGE)) {
                 pions |= gardeRouge;
             }
             if (jeu.getPlateau().pionDansChateauRge(Pion.SOR)) {
@@ -217,6 +244,9 @@ public class IAStrategie extends IA {
             if (jeu.getPlateau().pionDansDucheVrt(Pion.ROI)) {
                 pions |= roi;
             }
+            if (jeu.getPlateau().pionDansDucheVrt(Pion.GAR_RGE)) {
+                pions |= gardeRouge;
+            }
         } else {
             if (jeu.getPlateau().pionDansDucheRge(Pion.GAR_VRT)) {
                 pions |= gardeRouge;
@@ -229,6 +259,9 @@ public class IAStrategie extends IA {
             }
             if (jeu.getPlateau().pionDansDucheRge(Pion.ROI)) {
                 pions |= roi;
+            }
+            if (jeu.getPlateau().pionDansDucheRge(Pion.GAR_RGE)) {
+                pions |= gardeRouge;
             }
         }
         return pions;
@@ -312,6 +345,16 @@ public class IAStrategie extends IA {
 
     private Coup choisirPion(List<Coup> lc) {
         Coup coup = null;
+        if(jeu.getTypeCourant().equals(Type.ROI)){
+            for (Coup c : lc) {
+                if (c.getCarte() != null && c.getCarte().getType().equals(Type.ROI)) {
+                    coup = c;
+                }
+            }
+        }
+        if(coup != null){
+            return coup;
+        }
         if (jeu.getActivationPouvoirSor()) {
             if (joueurCourant == Jeu.JOUEUR_RGE) {
                 if (posRoi < posSorcier) {
@@ -371,7 +414,32 @@ public class IAStrategie extends IA {
                         }
                     }
                 }
-
+            } else {
+                if ((pionsChateauAdverse & gardeRouge) == gardeRouge) {
+                    for (Coup c : lc) {
+                        if (c.getPion().equals(Pion.GAR_RGE)) {
+                            coup = c;
+                        }
+                    }
+                } else if ((pionsDucheAdverse & gardeVert) == gardeVert || (pionsSurFontaine & gardeVert) == gardeVert) {
+                    for (Coup c : lc) {
+                        if (c.getPion().equals(Pion.GAR_VRT)) {
+                            coup = c;
+                        }
+                    }
+                } else if (posRoi < Plateau.FONTAINE && ((pionsDucheAdverse & gardeRouge) == gardeRouge || (pionsSurFontaine & gardeRouge) == gardeRouge)) {
+                    for (Coup c : lc) {
+                        if (c.getPion().equals(Pion.GAR_RGE)) {
+                            coup = c;
+                        }
+                    }
+                } else if ((pionsDuche & gardeVert) == gardeVert) {
+                    for (Coup c : lc) {
+                        if (c.getPion().equals(Pion.GAR_RGE)) {
+                            coup = c;
+                        }
+                    }
+                }
             }
         }
         if (coup != null) {
@@ -493,6 +561,9 @@ public class IAStrategie extends IA {
                 }
             }
         }
+        if(coup != null){
+            return coup;
+        }
         return choisirCoupAlea(lc);
     }
 
@@ -511,4 +582,21 @@ public class IAStrategie extends IA {
         }
         return possibles;
     }
+
+    private Coup carteEnFonctionNombreEtDistance(){
+        int nbRoi;
+        int nbSor;
+        int nbGarde;
+        int nbFou;
+        nbFou = jeu.getMain(joueurCourant).getNombreTypeCarte(Type.FOU);
+        nbSor = jeu.getMain(joueurCourant).getNombreTypeCarte(Type.SOR);
+        nbRoi = jeu.getMain(joueurCourant).getNombreTypeCarte(Type.ROI);
+        nbGarde = jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR);
+
+        if(jeu.getTypeCourant().equals(Type.IND)){
+
+        }
+        return null;
+    }
+
 }
