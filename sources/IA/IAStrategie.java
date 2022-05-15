@@ -68,10 +68,10 @@ public class IAStrategie extends IA {
     private Coup choisirCarte(List<Coup> lc) {
         Coup coup = null;
         //coup = carteEnFonctionNombreEtDistance();
-        if(!jeu.getTypeCourant().equals(Type.IND)){
+        if (!jeu.getTypeCourant().equals(Type.IND)) {
             coup = choisirCarte(lc, jeu.getTypeCourant());
         }
-        if(coup != null)
+        if (coup != null)
             return coup;
         if (pionsChateauAdverse == 0) { //pas de pions dans le chateau adverse
             System.out.println("Aucun pion dans le chateau adverse");
@@ -154,8 +154,8 @@ public class IAStrategie extends IA {
                     if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
                         coup = choisirCarte(lc, Type.GAR);
                     }
-                    if((pionsDucheAdverse & roi) == roi){
-                        if(coup != null && coup.getCarte().estDeplacementGarCentre() && posRoi < Plateau.FONTAINE - 1){
+                    if ((pionsDucheAdverse & roi) == roi) {
+                        if (coup != null && coup.getCarte().estDeplacementGarCentre() && posRoi < Plateau.FONTAINE - 1) {
                             lc.remove(coup);
                             coup = choisirCarte(lc, Type.GAR);
                         }
@@ -164,8 +164,8 @@ public class IAStrategie extends IA {
                     if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
                         coup = choisirCarte(lc, Type.GAR);
                     }
-                    if((pionsDucheAdverse & roi) == roi){
-                        if(coup != null && coup.getCarte().estDeplacementGarCentre() && posRoi > Plateau.FONTAINE + 1){
+                    if ((pionsDucheAdverse & roi) == roi) {
+                        if (coup != null && coup.getCarte().estDeplacementGarCentre() && posRoi > Plateau.FONTAINE + 1) {
                             lc.remove(coup);
                             coup = choisirCarte(lc, Type.GAR);
                         }
@@ -345,14 +345,14 @@ public class IAStrategie extends IA {
 
     private Coup choisirPion(List<Coup> lc) {
         Coup coup = null;
-        if(jeu.getTypeCourant().equals(Type.ROI)){
+        if (jeu.getTypeCourant().equals(Type.ROI)) {
             for (Coup c : lc) {
                 if (c.getCarte() != null && c.getCarte().getType().equals(Type.ROI)) {
                     coup = c;
                 }
             }
         }
-        if(coup != null){
+        if (coup != null) {
             return coup;
         }
         if (jeu.getActivationPouvoirSor()) {
@@ -561,7 +561,7 @@ public class IAStrategie extends IA {
                 }
             }
         }
-        if(coup != null){
+        if (coup != null) {
             return coup;
         }
         return choisirCoupAlea(lc);
@@ -583,7 +583,7 @@ public class IAStrategie extends IA {
         return possibles;
     }
 
-    private Coup carteEnFonctionNombreEtDistance(){
+    private Coup carteEnFonctionNombreEtDistance() {
         int nbRoi;
         int nbSor;
         int nbGarde;
@@ -593,10 +593,9 @@ public class IAStrategie extends IA {
         nbRoi = jeu.getMain(joueurCourant).getNombreTypeCarte(Type.ROI);
         nbGarde = jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR);
 
-        if(jeu.getTypeCourant().equals(Type.IND)){
+        if (jeu.getTypeCourant().equals(Type.IND)) {
 
         }
         return null;
     }
-
 }
