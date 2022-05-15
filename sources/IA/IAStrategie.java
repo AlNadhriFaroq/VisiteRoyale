@@ -21,6 +21,7 @@ public class IAStrategie extends IA {
     int posGardeVert;
     int posGardeRouge;
     int posSorcier;
+    int posFou;
 
     public IAStrategie(Jeu jeu) {
         super(jeu);
@@ -40,6 +41,7 @@ public class IAStrategie extends IA {
         posGardeVert = jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
         posGardeRouge = jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
         posSorcier = jeu.getPlateau().getPositionPion(Pion.SOR);
+        posFou = jeu.getPlateau().getPositionPion(Pion.FOU);
         Coup coup;
         List<Coup> lc = jeu.calculerListeCoup();
         if (lc.size() == 1) {
@@ -71,8 +73,18 @@ public class IAStrategie extends IA {
         if(!jeu.getTypeCourant().equals(Type.IND)){
             coup = choisirCarte(lc, jeu.getTypeCourant());
         }
-        if(coup != null)
-            return coup;
+
+        if(coup != null){
+            if(jeu.getTypeCourant().equals(Type.FOU) && coup.getCarte().estDeplacementFouCentre()){
+                if(joueurCourant == Jeu.JOUEUR_RGE && posFou < Plateau.FONTAINE){
+                    return coup;
+                }
+                if(joueurCourant == Jeu.JOUEUR_VRT && posFou > Plateau.FONTAINE){
+                    return coup;
+                }
+            }
+        }
+
         if (pionsChateauAdverse == 0) { //pas de pions dans le chateau adverse
             System.out.println("Aucun pion dans le chateau adverse");
             if (pionsDucheAdverse == 0) { //pas de pions dans le duche adverse
@@ -136,8 +148,18 @@ public class IAStrategie extends IA {
                     }
                 } else if ((pionsDucheAdverse & fou) == fou && (jeu.getTypeCourant().equals(Type.FOU) || jeu.getTypeCourant().equals(Type.IND))) {
                     if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.FOU) >= 1) {
-                        coup = choisirCarte(lc, Type.FOU);
+                        if(!jeu.getMain(joueurCourant).contientCarte(Carte.FM)){
+                            coup = choisirCarte(lc, Type.FOU);
+                        }
+                        else {
+                            for(Coup c : lc){
+                                if(c.getCarte().estDeplacementFouCentre()){
+                                    return c;
+                                }
+                            }
+                        }
                     }
+
                 } else if ((pionsDucheAdverse & roi) == roi && (jeu.getTypeCourant().equals(Type.ROI) || jeu.getTypeCourant().equals(Type.IND))) {
                     if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.ROI) >= 1) {
                         coup = choisirCarte(lc, Type.ROI);
@@ -180,8 +202,15 @@ public class IAStrategie extends IA {
                     coup = choisirCarte(lc, Type.SOR);
                 }
             } else if ((pionsChateauAdverse & fou) == fou && (jeu.getTypeCourant().equals(Type.FOU) || jeu.getTypeCourant().equals(Type.IND))) {
-                if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.FOU) >= 1) {
+                if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.FOU) >= 1 && jeu.getMain(joueurCourant).contientCarte(Carte.FM)) {
                     coup = choisirCarte(lc, Type.FOU);
+                }
+                else{
+                    for(Coup c : lc){
+                        if(c.getCarte().estDeplacementFouCentre()){
+                            return c;
+                        }
+                    }
                 }
             } else if ((pionsChateauAdverse & gardeVert) == gardeVert && joueurCourant == Jeu.JOUEUR_RGE && (jeu.getTypeCourant().equals(Type.GAR) || jeu.getTypeCourant().equals(Type.IND))) {
                 if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
@@ -345,16 +374,7 @@ public class IAStrategie extends IA {
 
     private Coup choisirPion(List<Coup> lc) {
         Coup coup = null;
-        if(jeu.getTypeCourant().equals(Type.ROI)){
-            for (Coup c : lc) {
-                if (c.getCarte() != null && c.getCarte().getType().equals(Type.ROI)) {
-                    coup = c;
-                }
-            }
-        }
-        if(coup != null){
-            return coup;
-        }
+
         if (jeu.getActivationPouvoirSor()) {
             if (joueurCourant == Jeu.JOUEUR_RGE) {
                 if (posRoi < posSorcier) {
@@ -450,6 +470,18 @@ public class IAStrategie extends IA {
 
     private Coup choisirDirection(List<Coup> lc) {
         Coup coup = null;
+        //privilege du roi des 2 cartes roi si possible
+        if(jeu.getTypeCourant().equals(Type.ROI)){
+            coup = jouePrivilegeRoi(lc);
+        }
+        if(coup != null){return coup;}
+
+        if(jeu.getTypeCourant().equals(Type.GAR)){
+            coup = joueGarde2(lc);
+        }
+
+        if(coup != null){return coup;}
+
         int possibilites = nbPossibilites(lc);
         if ((possibilites & 8) == 8) {
             if (joueurCourant == Jeu.JOUEUR_RGE) {
@@ -599,4 +631,41 @@ public class IAStrategie extends IA {
         return null;
     }
 
+    Coup jouePrivilegeRoi(List<Coup> lc){
+        Coup coup = null;
+        if(jeu.getTypeCourant().equals(Type.ROI)){
+            for (Coup c : lc) {
+                if (c.getCarte() != null && c.getCarte().getType().equals(Type.ROI)) {
+                    coup = c;
+                }
+            }
+        }
+        return coup;
+    }
+
+    Coup joueGarde2(List<Coup> lc){
+        Coup coup = null;
+        if(joueurCourant == Jeu.JOUEUR_RGE){
+            if(posGardeVert == (posRoi - 1)){
+                for(Coup c : lc){
+                  if(c.getDirection() == Plateau.DIRECTION_RGE){
+                      coup = c;
+                      break;
+                  }
+                }
+            }
+        }
+        else{
+            if(posGardeRouge == (posRoi + 1)){
+                for(Coup c : lc){
+                    if(c.getDirection() == Plateau.DIRECTION_RGE){
+                        coup = c;
+                        break;
+                    }
+                }
+            }
+        }
+        return coup;
+    }
 }
+
