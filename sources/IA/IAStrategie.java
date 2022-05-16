@@ -114,7 +114,7 @@ public class IAStrategie extends IA {
             }
             else if(jeu.getTypeCourant().equals(Type.GAR) && coup.getCarte().estDeplacementGarCentre()){
                 System.out.println("veut faire garde centre");
-                if(joueurCourant == Jeu.JOUEUR_RGE && posGardeVert == (posRoi - 1)){
+                if(joueurCourant == Jeu.JOUEUR_RGE && ((posRoi - posGardeVert < posGardeRouge - posRoi)) && (pionsChateauAdverse & gardeVert) != gardeVert){
                     lc.remove(coup);
                     for(Coup c : lc){
                         if (c.getCarte() != null && c.getCarte().estDeplacementGarCentre()){
@@ -123,7 +123,7 @@ public class IAStrategie extends IA {
                     }
                     coup = null;
                 }
-                else if(joueurCourant == Jeu.JOUEUR_VRT && posGardeRouge == (posRoi + 1)){
+                else if(joueurCourant == Jeu.JOUEUR_VRT && ((posRoi - posGardeVert > posGardeRouge - posRoi)) && (pionsChateauAdverse & gardeRouge) != gardeRouge){
                     lc.remove(coup);
                     for(Coup c : lc){
                         if (c.getCarte() != null && c.getCarte().estDeplacementGarCentre()){
