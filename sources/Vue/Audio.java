@@ -9,7 +9,6 @@ public class Audio {
     public static final int SON_INTRO2 = 1;
     public static final int SON_PERTE = 2;
     public static final int SON_VICTOIRE1 = 3;
-    public static final int SON_VICTOIRE2 = 4;
 
     int nombreSons;
     String[] sons;
@@ -18,7 +17,7 @@ public class Audio {
     String path;
 
     public Audio() {
-        nombreSons = 5;
+        nombreSons = 4;
         sons = new String[nombreSons];
         clips = new Clip[nombreSons];
         rand = new Random();
@@ -30,7 +29,6 @@ public class Audio {
 
         sons[2] = path + "Sons/lost.wav";
         sons[3] = path + "Sons/tada.wav";
-        sons[4] = path + "Sons/medieval_fanfare.wav";
 
         chargerClips();
     }
