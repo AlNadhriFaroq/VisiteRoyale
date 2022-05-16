@@ -17,6 +17,8 @@ public class Terrain extends JPanel implements MouseInputListener {
     private int posFou;
     private int posSor;
 
+    private Image icon;
+
     public Terrain(Plateau p){
         this.plateau = p;
 
@@ -26,6 +28,8 @@ public class Terrain extends JPanel implements MouseInputListener {
         posFou = p.getPositionPion(Pion.FOU);
         posSor = p.getPositionPion(Pion.SOR);
 
+
+
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
     }
@@ -33,8 +37,8 @@ public class Terrain extends JPanel implements MouseInputListener {
     @Override
     public void paintComponent(Graphics g){
 
-        super.paintComponent(g);
 
+        super.paintComponent(g);
         for(int i=0; i<taille; i++){
             g.drawLine((this.getWidth()/17)*i,0,(this.getWidth()/17)*i, this.getHeight());
 
@@ -48,6 +52,7 @@ public class Terrain extends JPanel implements MouseInputListener {
             g.drawLine(0,(this.getHeight()+30)/3*i,this.getWidth(), (this.getHeight()+30)/3*i);
         }
         g.drawLine(0, this.getHeight()-1, this.getWidth(), this.getHeight()-1);
+
     }
 
     @Override
@@ -124,6 +129,4 @@ public class Terrain extends JPanel implements MouseInputListener {
     public void setPosSor(int posSor) {
         this.posSor = posSor;
     }
-
-
 }
