@@ -401,7 +401,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
     @Override
     public void mettreAJour() {
-        System.out.println("\n");
+        System.out.println();
         afficherProgramme();
         if (prog.getEtat() != Programme.ETAT_ACCUEIL && prog.getEtat() != Programme.ETAT_FIN_PROGRAMME)
             System.out.print("\nCommande > ");
