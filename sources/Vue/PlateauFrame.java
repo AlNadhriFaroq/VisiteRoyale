@@ -229,8 +229,7 @@ public class PlateauFrame extends JComponent {
 
     public void afficheTerrain(){
 
-        int x = (3*this.carteH);
-        int y = (2*this.carteH);
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 
         int w = carteW*10;
         int h = carteH*2 + carteH/2;
@@ -238,6 +237,9 @@ public class PlateauFrame extends JComponent {
         if(!(w%17==0)){
             w -= w%17;
         }
+
+        int y = ((dimension.height/2)-(h/2));
+        int x = ((dimension.width/2)-(w/2));
 
         terrain.setBounds(x, y, w, h);
         terrain.setVisible(true);
