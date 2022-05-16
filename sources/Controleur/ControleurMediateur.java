@@ -102,31 +102,43 @@ public class ControleurMediateur {
             prog.refaireCoup();
     }
 
-    public void changerDifficulte(int joueur, int difficulte) {
-        difficultes[joueur] = difficulte;
-    }
-
-    public void ouvrirMenuJeu() {
-        prog.ouvrirMenuJeu();
-        audio.boucler(Audio.SON_INTRO1);
-    }
-
     public void reprendrePartie() {
-        prog.reprendrePartie();
+        prog.changerEtat(Programme.ETAT_EN_JEU);
         audio.arreter(Audio.SON_INTRO1);
     }
 
-    public void ouvrirCredits() {
-        prog.ouvrirCredits();
+    public void ouvrirMenuJeu() {
+        prog.changerEtat(Programme.ETAT_MENU_JEU);
+        audio.boucler(Audio.SON_INTRO1);
     }
 
-    public void retourMenuPrincipal() {
-        prog.retourMenuPrincipal();
+    public void ouvrirMenuOptions() {
+        prog.changerEtat(Programme.ETAT_MENU_OPTIONS);
+    }
+
+    public void ouvrirTutoriel() {
+        prog.changerEtat(Programme.ETAT_TUTORIEL);
+    }
+
+    public void ouvrirCredits() {
+        prog.changerEtat(Programme.ETAT_CREDITS);
+    }
+
+    public void retourMenuPrecedant() {
+        prog.retourMenuPrecedant();
         audio.boucler(Audio.SON_INTRO1);
     }
 
     public void quitter() {
         prog.quitter();
         System.exit(0);
+    }
+
+    public void changerDifficulte(int joueur, int difficulte) {
+        difficultes[joueur] = difficulte;
+    }
+
+    public void changerPageTutoriel(int sens) {
+        prog.changerPageTutoriel(sens);
     }
 }

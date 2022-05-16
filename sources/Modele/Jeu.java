@@ -464,33 +464,7 @@ public class Jeu extends Historique implements Cloneable {
     @Override
     public String toString() {
         String txt = "";
-
-        switch (etatJeu) {
-            case ETAT_CHOIX_JOUEUR:
-                txt += "Tirage du joueur qui commence.\nMain gauche ou main droite ?";
-                break;
-            case ETAT_CHOIX_CARTE:
-            case ETAT_CHOIX_PION:
-            case ETAT_CHOIX_DIRECTION:
-                txt += afficherJeu();
-                break;
-            case ETAT_FIN_DE_PARTIE:
-                txt += afficherJeu();
-                txt += "\n\n     VICTOIRE DU " + joueurEnTexte(getJoueurGagnant()).toUpperCase() + " !!!";
-                txt += "\n\nFIN DE PARTIE\n";
-                txt += "1. Nouvelle partie\n";
-                txt += "2. Retour au menu principal";
-                break;
-            default:
-                throw new RuntimeException("Modele.jeu.toString() : Etat de jeu non affichable.");
-        }
-
-        return txt;
-    }
-
-    private String afficherJeu() {
-        String txt = "";
-        txt = "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase();
+        txt += "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase();
         txt += "              Pioche : " + getPioche().getTaille() + "\n";
         txt += "     Main vert  : " + mainJoueurVrt.toString() + "\n";
         txt += "                  " + selectionCartesVrt.toString() + "\n";
