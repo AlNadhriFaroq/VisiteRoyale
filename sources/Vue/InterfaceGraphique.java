@@ -24,6 +24,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
     public InterfaceGraphique(Programme prog, ControleurMediateur ctrl) {
         this.prog = prog;
         this.ctrl = ctrl;
+        this.ctrl.nouvellePartie(true, true);
         pleinEcran = false;
         this.plateau = new PlateauFrame(this.prog.getJeu());
     }
