@@ -155,7 +155,7 @@ public class Coup implements Cloneable {
         } else {
             if (jeu.getActivationPouvoirFou()) {
                 jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
-                if (carte.estDeplacementFouCentre())
+                if (carte.estDeplacementFouCentre() && !typePasse.equals(Type.IND) && !typePasse.equals(Type.GAR))
                     desexecuterDeplacement();
             } else {
                 jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
