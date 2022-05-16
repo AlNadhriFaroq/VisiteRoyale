@@ -19,10 +19,10 @@ public class ControleurMediateur {
         this.prog = prog;
         joueurs = new Joueur[2];
         difficultes = new int[2];
-        difficultes[0] = Integer.parseInt(Configuration.instance().lire("NiveauDifficulte"));
-        difficultes[1] = Integer.parseInt(Configuration.instance().lire("NiveauDifficulte2"));
+        difficultes[0] = Integer.parseInt(Configuration.instance().lire("NiveauDifficulteIA"));
+        difficultes[1] = Integer.parseInt(Configuration.instance().lire("NiveauDifficulteIA2"));
         audio = new Audio();
-        audio.boucler();
+        audio.boucler(Audio.SON_INTRO1);
     }
 
     public void clicSouris(int x, int y) {
@@ -43,7 +43,7 @@ public class ControleurMediateur {
         definirJoueurIA(Jeu.JOUEUR_VRT, joueurVrtEstIA);
         definirJoueurIA(Jeu.JOUEUR_RGE, joueurRgeEstIA);
         prog.nouvellePartie(joueurVrtEstIA, joueurRgeEstIA);
-        audio.arreter();
+        audio.arreter(Audio.SON_INTRO1);
     }
 
     private void definirJoueurIA(int joueur, boolean estIA) {
@@ -88,6 +88,8 @@ public class ControleurMediateur {
     public void jouer(Coup coup) {
         if (coup != null)
             joueurs[prog.getJeu().getJoueurCourant()].jouer(coup);
+        if(prog.getJeu().estTerminee())
+            audio.jouer(Audio.SON_VICTOIRE1);
     }
 
     public void annuler() {
@@ -106,12 +108,12 @@ public class ControleurMediateur {
 
     public void ouvrirMenuJeu() {
         prog.ouvrirMenuJeu();
-        audio.boucler();
+        audio.boucler(Audio.SON_INTRO1);
     }
 
     public void reprendrePartie() {
         prog.reprendrePartie();
-        audio.arreter();
+        audio.arreter(Audio.SON_INTRO1);
     }
 
     public void ouvrirCredits() {
@@ -120,7 +122,7 @@ public class ControleurMediateur {
 
     public void retourMenuPrincipal() {
         prog.retourMenuPrincipal();
-        audio.boucler();
+        audio.boucler(Audio.SON_INTRO1);
     }
 
     public void quitter() {
