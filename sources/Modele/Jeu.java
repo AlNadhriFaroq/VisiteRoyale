@@ -31,11 +31,6 @@ public class Jeu extends Historique implements Cloneable {
     private Pion[] selectionPions;
     private int[] selectionDirections;
 
-    public Jeu() {
-        nouvellePartie();
-        //partieAleatoire();
-        //nouvellePartiePersonalise(JOUEUR_VRT, 10, 3, 14, 4, 8, 8, Plateau.FACE_GRD_CRN, 0);
-    }
 
     public void nouvellePartie() {
         initialiser();

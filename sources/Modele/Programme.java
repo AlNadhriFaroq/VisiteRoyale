@@ -47,6 +47,7 @@ public class Programme extends Observable {
         this.joueurVrtEstIA = joueurVrtEstIA;
         this.joueurRgeEstIA = joueurRgeEstIA;
         jeu.nouvellePartie();
+        //jeu. nouvellePartiePersonalise(0, 14, 3, 16, 4, 8, 8, Plateau.FACE_GRD_CRN, 0);
         mettreAJour();
     }
 
