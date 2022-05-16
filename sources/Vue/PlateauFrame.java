@@ -31,6 +31,7 @@ public class PlateauFrame extends JComponent {
 
     int heigth, width, carteH, carteW, TerrainH, TerrainW;
     private static int OFFSET = 20;
+    Dimension screenSize, frameSize;
 
 
     public PlateauFrame(Jeu jeu) {
@@ -44,7 +45,9 @@ public class PlateauFrame extends JComponent {
 
 
         this.frame = new JFrame();
-        this.frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.frame.setMinimumSize(new Dimension(LARGEURFENETRE, HAUTEURFENETRE));
+        this.frame.setSize(this.screenSize);
         //this.frame.setSize(LARGEURFENETRE, HAUTEURFENETRE);
         this.jeu =jeu;
 
