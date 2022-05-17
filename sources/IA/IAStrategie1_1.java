@@ -858,10 +858,10 @@ public class IAStrategie1_1 extends IA {
         gagnantRoi = coupGagnantRoiChateau();
         switch(gagnantRoi){
             case 1:              //si on doit deplacer roi
-                System.out.println("coup gagnant Roi");
+                System.out.println("coup gagnant Roi roi");
                 return retournerCarteType(lc, Type.ROI);
             case 8:     //si on doit faire pouvoir sorcier
-                System.out.println("coup gagnant Roi");
+                System.out.println("coup gagnant Roi sorcier");
                 if(jeu.getTypeCourant().equals(Type.IND)){
                     for(Coup c : lc){
                         if(c.getTypeCoup() == Coup.ACTIVER_POUVOIR_SOR){
@@ -887,6 +887,9 @@ public class IAStrategie1_1 extends IA {
             case 16: // fou
                 System.out.println("coup gagnant couronne");
                 return retournerCarteType(lc, Type.FOU);
+            case -1:
+                System.out.println("coup gagnant couronne -1 pas encore mis en place");
+                break;
             default:
                 System.out.println("pas de coup gagnant couronne");
         }
@@ -920,13 +923,13 @@ public class IAStrategie1_1 extends IA {
                 if(posGardeVert == Plateau.BORDURE_VRT){    //si le garde vert tout a gauche on peut gagner
                     return roi;
                 }
-                else{                                       //sinon si le garde vert pas tout a gauche, pn regarde si avec le privilege on peut l y amener et amer le roi ensuite
-                    if(nbCarteRoi / 2 == posGardeVert && (nbCarteRoi - nbCarteRoi / 2) == posRoi){
-                        return sorcier;
+                else{                                       //sinon si le garde vert pas tout a gauche, on regarde si avec le privilege on peut l y amener et amer le roi ensuite
+                    if(nbCarteRoi / 2 == posGardeVert - 1 && (nbCarteRoi - nbCarteRoi / 2) == posRoi - nbCarteRoi / 2){
+                        return roi;
                     }
                 }
             }
-            if((pionsChateau & sorcier) == sorcier && posGardeVert == Plateau.BORDURE_VRT && jeu.getTypeCourant().equals(Type.IND)){
+            if(posSorcier == Plateau.CHATEAU_VRT && posGardeVert == Plateau.BORDURE_VRT && jeu.getTypeCourant().equals(Type.IND)){
                 return sorcier;
             }
         }
@@ -936,12 +939,12 @@ public class IAStrategie1_1 extends IA {
                     return roi;
                 }
                 else{                                       //
-                    if(nbCarteRoi / 2 == (Plateau.BORDURE_RGE - posGardeRouge) && (nbCarteRoi - nbCarteRoi / 2) == (Plateau.BORDURE_RGE - posRoi)){
+                    if(nbCarteRoi / 2 == (Plateau.BORDURE_RGE - posGardeRouge) && (nbCarteRoi - nbCarteRoi / 2) == (Plateau.BORDURE_RGE - posRoi + nbCarteRoi / 2)){
                         return roi;
                     }
                 }
             }
-            if((pionsChateau & sorcier) == sorcier && posGardeRouge == Plateau.BORDURE_RGE && jeu.getTypeCourant().equals(Type.IND)){
+            if(posSorcier == Plateau.CHATEAU_RGE && posGardeRouge == Plateau.BORDURE_RGE && jeu.getTypeCourant().equals(Type.IND)){
                 return sorcier;
             }
         }
@@ -971,17 +974,17 @@ public class IAStrategie1_1 extends IA {
                 return -1;
             }
             else if(jeu.getPlateau().getPositionCouronne() - nbPieceChateau + 1 <= Plateau.CHATEAU_VRT){
-                if(s) {
+                if(!s) {
                     if (peutMettrePionDansChateau(Pion.SOR, Plateau.DIRECTION_VRT)) {
                         return sorcier;
                     }
                 }
-                if(f) {
+                if(!f) {
                     if(peutMettrePionDansChateau(Pion.FOU, Plateau.DIRECTION_VRT)){
                         return fou;
                     }
                 }
-                if(gv){
+                if(!gv){
                     if(peutMettrePionDansChateau(Pion.GAR_VRT, Plateau.DIRECTION_VRT)){
                         return gardeVert;
                     }
@@ -997,24 +1000,24 @@ public class IAStrategie1_1 extends IA {
                 return -1;
             }
             else if(jeu.getPlateau().getPositionCouronne() - nbPieceChateau + 1 >= Plateau.CHATEAU_RGE){
-                if(s){
+                if(!s){
                     if(peutMettrePionDansChateau(Pion.SOR, Plateau.DIRECTION_RGE)){
                         return sorcier;
                     }
                 }
-                if(f){
+                if(!f){
                     if(peutMettrePionDansChateau(Pion.FOU, Plateau.DIRECTION_RGE)){
                         return fou;
                     }
                 }
-                if(gr){
+                if(!gr){
                     if(peutMettrePionDansChateau(Pion.GAR_RGE, Plateau.DIRECTION_RGE)){
                         return gardeRouge;
                     }
                 }
             }
         }
-        return -1;
+        return -2;
     }
 
     private int coupGagnantFinPioche(){
@@ -1069,9 +1072,7 @@ public class IAStrategie1_1 extends IA {
                 finTour = c;
             }
         }
-        if(finTour != null)
-            return finTour;
-        return null;
+        return finTour;
     }
 
     private Coup choixPouvoirFou(List<Coup> lc){
