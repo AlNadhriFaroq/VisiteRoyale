@@ -73,17 +73,17 @@ public class IAStrategie extends IA {
 
         if(jeu.getTypeCourant().equals(Type.IND)){
             coup = choixPouvoirSorcier(lc);
-        }
-
-        if(coup != null){
-            return coup;
+            if(coup != null){
+                return coup;
+            }
         }
 
         //si trop de carte on les joue
         if(jeu.getTypeCourant().equals(Type.IND)){
             Type type = carteEnFonctionNombre();
             if(type != null){
-                if(jeu.getMain(joueurCourant).contientCarte(Carte.GC)){
+                System.out.println("type n est pas nul + de 5 cartes en main 1 " + type);
+                if(type.equals(Type.GAR) && jeu.getMain(joueurCourant).contientCarte(Carte.GC)){
                     for(Coup c : lc){
                         if(c.getCarte() != null && c.getCarte().estDeplacementGarCentre()){
                             coup = c;
@@ -115,7 +115,7 @@ public class IAStrategie extends IA {
                 }
             }
             else if(jeu.getTypeCourant().equals(Type.GAR) && coup.getCarte().estDeplacementGarCentre() || jeu.getTypeCourant().equals(Type.IND) && coup.getCarte().estDeplacementGarCentre()){
-                System.out.println("veut faire garde centre");
+                System.out.println("veut faire garde centre 1");
                 if(joueurCourant == Jeu.JOUEUR_RGE && ((posRoi - posGardeVert < posGardeRouge - posRoi)) && (pionsChateauAdverse & gardeVert) != gardeVert){
                     lc.remove(coup);
                     for(Coup c : lc){
@@ -136,8 +136,6 @@ public class IAStrategie extends IA {
                 }
             }
         }
-
-        //if(coup != null){return coup;}
 
         if(!jeu.getTypeCourant().equals(Type.IND)){
             coup = choisirCarte(lc, jeu.getTypeCourant());
@@ -162,7 +160,7 @@ public class IAStrategie extends IA {
                 }
             }
             else if(jeu.getTypeCourant().equals(Type.GAR) && coup.getCarte().estDeplacementGarCentre() || jeu.getTypeCourant().equals(Type.IND) && coup.getCarte().estDeplacementGarCentre()){
-                System.out.println("veut faire garde centre");
+                System.out.println("veut faire garde centre 2");
                 if(joueurCourant == Jeu.JOUEUR_RGE && ((posRoi - posGardeVert < posGardeRouge - posRoi)) && (pionsChateauAdverse & gardeVert) != gardeVert){
                     lc.remove(coup);
                     for(Coup c : lc){
