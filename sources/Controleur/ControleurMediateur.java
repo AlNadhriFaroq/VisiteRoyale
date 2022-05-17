@@ -78,6 +78,7 @@ public class ControleurMediateur {
         }
     }
 
+
     public void definirJoueurQuiCommence() {
         Random r = new Random();
         prog.definirJoueurQuiCommence(r.nextInt(2));

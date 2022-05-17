@@ -242,6 +242,7 @@ public class IAStrategie1_1 extends IA {
                             }
                         }
                     }
+
                 } else if ((pionsChateauAdverse & gardeVert) == gardeVert && joueurCourant == Jeu.JOUEUR_RGE && (jeu.getTypeCourant().equals(Type.GAR) || jeu.getTypeCourant().equals(Type.IND))) {
                     if (jeu.getMain(joueurCourant).contientCarte(Carte.GC) && (posRoi - posGardeVert >= posGardeRouge - posRoi)) {
                         System.out.println("Choix garde centre et garde vert plus loin ou egale en distance que garde rouge par rapport au roi");
