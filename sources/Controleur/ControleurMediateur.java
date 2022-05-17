@@ -1,6 +1,7 @@
 package Controleur;
 
 import Global.Configuration;
+import IA.*;
 import Modele.*;
 import Vue.Audio;
 
@@ -10,13 +11,13 @@ public class ControleurMediateur {
     final int lenteurAttente = 10;
 
     Programme prog;
-    Joueur[] joueurs;
+    IA[] joueursIA;
     int decompte;
     Audio audio;
 
     public ControleurMediateur(Programme prog) {
         this.prog = prog;
-        joueurs = new Joueur[2];
+        joueursIA = new IA[2];
         audio = new Audio();
         audio.boucler(Audio.MUSIQUE_MENUS1);
     }
@@ -26,15 +27,20 @@ public class ControleurMediateur {
     }
 
     public void tictac() {
-        if (prog.getEtat() == Programme.ETAT_EN_JEU && prog.getJeu().getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE)
-            if (decompte == 0) {
-                joueurs[prog.getJeu().getJoueurCourant()].tempsEcoule();
-                if(prog.getJeu().estTerminee())
-                    audio.jouer(Audio.SON_VICTOIRE);
-                decompte = lenteurAttente;
-            } else {
-                decompte--;
+        if (decompte == 0) {
+            if (prog.getEtat() == Programme.ETAT_EN_JEU && joueursIA[prog.getJeu().getJoueurCourant()] != null) {
+                if (prog.getJeu().getEtatJeu() == Jeu.ETAT_CHOIX_JOUEUR) {
+                    Random r = new Random();
+                    prog.definirJoueurQuiCommence(r.nextInt(2));
+                } else if (prog.getJeu().getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE) {
+                    Coup coup = joueursIA[prog.getJeu().getJoueurCourant()].elaborerCoup();
+                    jouer(coup);
+                }
             }
+            decompte = lenteurAttente;
+        } else {
+            decompte--;
+        }
     }
 
     public void nouvellePartie(boolean joueurVrtEstIA, boolean joueurRgeEstIA) {
@@ -45,8 +51,30 @@ public class ControleurMediateur {
     }
 
     private void definirJoueurIA(int joueur, boolean estIA) {
-        int difficulte = Integer.parseInt(Configuration.instance().lire(joueur == Jeu.JOUEUR_VRT ? "NiveauDifficulteIA" : "NiveauDifficulteIA2"));
-        joueurs[joueur] = estIA ? new JoueurIA(joueur, prog, difficulte) : new JoueurHumain(joueur, prog);
+        if (estIA) {
+            int difficulte = Integer.parseInt(Configuration.instance().lire(joueur == Jeu.JOUEUR_VRT ? "NiveauDifficulteIA" : "NiveauDifficulteIA2"));
+            switch (difficulte) {
+                case IA.DEBUTANT:
+                    joueursIA[joueur] = new IAAleatoire(prog.getJeu());
+                    break;
+                case IA.AMATEUR:
+                    joueursIA[joueur] = new IAAleatoirePonderee(prog.getJeu());
+                    break;
+                case IA.INTERMEDIAIRE:
+                    joueursIA[joueur] = new IAStrategie(prog.getJeu());
+                    break;
+                case IA.PROFESSIONNEL:
+                    joueursIA[joueur] = new IAStrategie(prog.getJeu());
+                    break;
+                case IA.EXPERT:
+                    joueursIA[joueur] = new IAStrategie(prog.getJeu());
+                    break;
+                default:
+                    throw new RuntimeException("Controleur.JoueurIA() : Difficulté de l'IA introuvable.");
+            }
+        } else {
+            joueursIA[joueur] = null;
+        }
     }
 
     public void definirJoueurQuiCommence() {
@@ -84,10 +112,10 @@ public class ControleurMediateur {
         jouer(coup);
     }
 
-    public void jouer(Coup coup) {
+    private void jouer(Coup coup) {
         if (coup != null)
-            joueurs[prog.getJeu().getJoueurCourant()].jouer(coup);
-        if(prog.getJeu().estTerminee())
+            prog.jouerCoup(coup);
+        if (prog.getJeu().estTerminee())
             audio.jouer(Audio.SON_VICTOIRE);
     }
 
