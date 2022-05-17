@@ -29,6 +29,8 @@ public class ControleurMediateur {
         if (prog.getEtat() == Programme.ETAT_EN_JEU && prog.getJeu().getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE)
             if (decompte == 0) {
                 joueurs[prog.getJeu().getJoueurCourant()].tempsEcoule();
+                if(prog.getJeu().estTerminee())
+                    audio.jouer(Audio.SON_VICTOIRE);
                 decompte = lenteurAttente;
             } else {
                 decompte--;
