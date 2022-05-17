@@ -11,18 +11,14 @@ public class ControleurMediateur {
 
     Programme prog;
     Joueur[] joueurs;
-    int[] difficultes;
     int decompte;
     Audio audio;
 
     public ControleurMediateur(Programme prog) {
         this.prog = prog;
         joueurs = new Joueur[2];
-        difficultes = new int[2];
-        difficultes[0] = Integer.parseInt(Configuration.instance().lire("NiveauDifficulteIA"));
-        difficultes[1] = Integer.parseInt(Configuration.instance().lire("NiveauDifficulteIA2"));
         audio = new Audio();
-        audio.boucler(Audio.SON_INTRO1);
+        audio.boucler(Audio.MUSIQUE_MENUS1);
     }
 
     public void clicSouris(int x, int y) {
@@ -43,11 +39,12 @@ public class ControleurMediateur {
         definirJoueurIA(Jeu.JOUEUR_VRT, joueurVrtEstIA);
         definirJoueurIA(Jeu.JOUEUR_RGE, joueurRgeEstIA);
         prog.nouvellePartie(joueurVrtEstIA, joueurRgeEstIA);
-        audio.arreter(Audio.SON_INTRO1);
+        audio.arreter(Audio.MUSIQUE_MENUS1);
     }
 
     private void definirJoueurIA(int joueur, boolean estIA) {
-        joueurs[joueur] = estIA ? new JoueurIA(joueur, prog, difficultes[joueur]) : new JoueurHumain(joueur, prog);
+        int difficulte = Integer.parseInt(Configuration.instance().lire(joueur == Jeu.JOUEUR_VRT ? "NiveauDifficulteIA" : "NiveauDifficulteIA2"));
+        joueurs[joueur] = estIA ? new JoueurIA(joueur, prog, difficulte) : new JoueurHumain(joueur, prog);
     }
 
     public void definirJoueurQuiCommence() {
@@ -89,7 +86,7 @@ public class ControleurMediateur {
         if (coup != null)
             joueurs[prog.getJeu().getJoueurCourant()].jouer(coup);
         if(prog.getJeu().estTerminee())
-            audio.jouer(Audio.SON_VICTOIRE1);
+            audio.jouer(Audio.SON_VICTOIRE);
     }
 
     public void annuler() {
@@ -104,12 +101,12 @@ public class ControleurMediateur {
 
     public void reprendrePartie() {
         prog.changerEtat(Programme.ETAT_EN_JEU);
-        audio.arreter(Audio.SON_INTRO1);
+        audio.arreter(Audio.MUSIQUE_MENUS1);
     }
 
     public void ouvrirMenuJeu() {
         prog.changerEtat(Programme.ETAT_MENU_JEU);
-        audio.boucler(Audio.SON_INTRO1);
+        audio.boucler(Audio.MUSIQUE_MENUS1);
     }
 
     public void ouvrirMenuOptions() {
@@ -126,7 +123,7 @@ public class ControleurMediateur {
 
     public void retourMenuPrecedant() {
         prog.retourMenuPrecedant();
-        audio.boucler(Audio.SON_INTRO1);
+        audio.boucler(Audio.MUSIQUE_MENUS1);
     }
 
     public void quitter() {
@@ -135,7 +132,7 @@ public class ControleurMediateur {
     }
 
     public void changerDifficulte(int joueur, int difficulte) {
-        difficultes[joueur] = difficulte;
+        Configuration.instance().ecrire(joueur == Jeu.JOUEUR_VRT ? "NiveauDifficulteIA" : "NiveauDifficulteIA2", Integer.toString(difficulte));
     }
 
     public void changerPageTutoriel(int sens) {

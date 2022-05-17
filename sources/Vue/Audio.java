@@ -5,44 +5,36 @@ import java.io.File;
 import javax.sound.sampled.*;
 
 public class Audio {
-    public static final int SON_INTRO1 = 0;
-    public static final int SON_INTRO2 = 1;
-    public static final int SON_PERTE = 2;
-    public static final int SON_VICTOIRE1 = 3;
+    public static final int MUSIQUE_MENUS1 = 0;
+    public static final int MUSIQUE_MENUS2 = 1;
 
-    int nombreSons;
-    String[] sons;
+    public static final int SON_DEFAITE = 2;
+    public static final int SON_VICTOIRE = 3;
+
+    private final String DOSSIER = "resources/Audios/";
+
     Clip[] clips;
-    Random rand;
-    String path;
+    Random r;
 
     public Audio() {
-        nombreSons = 4;
-        sons = new String[nombreSons];
-        clips = new Clip[nombreSons];
-        rand = new Random();
+        r = new Random();
+        clips = new Clip[4];
 
-        path = "resources/Audios/";
+        clips[MUSIQUE_MENUS1] = chargerClips(DOSSIER + "Musiques/antiqua.wav");
+        clips[MUSIQUE_MENUS2] = chargerClips(DOSSIER + "Musiques/mozart.wav");
 
-        sons[0] = path + "Musiques/intro_antiqua.wav";
-        sons[1] = path + "Musiques/intro_mozart.wav";
-
-        sons[2] = path + "Sons/lost.wav";
-        sons[3] = path + "Sons/tada.wav";
-
-        chargerClips();
+        clips[SON_DEFAITE] = chargerClips(DOSSIER + "Sons/defaite.wav");
+        clips[SON_VICTOIRE] = chargerClips(DOSSIER + "Sons/victoire.wav");
     }
 
-    void chargerClips() {
+    private Clip chargerClips(String nom) {
         try {
-            for(int i = 0; i < nombreSons; i++) {
-                File file = new File(sons[i]);
-                AudioInputStream audi = AudioSystem.getAudioInputStream(file);
-                clips[i] = AudioSystem.getClip();
-                clips[i].open(audi);
-            }
+            AudioInputStream audio = AudioSystem.getAudioInputStream(new File(nom));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audio);
+            return clip;
         } catch (Exception e) {
-            System.err.println("Erreur lors du chargement de son : " + e);
+            throw new RuntimeException("Vue.Audio.chargerClips() : Erreur lors du chargement du son : '" + nom + "'.\n" + e);
         }
     }
 
