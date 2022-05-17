@@ -65,7 +65,7 @@ public class ControleurMediateur {
                     joueursIA[joueur] = new IAStrategie(prog.getJeu());
                     break;
                 case IA.PROFESSIONNEL:
-                    joueursIA[joueur] = new IAStrategie(prog.getJeu());
+                    joueursIA[joueur] = new IAStrategie1_1(prog.getJeu());
                     break;
                 case IA.EXPERT:
                     joueursIA[joueur] = new IAStrategie(prog.getJeu());

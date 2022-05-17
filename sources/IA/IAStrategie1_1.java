@@ -187,11 +187,15 @@ public class IAStrategie1_1 extends IA {
                                 }
                             }
                         }
-                        if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
+                        if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) == 1 && jeu.getMain(joueurCourant).contientCarte(Carte.GC)) {
+                            System.out.println("1 seule carte gc on joue pas");
+                            coup = retournerCarteType(lc, Type.FIN);
+                        }
+                        else if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
                             coup = choisirCarte(lc, Type.GAR);
                         }
                         if ((pionsDucheAdverse & roi) == roi) {
-                            if (coup != null && coup.getCarte().estDeplacementGarCentre() && posRoi < Plateau.FONTAINE - 1) {
+                            if (coup != null && coup.getCarte() != null && coup.getCarte().estDeplacementGarCentre() && posRoi < Plateau.FONTAINE - 1) {
                                 lc.remove(coup);
                                 coup = choisirCarte(lc, Type.GAR);
                             }
@@ -205,11 +209,15 @@ public class IAStrategie1_1 extends IA {
                                 }
                             }
                         }
-                        if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
+                        if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) == 1 && jeu.getMain(joueurCourant).contientCarte(Carte.GC)) {
+                            System.out.println("1 seule carte gc on joue pas");
+                            coup = retournerCarteType(lc, Type.FIN);
+                        }
+                        else if (jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR) >= 1) {
                             coup = choisirCarte(lc, Type.GAR);
                         }
                         if ((pionsDucheAdverse & roi) == roi) {
-                            if (coup != null && coup.getCarte().estDeplacementGarCentre() && posRoi > Plateau.FONTAINE + 1) {
+                            if (coup != null && coup.getCarte() != null && coup.getCarte().estDeplacementGarCentre() && posRoi > Plateau.FONTAINE + 1) {
                                 lc.remove(coup);
                                 coup = choisirCarte(lc, Type.GAR);
                             }
@@ -338,7 +346,7 @@ public class IAStrategie1_1 extends IA {
             }
         } else {
             if (jeu.getPlateau().pionDansDucheRge(Pion.GAR_VRT)) {
-                pions |= gardeRouge;
+                pions |= gardeVert;
             }
             if (jeu.getPlateau().pionDansDucheRge(Pion.SOR)) {
                 pions |= sorcier;
@@ -923,9 +931,11 @@ public class IAStrategie1_1 extends IA {
                 if(posGardeVert == Plateau.BORDURE_VRT){    //si le garde vert tout a gauche on peut gagner
                     return roi;
                 }
-                else{                                       //sinon si le garde vert pas tout a gauche, on regarde si avec le privilege on peut l y amener et amer le roi ensuite
-                    if(nbCarteRoi / 2 == posGardeVert - 1 && (nbCarteRoi - nbCarteRoi / 2) == posRoi - nbCarteRoi / 2){
-                        return roi;
+                else{                                     //sinon si le garde vert pas tout a gauche, on regarde si avec le privilege on peut l y amener et amer le roi ensuite
+                    for(int i = 1; i <= nbCarteRoi / 2 && posGardeVert - i >= Plateau.BORDURE_VRT; i++){
+                        if(posGardeVert - i == Plateau.BORDURE_VRT && posRoi - (nbCarteRoi - i * 2) - i <= Plateau.CHATEAU_VRT){
+                            return roi;
+                        }
                     }
                 }
             }
@@ -939,8 +949,10 @@ public class IAStrategie1_1 extends IA {
                     return roi;
                 }
                 else{                                       //
-                    if(nbCarteRoi / 2 == (Plateau.BORDURE_RGE - posGardeRouge) && (nbCarteRoi - nbCarteRoi / 2) == (Plateau.BORDURE_RGE - posRoi + nbCarteRoi / 2)){
-                        return roi;
+                    for(int i = 1; i <= nbCarteRoi / 2 && posGardeRouge + i <= Plateau.BORDURE_RGE; i++){
+                        if(posGardeRouge + i == Plateau.BORDURE_RGE && posRoi + (nbCarteRoi - i * 2) + i >= Plateau.CHATEAU_RGE){
+                            return roi;
+                        }
                     }
                 }
             }
@@ -953,6 +965,10 @@ public class IAStrategie1_1 extends IA {
 
     private int coupGagnantCouronne(){
         int nbPieceChateau = 0;
+        if(((gardeRouge & pionsDuche) == gardeRouge || (gardeRouge & pionsChateau) == gardeRouge) && ((gardeVert & pionsDuche) == gardeVert || (gardeVert & pionsChateau) == gardeVert ) && (roi & pionsDuche) == roi){
+            System.out.println("cour dans duche");
+            nbPieceChateau ++;
+        }
         boolean f = false;
         boolean s = false;
         boolean gr = false;
@@ -1051,10 +1067,10 @@ public class IAStrategie1_1 extends IA {
     private boolean deplacementDansChateau(Type type, int direction){
         for(int i = 0; i < tailleMain; i++){
             if(jeu.getMain(joueurCourant).getCarte(i).getType().equals(type)){
-                if((jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) == Plateau.CHATEAU_VRT ||
-                   (jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) == Plateau.CHATEAU_RGE ||
-                   (jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) == Plateau.BORDURE_VRT ||
-                   (jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) == Plateau.BORDURE_RGE){
+                if((jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) <= Plateau.CHATEAU_VRT ||
+                   (jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) <= Plateau.CHATEAU_RGE ||
+                   (jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) >= Plateau.BORDURE_VRT ||
+                   (jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) >= Plateau.BORDURE_RGE){
                     return true;
                 }
             }
