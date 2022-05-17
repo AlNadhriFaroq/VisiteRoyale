@@ -79,15 +79,25 @@ public class IAStrategie extends IA {
             return coup;
         }
 
+        //si trop de carte on les joue
         if(jeu.getTypeCourant().equals(Type.IND)){
             Type type = carteEnFonctionNombre();
             if(type != null){
-                coup = choisirCarte(lc, type);
+                if(jeu.getMain(joueurCourant).contientCarte(Carte.GC)){
+                    for(Coup c : lc){
+                        if(c.getCarte() != null && c.getCarte().estDeplacementGarCentre()){
+                            coup = c;
+                        }
+                    }
+                }
+                else{
+                    coup = choisirCarte(lc, type);
+                }
             }
         }
 
         if(coup != null){
-            if(jeu.getTypeCourant().equals(Type.FOU) && coup.getCarte().estDeplacementFouCentre()){
+            if(jeu.getTypeCourant().equals(Type.FOU) && coup.getCarte().estDeplacementFouCentre() || jeu.getTypeCourant().equals(Type.IND) && coup.getCarte().estDeplacementFouCentre()){
                 if(joueurCourant == Jeu.JOUEUR_RGE && posFou < Plateau.FONTAINE){
                     return coup;
                 }
@@ -104,7 +114,7 @@ public class IAStrategie extends IA {
                     coup = null;
                 }
             }
-            else if(jeu.getTypeCourant().equals(Type.GAR) && coup.getCarte().estDeplacementGarCentre()){
+            else if(jeu.getTypeCourant().equals(Type.GAR) && coup.getCarte().estDeplacementGarCentre() || jeu.getTypeCourant().equals(Type.IND) && coup.getCarte().estDeplacementGarCentre()){
                 System.out.println("veut faire garde centre");
                 if(joueurCourant == Jeu.JOUEUR_RGE && ((posRoi - posGardeVert < posGardeRouge - posRoi)) && (pionsChateauAdverse & gardeVert) != gardeVert){
                     lc.remove(coup);
@@ -134,7 +144,7 @@ public class IAStrategie extends IA {
         }
 
         if(coup != null){
-            if(jeu.getTypeCourant().equals(Type.FOU) && coup.getCarte().estDeplacementFouCentre()){
+            if(jeu.getTypeCourant().equals(Type.FOU) && coup.getCarte().estDeplacementFouCentre() || jeu.getTypeCourant().equals(Type.IND) && coup.getCarte().estDeplacementFouCentre()){
                 if(joueurCourant == Jeu.JOUEUR_RGE && posFou < Plateau.FONTAINE){
                     return coup;
                 }
@@ -151,7 +161,7 @@ public class IAStrategie extends IA {
                     coup = null;
                 }
             }
-            else if(jeu.getTypeCourant().equals(Type.GAR) && coup.getCarte().estDeplacementGarCentre()){
+            else if(jeu.getTypeCourant().equals(Type.GAR) && coup.getCarte().estDeplacementGarCentre() || jeu.getTypeCourant().equals(Type.IND) && coup.getCarte().estDeplacementGarCentre()){
                 System.out.println("veut faire garde centre");
                 if(joueurCourant == Jeu.JOUEUR_RGE && ((posRoi - posGardeVert < posGardeRouge - posRoi)) && (pionsChateauAdverse & gardeVert) != gardeVert){
                     lc.remove(coup);
