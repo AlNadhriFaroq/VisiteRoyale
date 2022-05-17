@@ -45,10 +45,16 @@ public class PlateauFrame extends JComponent {
 
 
         this.frame = new JFrame();
+
         this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.frame.setMinimumSize(new Dimension(LARGEURFENETRE, HAUTEURFENETRE));
         this.frame.setSize(this.screenSize);
+        //this.frame.getContentPane().setBackground(new Color(0,0,255));
+        this.frame.setVisible(true);
+
         //this.frame.setSize(LARGEURFENETRE, HAUTEURFENETRE);
+
+
         this.jeu =jeu;
 
         this.terrain = new Terrain(this.jeu.getPlateau());
@@ -63,6 +69,7 @@ public class PlateauFrame extends JComponent {
         this.CreerMain(true);
         this.afficheMain();
         this.afficheTerrain();
+
     }
 
     public JFrame getFrame() {
@@ -72,9 +79,12 @@ public class PlateauFrame extends JComponent {
     /* PaintComponent */
     @Override
     public void paintComponent(Graphics g){
+
         this.afficheMain();
         this.afficheTerrain();
+        //this.frame.getContentPane().setBackground(new Color(0,255,255));
         super.paintComponent(g);
+
 
     }
 
@@ -88,7 +98,7 @@ public class PlateauFrame extends JComponent {
             CarteVue carteVue = new CarteVue();
 
             carteVue.setCarte(this.jeu.getPioche().getCarte(i));
-            carteVue.setSize(90,160);
+            carteVue.setSize(this.frame.getHeight()/10,this.frame.getWidth()/10);
             carteVue.setVisible(true);
             if (i==0){y = ( (this.heigth/2) - (carteVue.getHeight()/2) ) -40;}
             carteVue.setLocation(x,y);
@@ -97,6 +107,7 @@ public class PlateauFrame extends JComponent {
         }
 
         this.frame.repaint();
+
     }
 
 
@@ -232,7 +243,7 @@ public class PlateauFrame extends JComponent {
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 
         int w = carteW*10;
-        int h = carteH*2 + carteH/2;
+        int h = carteH+ carteH/2;
 
         if(!(w%17==0)){
             w -= w%17;

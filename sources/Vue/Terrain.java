@@ -38,6 +38,7 @@ public class Terrain extends JPanel implements MouseInputListener {
     public void paintComponent(Graphics g){
 
 
+
         super.paintComponent(g);
         for(int i=0; i<taille; i++){
             g.drawLine((this.getWidth()/17)*i,0,(this.getWidth()/17)*i, this.getHeight());

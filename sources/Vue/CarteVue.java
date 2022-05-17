@@ -90,7 +90,7 @@ public class CarteVue extends JPanel implements MouseInputListener {
         //this.setSize(90, 160);
         //setBounds(0,0, 400, 400);
         super.paintComponent(g);
-        g.drawImage(this.image, 0, 0, 90, 160, this);
+        g.drawImage(this.image, 0, 0, this.getWidth(), this.getHeight(), this);
     }
 
 
