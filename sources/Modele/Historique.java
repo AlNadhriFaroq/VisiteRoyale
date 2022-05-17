@@ -1,9 +1,10 @@
 package Modele;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Historique {
+public class Historique implements Serializable {
     private List<Coup> passe;
     private List<Coup> futur;
 

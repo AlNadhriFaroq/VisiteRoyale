@@ -1,8 +1,9 @@
 package Modele;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Jeu extends Historique implements Cloneable {
+public class Jeu extends Historique implements Cloneable, Serializable {
     public static final int ETAT_CHOIX_JOUEUR = 0;
     public static final int ETAT_CHOIX_CARTE = 1;
     public static final int ETAT_CHOIX_PION = 2;

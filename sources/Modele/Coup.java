@@ -1,6 +1,8 @@
 package Modele;
 
-public class Coup implements Cloneable {
+import java.io.Serializable;
+
+public class Coup implements Cloneable, Serializable {
     public static final int CHOISIR_CARTE = 0;
     public static final int CHOISIR_PION = 1;
     public static final int CHOISIR_DIRECTION = 2;

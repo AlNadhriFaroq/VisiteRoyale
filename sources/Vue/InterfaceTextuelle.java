@@ -30,6 +30,9 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case Programme.ETAT_MENU_JEU:
                 interpreterCommandeMenuJeu(cmd);
                 break;
+            case Programme.ETAT_MENU_SAUVEGARDES:
+                interpreterCommandeMenuSauvegardes(cmd);
+                break;
             case Programme.ETAT_MENU_OPTIONS:
                 interpreterCommandeMenuOptions(cmd);
                 break;
@@ -60,8 +63,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 break;
             case "3":
             case "charger":
-                System.out.println("Chargement de partie non implémenté.");
-                System.out.print("Commande > ");
+                ctrl.ouvrirMenuSauvegardes();
                 break;
             case "4":
             case "opt":
@@ -126,8 +128,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 break;
             case "3":
             case "sauvegarder":
-                System.out.println("Sauvegarde de parties non implémenté.");
-                System.out.print("Commande > ");
+                ctrl.ouvrirMenuSauvegardes();
                 break;
             case "4":
             case "opt":
@@ -142,6 +143,48 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case "6":
             case "menu":
             case "menuprincipal":
+                ctrl.retourMenuPrecedant();
+                break;
+            default:
+                System.out.println("Commande invalide.");
+                System.out.print("Commande > ");
+                break;
+        }
+    }
+
+    void interpreterCommandeMenuSauvegardes(String cmd) {
+        int sauvegarde;
+        switch (cmd) {
+            case "-1":
+            case "-2":
+            case "-3":
+            case "-4":
+            case "-5":
+                sauvegarde = -Integer.parseInt(cmd) - 1;
+                if (prog.sauvegardeEstSupprimable(sauvegarde)) {
+                    ctrl.supprimerSauvegarde(sauvegarde);
+                } else {
+                    System.out.println("Impossible de supprimer une sauvegarde vide.");
+                    System.out.println("Commande > ");
+                }
+                break;
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+                sauvegarde = Integer.parseInt(cmd) - 1;
+                if (prog.partieEstSauvegardable()) {
+                    ctrl.sauvegarderPartie(sauvegarde);
+                } else if (prog.sauvegardeEstChargeable(sauvegarde)) {
+                    ctrl.chargerSauvegarde(sauvegarde);
+                } else {
+                    System.out.println("Impossible de charger une sauvegarde vide.");
+                    System.out.println("Commande > ");
+                }
+                break;
+            case "6":
+            case "retour":
                 ctrl.retourMenuPrecedant();
                 break;
             default:
@@ -433,6 +476,15 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("4. Options");
                 System.out.println("5. Tutoriel");
                 System.out.println("6. Retour au menu principal");
+                break;
+            case Programme.ETAT_MENU_SAUVEGARDES:
+                System.out.println("SAUVEGARDES");
+                for (int i = 0; i < prog.getSauvegardes().length; i++)
+                    System.out.println((i + 1) + ". " + prog.getSauvegardes()[i]);
+                for (int i = prog.getSauvegardes().length; i < Programme.NB_SAUVEGARDES; i++)
+                    System.out.println((i + 1) + ". Sauvegarde vide");
+                System.out.println((Programme.NB_SAUVEGARDES + 1) + ". Retour");
+                System.out.println("Précéder d'un '-' le numéro d'une sauvegarde pour la supprimer.");
                 break;
             case Programme.ETAT_MENU_OPTIONS:
                 afficherOptions();

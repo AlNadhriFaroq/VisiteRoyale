@@ -1,6 +1,8 @@
 package Modele;
 
-public class Type implements Cloneable, Comparable<Type> {
+import java.io.Serializable;
+
+public class Type implements Cloneable, Serializable, Comparable<Type> {
     public static final Type IND = new Type(0);
     public static final Type ROI = new Type(1);
     public static final Type GAR = new Type(2);

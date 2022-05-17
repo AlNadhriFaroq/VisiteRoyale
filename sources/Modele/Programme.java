@@ -2,26 +2,43 @@ package Modele;
 
 import Patterns.Observable;
 
+import java.util.Date;
+import java.io.*;
+import java.text.SimpleDateFormat;
+
 public class Programme extends Observable {
     public static final int ETAT_ACCUEIL = 0;
     public static final int ETAT_MENU_PRINCIPAL = 1;
     public static final int ETAT_EN_JEU = 2;
     public static final int ETAT_MENU_JEU = 3;
-    public static final int ETAT_MENU_OPTIONS = 4;
-    public static final int ETAT_TUTORIEL = 5;
-    public static final int ETAT_CREDITS = 6;
-    public static final int ETAT_FIN_PROGRAMME = 7;
+    public static final int ETAT_MENU_SAUVEGARDES = 4;
+    public static final int ETAT_MENU_OPTIONS = 5;
+    public static final int ETAT_TUTORIEL = 6;
+    public static final int ETAT_CREDITS = 7;
+    public static final int ETAT_FIN_PROGRAMME = 8;
+
+    private static final String DOSSIER = System.getProperty("user.home") + File.separator + "VisiteRoyale" + File.separator + "sauvegardes";
+    public static final int NB_SAUVEGARDES = 5;
 
     int etat;
     Jeu jeu;
     boolean[] joueursSontIA;
+    File dossier;
+    String[] sauvegardes;
     int pageTutoriel;
 
     public Programme() {
         etat = ETAT_ACCUEIL;
+
         jeu = new Jeu();
         jeu.setEtatJeu(Jeu.ETAT_FIN_DE_PARTIE);
+
         joueursSontIA = new boolean[2];
+
+        dossier = new File(DOSSIER);
+        dossier.mkdirs();
+        sauvegardes = dossier.list();
+
         pageTutoriel = 0;
     }
 
@@ -35,6 +52,10 @@ public class Programme extends Observable {
 
     public boolean getJoueurEstIA(int joueur) {
         return joueursSontIA[joueur];
+    }
+
+    public String[] getSauvegardes() {
+        return sauvegardes;
     }
 
     public int getPageTutoriel() {
@@ -55,8 +76,8 @@ public class Programme extends Observable {
 
     public void nouvellePartie(boolean joueurVrtEstIA, boolean joueurRgeEstIA) {
         etat = ETAT_EN_JEU;
-        //jeu.nouvellePartie();
-        jeu.nouvellePartiePersonalise(Jeu.JOUEUR_VRT, 2, 0, 3, 7, 9, 8, Plateau.FACE_GRD_CRN, 0);
+        jeu.nouvellePartie();
+        //jeu.nouvellePartiePersonalise(Jeu.JOUEUR_VRT, 2, 0, 3, 7, 9, 8, Plateau.FACE_GRD_CRN, 0);
         joueursSontIA[Jeu.JOUEUR_VRT] = joueurVrtEstIA;
         joueursSontIA[Jeu.JOUEUR_RGE] = joueurRgeEstIA;
         mettreAJour();
@@ -82,19 +103,13 @@ public class Programme extends Observable {
         mettreAJour();
     }
 
-    public void sauvegarderPartie() {
-    }
-
-    public void chargerPartie() {
-    }
-
     public void changerEtat(int etat) {
         setEtat(etat);
         mettreAJour();
     }
 
     public void retourMenuPrecedant() {
-        if ((etat == ETAT_MENU_OPTIONS || etat == ETAT_TUTORIEL) && jeu.getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE) {
+        if ((etat == ETAT_MENU_OPTIONS || etat == ETAT_TUTORIEL || etat == ETAT_MENU_SAUVEGARDES) && jeu.getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE) {
             etat = ETAT_MENU_JEU;
         } else {
             etat = ETAT_MENU_PRINCIPAL;
@@ -108,12 +123,81 @@ public class Programme extends Observable {
         mettreAJour();
     }
 
+    public void sauvegarderPartie(int sauvegarde) {
+        try {
+            File fichier;
+            SimpleDateFormat date = new SimpleDateFormat("yy-MM-dd-HH-mm-ss");
+            String nom = DOSSIER + File.separator + "Partie_vs_" + (joueursSontIA[Jeu.JOUEUR_VRT] ? "IA" : "JH") + "_du_" + date.format(new Date()) + ".sauvegarde";
+
+            if (sauvegarde < sauvegardes.length) {
+                fichier = new File(sauvegardes[sauvegarde]);
+                fichier.renameTo(new File(nom));
+            } else {
+                fichier = new File(nom);
+                fichier.createNewFile();
+            }
+
+            FileOutputStream fichierOut = new FileOutputStream(fichier);
+            ObjectOutputStream out = new ObjectOutputStream(fichierOut);
+            out.writeObject(jeu);
+            out.close();
+            fichierOut.close();
+            mettreAJourSauvegardes();
+        } catch (Exception e) {
+            throw new RuntimeException("Controleur.ControleurMediateur.sauvegarderPartie() : Impossible de sauvegarder cette partie.\n" + e);
+        }
+    }
+
+    public void chargerSauvegarde(int sauvegarde) {
+        try {
+            FileInputStream fichier = new FileInputStream(DOSSIER + File.separator + sauvegardes[sauvegarde]);
+            ObjectInputStream in = new ObjectInputStream(fichier);
+            jeu = (Jeu) in.readObject();
+            in.close();
+            fichier.close();
+
+            etat = ETAT_EN_JEU;
+            joueursSontIA[Jeu.JOUEUR_VRT] = sauvegardes[sauvegarde].split("_")[2].equals("IA");
+            joueursSontIA[Jeu.JOUEUR_RGE] = false;
+            mettreAJour();
+        } catch (Exception e) {
+            throw new RuntimeException("Controleur.ControleurMediateur.chargerSauvegarde() : Impossible de charger cette sauvegarde.\n" + e);
+        }
+    }
+
+    public void supprimerSauvegarde(int sauvegarde) {
+        try {
+            File fichier = new File(DOSSIER + File.separator + sauvegardes[sauvegarde]);
+            fichier.delete();
+            mettreAJourSauvegardes();
+        } catch (Exception e) {
+            throw new RuntimeException("Controleur.ControleurMediateur.supprimerSauvegarde() : Impossible de supprimer cette sauvegarde.\n" + e);
+        }
+    }
+
+    public void mettreAJourSauvegardes() {
+        sauvegardes = dossier.list();
+        mettreAJour();
+    }
+
     public void changerPageTutoriel(int sens) {
         if (sens == 1 && pageTutoriel < 10)
             setPageTutoriel(pageTutoriel + 1);
         else if (sens == -1 && pageTutoriel > 0)
             setPageTutoriel(pageTutoriel - 1);
         mettreAJour();
+    }
+
+    public boolean partieEstSauvegardable() {
+        return jeu.getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE;
+    }
+
+    public boolean sauvegardeEstChargeable(int sauvegarde) {
+        return jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE && sauvegarde < sauvegardes.length;
+    }
+
+    public boolean sauvegardeEstSupprimable(int sauvegarde) {
+        return sauvegarde < sauvegardes.length;
     }
 
     @Override

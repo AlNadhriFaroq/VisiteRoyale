@@ -5,6 +5,7 @@ import IA.*;
 import Modele.*;
 import Vue.Audio;
 
+import java.io.*;
 import java.util.Random;
 
 public class ControleurMediateur {
@@ -52,8 +53,8 @@ public class ControleurMediateur {
 
     private void definirJoueurIA(int joueur, boolean estIA) {
         if (estIA) {
-            int difficulte = Integer.parseInt(Configuration.instance().lire(joueur == Jeu.JOUEUR_VRT ? "NiveauDifficulteIA" : "NiveauDifficulteIA2"));
-            switch (difficulte) {
+            String difficulte = Configuration.instance().lire(joueur == Jeu.JOUEUR_VRT ? "NiveauDifficulteIA" : "NiveauDifficulteIA2");
+            switch (Integer.parseInt(difficulte)) {
                 case IA.DEBUTANT:
                     joueursIA[joueur] = new IAAleatoire(prog.getJeu());
                     break;
@@ -139,6 +140,11 @@ public class ControleurMediateur {
         audio.boucler(Audio.MUSIQUE_MENUS1);
     }
 
+    public void ouvrirMenuSauvegardes() {
+        prog.changerEtat(Programme.ETAT_MENU_SAUVEGARDES);
+        audio.boucler(Audio.MUSIQUE_MENUS1);
+    }
+
     public void ouvrirMenuOptions() {
         prog.changerEtat(Programme.ETAT_MENU_OPTIONS);
     }
@@ -159,6 +165,18 @@ public class ControleurMediateur {
     public void quitter() {
         prog.quitter();
         System.exit(0);
+    }
+
+    public void sauvegarderPartie(int sauvegarde) {
+        prog.sauvegarderPartie(sauvegarde);
+    }
+
+    public void chargerSauvegarde(int sauvegarde) {
+        prog.chargerSauvegarde(sauvegarde);
+    }
+
+    public void supprimerSauvegarde(int sauvegarde) {
+        prog.supprimerSauvegarde(sauvegarde);
     }
 
     public void changerDifficulte(int joueur, int difficulte) {

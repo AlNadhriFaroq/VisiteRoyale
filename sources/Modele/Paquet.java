@@ -1,8 +1,9 @@
 package Modele;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Paquet implements Cloneable {
+public class Paquet implements Cloneable, Serializable {
     private List<Carte> cartes;
     private int tailleMax;
 

@@ -1,8 +1,9 @@
 package Modele;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 
-public class Plateau implements Cloneable {
+public class Plateau implements Cloneable, Serializable {
     public static final int BORDURE_VRT = 0;
     public static final int CHATEAU_VRT = 1;
     public static final int FONTAINE = 8;

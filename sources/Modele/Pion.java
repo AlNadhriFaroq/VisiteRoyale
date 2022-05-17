@@ -1,6 +1,8 @@
 package Modele;
 
-public class Pion implements Cloneable {
+import java.io.Serializable;
+
+public class Pion implements Cloneable, Serializable {
     public static final Pion ROI = new Pion(0, Type.ROI);
     public static final Pion GAR_VRT = new Pion(1, Type.GAR);
     public static final Pion GAR_RGE = new Pion(2, Type.GAR);

@@ -1,6 +1,8 @@
 package Modele;
 
-public class Carte implements Cloneable, Comparable<Carte> {
+import java.io.Serializable;
+
+public class Carte implements Cloneable, Serializable, Comparable<Carte> {
     public static final Carte R1 = new Carte(Type.ROI, 1);
     public static final Carte G1 = new Carte(Type.GAR, 1);
     public static final Carte G2 = new Carte(Type.GAR, 2);
