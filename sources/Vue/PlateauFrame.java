@@ -62,11 +62,10 @@ public class PlateauFrame extends JComponent {
 
         this.heigth = this.frame.getHeight();
         this.width = this.frame.getWidth();
-        this.carteH = this.frame.getHeight()/10;
-        this.carteW = this.frame.getWidth()/10;
+        this.carteH = this.frame.getWidth()/10;
+        this.carteW = this.frame.getHeight()/10;
         this.joueeH = this.carteH - (this.carteH/2);
         this.joueeW = this.carteW - (this.carteW/2);
-
         this.setVisible(true);
 
         this.genererDeck();
