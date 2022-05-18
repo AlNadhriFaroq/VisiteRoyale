@@ -28,11 +28,13 @@ public class IAStrategie1_1 extends IA {
     int nbGarde;
     int nbFou;
     boolean gagnantAvecCouronne;
+    boolean defausseCarte;
     List<Coup> lc;
     public IAStrategie1_1(Jeu jeu) {
         super(jeu);
         r = new Random();
         gagnantAvecCouronne = false;
+        defausseCarte = false;
     }
 
     @Override
@@ -1063,7 +1065,7 @@ public class IAStrategie1_1 extends IA {
                 nbPieceChateau ++;
                 gr = true;
             }
-            if(jeu.getPlateau().getPositionCouronne() - nbPieceChateau >= Plateau.CHATEAU_RGE){
+            if(jeu.getPlateau().getPositionCouronne() + nbPieceChateau >= Plateau.CHATEAU_RGE){
                 return -1;
             }
             else if(jeu.getPlateau().getPositionCouronne() + nbPieceChateau + 1 >= Plateau.CHATEAU_RGE){
@@ -1098,6 +1100,7 @@ public class IAStrategie1_1 extends IA {
     private int coupGagnantFinPioche(){
         int max;
         if(jeu.getPioche().getTaille() <= (max = Math.max(nbFou, Math.max(nbGarde, Math.max(nbRoi, nbSor))))){
+            defausseCarte = true;
             if(nbFou == max)
                 return fou;
             if(nbRoi == max)
@@ -1292,6 +1295,4 @@ public class IAStrategie1_1 extends IA {
         }
         return dist;
     }
-
 }
-
