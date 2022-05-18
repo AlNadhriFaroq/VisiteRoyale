@@ -89,6 +89,7 @@ public class Audio {
            case 5 : volume = 6f; break;
            default: break;
        }
+       Configuration.instance().ecrire("Volume",Integer.toString(volumeEchelle));
        for(Clip clip : clips)
            ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
 
