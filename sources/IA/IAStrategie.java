@@ -30,13 +30,13 @@ public class IAStrategie extends IA {
 
     @Override
     public Coup calculerCoup() {
+        joueurCourant = jeu.getJoueurCourant();
         pionsSurFontaine = pionsSurFontaine();
         pionsChateauAdverse = pionDansChateau(joueurCourant);
         pionsDucheAdverse = pionsDansDuche(joueurCourant);
         int joueur = 1 - joueurCourant;
         pionsChateau = pionDansChateau(joueur);
         pionsDuche = pionsDansDuche(joueur);
-        joueurCourant = jeu.getJoueurCourant();
         posRoi = jeu.getPlateau().getPositionPion(Pion.ROI);
         posGardeVert = jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
         posGardeRouge = jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
