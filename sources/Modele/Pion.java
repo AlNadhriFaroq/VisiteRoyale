@@ -67,6 +67,11 @@ public class Pion implements Cloneable, Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return valeur;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;

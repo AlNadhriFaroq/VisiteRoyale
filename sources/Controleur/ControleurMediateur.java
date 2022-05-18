@@ -174,6 +174,8 @@ public class ControleurMediateur {
 
     public void chargerSauvegarde(int sauvegarde) {
         prog.chargerSauvegarde(sauvegarde);
+        definirJoueurIA(Jeu.JOUEUR_VRT, prog.getJoueurEstIA(Jeu.JOUEUR_VRT));
+        definirJoueurIA(Jeu.JOUEUR_RGE, prog.getJoueurEstIA(Jeu.JOUEUR_RGE));
     }
 
     public void supprimerSauvegarde(int sauvegarde) {

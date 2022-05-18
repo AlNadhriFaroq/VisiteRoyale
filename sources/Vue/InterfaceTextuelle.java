@@ -241,7 +241,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case "help":
                 System.out.println("G / Gauche : Choisir la main de gauche.");
                 System.out.println("D / Droite : Choisir la main de droite.");
-                System.out.println("Aide       : Afficher cette aide.");
                 System.out.println("Pause      : Ouvrir le menu du jeu.");
                 System.out.print("\nCommande > ");
                 break;
@@ -301,7 +300,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("Fin      : Finir son tour.");
             System.out.println("Annuler  : Annuler le dernier coup joué.");
             System.out.println("Refaire  : Refaire le dernier coup joué.");
-            System.out.println("Aide     : Afficher cette aide.");
             System.out.println("Pause    : Ouvrir le menu du jeu.");
             System.out.print("\nCommande > ");
         } else if (cmd.equals("pause")) {
@@ -338,7 +336,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("S        : Selectionner le pion Sorcier.");
             System.out.println("Annuler  : Annuler le dernier coup joué.");
             System.out.println("Refaire  : Refaire le dernier coup joué.");
-            System.out.println("Aide     : Afficher cette aide.");
             System.out.println("Pause    : Ouvrir le menu du jeu.");
             System.out.print("\nCommande > ");
         } else if (cmd.equals("pause")) {
@@ -385,7 +382,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("R        : Sélectionner la direction vers le joueur rouge, vers la droite.");
             System.out.println("Annuler  : Annuler le dernier coup joué.");
             System.out.println("Refaire  : Refaire le dernier coup joué.");
-            System.out.println("Aide     : Afficher cette aide.");
             System.out.println("Pause    : Ourvrir le menu du jeu.");
             System.out.print("\nCommande > ");
         } else if (cmd.equals("pause")) {
@@ -444,6 +440,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
     @Override
     public void mettreAJour() {
+        jeu = prog.getJeu();
         System.out.println();
         afficherProgramme();
         if (prog.getEtat() != Programme.ETAT_ACCUEIL && prog.getEtat() != Programme.ETAT_FIN_PROGRAMME)

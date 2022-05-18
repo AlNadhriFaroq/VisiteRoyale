@@ -11,8 +11,6 @@ public class Audio {
     public static final int SON_DEFAITE = 2;
     public static final int SON_VICTOIRE = 3;
 
-    private final String DOSSIER = "resources/Audios/";
-
     Clip[] clips;
     Random r;
 
@@ -20,6 +18,7 @@ public class Audio {
         r = new Random();
         clips = new Clip[4];
 
+        String DOSSIER = "resources/Audios/";
         clips[MUSIQUE_MENUS1] = chargerClips(DOSSIER + "Musiques/antiqua.wav");
         clips[MUSIQUE_MENUS2] = chargerClips(DOSSIER + "Musiques/mozart.wav");
 
