@@ -197,19 +197,28 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     void interpreterCommandeMenuOptions(String cmd) {
         switch (cmd) {
             case "1":
+            case "musique":
+            case "arreter":
+            case "demarrer":
                 ctrl.changerVolume(0);
                 System.out.print("Commande > ");
                 break;
             case "2":
+            case "+":
+            case "augmenter":
                 ctrl.changerVolume(-1);
                 System.out.print("Commande > ");
                 break;
             case "3":
+            case "-":
+            case "diminuer":
                 ctrl.changerVolume(-2);
                 System.out.print("Commande > ");
                 break;
             case "4":
+            case "menu":
             case "retour":
+            case "menuPrecedant":
                 ctrl.retourMenuPrecedant();
                 break;
             default:
@@ -222,11 +231,13 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     void interpreterCommandeTutoriel(String cmd) {
         switch (cmd) {
             case "<":
+            case "p":
             case "prec":
             case "precedant":
                 ctrl.changerPageTutoriel(-1);
                 break;
             case ">":
+            case "s":
             case "suiv":
             case "suivant":
                 ctrl.changerPageTutoriel(1);
@@ -252,13 +263,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case "maingauche":
             case "maindroite":
                 ctrl.definirJoueurQuiCommence();
-                break;
-            case "aide":
-            case "help":
-                System.out.println("G / Gauche : Choisir la main de gauche.");
-                System.out.println("D / Droite : Choisir la main de droite.");
-                System.out.println("Pause      : Ouvrir le menu du jeu.");
-                System.out.print("\nCommande > ");
                 break;
             case "pause":
                 ctrl.ouvrirMenuJeu();
@@ -314,9 +318,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("Fou      : Activer le pouvoir du Fou, déplacant un pion avec les cartes Fou.");
             if (jeu.peutFinirTour())
                 System.out.println("Fin      : Finir son tour.");
-            System.out.println("Annuler  : Annuler le dernier coup joué.");
-            System.out.println("Refaire  : Refaire le dernier coup joué.");
-            System.out.println("Pause    : Ouvrir le menu du jeu.");
             System.out.print("\nCommande > ");
         } else if (cmd.equals("pause")) {
             ctrl.ouvrirMenuJeu();
@@ -350,9 +351,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("GR       : Selectionner le pion Garde qui est du côté de joueur rouge.");
             if (jeu.peutSelectionnerPion(Pion.SOR))
                 System.out.println("S        : Selectionner le pion Sorcier.");
-            System.out.println("Annuler  : Annuler le dernier coup joué.");
-            System.out.println("Refaire  : Refaire le dernier coup joué.");
-            System.out.println("Pause    : Ouvrir le menu du jeu.");
             System.out.print("\nCommande > ");
         } else if (cmd.equals("pause")) {
             ctrl.ouvrirMenuJeu();
@@ -396,9 +394,6 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("V        : Sélectionner la direction vers le joueur vert, vers la gauche.");
             if (jeu.peutSelectionnerDirection(Plateau.DIRECTION_RGE))
                 System.out.println("R        : Sélectionner la direction vers le joueur rouge, vers la droite.");
-            System.out.println("Annuler  : Annuler le dernier coup joué.");
-            System.out.println("Refaire  : Refaire le dernier coup joué.");
-            System.out.println("Pause    : Ourvrir le menu du jeu.");
             System.out.print("\nCommande > ");
         } else if (cmd.equals("pause")) {
             ctrl.ouvrirMenuJeu();
@@ -537,30 +532,11 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case Jeu.ETAT_CHOIX_CARTE:
             case Jeu.ETAT_CHOIX_PION:
             case Jeu.ETAT_CHOIX_DIRECTION:
-                afficherEnteteJeu(prog.getJeu());
-
-                System.out.print(Couleur.formaterTexte("    Joueur    ", Couleur.VERT));
-                afficherPaquet(prog.getJeu().getMain(Jeu.JOUEUR_VRT), prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_VRT);
-                System.out.println();
-
-                System.out.print(Couleur.formaterTexte("      vert    ", Couleur.VERT));
-                afficherPaquet(prog.getJeu().getSelectionCartes(Jeu.JOUEUR_VRT), false);
-                System.out.println();
-
-                afficherPlateau(prog.getJeu());
-
-                System.out.print(Couleur.formaterTexte("              ", Couleur.ROUGE));
-                afficherPaquet(prog.getJeu().getSelectionCartes(Jeu.JOUEUR_RGE), false);
-                System.out.println(Couleur.formaterTexte("   Joueur", Couleur.ROUGE));
-
-                System.out.print(Couleur.formaterTexte("              ", Couleur.ROUGE));
-                afficherPaquet(prog.getJeu().getMain(Jeu.JOUEUR_RGE), prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_RGE);
-                System.out.println(Couleur.formaterTexte("   rouge", Couleur.ROUGE));
-
-                System.out.println("< Annuler       Retour       Aide       Refaire >");
+                afficherJeu(prog.getJeu());
                 break;
             case Jeu.ETAT_FIN_DE_PARTIE:
-                System.out.println(prog.getJeu().toString() + "\n");
+                afficherJeu(prog.getJeu());
+                System.out.println("\n");
                 if (prog.getJoueurEstIA(Jeu.JOUEUR_VRT) && !prog.getJoueurEstIA(Jeu.JOUEUR_RGE))
                     if (prog.getJeu().getJoueurGagnant() == Jeu.JOUEUR_RGE)
                         System.out.println("VOUS AVEZ GAGNEZ !!!\n");
@@ -579,7 +555,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
     private void afficherOptions() {
         System.out.println("OPTIONS");
-        System.out.println("1. Demarrer / Arreter la musique");
+        System.out.println("1. Démarrer/Arrêter la musique");
         System.out.println("2. Augmenter le volume");
         System.out.println("3. Diminuer le volume");
         System.out.println("4. Retour");
@@ -628,37 +604,49 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
         System.out.println("< Precedant       Retour       Suivant >");
     }
 
-    private void afficherEnteteJeu(Jeu jeu) {
-        String joueurCourant = Jeu.joueurEnTexte(jeu.getJoueurCourant());
+    private void afficherJeu(Jeu jeu) {
+        String joueurCourant = Jeu.joueurEnTexte(jeu.getJoueurCourant()) + (jeu.getJoueurCourant() == Jeu.JOUEUR_VRT ? " " : "");
         String couleurJoueur = jeu.getJoueurCourant() == Jeu.JOUEUR_VRT ? Couleur.VERT : Couleur.ROUGE;
 
-        System.out.print("AU TOUR DE : ");
-        System.out.printf("%-12s", Couleur.formaterTexte(joueurCourant.toUpperCase(), couleurJoueur));
-        System.out.printf("%25s\n", "Pioche : " + jeu.getPioche().getTaille());
+        System.out.println("╔═══════════════════════════════════════════════════╗");
+        System.out.print("║AU TOUR DE : ");
+        System.out.print(Couleur.formaterTexte(joueurCourant.toUpperCase(), couleurJoueur));
+        System.out.printf("%24s%2d║\n", "Pioche : ", jeu.getPioche().getTaille());
+
+        System.out.print("║" + Couleur.formaterTexte("    Joueur    ", Couleur.VERT));
+        afficherPaquet(prog.getJeu().getMain(Jeu.JOUEUR_VRT), prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_VRT);
+        System.out.println("             ║");
+
+        System.out.print("║" + Couleur.formaterTexte("      vert    ", Couleur.VERT));
+        afficherPaquet(prog.getJeu().getSelectionCartes(Jeu.JOUEUR_VRT), false);
+        System.out.println("             ║");
+
+        afficherPlateau(prog.getJeu());
+
+        System.out.print("║" + Couleur.formaterTexte("              ", Couleur.ROUGE));
+        afficherPaquet(prog.getJeu().getSelectionCartes(Jeu.JOUEUR_RGE), false);
+        System.out.println(Couleur.formaterTexte("   Joueur    ", Couleur.ROUGE) + "║");
+
+        System.out.print("║" + Couleur.formaterTexte("              ", Couleur.ROUGE));
+        afficherPaquet(prog.getJeu().getMain(Jeu.JOUEUR_RGE), prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_RGE);
+        System.out.println(Couleur.formaterTexte("   rouge     ", Couleur.ROUGE) + "║");
+
+        System.out.println("║< Annuler        Retour       Aide        Refaire >║");
+        System.out.print("╚═══════════════════════════════════════════════════╝");
     }
 
     private void afficherPaquet(Paquet paquet, boolean estJoueurCourant) {
         for (int i = 0; i < paquet.getTaille(); i++) {
             Carte carte = paquet.getCarte(i);
-            if (estJoueurCourant && prog.getJeu().peutSelectionnerCarte(carte)) {
-                if (carte.getType().equals(Type.ROI))
-                    System.out.print(Couleur.formaterTexte(carte.toString(), 190, 68, 125, "1101"));
-                else if (carte.getType().equals(Type.GAR))
-                    System.out.print(Couleur.formaterTexte(carte.toString(), 149, 169, 177, "1101"));
-                else if (carte.getType().equals(Type.SOR))
-                    System.out.print(Couleur.formaterTexte(carte.toString(), 255, 133, 55, "1101"));
-                else if (carte.getType().equals(Type.FOU))
-                    System.out.print(Couleur.formaterTexte(carte.toString(), 100, 199, 194, "1101"));
-            } else {
-                if (carte.getType().equals(Type.ROI))
-                    System.out.print(Couleur.formaterTexte(carte.toString(), 190, 68, 125, "0001"));
-                else if (carte.getType().equals(Type.GAR))
-                    System.out.print(Couleur.formaterTexte(carte.toString(), 149, 169, 177, "0001"));
-                else if (carte.getType().equals(Type.SOR))
-                    System.out.print(Couleur.formaterTexte(carte.toString(), 255, 133, 55, "0001"));
-                else if (carte.getType().equals(Type.FOU))
-                    System.out.print(Couleur.formaterTexte(carte.toString(), 100, 199, 194, "0001"));
-            }
+            String grasItalique = (estJoueurCourant && prog.getJeu().peutSelectionnerCarte(carte)) ? "11" : "00";
+            if (carte.getType().equals(Type.ROI))
+                System.out.print(Couleur.formaterTexte(carte.toString(), 190, 68, 125, grasItalique + "01"));
+            else if (carte.getType().equals(Type.GAR))
+                System.out.print(Couleur.formaterTexte(carte.toString(), 149, 169, 177, grasItalique + "01"));
+            else if (carte.getType().equals(Type.SOR))
+                System.out.print(Couleur.formaterTexte(carte.toString(), 255, 133, 55, grasItalique + "01"));
+            else if (carte.getType().equals(Type.FOU))
+                System.out.print(Couleur.formaterTexte(carte.toString(), 100, 199, 194, grasItalique + "01"));
             System.out.print(" ");
         }
         for (int i = paquet.getTaille(); i < paquet.getTailleMax(); i++) {
@@ -670,6 +658,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
         Plateau plateau = jeu.getPlateau();
 
         for (int l = 0; l < 4; l++) {
+            System.out.print("║");
             for (int c = Plateau.BORDURE_VRT; c <= Plateau.BORDURE_RGE; c++) {
                 String txt;
                 boolean pionSelectionnable = false;
@@ -695,16 +684,12 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                     txt = "   ";
                 }
 
-                afficherCase(l, c, txt, pionSelectionnable);
+                int[] couleurs = Couleur.obtenirCouleur(c);
+                String grasItalique = pionSelectionnable ? "11" : "00";
+                String souligne = l == 0 ? "1" : "0";
+                System.out.print(Couleur.formaterTexte(txt, couleurs[0], couleurs[1], couleurs[2], grasItalique + souligne + "1"));
             }
-            System.out.println();
+            System.out.println("║");
         }
-    }
-
-    private void afficherCase(int l, int c, String txt, boolean pionSelectionnable) {
-        int[] couleurs = Couleur.obtenirCouleur(c);
-        String gras = pionSelectionnable ? "11" : "00";
-        String souligne = l == 0 ? "1" : "0";
-        System.out.print(Couleur.formaterTexte(txt, couleurs[0], couleurs[1], couleurs[2], gras + souligne + "1"));
     }
 }
