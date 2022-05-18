@@ -520,7 +520,16 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case Jeu.ETAT_CHOIX_CARTE:
             case Jeu.ETAT_CHOIX_PION:
             case Jeu.ETAT_CHOIX_DIRECTION:
-                System.out.println(prog.getJeu().toString());
+                afficherEnteteJeu(prog.getJeu());
+                System.out.print("     Main vert  : ");
+                afficherPaquet(prog.getJeu().getMain(Jeu.JOUEUR_VRT), prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_VRT);
+                System.out.print("                  ");
+                afficherPaquet(prog.getJeu().getSelectionCartes(Jeu.JOUEUR_VRT), false);
+                afficherPlateau(prog.getJeu());
+                System.out.print("                  ");
+                afficherPaquet(prog.getJeu().getSelectionCartes(Jeu.JOUEUR_RGE), false);
+                System.out.print("     Main rouge : ");
+                afficherPaquet(prog.getJeu().getMain(Jeu.JOUEUR_RGE), prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_RGE);
                 break;
             case Jeu.ETAT_FIN_DE_PARTIE:
                 System.out.println(prog.getJeu().toString() + "\n");
@@ -587,5 +596,88 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 break;
         }
         System.out.println("< Precedant       Retour       Suivant >");
+    }
+
+    private void afficherEnteteJeu(Jeu jeu) {
+        String joueurCourant = Jeu.joueurEnTexte(jeu.getJoueurCourant());
+        String couleurJoueur = jeu.getJoueurCourant() == Jeu.JOUEUR_VRT ? Couleur.VERT : Couleur.ROUGE;
+
+        System.out.print("AU TOUR DE : ");
+        System.out.printf("%-12s", Couleur.formaterTexte(joueurCourant.toUpperCase(), couleurJoueur));
+        System.out.printf("%25s\n" , "Pioche : " + jeu.getPioche().getTaille());
+    }
+
+    private void afficherPaquet(Paquet paquet, boolean estJoueurCourant) {
+        for (int i = 0; i < paquet.getTaille(); i++) {
+            Carte carte = paquet.getCarte(i);
+            if (estJoueurCourant && prog.getJeu().peutSelectionnerCarte(carte)) {
+                if (carte.getType().equals(Type.ROI))
+                    System.out.print(Couleur.formaterTexte(carte.toString(), 190, 68, 125, true, false, false, false));
+                else if (carte.getType().equals(Type.GAR))
+                    System.out.print(Couleur.formaterTexte(carte.toString(), 149, 169, 177, true, false, false, false));
+                else if (carte.getType().equals(Type.SOR))
+                    System.out.print(Couleur.formaterTexte(carte.toString(), 255, 133, 55, true, false, false, false));
+                else if (carte.getType().equals(Type.FOU))
+                    System.out.print(Couleur.formaterTexte(carte.toString(), 100, 199, 194, true, false, false, false));
+            } else {
+                if (carte.getType().equals(Type.ROI))
+                    System.out.print(Couleur.formaterTexte(carte.toString(), 190, 68, 125));
+                else if (carte.getType().equals(Type.GAR))
+                    System.out.print(Couleur.formaterTexte(carte.toString(), 149, 169, 177));
+                else if (carte.getType().equals(Type.SOR))
+                    System.out.print(Couleur.formaterTexte(carte.toString(), 255, 133, 55));
+                else if (carte.getType().equals(Type.FOU))
+                    System.out.print(Couleur.formaterTexte(carte.toString(), 100, 199, 194));
+            }
+            System.out.print(" ");
+        }
+        System.out.println();
+    }
+
+    private void afficherPlateau(Jeu jeu) {
+        Plateau plateau = jeu.getPlateau();
+
+        for (int l = 0; l < 4; l++) {
+            for (int c = Plateau.BORDURE_VRT; c <= Plateau.BORDURE_RGE; c++) {
+                String txt;
+                boolean pionSelectionnable = false;
+
+                if (l == 0 && c == plateau.getPositionCouronne()) {
+                    txt = plateau.getFaceCouronne() == Plateau.FACE_GRD_CRN ? "C " : "c ";
+                } else if (l == 1 && c == plateau.getPositionPion(Pion.SOR)) {
+                    txt = Pion.SOR + " ";
+                    pionSelectionnable = jeu.peutSelectionnerPion(Pion.SOR);
+                } else if (l == 2 && c == plateau.getPositionPion(Pion.GAR_VRT)) {
+                    txt = Pion.GAR_VRT.toString();
+                    pionSelectionnable = jeu.peutSelectionnerPion(Pion.GAR_VRT);
+                } else if (l == 2 && c == plateau.getPositionPion(Pion.ROI)) {
+                    txt = Pion.ROI + " ";
+                    pionSelectionnable = jeu.peutSelectionnerPion(Pion.ROI);
+                } else if (l == 2 && c == plateau.getPositionPion(Pion.GAR_RGE)) {
+                    txt = Pion.GAR_RGE.toString();
+                    pionSelectionnable = jeu.peutSelectionnerPion(Pion.GAR_RGE);
+                } else if (l == 3 && c == plateau.getPositionPion(Pion.FOU)) {
+                    txt = Pion.FOU + " ";
+                    pionSelectionnable = jeu.peutSelectionnerPion(Pion.FOU);
+                } else {
+                    txt = "  ";
+                }
+
+                afficherCase(c, txt, pionSelectionnable);
+            }
+            System.out.println();
+        }
+    }
+
+    private void afficherCase(int c, String txt, boolean pionSelectionnable) {
+        int[] couleurs = Couleur.obtenirCouleur(c);
+
+        if (txt.equals("  "))
+            System.out.print(Couleur.formaterTexte(txt, Couleur.NOIR, couleurs[0], couleurs[1], couleurs[2], false, false, false, false));
+        else
+            System.out.print(Couleur.formaterTexte(txt, 100, 100, 100, couleurs[0], couleurs[1], couleurs[2], pionSelectionnable, false, false, true));
+
+        if (c != Plateau.BORDURE_RGE)
+            System.out.print(" ");
     }
 }

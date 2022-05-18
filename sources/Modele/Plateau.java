@@ -200,34 +200,31 @@ public class Plateau implements Cloneable, Serializable {
 
     @Override
     public String toString() {
-        StringBuilder txt = new StringBuilder();
+        String txt = "";
 
         for (int l = 0; l < 4; l++) {
             for (int c = BORDURE_VRT; c <= BORDURE_RGE; c++) {
                 if (l == 0 && c == getPositionCouronne())
-                    if (faceCouronne == FACE_GRD_CRN)
-                        txt.append("C ");
-                    else
-                        txt.append("c ");
+                    txt += faceCouronne == FACE_GRD_CRN ? "C " : "c ";
                 else if (l == 1 && c == getPositionPion(Pion.SOR))
-                    txt.append(Pion.SOR).append(" ");
+                    txt += Pion.SOR + " ";
                 else if (l == 2 && c == getPositionPion(Pion.GAR_VRT))
-                    txt.append(Pion.GAR_VRT);
+                    txt += Pion.GAR_VRT;
                 else if (l == 2 && c == getPositionPion(Pion.ROI))
-                    txt.append(Pion.ROI).append(" ");
+                    txt += Pion.ROI + " ";
                 else if (l == 2 && c == getPositionPion(Pion.GAR_RGE))
-                    txt.append(Pion.GAR_RGE);
+                    txt += Pion.GAR_RGE;
                 else if (l == 3 && c == getPositionPion(Pion.FOU))
-                    txt.append(Pion.FOU).append(" ");
+                    txt += Pion.FOU + " ";
                 else
-                    txt.append("__");
+                    txt += "  ";
                 if (c != BORDURE_RGE)
-                    txt.append(" ");
+                    txt += " ";
             }
             if (l != 3)
-                txt.append("\n");
+                txt += "\n";
         }
 
-        return txt.toString();
+        return txt;
     }
 }

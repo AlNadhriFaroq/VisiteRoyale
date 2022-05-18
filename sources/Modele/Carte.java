@@ -1,5 +1,7 @@
 package Modele;
 
+import Vue.Couleur;
+
 import java.io.Serializable;
 
 public class Carte implements Cloneable, Serializable, Comparable<Carte> {

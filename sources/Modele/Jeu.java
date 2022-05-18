@@ -363,6 +363,9 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         if (etatJeu == ETAT_CHOIX_PION && activationPouvoirSor)
             return plateau.peutUtiliserPouvoirSor(pion) && !pion.getType().equals(Type.FOU) && !pion.getType().equals(Type.SOR);
 
+        if (getSelectionCartes(joueurCourant).estVide())
+            return false;
+
         Carte carte = getSelectionCartes(joueurCourant).getCarte(getSelectionCartes(joueurCourant).getTaille() - 1);
         if (etatJeu == ETAT_CHOIX_DIRECTION) {
             return carte.estDeplacementGar1Plus1() && pion.getType().equals(Type.GAR) &&
@@ -380,6 +383,9 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     }
 
     public boolean peutSelectionnerDirection(int direction) {
+        if (getSelectionCartes(joueurCourant).estVide())
+            return false;
+
         Carte carte = getSelectionCartes(joueurCourant).getCarte(getSelectionCartes(joueurCourant).getTaille() - 1);
 
         if (activationPouvoirFou) {
