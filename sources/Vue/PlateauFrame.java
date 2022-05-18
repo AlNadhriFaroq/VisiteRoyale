@@ -2,6 +2,10 @@ package Vue;
 
 import Modele.Jeu;
 import Modele.Paquet;
+import Vue.Boutons.BoutonFInTour;
+import Vue.Boutons.BoutonPouvoir;
+import Vue.Boutons.BoutonPouvoirFou;
+import Vue.Boutons.BoutonPouvoirSorcier;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,6 +33,8 @@ public class PlateauFrame extends JComponent {
 
     Terrain terrain;
 
+    List<BoutonPouvoir> boutons;
+
 
     int heigth, width, carteH, carteW, TerrainH, TerrainW;
     private static int OFFSET = 20;
@@ -43,6 +49,7 @@ public class PlateauFrame extends JComponent {
         this.joueesB = new ArrayList<CarteVue>();
         this.joueesA = new ArrayList<CarteVue>();
         this.defausse = new ArrayList<CarteVue>();
+        this.boutons = new ArrayList<BoutonPouvoir>();
 
 
         this.frame = new JFrame();
@@ -50,6 +57,7 @@ public class PlateauFrame extends JComponent {
         this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.frame.setMinimumSize(new Dimension(LARGEURFENETRE, HAUTEURFENETRE));
         this.frame.setSize(this.screenSize);
+        this.frame.setSize(1600,900);
         //this.frame.getContentPane().setBackground(new Color(0,0,255));
         this.frame.setVisible(true);
 
@@ -73,6 +81,7 @@ public class PlateauFrame extends JComponent {
         this.GenererMains();
         this.afficheMain();
         this.afficheTerrain();
+        this.genererBoutons();
 
     }
 
@@ -86,6 +95,7 @@ public class PlateauFrame extends JComponent {
 
         this.afficheMain();
         this.afficheTerrain();
+        this.afficherBoutons();
         //this.frame.getContentPane().setBackground(new Color(0,255,255));
         super.paintComponent(g);
 
@@ -268,7 +278,7 @@ public class PlateauFrame extends JComponent {
 
     public void afficheTerrain(){
 
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension dimension = this.frame.getSize();
 
         int w = carteW*10;
         int h = carteH+ carteH/2;
@@ -286,5 +296,53 @@ public class PlateauFrame extends JComponent {
         terrain.repaint();
     }
 
+    public void genererBoutons(){
+        int BoutonLargeur = this.carteW/2;
+        int BoutonHauteur = BoutonLargeur;
+        int x= this.terrain.getX() + this.terrain.getWidth() + BoutonLargeur;
+        int y= this.terrain.getY() + BoutonHauteur ;
+
+        BoutonPouvoirFou pouvoirFou = new BoutonPouvoirFou(this.jeu);
+        BoutonPouvoirSorcier pouvoirSorcier = new BoutonPouvoirSorcier(this.jeu);
+        BoutonFInTour fInTour = new BoutonFInTour(this.jeu);
+
+        pouvoirFou.setSize(BoutonLargeur, BoutonHauteur);
+        pouvoirFou.setLocation(x,y);
+        pouvoirFou.setVisible(true);
+
+
+        pouvoirSorcier.setSize(BoutonLargeur, BoutonHauteur);
+        y = this.terrain.getY() + this.terrain.getHeight() - (BoutonHauteur*2);
+        pouvoirSorcier.setLocation(x,y);
+        pouvoirSorcier.setVisible(true);
+
+        fInTour.setSize( (BoutonLargeur*2) + (BoutonLargeur/2), BoutonHauteur + (BoutonHauteur/2));
+        x = this.width - (fInTour.getWidth()*2);
+        y = this.heigth - this.carteH - fInTour.getHeight();
+        fInTour.setLocation(x,y);
+        fInTour.setVisible(true);
+
+        this.boutons.add(pouvoirFou);
+        this.boutons.add(pouvoirSorcier);
+        this.boutons.add(fInTour);
+
+        ajoutBoutons();
+
+    }
+
+    public void ajoutBoutons(){
+        int taille = this.boutons.size();
+        for (int i=0; i<taille; i++){
+            this.frame.add(this.boutons.get(i));
+        }
+    }
+
+    public void afficherBoutons(){
+        int taille = this.boutons.size();
+        for (int i=0; i< taille; i++){
+            this.boutons.get(i).setVisible(true);
+            this.boutons.get(i).setLocation(this.boutons.get(i).getLocation());
+        }
+    }
 
 }

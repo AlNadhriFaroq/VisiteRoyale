@@ -12,6 +12,7 @@ public class BoutonPouvoirSorcier extends BoutonPouvoir {
 
     @Override
     void action() {
+        System.out.println("POUVOIR SORCIER");
 
     }
 
