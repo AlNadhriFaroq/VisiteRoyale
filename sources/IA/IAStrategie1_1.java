@@ -36,12 +36,12 @@ public class IAStrategie1_1 extends IA {
 
     @Override
     public Coup calculerCoup() {
+        joueurCourant = jeu.getJoueurCourant();
         pionsSurFontaine = pionsSurFontaine();
         pionsChateauAdverse = pionDansChateau(joueurCourant);
         pionsDucheAdverse = pionsDansDuche(joueurCourant);
         pionsChateau = pionDansChateau(1 - joueurCourant);
         pionsDuche = pionsDansDuche(1 - joueurCourant);
-        joueurCourant = jeu.getJoueurCourant();
         posRoi = jeu.getPlateau().getPositionPion(Pion.ROI);
         posGardeVert = jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
         posGardeRouge = jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
@@ -52,10 +52,10 @@ public class IAStrategie1_1 extends IA {
         nbSor = jeu.getMain(joueurCourant).getNombreTypeCarte(Type.SOR);
         nbRoi = jeu.getMain(joueurCourant).getNombreTypeCarte(Type.ROI);
         nbGarde = jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR);
-        System.out.println("pionsduche " + pionsDuche);
+       /* System.out.println("pionsduche " + pionsDuche);
         System.out.println("pionsduchAdverse " + pionsDucheAdverse);
         System.out.println("pionschateau " + pionsChateau);
-        System.out.println("pionschateau adverse " + pionsChateauAdverse);
+        System.out.println("pionschateau adverse " + pionsChateauAdverse);*/
         Coup coup;
         List<Coup> lc = jeu.calculerListeCoup();
         if (lc.size() == 1) {
