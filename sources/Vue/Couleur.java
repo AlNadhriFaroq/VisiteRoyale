@@ -10,36 +10,36 @@ public class Couleur {
     public static final String CYAN = "6";
     public static final String GRIS = "7";
 
-    public static String formaterTexte(String texte, int tR, int tV, int tB, int fR, int fV, int fB, boolean gras, boolean souligne, boolean italique, boolean encercle) {
+    public static String formaterTexte(String texte, int tR, int tV, int tB, int fR, int fV, int fB, String format) {
         String txt = "\033[0;";
-        txt += formater(gras, souligne, italique, encercle);
+        txt += formater(format);
         txt += "3" + colorer(tR, tV, tB);
         txt += ";4" + colorer(fR, fV, fB);
         txt += "m" + texte + "\033[0m";
         return txt;
     }
 
-    public static String formaterTexte(String texte, String couleurTexte, int fR, int fV, int fB, boolean gras, boolean souligne, boolean italique, boolean encercle) {
+    public static String formaterTexte(String texte, String couleurTexte, int fR, int fV, int fB, String format) {
         String txt = "\033[0;";
-        txt += formater(gras, souligne, italique, encercle);
+        txt += formater(format);
         txt += "3" + couleurTexte;
         txt += ";4" + colorer(fR, fV, fB);
         txt += "m" + texte + "\033[0m";
         return txt;
     }
 
-    public static String formaterTexte(String texte, int tR, int tV, int tB, String couleurFond, boolean gras, boolean souligne, boolean italique, boolean encercle) {
+    public static String formaterTexte(String texte, int tR, int tV, int tB, String couleurFond, String format) {
         String txt = "\033[0;";
-        txt += formater(gras, souligne, italique, encercle);
+        txt += formater(format);
         txt += "3" + colorer(tR, tV, tB);
         txt += ";4" + couleurFond;
         txt += "m" + texte + "\033[0m";
         return txt;
     }
 
-    public static String formaterTexte(String texte, String couleurTexte, String couleurFond, boolean gras, boolean souligne, boolean italique, boolean encercle) {
+    public static String formaterTexte(String texte, String couleurTexte, String couleurFond, String format) {
         String txt = "\033[0;";
-        txt += formater(gras, souligne, italique, encercle);
+        txt += formater(format);
         txt += "3" + couleurTexte;
         txt += ";4" + couleurFond;
         txt += "m" + texte + "\033[0m";
@@ -62,33 +62,17 @@ public class Couleur {
         return txt;
     }
 
-    public static String formaterTexte(String texte, int tR, int tV, int tB, String couleurFond) {
+    public static String formaterTexte(String texte, int tR, int tV, int tB, String format) {
         String txt = "\033[0;";
-        txt += "3" + colorer(tR, tV, tB);
-        txt += ";4" + couleurFond;
-        txt += "m" + texte + "\033[0m";
-        return txt;
-    }
-
-    public static String formaterTexte(String texte, String couleurTexte, String couleurFond) {
-        String txt = "\033[0;";
-        txt += "3" + couleurTexte;
-        txt += ";4" + couleurFond;
-        txt += "m" + texte + "\033[0m";
-        return txt;
-    }
-
-    public static String formaterTexte(String texte, int tR, int tV, int tB, boolean gras, boolean souligne, boolean italique, boolean encercle) {
-        String txt = "\033[0;";
-        txt += formater(gras, souligne, italique, encercle);
+        txt += formater(format);
         txt += "3" + colorer(tR, tV, tB);
         txt += "m" + texte + "\033[0m";
         return txt;
     }
 
-    public static String formaterTexte(String texte, String couleurTexte, boolean gras, boolean souligne, boolean italique, boolean encercle) {
+    public static String formaterTexte(String texte, String couleurTexte, String format) {
         String txt = "\033[0;";
-        txt += formater(gras, souligne, italique, encercle);
+        txt += formater(format);
         txt += "3" + couleurTexte;
         txt += "m" + texte + "\033[0m";
         return txt;
@@ -112,15 +96,17 @@ public class Couleur {
         return "8;2;" + R + ";" + V + ";" + B;
     }
 
-    private static String formater(boolean gras, boolean souligne, boolean italique, boolean encercle) {
+    private static String formater(String format) {
         String txt = "";
-        if (gras)
+        if (format.length() >= 1 && format.charAt(0) == '1')
             txt += "1;";
-        if (italique)
+        if (format.length() >= 2 && format.charAt(1) == '1')
             txt += "3;";
-        if (souligne)
+        if (format.length() >= 3 && format.charAt(2) == '1')
             txt += "4;";
-        if (encercle)
+        if (format.length() >= 4 && format.charAt(3) == '1')
+            txt += "7;";
+        if (format.length() >= 5 && format.charAt(4) == '1')
             txt += "52;";
         return txt;
     }
