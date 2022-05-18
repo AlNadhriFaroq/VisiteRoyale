@@ -12,6 +12,7 @@ import java.util.HashMap;
 public class CarteVue extends JPanel implements MouseInputListener {
     private static final HashMap<String, BufferedImage> images = new HashMap<>();
     private static String path;
+    private final PlateauFrame frame;
     private Carte carte;
     private Boolean dos;
     private Boolean jouable;
@@ -20,7 +21,8 @@ public class CarteVue extends JPanel implements MouseInputListener {
     private Image imDos;
     private static String Mypath = "/Images/Cartes/";
 
-    public CarteVue() {
+    public CarteVue(PlateauFrame f) {
+        this.frame = f;
         this.dos = false;
         this.jouable = false;
         this.dragged = false;
@@ -122,6 +124,15 @@ public class CarteVue extends JPanel implements MouseInputListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        setFocusable(true);
+        this.requestFocus();
+        this.dragged = true;
+        Point p1 = e.getLocationOnScreen();
+        Point p2 = this.frame.getLocationOnScreen();
+        Point p = new Point(p1.x - p2.x, p1.y-p2.y);
+        this.setLocation(p.x - (getWidth() / 2), p.y - (getHeight() / 2));
+        this.setVisible(true);
+        this.repaint();
 
     }
 

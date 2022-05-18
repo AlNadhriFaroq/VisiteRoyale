@@ -1,6 +1,7 @@
 package Vue;
 
 import Modele.Jeu;
+import Modele.Paquet;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -65,8 +66,11 @@ public class PlateauFrame extends JComponent {
         this.setVisible(true);
 
         this.genererDeck();
+        /*
         this.CreerMain(false);
         this.CreerMain(true);
+         */
+        this.GenererMains();
         this.afficheMain();
         this.afficheTerrain();
 
@@ -95,7 +99,7 @@ public class PlateauFrame extends JComponent {
         int y =0 ;
 
         for (int i=0; i<taille; i++){
-            CarteVue carteVue = new CarteVue();
+            CarteVue carteVue = new CarteVue(this);
 
             carteVue.setCarte(this.jeu.getPioche().getCarte(i));
             carteVue.setSize(this.frame.getHeight()/10,this.frame.getWidth()/10);
@@ -161,9 +165,33 @@ public class PlateauFrame extends JComponent {
         }
     }
 
-    public void CreerMain(boolean j){
-        for (int i=0; i<8; i++){
-            this.piocher(1,j);
+    public void GenererMains(){
+        Paquet main = this.jeu.getMain(this.jeu.JOUEUR_RGE);
+        int taille = main.getTaille();
+        int x =0; int y = 0;
+
+
+        for (int i=0; i<taille; i++){
+            CarteVue carteVue = new CarteVue(this);
+            carteVue.setCarte(main.getCarte(i));
+            carteVue.setSize(this.frame.getHeight()/10,this.frame.getWidth()/10);
+            carteVue.setVisible(true);
+            carteVue.setLocation(x,y);
+            this.mainA.add(carteVue);
+            this.frame.add(carteVue);
+        }
+
+        main = this.jeu.getMain(this.jeu.JOUEUR_VRT);
+        taille = main.getTaille();
+
+        for (int i=0; i<taille; i++){
+            CarteVue carteVue = new CarteVue(this);
+            carteVue.setCarte(main.getCarte(i));
+            carteVue.setSize(this.frame.getHeight()/10,this.frame.getWidth()/10);
+            carteVue.setVisible(true);
+            carteVue.setLocation(x,y);
+            this.mainB.add(carteVue);
+            this.frame.add(carteVue);
         }
     }
 
