@@ -179,7 +179,7 @@ public class IAStrategie1_1 extends IA {
                             coup = choisirCarte(lc, Type.GAR);
                         }
                     } else if ((pionsDucheAdverse & gardeVert) == gardeVert && joueurCourant == Jeu.JOUEUR_RGE && (jeu.getTypeCourant().equals(Type.GAR) || jeu.getTypeCourant().equals(Type.IND))) { // si garde vert dans chateau
-                        if (jeu.getMain(joueurCourant).contientCarte(Carte.GC) && (posGardeVert + 4) <= posRoi &&  (pionsChateau & gardeRouge) != gardeRouge) {
+                        if (jeu.getMain(joueurCourant).contientCarte(Carte.GC) && (posGardeVert + 4) >= posRoi &&  (pionsChateau & gardeRouge) != gardeRouge) {
                             System.out.println("Choix garde centre duche");
                             for (Coup c : lc) {
                                 if (c.getCarte() != null && c.getCarte().estDeplacementGarCentre()) {
@@ -883,7 +883,6 @@ public class IAStrategie1_1 extends IA {
                 System.out.println("pas de coup gagnant Roi");
         }
 
-
         int gagnantCouronne = coupGagnantCouronne();
         switch (gagnantCouronne){
             case 8: //sorcier
@@ -903,7 +902,7 @@ public class IAStrategie1_1 extends IA {
                 System.out.println("pas de coup gagnant couronne");
         }
 
-        if(jeu.getPlateau().getFaceCouronne()) {
+        if(jeu.getPlateau().getFaceCouronne() == Plateau.FACE_PTT_CRN) {
             int gagnantPioche = coupGagnantFinPioche();
             switch (gagnantPioche) {
                 case 1:
@@ -966,6 +965,7 @@ public class IAStrategie1_1 extends IA {
 
     private int coupGagnantCouronne(){
         int nbPieceChateau = 0;
+        System.out.println("essaie de trouver coup gagnant couronne");
         if(((gardeRouge & pionsDuche) == gardeRouge || (gardeRouge & pionsChateau) == gardeRouge) && ((gardeVert & pionsDuche) == gardeVert || (gardeVert & pionsChateau) == gardeVert ) && (roi & pionsDuche) == roi){
             System.out.println("cour dans duche");
             nbPieceChateau ++;
@@ -983,6 +983,7 @@ public class IAStrategie1_1 extends IA {
             nbPieceChateau ++;
         }
         if(joueurCourant == Jeu.JOUEUR_VRT){
+            System.out.println("joueur vert dans coup gagnant couronne");
             if((gardeVert & pionsChateau) == gardeVert){
                 nbPieceChateau ++;
                 gv = true;
@@ -990,19 +991,23 @@ public class IAStrategie1_1 extends IA {
             if(jeu.getPlateau().getPositionCouronne() - nbPieceChateau <= Plateau.CHATEAU_VRT){
                 return -1;
             }
-            else if(jeu.getPlateau().getPositionCouronne() - nbPieceChateau + 1 <= Plateau.CHATEAU_VRT){
+            else if(jeu.getPlateau().getPositionCouronne() - (nbPieceChateau + 1) <= Plateau.CHATEAU_VRT){
+                System.out.println("si on deplace un pion on gagne a la couronne");
                 if(!s) {
                     if (peutMettrePionDansChateau(Pion.SOR, Plateau.DIRECTION_VRT)) {
+                        System.out.println("sorcier peut etre mis dans chateau vert");
                         return sorcier;
                     }
                 }
                 if(!f) {
                     if(peutMettrePionDansChateau(Pion.FOU, Plateau.DIRECTION_VRT)){
+                        System.out.println("fou peut etre mis dans chateau vert");
                         return fou;
                     }
                 }
                 if(!gv){
                     if(peutMettrePionDansChateau(Pion.GAR_VRT, Plateau.DIRECTION_VRT)){
+                        System.out.println("garde vert peut etre mis dans chateau vert");
                         return gardeVert;
                     }
                 }
@@ -1019,16 +1024,19 @@ public class IAStrategie1_1 extends IA {
             else if(jeu.getPlateau().getPositionCouronne() - nbPieceChateau + 1 >= Plateau.CHATEAU_RGE){
                 if(!s){
                     if(peutMettrePionDansChateau(Pion.SOR, Plateau.DIRECTION_RGE)){
+                        System.out.println("sorcier peut etre mis dans chateau rouge");
                         return sorcier;
                     }
                 }
                 if(!f){
                     if(peutMettrePionDansChateau(Pion.FOU, Plateau.DIRECTION_RGE)){
+                        System.out.println("fou peut etre mis dans chateau rouge");
                         return fou;
                     }
                 }
                 if(!gr){
                     if(peutMettrePionDansChateau(Pion.GAR_RGE, Plateau.DIRECTION_RGE)){
+                        System.out.println("garde vert peut etre mis dans chateau rouge");
                         return gardeRouge;
                     }
                 }
@@ -1039,7 +1047,7 @@ public class IAStrategie1_1 extends IA {
 
     private int coupGagnantFinPioche(){
         int max;
-        if(jeu.getPioche().getTaille() < (max = Math.max(nbFou, Math.max(nbGarde, Math.max(nbRoi, nbSor))))){
+        if(jeu.getPioche().getTaille() <= (max = Math.max(nbFou, Math.max(nbGarde, Math.max(nbRoi, nbSor))))){
             if(nbFou == max)
                 return fou;
             if(nbRoi == max)
@@ -1055,25 +1063,38 @@ public class IAStrategie1_1 extends IA {
     private boolean peutMettrePionDansChateau(Pion pion, int direction){
         switch(pion.toString()){
             case "F":
-                return deplacementDansChateau(Type.FOU, direction);
+                return deplacementDansChateau(Type.FOU, direction, Pion.FOU);
             case "S":
-                return deplacementDansChateau(Type.SOR, direction);
+                return deplacementDansChateau(Type.SOR, direction, Pion.SOR);
             case "GR":
+                return deplacementDansChateau(Type.GAR, direction, Pion.GAR_RGE);
             case "GV":
-                return deplacementDansChateau(Type.GAR, direction);
+                return deplacementDansChateau(Type.GAR, direction, Pion.GAR_VRT);
         }
         return false;
     }
 
-    private boolean deplacementDansChateau(Type type, int direction){
+    private boolean deplacementDansChateau(Type type, int direction, Pion pion){
+        int deplacement = 0;
         for(int i = 0; i < tailleMain; i++){
-            if(jeu.getMain(joueurCourant).getCarte(i).getType().equals(type)){
-                if((jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) <= Plateau.CHATEAU_VRT ||
-                   (jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) <= Plateau.CHATEAU_RGE ||
-                   (jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) >= Plateau.BORDURE_VRT ||
-                   (jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) >= Plateau.BORDURE_RGE){
+            if((jeu.getMain(joueurCourant).getCarte(i).getDeplacement() != 3 && type.equals(Type.GAR) || jeu.getMain(joueurCourant).getCarte(i).getDeplacement() != 6 && type.equals(Type.FOU)) && jeu.getMain(joueurCourant).getCarte(i).getType().equals(type)){
+                if((jeu.getPlateau().getPositionPion(pion) + jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) <= Plateau.CHATEAU_VRT ||
+                   (jeu.getPlateau().getPositionPion(pion) + jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) <= Plateau.CHATEAU_RGE ||
+                   (jeu.getPlateau().getPositionPion(pion) + jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) >= Plateau.BORDURE_VRT ||
+                   (jeu.getPlateau().getPositionPion(pion) + jeu.getMain(joueurCourant).getCarte(i).getDeplacement() * direction) >= Plateau.BORDURE_RGE){
+                    System.out.println("deplacement dans chateau possible");
                     return true;
                 }
+                else{
+                    deplacement += jeu.getMain(joueurCourant).getCarte(i).getDeplacement();
+                }
+
+            }
+            else if((jeu.getPlateau().getPositionPion(pion) + deplacement * direction) <= Plateau.CHATEAU_VRT ||
+                    (jeu.getPlateau().getPositionPion(pion) + deplacement * direction) <= Plateau.CHATEAU_RGE ||
+                    (jeu.getPlateau().getPositionPion(pion) + deplacement * direction) >= Plateau.BORDURE_VRT ||
+                    (jeu.getPlateau().getPositionPion(pion) + deplacement * direction) >= Plateau.BORDURE_RGE){
+                return true;
             }
         }
         return  false;
