@@ -150,6 +150,15 @@ public class ControleurMediateur {
         prog.changerEtat(Programme.ETAT_MENU_OPTIONS);
     }
 
+    public void changerVolume(int changement ){
+        if(changement == -2)
+            audio.diminuerVolume();
+        else if (changement == -1)
+            audio.augmenterVolume();
+        else
+            audio.setVolume(changement);
+    }
+
     public void ouvrirTutoriel() {
         prog.changerEtat(Programme.ETAT_TUTORIEL);
     }

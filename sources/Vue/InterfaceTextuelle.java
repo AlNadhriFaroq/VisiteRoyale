@@ -197,6 +197,18 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     void interpreterCommandeMenuOptions(String cmd) {
         switch (cmd) {
             case "1":
+                ctrl.changerVolume(0);
+                System.out.print("Commande > ");
+                break;
+            case "2":
+                ctrl.changerVolume(-1);
+                System.out.print("Commande > ");
+                break;
+            case "3":
+                ctrl.changerVolume(-2);
+                System.out.print("Commande > ");
+                break;
+            case "4":
             case "retour":
                 ctrl.retourMenuPrecedant();
                 break;
@@ -240,6 +252,13 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case "maingauche":
             case "maindroite":
                 ctrl.definirJoueurQuiCommence();
+                break;
+            case "aide":
+            case "help":
+                System.out.println("G / Gauche : Choisir la main de gauche.");
+                System.out.println("D / Droite : Choisir la main de droite.");
+                System.out.println("Pause      : Ouvrir le menu du jeu.");
+                System.out.print("\nCommande > ");
                 break;
             case "pause":
                 ctrl.ouvrirMenuJeu();
@@ -295,6 +314,9 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("Fou      : Activer le pouvoir du Fou, déplacant un pion avec les cartes Fou.");
             if (jeu.peutFinirTour())
                 System.out.println("Fin      : Finir son tour.");
+            System.out.println("Annuler  : Annuler le dernier coup joué.");
+            System.out.println("Refaire  : Refaire le dernier coup joué.");
+            System.out.println("Pause    : Ouvrir le menu du jeu.");
             System.out.print("\nCommande > ");
         } else if (cmd.equals("pause")) {
             ctrl.ouvrirMenuJeu();
@@ -328,6 +350,9 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("GR       : Selectionner le pion Garde qui est du côté de joueur rouge.");
             if (jeu.peutSelectionnerPion(Pion.SOR))
                 System.out.println("S        : Selectionner le pion Sorcier.");
+            System.out.println("Annuler  : Annuler le dernier coup joué.");
+            System.out.println("Refaire  : Refaire le dernier coup joué.");
+            System.out.println("Pause    : Ouvrir le menu du jeu.");
             System.out.print("\nCommande > ");
         } else if (cmd.equals("pause")) {
             ctrl.ouvrirMenuJeu();
@@ -371,6 +396,9 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("V        : Sélectionner la direction vers le joueur vert, vers la gauche.");
             if (jeu.peutSelectionnerDirection(Plateau.DIRECTION_RGE))
                 System.out.println("R        : Sélectionner la direction vers le joueur rouge, vers la droite.");
+            System.out.println("Annuler  : Annuler le dernier coup joué.");
+            System.out.println("Refaire  : Refaire le dernier coup joué.");
+            System.out.println("Pause    : Ourvrir le menu du jeu.");
             System.out.print("\nCommande > ");
         } else if (cmd.equals("pause")) {
             ctrl.ouvrirMenuJeu();
@@ -429,6 +457,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     @Override
     public void mettreAJour() {
         jeu = prog.getJeu();
+        System.out.println();
         afficherProgramme();
         if (prog.getEtat() != Programme.ETAT_ACCUEIL && prog.getEtat() != Programme.ETAT_FIN_PROGRAMME)
             System.out.print("\nCommande > ");
@@ -550,8 +579,10 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
     private void afficherOptions() {
         System.out.println("OPTIONS");
-        System.out.println("Pas d'option pour le moment...");
-        System.out.println("1. Retour");
+        System.out.println("1. Demarrer / Arreter la musique");
+        System.out.println("2. Augmenter le volume");
+        System.out.println("3. Diminuer le volume");
+        System.out.println("4. Retour");
     }
 
     private void afficherTutoriel() {
