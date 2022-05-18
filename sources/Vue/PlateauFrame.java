@@ -2,10 +2,7 @@ package Vue;
 
 import Modele.Jeu;
 import Modele.Paquet;
-import Vue.Boutons.BoutonFInTour;
-import Vue.Boutons.BoutonPouvoir;
-import Vue.Boutons.BoutonPouvoirFou;
-import Vue.Boutons.BoutonPouvoirSorcier;
+import Vue.Boutons.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -36,7 +33,7 @@ public class PlateauFrame extends JComponent {
     List<BoutonPouvoir> boutons;
 
 
-    int heigth, width, carteH, carteW, TerrainH, TerrainW;
+    int heigth, width, carteH, carteW, joueeH, joueeW;
     private static int OFFSET = 20;
     Dimension screenSize, frameSize;
 
@@ -57,12 +54,7 @@ public class PlateauFrame extends JComponent {
         this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.frame.setMinimumSize(new Dimension(LARGEURFENETRE, HAUTEURFENETRE));
         this.frame.setSize(this.screenSize);
-        this.frame.setSize(1600,900);
-        //this.frame.getContentPane().setBackground(new Color(0,0,255));
         this.frame.setVisible(true);
-
-        //this.frame.setSize(LARGEURFENETRE, HAUTEURFENETRE);
-
 
         this.jeu =jeu;
 
@@ -70,14 +62,14 @@ public class PlateauFrame extends JComponent {
 
         this.heigth = this.frame.getHeight();
         this.width = this.frame.getWidth();
+        this.carteH = this.frame.getHeight()/10;
+        this.carteW = this.frame.getWidth()/10;
+        this.joueeH = this.carteH - (this.carteH/2);
+        this.joueeW = this.carteW - (this.carteW/2);
 
         this.setVisible(true);
 
         this.genererDeck();
-        /*
-        this.CreerMain(false);
-        this.CreerMain(true);
-         */
         this.GenererMains();
         this.afficheMain();
         this.afficheTerrain();
@@ -96,7 +88,6 @@ public class PlateauFrame extends JComponent {
         this.afficheMain();
         this.afficheTerrain();
         this.afficherBoutons();
-        //this.frame.getContentPane().setBackground(new Color(0,255,255));
         super.paintComponent(g);
 
 
@@ -112,7 +103,7 @@ public class PlateauFrame extends JComponent {
             CarteVue carteVue = new CarteVue(this);
 
             carteVue.setCarte(this.jeu.getPioche().getCarte(i));
-            carteVue.setSize(this.frame.getHeight()/10,this.frame.getWidth()/10);
+            carteVue.setSize(this.carteW,this.carteH);
             carteVue.setVisible(true);
             if (i==0){y = ( (this.heigth/2) - (carteVue.getHeight()/2) ) -40;}
             carteVue.setLocation(x,y);
@@ -184,7 +175,7 @@ public class PlateauFrame extends JComponent {
         for (int i=0; i<taille; i++){
             CarteVue carteVue = new CarteVue(this);
             carteVue.setCarte(main.getCarte(i));
-            carteVue.setSize(this.frame.getHeight()/10,this.frame.getWidth()/10);
+            carteVue.setSize(this.carteW,this.carteH);
             carteVue.setVisible(true);
             carteVue.setLocation(x,y);
             this.mainA.add(carteVue);
@@ -197,7 +188,7 @@ public class PlateauFrame extends JComponent {
         for (int i=0; i<taille; i++){
             CarteVue carteVue = new CarteVue(this);
             carteVue.setCarte(main.getCarte(i));
-            carteVue.setSize(this.frame.getHeight()/10,this.frame.getWidth()/10);
+            carteVue.setSize(this.carteW,this.carteH);
             carteVue.setVisible(true);
             carteVue.setLocation(x,y);
             this.mainB.add(carteVue);
@@ -210,8 +201,6 @@ public class PlateauFrame extends JComponent {
 
     void afficheMain(){
         int x, size, taille;
-        this.carteH = this.deck.get(0).getHeight();
-        this.carteW = this.deck.get(0).getWidth();
         int yA = this.heigth-this.carteH-40;
         int yB = 5;
         int yARaised = yA - this.carteH/ 10;
@@ -246,6 +235,7 @@ public class PlateauFrame extends JComponent {
         int x = (2*OFFSET) + c.getWidth();
         int y = ((this.heigth/2) - (c.getHeight()/2)) - 40;
 
+        c.setSize(this.carteW, this.carteH);
         c.setLocation(x, y);
     }
 
@@ -273,7 +263,9 @@ public class PlateauFrame extends JComponent {
         int y = ((this.heigth) - (c.getHeight()*2))- (c.getHeight()/5) - 40;
 
         decaler(this.joueesA);
+        c.setSize(this.joueeW, this.joueeH);
         c.setLocation(x, y);
+
     }
 
     public void afficheTerrain(){
@@ -305,6 +297,8 @@ public class PlateauFrame extends JComponent {
         BoutonPouvoirFou pouvoirFou = new BoutonPouvoirFou(this.jeu);
         BoutonPouvoirSorcier pouvoirSorcier = new BoutonPouvoirSorcier(this.jeu);
         BoutonFInTour fInTour = new BoutonFInTour(this.jeu);
+        BoutonAnnuler annuler = new BoutonAnnuler(this.jeu);
+        BoutonRefaire refaire = new BoutonRefaire(this.jeu);
 
         pouvoirFou.setSize(BoutonLargeur, BoutonHauteur);
         pouvoirFou.setLocation(x,y);
@@ -322,9 +316,21 @@ public class PlateauFrame extends JComponent {
         fInTour.setLocation(x,y);
         fInTour.setVisible(true);
 
+        annuler.setSize(BoutonLargeur, BoutonHauteur);
+        refaire.setSize(BoutonLargeur, BoutonHauteur);
+        y = this.terrain.getY() + this.terrain.getHeight() + annuler.getHeight();
+        x =(this.width/2)-(this.carteW*4) - (annuler.getWidth() + (annuler.getWidth()/2));
+        annuler.setLocation(x,y);
+        annuler.setVisible(true);
+        x =(this.width/2)+(this.carteW*4) + (annuler.getWidth() + (annuler.getWidth()/2));
+        refaire.setLocation(x, y);
+        refaire.setVisible(true);
+
         this.boutons.add(pouvoirFou);
         this.boutons.add(pouvoirSorcier);
         this.boutons.add(fInTour);
+        this.boutons.add(annuler);
+        this.boutons.add(refaire);
 
         ajoutBoutons();
 

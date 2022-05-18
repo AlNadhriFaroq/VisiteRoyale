@@ -5,14 +5,17 @@ import Modele.Jeu;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class BoutonRefaire extends JButton {
+public class BoutonRefaire extends BoutonPouvoir {
     Jeu jeu;
 
-    public BoutonRefaire(Jeu jeu){
-        this.jeu = jeu;
-        //this.addActionListener(ActionEvent -> {action();});
+    public BoutonRefaire(Jeu jeu) {
+        super(jeu);
     }
 
-    // TODO ajouter appel pour refaire
-    //void action();
+    @Override
+    void action() {
+
+    }
+
+
 }

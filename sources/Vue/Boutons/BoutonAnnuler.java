@@ -5,14 +5,15 @@ import Modele.Jeu;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class BoutonAnnuler extends JButton {
+public class BoutonAnnuler extends BoutonPouvoir {
     Jeu jeu;
 
-    public BoutonAnnuler(Jeu jeu){
-        this.jeu = jeu;
-        //this.addActionListener(ActionEvent -> {action();});
+    public BoutonAnnuler(Jeu jeu) {
+        super(jeu);
     }
 
-    // TODO ajouter appel pour annuler
-    //void action();
+    @Override
+    void action() {
+
+    }
 }
