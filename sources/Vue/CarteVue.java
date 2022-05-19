@@ -105,6 +105,13 @@ public class CarteVue extends JPanel implements MouseInputListener {
     public void mouseClicked(MouseEvent e) {
         if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())) {
             ctrl.selectionnerCarte(carte);
+
+            frame.jouerCarte(this);
+            if (jeu.getJoueurCourant() == Jeu.JOUEUR_RGE){
+                frame.PlacerJeuA(this);
+            }else{
+                frame.PlacerJeuB(this);
+            }
             System.out.println(carte.toString() + ", " + e.getYOnScreen());
         }
     }
