@@ -337,6 +337,7 @@ public class IAStrategie1_1 extends IA {
             if(jeu.peutUtiliserPouvoirFou() && !coup.getCarte().getType().equals(Type.GAR)){
                 System.out.println("pouvoir fou sur sorcier ou roi");
                 if(coup.getCarte().getType().equals(Type.ROI)){
+                    System.out.println("carte sorcier");
                     fouSurRoi = true;
                 }
                 else if(coup.getCarte().getType().equals(Type.SOR)){
@@ -363,6 +364,9 @@ public class IAStrategie1_1 extends IA {
                 if(distance + retourneDistanceMax(lc, Type.FOU) > retourneDistanceMax(lc, coup.getCarte().getType())){
                     System.out.println("distance fou :" + distance + retourneDistanceMax(lc, Type.FOU) + " et distance carte : " + retourneDistanceMax(lc, coup.getCarte().getType()));
                     System.out.println("joueur" + Jeu.joueurEnTexte(joueurCourant) + "peut peut activer pouvoir fou !!!!! sur le pion : " + Pion.typeEnPion(coup.getCarte().getType()));
+                    if(coup.getCarte().getType().equals(Type.ROI) && posRoi + distance * jeu.getSelectionDirections(joueurCourant) >= posGardeRouge || coup.getCarte().getType().equals(Type.ROI) && posRoi + distance * jeu.getSelectionDirections(joueurCourant) <= posGardeVert){
+                        return coup;
+                    }
                     for(Coup c : lc){
                         if(c.getTypeCoup() == Coup.ACTIVER_POUVOIR_FOU){
                             return c;
