@@ -69,7 +69,12 @@ public class IAStrategie1_1 extends IA {
         nbGarde = jeu.getMain(joueurCourant).getNombreTypeCarte(Type.GAR);
         Coup coup;
         if (lc.size() == 1) {
-            return lc.get(0);
+            System.out.println("size = 1");
+            if(lc.get(0).getTypeCoup() != Coup.FINIR_TOUR && !jeu.getTypeCourant().equals(Type.IND)){
+                lc.add(new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
+            }
+            else
+                return lc.get(0);
         }
         switch (jeu.getEtatJeu()) {
             case Jeu.ETAT_CHOIX_CARTE:
@@ -119,6 +124,7 @@ public class IAStrategie1_1 extends IA {
         if((!jeu.getTypeCourant().equals(Type.IND) && jeu.getActivationPouvoirFou()) || (jeu.getTypeCourant().equals(Type.IND) && jeu.getActivationPouvoirFou()) ){
             System.out.println("pouvoir fou activee ");
             if(fmPouvoirFou){
+                System.out.println("fm utilise");
                 for(Coup c : lc){
                     if(c.getCarte() != null && c.getCarte().estDeplacementFouCentre()){
                         fmPouvoirFou = false;
@@ -129,12 +135,13 @@ public class IAStrategie1_1 extends IA {
 
             if(jeu.getTypeCourant().equals(Type.IND)){
                 System.out.println("premier coup pouvoir fou");
+                System.out.println("lc : " + lc);
                 return choisirCoupAleaCarte();
             }
 
             List<Coup> tmp= new ArrayList<>();
             int i = 0;
-            int tailleLc = lc.size() - 1;
+            int tailleLc = lc.size();
 
             for (int j = 0; j < tailleLc; j ++ ){
                 if (lc.get(j).getTypeCoup() == Coup.FINIR_TOUR){
@@ -144,20 +151,28 @@ public class IAStrategie1_1 extends IA {
                 }
             }
 
+            System.out.println("taille = " + tailleLc);
             coup = lc.get(i);
 
-            while(i < tailleLc && coup.getCarte().getDeplacement() * jeu.getSelectionDirections(joueurCourant) + jeu.getPlateau().getPositionPion(Pion.typeEnPion(jeu.getTypeCourant())) <= Plateau.BORDURE_RGE &&
-                               coup.getCarte().getDeplacement() * jeu.getSelectionDirections(joueurCourant) + jeu.getPlateau().getPositionPion(Pion.typeEnPion(jeu.getTypeCourant())) >= Plateau.BORDURE_VRT){
-                tmp.add(lc.remove(i));
+            while(i < tailleLc && ((joueurCourant == Jeu.JOUEUR_RGE && coup.getCarte().getDeplacement() + jeu.getPlateau().getPositionPion(Pion.typeEnPion(jeu.getTypeCourant())) <= Plateau.BORDURE_RGE) ||
+                    (-coup.getCarte().getDeplacement() + jeu.getPlateau().getPositionPion(Pion.typeEnPion(jeu.getTypeCourant())) >= Plateau.BORDURE_VRT && joueurCourant == Jeu.JOUEUR_VRT))){
+                System.out.println(-coup.getCarte().getDeplacement() + jeu.getPlateau().getPositionPion(Pion.typeEnPion(jeu.getTypeCourant())));
+                tmp.add(lc.get(i));
                 i++;
+                if(i < tailleLc)
+                    coup = lc.get(i);
             }
-
+            System.out.println("tmp :" + tmp);
             lc = tmp;
 
             coup = choisirCarte(Type.FOU);
 
             if(coup == null){
-                return lc.get(0);
+                for (Coup c : lc){
+                    if(c.getTypeCoup() == Coup.FINIR_TOUR){
+                        return c;
+                    }
+                }
             }
         }
 
@@ -226,6 +241,7 @@ public class IAStrategie1_1 extends IA {
                             if (jeu.peutUtiliserPouvoirFou() && jeu.getMain(joueurCourant).getNombreTypeCarte(Type.FOU) > 0){
                                 for (Coup c : lc) {
                                     if (c.getTypeCoup() == Coup.ACTIVER_POUVOIR_FOU) {
+                                        fouSurSorcier = true;
                                         return c;
                                     }
                                 }
@@ -638,12 +654,15 @@ public class IAStrategie1_1 extends IA {
 
         if(jeu.getActivationPouvoirFou()){
             if(fouSurGardeRouge){
+                System.out.println("fou sur garde rouge");
                 return choixPionPouvoirFou(Pion.GAR_RGE);
             }
             if(fouSurGardeVert){
+                System.out.println("fou sur garde vert");
                 return choixPionPouvoirFou(Pion.GAR_VRT);
             }
             if(fouSurRoi){
+                System.out.println("fou sur roi");
                 return choixPionPouvoirFou(Pion.ROI);
             }
             if(fouSurSorcier){
@@ -1381,7 +1400,7 @@ public class IAStrategie1_1 extends IA {
                         }
                     }
                     lc = tmp;
-                    if((pionsChateau & fou) == fou){
+                    if((pionsChateau & fou) == fou && !jeu.getTypeCourant().equals(Type.IND)){
                         for(Coup c : lc){
                             if(c.getTypeCoup() == Coup.FINIR_TOUR){
                                 return  c;
