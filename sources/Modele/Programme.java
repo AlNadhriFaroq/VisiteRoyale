@@ -76,8 +76,8 @@ public class Programme extends Observable {
 
     public void nouvellePartie(boolean joueurVrtEstIA, boolean joueurRgeEstIA) {
         etat = ETAT_EN_JEU;
-        //jeu.nouvellePartie();
-        jeu.nouvellePartiePersonalise(Jeu.JOUEUR_RGE, 10, 9, 11, 5, 14, 5, Plateau.FACE_PTT_CRN, 35);
+        jeu.nouvellePartie();
+        //jeu.nouvellePartiePersonalise(Jeu.JOUEUR_RGE, 10, 9, 11, 5, 14, 5, Plateau.FACE_PTT_CRN, 35);
         joueursSontIA[Jeu.JOUEUR_VRT] = joueurVrtEstIA;
         joueursSontIA[Jeu.JOUEUR_RGE] = joueurRgeEstIA;
         mettreAJour();
@@ -94,12 +94,20 @@ public class Programme extends Observable {
     }
 
     public void annulerCoup() {
+        int ancienJoueurCourant = jeu.getJoueurCourant();
         jeu.annulerCoup();
+        if (jeu.getJoueurCourant() != ancienJoueurCourant && joueursSontIA[jeu.getJoueurCourant()])
+            while (jeu.getJoueurCourant() != ancienJoueurCourant)
+                jeu.annulerCoup();
         mettreAJour();
     }
 
     public void refaireCoup() {
+        int ancienJoueurCourant = jeu.getJoueurCourant();
         jeu.refaireCoup();
+        if (jeu.getJoueurCourant() != ancienJoueurCourant && joueursSontIA[jeu.getJoueurCourant()])
+            while (jeu.getJoueurCourant() != ancienJoueurCourant)
+                jeu.refaireCoup();
         mettreAJour();
     }
 
@@ -200,6 +208,15 @@ public class Programme extends Observable {
         return sauvegarde < sauvegardes.length;
     }
 
+    public boolean peutAnnuler() {
+        return jeu.peutAnnuler() &&
+                (!joueursSontIA[jeu.getCoupPasse().getJoueur()] ||
+                        (joueursSontIA[jeu.getCoupPasse().getJoueur()] && jeu.getNbTour() > 1));
+    }
+
+    public boolean peutRefaire() {
+        return jeu.peutRefaire();
+    }
 
     @Override
     public String toString() {

@@ -1,6 +1,7 @@
 package Vue;
 
 import Controleur.ControleurMediateur;
+import IA.IA;
 import Modele.*;
 
 import java.util.Scanner;
@@ -197,25 +198,65 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     void interpreterCommandeMenuOptions(String cmd) {
         switch (cmd) {
             case "1":
+            case "*":
+            case "debutant":
+                ctrl.changerDifficulte(Jeu.JOUEUR_VRT, IA.DEBUTANT);
+                System.out.println("Changement du niveau de difficulté à Débutant.");
+                System.out.print("Commande > ");
+                break;
+            case "2":
+            case "**":
+            case "amateur":
+                ctrl.changerDifficulte(Jeu.JOUEUR_VRT, IA.AMATEUR);
+                System.out.println("Changement du niveau de difficulté à Amateur.");
+                System.out.print("Commande > ");
+                break;
+            case "3":
+            case "***":
+            case "inter":
+            case "intermediaire":
+                ctrl.changerDifficulte(Jeu.JOUEUR_VRT, IA.INTERMEDIAIRE);
+                System.out.println("Changement du niveau de difficulté à Intermédiaire.");
+                System.out.print("Commande > ");
+                break;
+            case "4":
+            case "****":
+            case "pro":
+            case "professionnel":
+                ctrl.changerDifficulte(Jeu.JOUEUR_VRT, IA.PROFESSIONNEL);
+                System.out.println("Changement du niveau de difficulté à Professionnel.");
+                System.out.print("Commande > ");
+                break;
+            case "5":
+            case "*****":
+            case "expert":
+                ctrl.changerDifficulte(Jeu.JOUEUR_VRT, IA.EXPERT);
+                System.out.println("Changement du niveau de difficulté à Expert.");
+                System.out.print("Commande > ");
+                break;
+            case "6":
             case "musique":
             case "arreter":
             case "demarrer":
                 ctrl.changerVolume(0);
+                System.out.println("Arrêt/Démarrage de la musique.");
                 System.out.print("Commande > ");
                 break;
-            case "2":
+            case "7":
             case "+":
             case "augmenter":
                 ctrl.changerVolume(-1);
+                System.out.println("Augmentation du volume.");
                 System.out.print("Commande > ");
                 break;
-            case "3":
+            case "8":
             case "-":
             case "diminuer":
                 ctrl.changerVolume(-2);
+                System.out.println("Diminution du volume.");
                 System.out.print("Commande > ");
                 break;
-            case "4":
+            case "9":
             case "menu":
             case "retour":
             case "menuPrecedant":
@@ -282,9 +323,19 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
         } else if (jeu.peutFinirTour() && (cmd.equals("fin") || cmd.equals("fintour"))) {
             ctrl.finirTour();
         } else if (cmd.equals("<") || cmd.equals("annuler")) {
-            ctrl.annuler();
+            if (prog.peutAnnuler()) {
+                ctrl.annuler();
+            } else {
+                System.out.println("Aucun coup annulable.");
+                System.out.print("Commande > ");
+            }
         } else if (cmd.equals(">") || cmd.equals("refaire")) {
-            ctrl.refaire();
+            if (prog.peutRefaire()) {
+                ctrl.refaire();
+            } else {
+                System.out.println("Auncun coup refaisable.");
+                System.out.print("Commande > ");
+            }
         } else if (cmd.equals("aide") || cmd.equals("help")) {
             if (jeu.peutSelectionnerCarte(Carte.R1))
                 System.out.println("R1       : Sélectionner une carte Roi pour déplacer le pion Roi d'une case.");
@@ -339,9 +390,19 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
     void interpreterCommandeChoixPion(String cmd) {
         if (cmd.equals("<") || cmd.equals("annuler")) {
-            ctrl.annuler();
+            if (prog.peutAnnuler()) {
+                ctrl.annuler();
+            } else {
+                System.out.println("Aucun coup annulable.");
+                System.out.print("Commande > ");
+            }
         } else if (cmd.equals(">") || cmd.equals("refaire")) {
-            ctrl.refaire();
+            if (prog.peutRefaire()) {
+                ctrl.refaire();
+            } else {
+                System.out.println("Auncun coup refaisable.");
+                System.out.print("Commande > ");
+            }
         } else if (cmd.equals("aide") || cmd.equals("help")) {
             if (jeu.peutSelectionnerPion(Pion.ROI))
                 System.out.println("R        : Selectionner le pion Roi.");
@@ -380,9 +441,19 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             else
                 System.out.println("Commande non reconnue.");
         } else if (cmd.equals("<") || cmd.equals("annuler")) {
-            ctrl.annuler();
+            if (prog.peutAnnuler()) {
+                ctrl.annuler();
+            } else {
+                System.out.println("Aucun coup annulable.");
+                System.out.print("Commande > ");
+            }
         } else if (cmd.equals(">") || cmd.equals("refaire")) {
-            ctrl.refaire();
+            if (prog.peutRefaire()) {
+                ctrl.refaire();
+            } else {
+                System.out.println("Auncun coup refaisable.");
+                System.out.print("Commande > ");
+            }
         } else if (cmd.equals("aide") || cmd.equals("help")) {
             if (jeu.peutUtiliserPrivilegeRoi())
                 System.out.println("R1       : Sélectionner une carte Roi pour déplacer la Cour d'une case.");
@@ -452,47 +523,48 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     @Override
     public void mettreAJour() {
         jeu = prog.getJeu();
-        System.out.println();
+        if (prog.getEtat() == Programme.ETAT_EN_JEU && prog.getJeu().getEtatJeu() != Jeu.ETAT_CHOIX_JOUEUR && prog.getJeu().peutAnnuler() && prog.getJoueurEstIA(prog.getJeu().getCoupPasse().getJoueur()))
+            System.out.println(prog.getJeu().getCoupPasse().toString());
         afficherProgramme();
         if (prog.getEtat() != Programme.ETAT_ACCUEIL && prog.getEtat() != Programme.ETAT_FIN_PROGRAMME)
-            System.out.print("\nCommande > ");
+            System.out.print("Commande > ");
     }
 
     private void afficherProgramme() {
         switch (prog.getEtat()) {
             case Programme.ETAT_ACCUEIL:
-                System.out.println("Ouverture en cours. Veuillez patienter...");
+                System.out.println("\nOuverture en cours. Veuillez patienter...");
                 break;
             case Programme.ETAT_MENU_PRINCIPAL:
-                System.out.println("VISITE ROYALE");
+                System.out.println("\nVISITE ROYALE");
                 System.out.println("1. Nouvelle partie 1v1");
                 System.out.println("2. Nouvelle partie contre IA");
                 System.out.println("3. Charger une partie");
                 System.out.println("4. Options");
                 System.out.println("5. Tutoriel");
                 System.out.println("6. Crédits");
-                System.out.println("7. Quitter");
+                System.out.println("7. Quitter\n");
                 break;
             case Programme.ETAT_EN_JEU:
                 afficherJeu();
                 break;
             case Programme.ETAT_MENU_JEU:
-                System.out.println("PAUSE");
+                System.out.println("\nPAUSE");
                 System.out.println("1. Reprende la partie");
                 System.out.println("2. Nouvelle partie");
                 System.out.println("3. Sauvegarder la partie");
                 System.out.println("4. Options");
                 System.out.println("5. Tutoriel");
-                System.out.println("6. Retour au menu principal");
+                System.out.println("6. Retour au menu principal\n");
                 break;
             case Programme.ETAT_MENU_SAUVEGARDES:
-                System.out.println("SAUVEGARDES");
+                System.out.println("\nSAUVEGARDES");
                 for (int i = 0; i < prog.getSauvegardes().length; i++)
                     System.out.println((i + 1) + ". " + prog.getSauvegardes()[i]);
                 for (int i = prog.getSauvegardes().length; i < Programme.NB_SAUVEGARDES; i++)
                     System.out.println((i + 1) + ". Sauvegarde vide");
                 System.out.println((Programme.NB_SAUVEGARDES + 1) + ". Retour");
-                System.out.println("Précéder d'un '-' le numéro d'une sauvegarde pour la supprimer.");
+                System.out.println("Précéder d'un '-' le numéro d'une sauvegarde pour la supprimer.\n");
                 break;
             case Programme.ETAT_MENU_OPTIONS:
                 afficherOptions();
@@ -501,7 +573,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 afficherTutoriel();
                 break;
             case Programme.ETAT_CREDITS:
-                System.out.println("Université Grenoble-Alpes");
+                System.out.println("\nUniversité Grenoble-Alpes");
                 System.out.println("Licence Informatique générale 3e année");
                 System.out.println("Programmation et projet logiciel\n");
                 System.out.println("Sous la direction de :");
@@ -512,10 +584,10 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("   Rodolphe Beguin");
                 System.out.println("   Maxime Bouchenoua");
                 System.out.println("   Sacha Isaac--Chassande");
-                System.out.println("   Landry Rolland");
+                System.out.println("   Landry Rolland\n");
                 break;
             case Programme.ETAT_FIN_PROGRAMME:
-                System.out.println("Fermeture en cours...");
+                System.out.println("\nFermeture en cours...\n");
                 break;
             default:
                 throw new RuntimeException("Modele.Programme.toString() : Etat invalide.");
@@ -525,9 +597,9 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     private void afficherJeu() {
         switch (prog.getJeu().getEtatJeu()) {
             case Jeu.ETAT_CHOIX_JOUEUR:
-                System.out.println("Tirage du joueur qui commence.");
+                System.out.println("\nTirage du joueur qui commence.");
                 System.out.println("Main gauche ou main droite ?");
-                System.out.println("< G         Pause         D >");
+                System.out.println("< G         Pause         D >\n");
                 break;
             case Jeu.ETAT_CHOIX_CARTE:
             case Jeu.ETAT_CHOIX_PION:
@@ -546,7 +618,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                     System.out.println("VICTOIRE DE " + Jeu.joueurEnTexte(prog.getJeu().getJoueurGagnant()).toUpperCase() + " !!!\n");
                 System.out.println("FIN DE PARTIE");
                 System.out.println("1. Nouvelle partie");
-                System.out.println("2. Retour au menu principal");
+                System.out.println("2. Retour au menu principal\n");
                 break;
             default:
                 throw new RuntimeException("Modele.Programme.toString() : Etat invalide.");
@@ -554,15 +626,22 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     }
 
     private void afficherOptions() {
-        System.out.println("OPTIONS");
-        System.out.println("1. Démarrer/Arrêter la musique");
-        System.out.println("2. Augmenter le volume");
-        System.out.println("3. Diminuer le volume");
-        System.out.println("4. Retour");
+        System.out.println("\nOPTIONS");
+        System.out.println("Niveau de difficulté :");
+        System.out.println("   1. Débutant             *");
+        System.out.println("   2. Amateur              **");
+        System.out.println("   3. Intermédiaire        ***");
+        System.out.println("   4. Professionnel        ****");
+        System.out.println("   5. Expert               *****");
+        System.out.println("Musique :");
+        System.out.println("   6. Démarrer/Arrêter");
+        System.out.println("   7. Augmenter le volume  +");
+        System.out.println("   8. Diminuer le volume   -");
+        System.out.println("9. Retour\n");
     }
 
     private void afficherTutoriel() {
-        System.out.println("TUTORIEL (page " + prog.getPageTutoriel() + ")");
+        System.out.println("\nTUTORIEL (page " + prog.getPageTutoriel() + ")");
         switch (prog.getPageTutoriel()) {
             case 0:
                 System.out.println("Pas de tutoriel pour le moment... (page 0)");
@@ -601,7 +680,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("Page inexistante.");
                 break;
         }
-        System.out.println("< Precedant       Retour       Suivant >");
+        System.out.println("< Precedant       Retour       Suivant >\n");
     }
 
     private void afficherJeu(Jeu jeu) {
@@ -611,7 +690,9 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
         System.out.println("╔═══════════════════════════════════════════════════╗");
         System.out.print("║AU TOUR DE : ");
         System.out.print(Couleur.formaterTexte(joueurCourant.toUpperCase(), couleurJoueur));
-        System.out.printf("%24s%2d║\n", "Pioche : ", jeu.getPioche().getTaille());
+        System.out.printf("%24s%2d║\n", "Tour : ", jeu.getNbTour());
+
+        System.out.printf("║%49s%2d║\n", "Pioche : ", jeu.getPioche().getTaille());
 
         System.out.print("║" + Couleur.formaterTexte("    Joueur    ", Couleur.VERT));
         afficherPaquet(prog.getJeu().getMain(Jeu.JOUEUR_VRT), prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_VRT);
@@ -632,7 +713,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
         System.out.println(Couleur.formaterTexte("   rouge     ", Couleur.ROUGE) + "║");
 
         System.out.println("║< Annuler        Retour       Aide        Refaire >║");
-        System.out.print("╚═══════════════════════════════════════════════════╝");
+        System.out.println("╚═══════════════════════════════════════════════════╝");
     }
 
     private void afficherPaquet(Paquet paquet, boolean estJoueurCourant) {

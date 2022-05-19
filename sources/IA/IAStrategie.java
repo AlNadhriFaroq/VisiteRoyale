@@ -63,7 +63,6 @@ public class IAStrategie extends IA {
                 throw new RuntimeException("IA.IAMoyenne.calculerCoup() : Etat du jeu invalide.");
 
         }
-        System.out.println(coup.toString());
         return coup;
     }
 

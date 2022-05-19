@@ -103,6 +103,10 @@ public class Paquet implements Cloneable, Serializable {
         Collections.sort(cartes);
     }
 
+    void inverser() {
+        Collections.reverse(cartes);
+    }
+
     void vider() {
         cartes.clear();
     }

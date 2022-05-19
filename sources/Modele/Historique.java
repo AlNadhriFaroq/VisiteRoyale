@@ -7,6 +7,7 @@ import java.util.List;
 public class Historique implements Serializable {
     private List<Coup> passe;
     private List<Coup> futur;
+    private int tour;
 
     Historique() {
         initialiser();
@@ -15,12 +16,27 @@ public class Historique implements Serializable {
     void initialiser() {
         passe = new ArrayList<>();
         futur = new ArrayList<>();
+        tour = 0;
+    }
+
+    public Coup getCoupPasse() {
+        return passe.get(passe.size()-1);
+    }
+
+    public Coup getCoupFutur() {
+        return futur.get(futur.size()-1);
+    }
+
+    public int getNbTour() {
+        return tour;
     }
 
     public void jouerCoup(Coup coup) {
         coup.executer();
         passe.add(coup);
         futur.clear();
+        if (coup.getTypeCoup() == Coup.FINIR_TOUR)
+            tour++;
     }
 
     private Coup transfererCoup(List<Coup> source, List<Coup> dest) {
@@ -32,11 +48,15 @@ public class Historique implements Serializable {
     public void annulerCoup() {
         Coup coup = transfererCoup(passe, futur);
         coup.desexecuter();
+        if (coup.getTypeCoup() == Coup.FINIR_TOUR)
+            tour--;
     }
 
     public void refaireCoup() {
         Coup coup = transfererCoup(futur, passe);
         coup.executer();
+        if (coup.getTypeCoup() == Coup.FINIR_TOUR)
+            tour++;
     }
 
     public boolean peutAnnuler() {

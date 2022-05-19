@@ -16,7 +16,6 @@ public class IAAleatoire extends IA {
     public Coup calculerCoup() {
         List<Coup> coups = jeu.calculerListeCoup();
         Coup coup = coups.get(r.nextInt(coups.size()));
-        System.out.println(coup.toString());
         return coup;
     }
 }

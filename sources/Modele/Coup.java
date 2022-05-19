@@ -53,6 +53,10 @@ public class Coup implements Cloneable, Serializable {
         selectionDirectionsPasse = new int[2];
     }
 
+    public int getJoueur() {
+        return joueur;
+    }
+
     public int getTypeCoup() {
         return typeCoup;
     }
@@ -398,7 +402,7 @@ public class Coup implements Cloneable, Serializable {
         nbCartesAPiocher = jeu.getSelectionCartes(joueur).getTaille();
 
         for (int i = 0; i < nbCartesAPiocher; i++)
-            jeu.getDefausse().inserer(jeu.getSelectionCartes(joueur).extraire(jeu.getSelectionCartes(joueur).getCarte(0)));
+            jeu.getDefausse().inserer(jeu.getSelectionCartes(joueur).extraire(jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1)));
 
         for (int i = 0; i < nbCartesAPiocher; i++) {
             cartesPiochees[i] = jeu.getPioche().extraire();
@@ -516,7 +520,7 @@ public class Coup implements Cloneable, Serializable {
             case ACTIVER_POUVOIR_FOU:
                 return "Fou";
             case FINIR_TOUR:
-                return "Fin tour";
+                return "Fin";
             default:
                 throw new RuntimeException("Modele.Coup.toString() : type de coup invalide.");
         }

@@ -122,13 +122,11 @@ public class ControleurMediateur {
     }
 
     public void annuler() {
-        if (prog.getJeu().peutAnnuler())
-            prog.annulerCoup();
+        prog.annulerCoup();
     }
 
     public void refaire() {
-        if (prog.getJeu().peutRefaire())
-            prog.refaireCoup();
+        prog.refaireCoup();
     }
 
     public void reprendrePartie() {
@@ -150,8 +148,8 @@ public class ControleurMediateur {
         prog.changerEtat(Programme.ETAT_MENU_OPTIONS);
     }
 
-    public void changerVolume(int changement ){
-        if(changement == -2)
+    public void changerVolume(int changement) {
+        if (changement == -2)
             audio.diminuerVolume();
         else if (changement == -1)
             audio.augmenterVolume();
