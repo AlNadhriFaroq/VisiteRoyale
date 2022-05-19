@@ -6,11 +6,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class AdaptateurSouris extends MouseAdapter {
-    JeuGraphique prtGrph;
+    JeuVue jeuVue;
     ControleurMediateur ctrl;
 
-    AdaptateurSouris(JeuGraphique prtGrph, ControleurMediateur ctrl) {
-        this.prtGrph = prtGrph;
+    AdaptateurSouris(JeuVue jeuVue, ControleurMediateur ctrl) {
+        this.jeuVue = jeuVue;
         this.ctrl = ctrl;
     }
 

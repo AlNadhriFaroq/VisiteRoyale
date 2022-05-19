@@ -21,17 +21,17 @@ public class AnimationPanel {
         carteVue.setLocation(this.debut);
     }
 
-    public AnimationPanel(CarteVue c, Point dest)  {
+    public AnimationPanel(CarteVue c, Point dest) {
         this(c, new Point(c.getX(), c.getY()), dest);
     }
 
-    boolean isDone(){
+    boolean isDone() {
         return this.step == 0;
     }
 
-    void EtapeSuivante(){
+    void EtapeSuivante() {
         this.step--;
-        if (isDone()){
+        if (isDone()) {
             this.carteVue.setLocation(this.dest);
         } else {
             this.debut.x += this.stepX;
@@ -41,6 +41,6 @@ public class AnimationPanel {
         this.carteVue.repaint();
     }
 
-    void FinAnimation(){}
-
+    void FinAnimation() {
+    }
 }

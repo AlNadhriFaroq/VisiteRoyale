@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class CarteVue extends JPanel implements MouseInputListener {
     private static final HashMap<String, BufferedImage> images = new HashMap<>();
     private static String path;
-    private final PlateauFrame frame;
+    private final JeuVue frame;
     private Carte carte;
     private Boolean dos;
     private Boolean jouable;
@@ -21,7 +21,7 @@ public class CarteVue extends JPanel implements MouseInputListener {
     private Image imDos;
     private static String Mypath = "/Images/Cartes/";
 
-    public CarteVue(PlateauFrame f) {
+    public CarteVue(JeuVue f) {
         this.frame = f;
         this.dos = false;
         this.jouable = false;
@@ -32,7 +32,6 @@ public class CarteVue extends JPanel implements MouseInputListener {
         this.setSize(90, 160);
     }
 
-    /* SETTERS/GETTERS */
     public void setJouable(Boolean jouable) {
         this.jouable = jouable;
     }
@@ -65,6 +64,7 @@ public class CarteVue extends JPanel implements MouseInputListener {
     public Boolean isDragged() {
         return dragged;
     }
+
     private void setImage() {
         if (this.isDos()) {
             this.image = getImage("Back");
@@ -74,21 +74,15 @@ public class CarteVue extends JPanel implements MouseInputListener {
         this.image = this.image.getScaledInstance(90, 160, Image.SCALE_SMOOTH);
     }
 
-    /* GESTION IMAGE */
     private static BufferedImage getImage(String name) {
         name = Mypath + name + ".png";
         if (!images.containsKey(name))
-        {
             images.put(name, Utils.loadImg(name));
-        }
-
         return images.get(name);
     }
-    /* METHODES */
-
 
     @Override
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
         //this.setSize(90, 160);
         //setBounds(0,0, 400, 400);
         super.paintComponent(g);
@@ -129,11 +123,10 @@ public class CarteVue extends JPanel implements MouseInputListener {
         this.dragged = true;
         Point p1 = e.getLocationOnScreen();
         Point p2 = this.frame.getLocationOnScreen();
-        Point p = new Point(p1.x - p2.x, p1.y-p2.y);
+        Point p = new Point(p1.x - p2.x, p1.y - p2.y);
         this.setLocation(p.x - (getWidth() / 2), p.y - (getHeight() / 2));
         this.setVisible(true);
         this.repaint();
-
     }
 
     @Override

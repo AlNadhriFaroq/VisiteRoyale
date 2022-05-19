@@ -2,8 +2,8 @@ package Vue.Boutons;
 
 import Modele.Jeu;
 
-public class BoutonFInTour extends BoutonPouvoir{
-    public BoutonFInTour(Jeu jeu){
+public class BoutonFinirTour extends BoutonPouvoir{
+    public BoutonFinirTour(Jeu jeu){
         super(jeu);
     }
 
