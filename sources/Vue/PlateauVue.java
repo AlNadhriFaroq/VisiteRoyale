@@ -1,5 +1,6 @@
 package Vue;
 
+import Controleur.ControleurMediateur;
 import Modele.Pion;
 import Modele.Plateau;
 
@@ -18,8 +19,9 @@ public class PlateauVue extends JPanel implements MouseInputListener {
     private int posSor;
 
     private Image icon;
+    ControleurMediateur ctrl;
 
-    public PlateauVue(Plateau p) {
+    public PlateauVue(ControleurMediateur ctrl, Plateau p) {
         this.plateau = p;
 
         posRoi = p.getPositionPion(Pion.ROI);
@@ -27,6 +29,8 @@ public class PlateauVue extends JPanel implements MouseInputListener {
         posGV = p.getPositionPion(Pion.GAR_VRT);
         posFou = p.getPositionPion(Pion.FOU);
         posSor = p.getPositionPion(Pion.SOR);
+
+        this.ctrl = ctrl;
 
         this.addMouseListener(this);
         this.addMouseMotionListener(this);

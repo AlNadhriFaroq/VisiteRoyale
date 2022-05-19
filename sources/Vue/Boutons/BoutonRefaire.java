@@ -1,20 +1,20 @@
 package Vue.Boutons;
 
+import Controleur.ControleurMediateur;
 import Modele.Jeu;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
+public class BoutonRefaire extends Bouton {
 
-public class BoutonRefaire extends BoutonPouvoir {
-    Jeu jeu;
-
-    public BoutonRefaire(Jeu jeu) {
-        super(jeu);
+    public BoutonRefaire(ControleurMediateur ctrl, Jeu jeu) {
+        super(ctrl, jeu);
     }
 
     @Override
     void action() {
-
+        if (jeu.peutRefaire()) {
+            ctrl.refaire();
+            System.out.println("Refait");
+        }
     }
 
 
