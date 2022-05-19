@@ -375,13 +375,13 @@ public class IAStrategie1_1 extends IA {
                 int distance = 0;
                 if((gardeVert & pionsChateauAdverse) == gardeVert || (gardeVert & pionsDucheAdverse) == gardeVert){
                         if(jeu.getMain(joueurCourant).contientCarte(Carte.FM)){
-                            distance += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.typeEnPion(coup.getCarte().getType()));
+                            distance += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
                         }
                         fouSurGardeVert = true;
                 }
                 else if((gardeRouge & pionsChateauAdverse) == gardeRouge || (gardeRouge & pionsDucheAdverse) == gardeRouge){
                         if(jeu.getMain(joueurCourant).contientCarte(Carte.FM)){
-                            distance += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.typeEnPion(coup.getCarte().getType()));
+                            distance += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
                         }
                         fouSurGardeRouge = true;
                 }
@@ -391,7 +391,7 @@ public class IAStrategie1_1 extends IA {
                             return c;
                         }
                     }
-                    System.out.println("joueur" + Jeu.joueurEnTexte(joueurCourant) + "peut activer pouvoir fou !!!!! sur le pion : " + Pion.typeEnPion(coup.getCarte().getType()));
+                    System.out.println("joueur" + Jeu.joueurEnTexte(joueurCourant) + "peut activer pouvoir fou !!!!! sur le pion : " + coup.getCarte().getType());
                 }
             }
 
