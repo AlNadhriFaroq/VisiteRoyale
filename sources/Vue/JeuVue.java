@@ -1,5 +1,6 @@
 package Vue;
 
+import Controleur.ControleurMediateur;
 import Modele.Jeu;
 import Modele.Paquet;
 import Vue.Boutons.*;
@@ -16,6 +17,7 @@ public class JeuVue extends JComponent {
     private static final int OFFSET = 20;
 
     Jeu jeu;
+    ControleurMediateur ctrl;
 
     List<CarteVue> deck;
     List<CarteVue> mainA;
@@ -24,12 +26,12 @@ public class JeuVue extends JComponent {
     List<CarteVue> joueesB;
     List<CarteVue> defausse;
     PlateauVue terrain;
-    List<BoutonPouvoir> boutons;
+    List<Bouton> boutons;
 
     int heigth, width, carteH, carteW, joueeH, joueeW;
     Dimension screenSize;
 
-    public JeuVue(Jeu jeu) {
+    public JeuVue(ControleurMediateur ctrl, Jeu jeu) {
         this.deck = new ArrayList<>();
         this.mainA = new ArrayList<>();
         this.mainB = new ArrayList<>();
@@ -41,13 +43,15 @@ public class JeuVue extends JComponent {
         this.frame = new JFrame();
 
         this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.frame.setMinimumSize(new Dimension(LARGEURFENETRE, HAUTEURFENETRE));
-        this.frame.setSize(this.screenSize);
+        //this.frame.setMinimumSize(new Dimension(LARGEURFENETRE, HAUTEURFENETRE));
+        //this.frame.setSize(this.screenSize);
+        this.frame.setSize(1200,800);
         this.frame.setVisible(true);
 
         this.jeu = jeu;
+        this.ctrl = ctrl;
 
-        this.terrain = new PlateauVue(this.jeu.getPlateau());
+        this.terrain = new PlateauVue(ctrl, this.jeu.getPlateau());
 
         this.heigth = this.frame.getHeight();
         this.width = this.frame.getWidth();
@@ -83,7 +87,7 @@ public class JeuVue extends JComponent {
         int y = 0;
 
         for (int i = 0; i < taille; i++) {
-            CarteVue carteVue = new CarteVue(this);
+            CarteVue carteVue = new CarteVue(jeu, ctrl, this);
 
             carteVue.setCarte(this.jeu.getPioche().getCarte(i));
             carteVue.setSize(this.carteW, this.carteH);
@@ -125,9 +129,9 @@ public class JeuVue extends JComponent {
         PlacerDefausse(this.defausse.get(this.defausse.size() - 1));
     }
 
-    public void defausserJeu(boolean joueur) {
+    public void defausserJeu(int joueur) {
         int taille;
-        if (joueur) {
+        if (joueur == Jeu.JOUEUR_RGE) {
             taille = this.joueesA.size();
             for (int i = 0; i < taille; i++) {
                 donnerCarte(i, this.defausse, this.joueesA);
@@ -149,7 +153,7 @@ public class JeuVue extends JComponent {
         int y = 0;
 
         for (int i = 0; i < taille; i++) {
-            CarteVue carteVue = new CarteVue(this);
+            CarteVue carteVue = new CarteVue(jeu, ctrl, this);
             carteVue.setCarte(main.getCarte(i));
             carteVue.setSize(this.carteW, this.carteH);
             carteVue.setVisible(true);
@@ -162,7 +166,7 @@ public class JeuVue extends JComponent {
         taille = main.getTaille();
 
         for (int i = 0; i < taille; i++) {
-            CarteVue carteVue = new CarteVue(this);
+            CarteVue carteVue = new CarteVue(jeu, ctrl, this);
             carteVue.setCarte(main.getCarte(i));
             carteVue.setSize(this.carteW, this.carteH);
             carteVue.setVisible(true);
@@ -214,7 +218,7 @@ public class JeuVue extends JComponent {
         return centre - (taille * largeur);
     }
 
-    private void decaler(List<CarteVue> list) {
+    public void decaler(List<CarteVue> list) {
         int x = CalculJeuX(list);
         int y = list.get(0).getY();
 
@@ -257,11 +261,13 @@ public class JeuVue extends JComponent {
         int x = this.terrain.getX() + this.terrain.getWidth() + BoutonLargeur;
         int y = this.terrain.getY() + BoutonHauteur;
 
-        BoutonPouvoirFou pouvoirFou = new BoutonPouvoirFou(this.jeu);
-        BoutonPouvoirSorcier pouvoirSorcier = new BoutonPouvoirSorcier(this.jeu);
-        BoutonFinirTour finTour = new BoutonFinirTour(this.jeu);
-        BoutonAnnuler annuler = new BoutonAnnuler(this.jeu);
-        BoutonRefaire refaire = new BoutonRefaire(this.jeu);
+        BoutonPouvoirFou pouvoirFou = new BoutonPouvoirFou(ctrl, this.jeu);
+        BoutonPouvoirSorcier pouvoirSorcier = new BoutonPouvoirSorcier(ctrl, this.jeu);
+        BoutonFinirTour finTour = new BoutonFinirTour(ctrl, this.jeu, this);
+        BoutonAnnuler annuler = new BoutonAnnuler(ctrl, this.jeu);
+        BoutonRefaire refaire = new BoutonRefaire(ctrl, this.jeu);
+        Gauche gauche = new Gauche(ctrl, this.jeu);
+        Droite droite = new Droite(ctrl, this.jeu);
 
         pouvoirFou.setSize(BoutonLargeur, BoutonHauteur);
         pouvoirFou.setLocation(x, y);
@@ -288,21 +294,31 @@ public class JeuVue extends JComponent {
         refaire.setLocation(x, y);
         refaire.setVisible(true);
 
+        gauche.setSize(BoutonLargeur, BoutonHauteur);
+        gauche.setLocation(0, 0);
+        gauche.setVisible(true);
+
+        droite.setSize(BoutonLargeur, BoutonHauteur);
+        droite.setLocation(BoutonLargeur*2, 0);
+        droite.setVisible(true);
+
         this.boutons.add(pouvoirFou);
         this.boutons.add(pouvoirSorcier);
         this.boutons.add(finTour);
         this.boutons.add(annuler);
         this.boutons.add(refaire);
+        this.boutons.add(gauche);
+        this.boutons.add(droite);
 
         ajoutBoutons();
     }
 
     public void ajoutBoutons() {
-        for (BoutonPouvoir bouton : this.boutons) this.frame.add(bouton);
+        for (Bouton bouton : this.boutons) this.frame.add(bouton);
     }
 
     public void afficherBoutons() {
-        for (BoutonPouvoir bouton : this.boutons) {
+        for (Bouton bouton : this.boutons) {
             bouton.setVisible(true);
             bouton.setLocation(bouton.getLocation());
         }

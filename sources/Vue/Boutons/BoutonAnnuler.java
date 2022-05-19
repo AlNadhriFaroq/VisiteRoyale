@@ -1,19 +1,19 @@
 package Vue.Boutons;
 
+import Controleur.ControleurMediateur;
 import Modele.Jeu;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
+public class BoutonAnnuler extends Bouton {
 
-public class BoutonAnnuler extends BoutonPouvoir {
-    Jeu jeu;
-
-    public BoutonAnnuler(Jeu jeu) {
-        super(jeu);
+    public BoutonAnnuler(ControleurMediateur ctrl, Jeu jeu) {
+        super(ctrl, jeu);
     }
 
     @Override
     void action() {
-
+        if (jeu.peutAnnuler()) {
+            ctrl.annuler();
+            System.out.println("Annule");
+        }
     }
 }

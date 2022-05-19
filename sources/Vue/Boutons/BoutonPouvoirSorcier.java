@@ -1,19 +1,20 @@
 package Vue.Boutons;
 
+import Controleur.ControleurMediateur;
 import Modele.Jeu;
 
-import java.awt.event.ActionEvent;
+public class BoutonPouvoirSorcier extends Bouton {
 
-public class BoutonPouvoirSorcier extends BoutonPouvoir {
-
-    public BoutonPouvoirSorcier(Jeu jeu) {
-        super(jeu);
+    public BoutonPouvoirSorcier(ControleurMediateur ctrl, Jeu jeu) {
+        super(ctrl, jeu);
     }
 
     @Override
     void action() {
-        System.out.println("POUVOIR SORCIER");
-
+        if (jeu.peutUtiliserPouvoirSorcier()) {
+            ctrl.activerPouvoirSor();
+            System.out.println("Pouvoir Sorcier");
+        }
     }
 
     // TODO ajouter appel pouvoir

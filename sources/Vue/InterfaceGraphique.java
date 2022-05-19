@@ -17,9 +17,10 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
     public InterfaceGraphique(Programme prog, ControleurMediateur ctrl) {
         this.prog = prog;
         this.ctrl = ctrl;
-        this.ctrl.nouvellePartie(true, true);
+        this.ctrl.nouvellePartie(false, false);
+        this.ctrl.definirJoueurQuiCommence();
         pleinEcran = false;
-        this.jeuVue = new JeuVue(this.prog.getJeu());
+        this.jeuVue = new JeuVue(ctrl, this.prog.getJeu());
     }
 
     public static void demarrer(Programme prog, ControleurMediateur ctrl) {
@@ -44,7 +45,6 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
         /* Configuration de la fenetre */
         frame.setTitle("Visite Royale");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         frame.setResizable(true);
         frame.setVisible(true);
     }
@@ -71,5 +71,6 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
     public void mettreAJour() {
         /* mise a jour des components de l'interface graphique */
         jeuVue.repaint();
+        System.out.println(prog.getJeu().getJoueurCourant());
     }
 }

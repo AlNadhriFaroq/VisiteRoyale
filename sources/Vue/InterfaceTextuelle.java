@@ -577,7 +577,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("Licence Informatique générale 3e année");
                 System.out.println("Programmation et projet logiciel\n");
                 System.out.println("Sous la direction de :");
-                System.out.println("   Gabriela González Sáez\n");
+                System.out.println("   Gabriela Nicole González Sáez\n");
                 System.out.println("Développeurs :");
                 System.out.println("   Faroq Al-Nadhari");
                 System.out.println("   Nadim Babba");

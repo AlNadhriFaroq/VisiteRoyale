@@ -1,6 +1,8 @@
 package Vue;
 
+import Controleur.ControleurMediateur;
 import Modele.Carte;
+import Modele.Jeu;
 
 import javax.swing.event.MouseInputListener;
 import javax.swing.*;
@@ -20,8 +22,12 @@ public class CarteVue extends JPanel implements MouseInputListener {
     private Image image;
     private Image imDos;
     private static String Mypath = "/Images/Cartes/";
+    private Jeu jeu;
+    private ControleurMediateur ctrl;
 
-    public CarteVue(JeuVue f) {
+    public CarteVue(Jeu jeu, ControleurMediateur ctrl, JeuVue f) {
+        this.jeu = jeu;
+        this.ctrl = ctrl;
         this.frame = f;
         this.dos = false;
         this.jouable = false;
@@ -89,11 +95,18 @@ public class CarteVue extends JPanel implements MouseInputListener {
         g.drawImage(this.image, 0, 0, this.getWidth(), this.getHeight(), this);
     }
 
+    private boolean estValide(int y) {
+        return (y > (frame.getHeight()/2) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE) ||
+                (y < (frame.getHeight()/2) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT);
+    }
 
     /* MOUSE LISTENER*/
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())) {
+            ctrl.selectionnerCarte(carte);
+            System.out.println(carte.toString() + ", " + e.getYOnScreen());
+        }
     }
 
     @Override

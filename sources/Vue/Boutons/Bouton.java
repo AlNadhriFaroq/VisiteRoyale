@@ -1,14 +1,17 @@
 package Vue.Boutons;
 
+import Controleur.ControleurMediateur;
 import Modele.Jeu;
 
 import javax.swing.*;
 
-public abstract class BoutonPouvoir extends JButton {
+public abstract class Bouton extends JButton {
     Jeu jeu;
+    ControleurMediateur ctrl;
 
-    public BoutonPouvoir(Jeu jeu){
+    public Bouton(ControleurMediateur ctrl, Jeu jeu){
         this.jeu = jeu;
+        this.ctrl = ctrl;
         this.addActionListener(ActionEvent -> {action();});
     }
 
