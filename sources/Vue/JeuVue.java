@@ -57,8 +57,8 @@ public class JeuVue extends JComponent {
         this.width = this.frame.getWidth();
         this.carteH = this.frame.getWidth() / 10;
         this.carteW = this.frame.getHeight() / 10;
-        this.joueeH = this.carteH - (this.carteH / 2);
-        this.joueeW = this.carteW - (this.carteW / 2);
+        this.joueeH = (this.carteH/4 )+ (this.carteH / 2);
+        this.joueeW = (this.carteW/4 )+ (this.carteW / 2);
         this.setVisible(true);
 
         this.genererDeck();
@@ -119,6 +119,14 @@ public class JeuVue extends JComponent {
             donnerCarte(i, this.joueesA, this.mainA);
         else
             donnerCarte(i, this.joueesB, this.mainB);
+    }
+
+    public void jouerCarte (CarteVue c){
+        if (jeu.getJoueurCourant() == jeu.JOUEUR_RGE){
+            jouer(this.mainA.indexOf(c), true);
+        }else{
+            jouer(this.mainB.indexOf(c), false);
+        }
     }
 
     public void defausserMain(int i, boolean joueur) {
@@ -209,6 +217,7 @@ public class JeuVue extends JComponent {
 
         c.setSize(this.carteW, this.carteH);
         c.setLocation(x, y);
+        this.frame.repaint();
     }
 
     private int CalculJeuX(List<CarteVue> liste) {
@@ -226,15 +235,28 @@ public class JeuVue extends JComponent {
             carteVue.setLocation(x, y);
             x += carteVue.getWidth();
         }
+        this.frame.repaint();
     }
 
     public void PlacerJeuA(CarteVue c) {
         int x = (this.width / 2) - (c.getWidth() / 2);
-        int y = ((this.heigth) - (c.getHeight() * 2)) - (c.getHeight() / 5) - 40;
+        int y = this.terrain.getY() + this.terrain.getHeight() + (this.carteH/4);
+        //int y = ((this.heigth) - (c.getHeight() * 2)) - (c.getHeight() / 5) - 40;
 
         decaler(this.joueesA);
         c.setSize(this.joueeW, this.joueeH);
         c.setLocation(x, y);
+        this.frame.repaint();
+    }
+    public void PlacerJeuB(CarteVue c) {
+        int x = (this.width / 2) - (c.getWidth() / 2);
+        int y = this.terrain.getY() - (this.carteH/4) - (this.joueeH);
+        //int y =  (c.getHeight() * 2) + (c.getHeight()/10);
+
+        decaler(this.joueesB);
+        c.setSize(this.joueeW, this.joueeH);
+        c.setLocation(x, y);
+        this.frame.repaint();
     }
 
     public void afficheTerrain() {
