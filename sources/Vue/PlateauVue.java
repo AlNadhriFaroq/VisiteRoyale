@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 public class PlateauVue extends JPanel implements MouseInputListener {
     private static int taille = 17;
@@ -18,7 +19,8 @@ public class PlateauVue extends JPanel implements MouseInputListener {
     private int posFou;
     private int posSor;
 
-    private Image icon;
+    private int posJeton;
+
     ControleurMediateur ctrl;
 
     public PlateauVue(ControleurMediateur ctrl, Plateau p) {
@@ -29,6 +31,8 @@ public class PlateauVue extends JPanel implements MouseInputListener {
         posGV = p.getPositionPion(Pion.GAR_VRT);
         posFou = p.getPositionPion(Pion.FOU);
         posSor = p.getPositionPion(Pion.SOR);
+        posJeton = p.getPositionCouronne();
+
 
         this.ctrl = ctrl;
 
@@ -71,9 +75,28 @@ public class PlateauVue extends JPanel implements MouseInputListener {
             g.setColor(new Color(225,150,115));
             g.fillRect(1+this.getWidth()/17*8,(t*i)+a+1,this.getWidth()/17-2,t-2);
         }
+        g.setColor(Color.ORANGE);
+        g.drawOval(posSor*this.getWidth()/17,a,this.getWidth()/17,t);
+        g.fillOval(posSor*this.getWidth()/17,a,this.getWidth()/17,t);
 
+        g.setColor(Color.cyan);
+        g.drawOval(posFou*this.getWidth()/17, (t*2)+a,this.getWidth()/17,t);
+        g.fillOval(posFou*this.getWidth()/17, (t*2)+a,this.getWidth()/17,t);
 
-//225,150,115
+        g.setColor(new Color(200,15,200));
+        g.drawOval(posRoi*this.getWidth()/17,t+a,this.getWidth()/17,t);
+        g.fillOval(posRoi*this.getWidth()/17,t+a,this.getWidth()/17,t);
+
+        g.setColor(Color.GRAY);
+        g.drawOval(posGR*this.getWidth()/17,t+a,this.getWidth()/17,t);
+        g.fillOval(posGR*this.getWidth()/17,t+a,this.getWidth()/17,t);
+
+        g.drawOval(posGV*this.getWidth()/17,t+a,this.getWidth()/17,t);
+        g.fillOval(posGV*this.getWidth()/17,t+a,this.getWidth()/17,t);
+
+        g.setColor(Color.YELLOW);
+        g.drawOval(posJeton*this.getWidth()/17,0,this.getWidth()/17,a);
+        g.fillOval(posJeton*this.getWidth()/17,0,this.getWidth()/17,a);
 
 
     }
@@ -151,5 +174,14 @@ public class PlateauVue extends JPanel implements MouseInputListener {
 
     public void setPosSor(int posSor) {
         this.posSor = posSor;
+    }
+
+    public void majPositions(){
+        posRoi = plateau.getPositionPion(Pion.ROI);
+        posGR = plateau.getPositionPion(Pion.GAR_RGE);
+        posGV = plateau.getPositionPion(Pion.GAR_VRT);
+        posFou = plateau.getPositionPion(Pion.FOU);
+        posSor = plateau.getPositionPion(Pion.SOR);
+        posJeton = plateau.getPositionCouronne();
     }
 }

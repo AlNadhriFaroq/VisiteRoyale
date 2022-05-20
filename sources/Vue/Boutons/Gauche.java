@@ -2,6 +2,7 @@ package Vue.Boutons;
 
 import Controleur.ControleurMediateur;
 import Modele.Jeu;
+import Modele.Pion;
 
 public class Gauche extends Bouton {
 
@@ -13,7 +14,7 @@ public class Gauche extends Bouton {
     void action() {
         if (jeu.peutSelectionnerDirection(Jeu.JOUEUR_VRT)) {
             ctrl.selectionnerDirection(Jeu.JOUEUR_VRT);
-            System.out.println("Vers vert");
+            System.out.println("Position " + jeu.getPlateau().getPositionPion(Pion.SOR));
         }
     }
 }

@@ -3,6 +3,7 @@ package Vue;
 import Controleur.ControleurMediateur;
 import Modele.Jeu;
 import Modele.Paquet;
+import Modele.Pion;
 import Vue.Boutons.*;
 
 import java.util.Collections;
@@ -293,6 +294,7 @@ public class JeuVue extends JComponent {
         terrain.setBounds(x, y, w, h);
         terrain.setVisible(true);
         this.frame.add(terrain);
+        terrain.majPositions();
         terrain.repaint();
     }
 
