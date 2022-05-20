@@ -5,7 +5,6 @@ import IA.*;
 import Modele.*;
 import Vue.Audio;
 
-import java.io.*;
 import java.util.Random;
 
 public class ControleurMediateur {
@@ -14,13 +13,10 @@ public class ControleurMediateur {
     Programme prog;
     IA[] joueursIA;
     int decompte;
-    Audio audio;
 
     public ControleurMediateur(Programme prog) {
         this.prog = prog;
         joueursIA = new IA[2];
-        audio = new Audio();
-        audio.boucler(Audio.MUSIQUE_MENUS1);
     }
 
     public void clicSouris(int x, int y) {
@@ -48,7 +44,7 @@ public class ControleurMediateur {
         definirJoueurIA(Jeu.JOUEUR_VRT, joueurVrtEstIA);
         definirJoueurIA(Jeu.JOUEUR_RGE, joueurRgeEstIA);
         prog.nouvellePartie(joueurVrtEstIA, joueurRgeEstIA);
-        audio.arreter(Audio.MUSIQUE_MENUS1);
+        Audio.MUSIQUE_MENUS1.arreter();
     }
 
     private void definirJoueurIA(int joueur, boolean estIA) {
@@ -118,7 +114,7 @@ public class ControleurMediateur {
         if (coup != null)
             prog.jouerCoup(coup);
         if (prog.getJeu().estTerminee())
-            audio.jouer(Audio.SON_VICTOIRE);
+            Audio.SON_VICTOIRE.jouer();
     }
 
     public void annuler() {
@@ -129,19 +125,24 @@ public class ControleurMediateur {
         prog.refaireCoup();
     }
 
+    public void demarrerProgramme() {
+        prog.changerEtat(Programme.ETAT_MENU_PRINCIPAL);
+        Audio.MUSIQUE_MENUS1.boucler();
+    }
+
     public void reprendrePartie() {
         prog.changerEtat(Programme.ETAT_EN_JEU);
-        audio.arreter(Audio.MUSIQUE_MENUS1);
+        Audio.MUSIQUE_MENUS1.arreter();
     }
 
     public void ouvrirMenuJeu() {
         prog.changerEtat(Programme.ETAT_MENU_JEU);
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audio.MUSIQUE_MENUS1.boucler();
     }
 
     public void ouvrirMenuSauvegardes() {
         prog.changerEtat(Programme.ETAT_MENU_SAUVEGARDES);
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audio.MUSIQUE_MENUS1.boucler();
     }
 
     public void ouvrirMenuOptions() {
@@ -149,12 +150,12 @@ public class ControleurMediateur {
     }
 
     public void changerVolume(int changement) {
-        if (changement == -2)
-            audio.diminuerVolume();
-        else if (changement == -1)
-            audio.augmenterVolume();
+        if (changement == -1)
+            Audio.diminuerVolume();
+        else if (changement == 1)
+            Audio.augmenterVolume();
         else
-            audio.setVolume(changement);
+            Audio.arreterDemarrer();
     }
 
     public void ouvrirTutoriel() {
@@ -167,7 +168,7 @@ public class ControleurMediateur {
 
     public void retourMenuPrecedant() {
         prog.retourMenuPrecedant();
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audio.MUSIQUE_MENUS1.boucler();
     }
 
     public void quitter() {

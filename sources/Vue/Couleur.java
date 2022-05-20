@@ -111,7 +111,7 @@ public class Couleur {
         return txt;
     }
 
-    public static int[] obtenirCouleur(int i) {
+    public static int[] getCouleurCase(int i) {
         int[] res = new int[3];
         switch (i) {
             case 0:

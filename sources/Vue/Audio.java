@@ -2,96 +2,77 @@ package Vue;
 
 import Global.Configuration;
 
-import java.util.Random;
 import java.io.File;
 import javax.sound.sampled.*;
 
 public class Audio {
-    public static final int MUSIQUE_MENUS1 = 0;
-    public static final int MUSIQUE_MENUS2 = 1;
+    public static final Audio MUSIQUE_MENUS1 = new Audio("Musiques/antiqua.wav");
+    public static final Audio MUSIQUE_MENUS2 = new Audio("Musiques/mozart.wav");
 
-    public static final int SON_DEFAITE = 2;
-    public static final int SON_VICTOIRE = 3;
+    public static final Audio SON_DEFAITE = new Audio("Sons/defaite.wav");
+    public static final Audio SON_VICTOIRE = new Audio("Sons/victoire.wav");
 
-    Clip[] clips;
-    Random r;
-    int volumeEchelle;
-    Float volume;
+    private final Clip clip;
 
-    public Audio() {
-        r = new Random();
-        clips = new Clip[4];
-        volumeEchelle = Integer.parseInt(Configuration.instance().lire("Volume"));
-
-        String DOSSIER = "resources/Audios/";
-        clips[MUSIQUE_MENUS1] = chargerClips(DOSSIER + "Musiques/antiqua.wav");
-        clips[MUSIQUE_MENUS2] = chargerClips(DOSSIER + "Musiques/mozart.wav");
-
-        clips[SON_DEFAITE] = chargerClips(DOSSIER + "Sons/defaite.wav");
-        clips[SON_VICTOIRE] = chargerClips(DOSSIER + "Sons/victoire.wav");
-
-        reglerVolume();
-    }
-
-    private Clip chargerClips(String nom) {
+    private Audio(String nom) {
+        String dossier = "resources/Audios/";
         try {
-            AudioInputStream audio = AudioSystem.getAudioInputStream(new File(nom));
-            Clip clip = AudioSystem.getClip();
-            clip.open(audio);
-            return clip;
+            clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(new File(dossier + nom)));
+            ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(getVolume());
         } catch (Exception e) {
-            throw new RuntimeException("Vue.Audio.chargerClips() : Erreur lors du chargement du son : '" + nom + "'.\n" + e);
+            throw new RuntimeException("Vue.Audio() : Erreur lors du chargement du son : '" + nom + "'.\n" + e);
         }
     }
 
-    public void jouer(int clip) {
-        clips[clip].setMicrosecondPosition(0);
-        clips[clip].start();
+    public void jouer() {
+        clip.setMicrosecondPosition(0);
+        clip.start();
     }
 
-    public void boucler(int clip) {
-        clips[clip].setMicrosecondPosition(0);
-        clips[clip].loop(Clip.LOOP_CONTINUOUSLY);
+    public void boucler() {
+        clip.setMicrosecondPosition(0);
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
-    public void arreter(int clip) {
-        clips[clip].stop();
+    public void arreter() {
+        clip.stop();
     }
 
-    public void diminuerVolume(){
-        volumeEchelle =volumeEchelle <= 0 ? 0: volumeEchelle - 1;
-        reglerVolume();
+    public static int getVolume() {
+        return Integer.parseInt(Configuration.instance().lire("Volume"));
     }
 
-    public void setVolume(int volume){
-        if(volumeEchelle == 0 && volume >= 0)
-            volumeEchelle = Integer.parseInt(Configuration.instance().lire("Volume"));
-        else if(volumeEchelle != 0 && volume == 0)
-            volumeEchelle = 0;
-        else
-            volumeEchelle = volume > 0 && volume <= 5 ? volume : this.volumeEchelle;
-        reglerVolume();
-
+    private static void setVolume(int volume) {
+        if (volume >= 0 && volume <= 10) {
+            Configuration.instance().ecrire("Volume", Integer.toString(volume));
+            float decibel = 20f * (float) Math.log10(((float) volume) / 10f);
+            ((FloatControl) MUSIQUE_MENUS1.clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
+            ((FloatControl) MUSIQUE_MENUS2.clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
+            ((FloatControl) SON_DEFAITE.clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
+            ((FloatControl) SON_VICTOIRE.clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
+        } else {
+            throw new RuntimeException("Vue.Audio.setVolume() : Volume entré invalide.");
+        }
     }
 
-    public void augmenterVolume(){
-        volumeEchelle = volumeEchelle >= 5 ? 5: volumeEchelle + 1;
-        reglerVolume();
+    public static void arreterDemarrer() {
+        setVolume(getVolume() == 0 ? 5 : 0);
     }
 
-    public void reglerVolume(){
-       switch (volumeEchelle){
-           case 0 : volume = -80f; break;
-           case 1 : volume = -20f; break;
-           case 2 : volume = -12f; break;
-           case 3 : volume = -5f; break;
-           case 4 : volume = 1f; break;
-           case 5 : volume = 6f; break;
-           default: break;
-       }
-       Configuration.instance().ecrire("Volume",Integer.toString(volumeEchelle));
-       for(Clip clip : clips)
-           ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
+    public static void diminuerVolume() {
+        setVolume(getVolume() - 1);
+    }
 
+    public static void augmenterVolume() {
+        setVolume(getVolume() + 1);
+    }
+
+    public static boolean peutDiminuerVolume() {
+        return getVolume() > 0;
+    }
+
+    public static boolean peutAugmenterVolume() {
+        return getVolume() < 10;
     }
 }

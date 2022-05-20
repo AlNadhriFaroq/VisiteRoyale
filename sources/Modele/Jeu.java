@@ -32,6 +32,10 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     private Pion[] selectionPions;
     private int[] selectionDirections;
 
+    public Jeu() {
+        nouvellePartie();
+        etatJeu = ETAT_FIN_DE_PARTIE;
+    }
 
     public void nouvellePartie() {
         initialiser();
@@ -73,14 +77,13 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         int posCouronne = rand.nextInt(Plateau.BORDURE_RGE - 3) + 2;
         boolean faceCouronne = rand.nextBoolean();
         int cartesDefausse = rand.nextInt(27);
-        Carte [] cartesmainv = new Carte[0];
-        Carte [] cartesmainr = new Carte[0];;
-        nouvellePartiePersonalise(joueur, posRoi, posGV, posGR, posSor, posFou, posCouronne, faceCouronne, cartesDefausse,cartesmainv,cartesmainr);
+        Carte[] cartesmainv = new Carte[0];
+        Carte[] cartesmainr = new Carte[0];
+        ;
+        nouvellePartiePersonalise(joueur, posRoi, posGV, posGR, posSor, posFou, posCouronne, faceCouronne, cartesDefausse, cartesmainv, cartesmainr);
     }
 
-    public void nouvellePartiePersonalise(int joueur, int posRoi, int posGV, int posGR, int posSor, int posFou, int posCouronne, boolean faceCouronne, int nbCartesDefausse,
-                                          Carte[] cartemainv ,  Carte[] cartemainr ) {
-
+    public void nouvellePartiePersonalise(int joueur, int posRoi, int posGV, int posGR, int posSor, int posFou, int posCouronne, boolean faceCouronne, int nbCartesDefausse, Carte[] cartemainv, Carte[] cartemainr) {
         nouvellePartie();
 
         etatJeu = ETAT_CHOIX_CARTE;
@@ -94,27 +97,24 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         plateau.setPositionPion(Pion.FOU, posFou);
         plateau.setPositionCouronne(posCouronne);
         plateau.setFaceCouronne(faceCouronne);
-        int j = 0 ;
-        if (cartemainr == null){
-            cartemainr =new Carte[0] ;
-        }
-        if (cartemainv == null){
+        int j = 0;
+        if (cartemainr == null)
+            cartemainr = new Carte[0];
+        if (cartemainv == null)
             cartemainv = new Carte[0];
-        }
-        while(cartemainv.length>j){
+
+        while (cartemainv.length > j) {
             pioche.inserer(mainJoueurVrt.extraire());
             j++;
         }
-        while(cartemainr.length>j){
+        while (cartemainr.length > j) {
             pioche.inserer(mainJoueurRge.extraire());
             j++;
         }
-        for (int i = 0 ;cartemainv.length> i ; i++ ){
+        for (int i = 0; cartemainv.length > i; i++)
             mainJoueurVrt.inserer(cartemainv[i]);
-        }
-        for (int i = 0 ;cartemainr.length> i ; i++ ){
+        for (int i = 0; cartemainr.length > i; i++)
             mainJoueurRge.inserer(cartemainr[i]);
-        }
 
         /* mettre des cartes dans la défausse */
         for (int i = 0; i < nbCartesDefausse; i++)

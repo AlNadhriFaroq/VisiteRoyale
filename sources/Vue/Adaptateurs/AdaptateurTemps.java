@@ -1,4 +1,4 @@
-package Vue;
+package Vue.Adaptateurs;
 
 import Controleur.ControleurMediateur;
 
@@ -7,7 +7,7 @@ import java.awt.event.*;
 public class AdaptateurTemps implements ActionListener {
     ControleurMediateur ctrl;
 
-    AdaptateurTemps(ControleurMediateur ctrl) {
+    public AdaptateurTemps(ControleurMediateur ctrl) {
         this.ctrl = ctrl;
     }
 

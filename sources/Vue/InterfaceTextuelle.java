@@ -3,6 +3,7 @@ package Vue;
 import Controleur.ControleurMediateur;
 import IA.IA;
 import Modele.*;
+import Vue.Adaptateurs.AdaptateurTemps;
 
 import java.util.Scanner;
 import javax.swing.*;
@@ -10,8 +11,8 @@ import javax.swing.*;
 public class InterfaceTextuelle extends InterfaceUtilisateur {
     Jeu jeu;
 
-    public InterfaceTextuelle(Programme prog, ControleurMediateur ctrl) {
-        super(prog, ctrl);
+    public InterfaceTextuelle(ControleurMediateur ctrl, Programme prog) {
+        super(ctrl, prog);
         jeu = prog.getJeu();
     }
 
@@ -245,15 +246,23 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case "7":
             case "+":
             case "augmenter":
-                ctrl.changerVolume(-1);
-                System.out.println("Augmentation du volume.");
+                if (Audio.peutAugmenterVolume()) {
+                    ctrl.changerVolume(+1);
+                    System.out.println("Augmentation du volume.");
+                } else {
+                    System.out.println("Volume déjà au maximum.");
+                }
                 System.out.print("Commande > ");
                 break;
             case "8":
             case "-":
             case "diminuer":
-                ctrl.changerVolume(-2);
-                System.out.println("Diminution du volume.");
+                if (Audio.peutDiminuerVolume()) {
+                    ctrl.changerVolume(-1);
+                    System.out.println("Diminution du volume.");
+                } else {
+                    System.out.println("Volume déjà au minimum.");
+                }
                 System.out.print("Commande > ");
                 break;
             case "9":
@@ -515,7 +524,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
         Scanner s = new Scanner(System.in);
 
-        prog.changerEtat(Programme.ETAT_MENU_PRINCIPAL);
+        ctrl.demarrerProgramme();
         while (prog.getEtat() != Programme.ETAT_FIN_PROGRAMME)
             interpreterCommande(s.nextLine());
     }
@@ -765,7 +774,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                     txt = "   ";
                 }
 
-                int[] couleurs = Couleur.obtenirCouleur(c);
+                int[] couleurs = Couleur.getCouleurCase(c);
                 String grasItalique = pionSelectionnable ? "11" : "00";
                 String souligne = l == 0 ? "1" : "0";
                 System.out.print(Couleur.formaterTexte(txt, couleurs[0], couleurs[1], couleurs[2], grasItalique + souligne + "1"));
