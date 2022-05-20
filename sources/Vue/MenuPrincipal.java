@@ -13,8 +13,8 @@ import java.io.IOException;
 public class MenuPrincipal {
     JFrame frame;
     Audio audio;
-    JButton boutonJouer1vs1, boutonJouerContrIA, boutonChargerPartie;
-    JButton boutonOptions, boutonTuturiel, boutonCredits, boutonQuitter;
+    MyBouton boutonJouer1vs1, boutonJouerContrIA, boutonChargerPartie;
+    MyBouton boutonOptions, boutonTuturiel, boutonCredits, boutonQuitter;
     JLabel label;
     Color colorBouton, colorBoutonSelectionne,colorBoutonClicked, colorBoutonForeGround;
     ImageIcon imgBackGround;
@@ -22,12 +22,11 @@ public class MenuPrincipal {
 
     public MenuPrincipal() throws IOException {
         audio = new Audio();
-        larageurFenetre = 960 ;
-        hauteurFenetre = 680 ;
-        imgBackGround=  new ImageIcon(new ImageIcon(String.valueOf(new File("resources/Images/bg.jpg"))).getImage().getScaledInstance(larageurFenetre, hauteurFenetre, Image.SCALE_DEFAULT));
-        label = new JLabel(imgBackGround);
+        larageurFenetre = 1080 ;
+        hauteurFenetre = 720 ;
 
-        colorBouton = new Color(19, 22, 169);
+
+        colorBouton = new Color(92, 19, 169);
         colorBoutonSelectionne = new Color(251, 133, 30);
         colorBoutonClicked = new Color(30, 132, 234);
         colorBoutonForeGround = new Color(255, 255, 255);
@@ -39,32 +38,12 @@ public class MenuPrincipal {
 
     }
 
-    private JButton createBouton(String nom, ActionListener action) {
-        JButton  bouton = new JButton(nom);
-        //bouton.setBackground(new Color(227, 2, 2, 0));
-       // bouton.setIcon(new ImageIcon(img));
-        bouton.setPreferredSize(new Dimension(120,50));
+    private MyBouton createBouton(String nom, ActionListener action) {
+        MyBouton bouton = new MyBouton(nom);
+        bouton.setBounds(0,0,70,30);
 
-        bouton.setMargin(new Insets(10,40,10,40));
-        bouton.setForeground(colorBoutonForeGround);
-        bouton.setBackground(colorBouton);
-        bouton.setBorder(BorderFactory.createStrokeBorder(new BasicStroke()));
         bouton.addActionListener(action);
-        bouton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                //super.mouseEntered(e);
-               bouton.setBackground(colorBoutonSelectionne);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-               bouton.setBackground(colorBouton);
-            }
-
-        });
         bouton.setFocusable(false);
-
         return bouton;
     }
 
@@ -72,14 +51,18 @@ public class MenuPrincipal {
         frame = new JFrame("Menu");
         audio.boucler(0);
         frame.setSize(larageurFenetre, hauteurFenetre);
-        label.setLayout(new FlowLayout());
+        imgBackGround=  new ImageIcon(new ImageIcon(String.valueOf(new File("resources/Images/bg2.jpg"))).getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_DEFAULT));
+        label = new JLabel(imgBackGround);
         label.setLayout(new BorderLayout());
-        label.setSize(larageurFenetre,hauteurFenetre);
+        //label.setSize(larageurFenetre,hauteurFenetre);
 
 
         JPanel panelButtons =new JPanel(new GridLayout());
+        panelButtons.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        panelButtons.setBackground(Color.GRAY);
         panelButtons.setLayout(new BoxLayout(panelButtons,BoxLayout.PAGE_AXIS));
         panelButtons.setBackground(new Color(0,0,0,0));
+        panelButtons.setPreferredSize(new Dimension(400,400));
 
         boutonJouer1vs1 = createBouton("Jouer 1vs1",ActionEvent->{
             System.out.println("joueur1vs1");
@@ -130,18 +113,23 @@ public class MenuPrincipal {
         });
 
         panelButtons.add(boutonJouer1vs1);
+        panelButtons.add(Box.createGlue());
         panelButtons.add(boutonJouerContrIA);
+        panelButtons.add(Box.createGlue());
         panelButtons.add(boutonChargerPartie);
+        panelButtons.add(Box.createGlue());
         panelButtons.add(boutonOptions);
+        panelButtons.add(Box.createGlue());
         panelButtons.add(boutonTuturiel);
+        panelButtons.add(Box.createGlue());
         panelButtons.add(boutonCredits);
+        panelButtons.add(Box.createGlue());
         panelButtons.add(boutonQuitter);
 
-        panelButtons.setPreferredSize(new Dimension(200,200));
-        panelButtons.setLocation(30,300);
         label.add(panelButtons,BorderLayout.PAGE_END);
+        
 
-        frame.add(label);
+        frame.setContentPane(label);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
