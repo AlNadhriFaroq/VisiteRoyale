@@ -166,7 +166,7 @@ public class IAStrategie1_1 extends IA {
                 System.out.println("fou sur garde rouge");
                 while(i < tailleLc && ((joueurCourant == Jeu.JOUEUR_RGE && coup.getCarte().getDeplacement() + jeu.getPlateau().getPositionPion(Pion.GAR_RGE) <= Plateau.BORDURE_RGE) ||
                         (-coup.getCarte().getDeplacement() + jeu.getPlateau().getPositionPion(Pion.GAR_RGE)) > posRoi && joueurCourant == Jeu.JOUEUR_VRT)){
-                    System.out.println(-coup.getCarte().getDeplacement() + jeu.getPlateau().getPositionPion(Pion.typeEnPion(jeu.getTypeCourant())));
+                    System.out.println(-coup.getCarte().getDeplacement() + jeu.getPlateau().getPositionPion(Pion.GAR_RGE));
                     tmp.add(lc.get(i));
                     i++;
                     if(i < tailleLc)
@@ -184,7 +184,7 @@ public class IAStrategie1_1 extends IA {
                         coup = lc.get(i);
                 }
             }
-            else{
+            else if(!fouSurGardeRouge && !fouSurGardeVert){
             while(i < tailleLc && ((joueurCourant == Jeu.JOUEUR_RGE && coup.getCarte().getDeplacement() + jeu.getPlateau().getPositionPion(Pion.typeEnPion(jeu.getTypeCourant())) <= Plateau.BORDURE_RGE) ||
                     (-coup.getCarte().getDeplacement() + jeu.getPlateau().getPositionPion(Pion.typeEnPion(jeu.getTypeCourant())) >= Plateau.BORDURE_VRT && joueurCourant == Jeu.JOUEUR_VRT))){
                 System.out.println(-coup.getCarte().getDeplacement() + jeu.getPlateau().getPositionPion(Pion.GAR_RGE));
