@@ -5,6 +5,8 @@ import Modele.Jeu;
 import Modele.Paquet;
 import Vue.Boutons.*;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -14,7 +16,7 @@ public class JeuVue extends JComponent {
     public final JFrame frame;
     static final int LARGEURFENETRE = 1600;
     static final int HAUTEURFENETRE = 900;
-    private static final int OFFSET = 20;
+    private static int OFFSET ;
 
     Jeu jeu;
     ControleurMediateur ctrl;
@@ -59,6 +61,7 @@ public class JeuVue extends JComponent {
         this.carteW = this.frame.getHeight() / 10;
         this.joueeH = (this.carteH/4 )+ (this.carteH / 2);
         this.joueeW = (this.carteW/4 )+ (this.carteW / 2);
+        this.OFFSET = this.width /80;
         this.setVisible(true);
 
         this.genererDeck();
@@ -92,8 +95,9 @@ public class JeuVue extends JComponent {
             carteVue.setCarte(this.jeu.getPioche().getCarte(i));
             carteVue.setSize(this.carteW, this.carteH);
             carteVue.setVisible(true);
-            if (i == 0)
+            if (i == 0) {
                 y = ((this.heigth / 2) - (carteVue.getHeight() / 2)) - 40;
+            }
             carteVue.setLocation(OFFSET, y);
             this.deck.add(carteVue);
             this.frame.add(carteVue);
@@ -107,22 +111,25 @@ public class JeuVue extends JComponent {
         Source.remove(i);
     }
 
-    public void piocher(int i, boolean joueur) {
-        if (joueur)
-            donnerCarte(i, this.mainA, this.deck);
-        else
-            donnerCarte(i, this.mainB, this.deck);
+    public void piocher(int joueur) {
+        int max = jeu.getSelectionCartes(joueur).getTaille();;
+        if (joueur == this.jeu.JOUEUR_RGE) {
+            for (int i=0; i< max; i++){donnerCarte(this.deck.size()-1, this.mainA, this.deck);}
+        }else {
+            for (int i=0; i< max; i++){donnerCarte(this.deck.size()-1, this.mainB, this.deck);}
+        }
     }
 
     public void jouer(int i, boolean joueur) {
-        if (joueur)
+        if (joueur) {
             donnerCarte(i, this.joueesA, this.mainA);
-        else
+        }else {
             donnerCarte(i, this.joueesB, this.mainB);
+        }
     }
 
     public void jouerCarte (CarteVue c){
-        if (jeu.getJoueurCourant() == jeu.JOUEUR_RGE){
+        if (jeu.getJoueurCourant() == this.jeu.JOUEUR_RGE){
             jouer(this.mainA.indexOf(c), true);
         }else{
             jouer(this.mainB.indexOf(c), false);
@@ -210,13 +217,49 @@ public class JeuVue extends JComponent {
 
         this.frame.repaint();
     }
+    public void updateMains(){
+        int tA = this.mainA.size();
+        int tb = this.mainB.size();
+/*
+        this.mainA.sort(new Comparator<CarteVue>() {
+            @Override
+            public int compare(CarteVue o1, CarteVue o2) {
+                if (o1.getCarte() == o2.getCarte()){
+                    return 0;
+                }else {
+                    return 1;
+                }
+            }
+        });
+        this.mainB.sort(new Comparator<CarteVue>() {
+            @Override
+            public int compare(CarteVue o1, CarteVue o2) {
+                if (o1.getCarte() == o2.getCarte()){
+                    return 0;
+                }else {
+                    return 1;
+                }
+            }
+        });
+        this.afficheMain();
+        this.frame.repaint();
+
+*/
+        for (int i = 0; i < tA; i++){this.mainA.remove(this.mainA.size() - 1);}
+        for (int i=0; i<tb; i++){this.mainB.remove(this.mainB.size()-1);}
+        this.GenererMains();
+        this.frame.repaint();
+
+    }
 
     public void PlacerDefausse(CarteVue c) {
+        c.setSize(this.carteW, this.carteH);
+
         int x = (2 * OFFSET) + c.getWidth();
         int y = ((this.heigth / 2) - (c.getHeight() / 2)) - 40;
 
-        c.setSize(this.carteW, this.carteH);
         c.setLocation(x, y);
+
         this.frame.repaint();
     }
 
