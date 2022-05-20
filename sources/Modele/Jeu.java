@@ -104,17 +104,16 @@ public class Jeu extends Historique implements Cloneable, Serializable {
             pioche.inserer(mainJoueurVrt.extraire());
             j++;
         }
-        while(cartemainv.length>j){
-            pioche.inserer(mainJoueurVrt.extraire());
+        while(cartemainr.length>j){
+            pioche.inserer(mainJoueurRge.extraire());
             j++;
         }
         for (int i = 0 ;cartemainv.length> i ; i++ ){
             mainJoueurVrt.inserer(cartemainv[i]);
-            pioche.extraire(cartemainv[i]);
+
         }
         for (int i = 0 ;cartemainr.length> i ; i++ ){
             mainJoueurRge.inserer(cartemainr[i]);
-            pioche.extraire(cartemainr[i]);
         }
 
         /* mettre des cartes dans la défausse */
