@@ -268,7 +268,10 @@ public class JeuVue extends JComponent {
         if (!(w % 17 == 0))
             w -= w % 17;
 
-        int y = ((dimension.height / 2) - (h / 2));
+        if(!(h % 3 == 0))
+            h -= h%3;
+
+        int y = ((dimension.height / 2) - (h / 3)*2);
         int x = ((dimension.width / 2) - (w / 2));
 
         terrain.setBounds(x, y, w, h);
