@@ -1,9 +1,6 @@
 package Modele;
 
 import Patterns.Observable;
-import java.io.*;
-import java.util.Stack;
-
 
 import java.util.Date;
 import java.io.*;
@@ -227,6 +224,4 @@ public class Programme extends Observable {
     public String toString() {
         return Integer.toString(etat);
     }
-
-
 }
