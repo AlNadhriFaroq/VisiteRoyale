@@ -50,6 +50,7 @@ public class IAStrategie1_1 extends IA {
 
     @Override
     public Coup calculerCoup() {
+        System.out.println("IA strategie 1 1 !!!");
         lc = jeu.calculerListeCoup();
         joueurCourant = jeu.getJoueurCourant();
         pionsSurFontaine = pionsSurFontaine();
@@ -131,6 +132,12 @@ public class IAStrategie1_1 extends IA {
                         fmPouvoirFou = false;
                         return c;
                     }
+                }
+            }
+
+            for(Coup c : lc){
+                if(c.getCarte() != null && c.getCarte().estDeplacementFouCentre()){
+                    lc.remove(c);
                 }
             }
 
@@ -544,7 +551,7 @@ public class IAStrategie1_1 extends IA {
                         }
                         fouSurGardeRouge = true;
                 }
-                if(distance + retourneDistanceMax(Type.FOU) > retourneDistanceMax(coup.getCarte().getType())){
+                if(pouvoirFouSurGarde(retourneDistanceMax(Type.GAR), distance)){
                     for(Coup c : lc){
                         if(c.getTypeCoup() == Coup.ACTIVER_POUVOIR_FOU){
                             return c;
@@ -619,10 +626,10 @@ public class IAStrategie1_1 extends IA {
             System.out.println("distance max cumule : " + distanceMaxCumulee);
             System.out.println("distance max roi garde vert : " + distRoiGvert);
             System.out.println("distance carte roi : " + distanceCarteRoi);
-            if(distanceMaxCumulee > distanceCarteRoi && distanceMaxEnUnCoup <= distanceMaxCumulee){
+            if(distanceMaxCumulee > distanceCarteRoi && distanceMaxEnUnCoup <= distanceMaxCumulee && distanceMaxCumulee < distRoiGvert){
                 return true;
             }
-            if(distanceMaxEnUnCoup > distanceCarteRoi){
+            if(distanceMaxEnUnCoup > distanceCarteRoi && distanceMaxEnUnCoup < distRoiGvert){
                 return true;
             }
         }
@@ -645,10 +652,10 @@ public class IAStrategie1_1 extends IA {
             System.out.println("disnce max cumulee : " + distanceMaxCumulee);
             System.out.println("disnce max distRoigarerouge : " + distRoiGrouge);
             System.out.println("distance carte roi : " + distanceCarteRoi);
-            if(distanceMaxCumulee > distanceCarteRoi && distanceMaxEnUnCoup <= distanceMaxCumulee){
+            if(distanceMaxCumulee > distanceCarteRoi && distanceMaxEnUnCoup <= distanceMaxCumulee && distanceMaxCumulee < distRoiGrouge){
                 return true;
             }
-            if(distanceMaxEnUnCoup > distanceCarteRoi){
+            if(distanceMaxEnUnCoup > distanceCarteRoi && distanceMaxEnUnCoup < distRoiGrouge){
                 return true;
             }
         }
