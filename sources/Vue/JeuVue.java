@@ -309,8 +309,8 @@ public class JeuVue extends JComponent {
         BoutonFinirTour finTour = new BoutonFinirTour(ctrl, this.jeu, this);
         BoutonAnnuler annuler = new BoutonAnnuler(ctrl, this.jeu);
         BoutonRefaire refaire = new BoutonRefaire(ctrl, this.jeu);
-        Gauche gauche = new Gauche(ctrl, this.jeu);
-        Droite droite = new Droite(ctrl, this.jeu);
+        Gauche gauche = new Gauche(ctrl, this,this.jeu);
+        Droite droite = new Droite(ctrl,this, this.jeu);
 
         pouvoirFou.setSize(BoutonLargeur, BoutonHauteur);
         pouvoirFou.setLocation(x, y);
