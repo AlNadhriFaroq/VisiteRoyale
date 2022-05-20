@@ -45,6 +45,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         mainJoueurRge = new Paquet(TAILLE_MAIN);
 
         pioche.remplir();
+
         for (int c = 0; c < TAILLE_MAIN; c++) {
             mainJoueurVrt.inserer(pioche.extraire(), true);
             mainJoueurRge.inserer(pioche.extraire(), true);

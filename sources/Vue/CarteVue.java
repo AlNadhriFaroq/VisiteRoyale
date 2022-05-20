@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public class CarteVue extends JPanel implements MouseInputListener {
+public class CarteVue extends JPanel implements MouseInputListener, Comparable<CarteVue> {
     private static final HashMap<String, BufferedImage> images = new HashMap<>();
     private static String path;
     private final JeuVue frame;
@@ -151,6 +151,13 @@ public class CarteVue extends JPanel implements MouseInputListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
+
+    }
+
+    @Override
+    public int compareTo(CarteVue o) {
+        return this.carte.getType().compareTo(o.carte.getType()) * 10 + (this.carte.getDeplacement() - o.carte.getDeplacement());
+
 
     }
 }

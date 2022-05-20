@@ -16,9 +16,8 @@ public class BoutonFinirTour extends Bouton {
     void action() {
         if (jeu.peutFinirTour()) {
 
-            this.frame.defausserJeu(jeu.getJoueurCourant());
             this.frame.piocher(jeu.getJoueurCourant());
-            //this.frame.updateMains();
+            this.frame.updateMains();
             ctrl.finirTour();
             System.out.println("Fin tour");
         }
