@@ -38,17 +38,44 @@ public class PlateauVue extends JPanel implements MouseInputListener {
 
     @Override
     public void paintComponent(Graphics g) {
+
+        int a = (this.getHeight() / 10) - (this.getHeight() % 10);
+        int t = (this.getHeight()-a)/3;
         super.paintComponent(g);
         for (int i = 0; i < taille; i++)
             g.drawLine((this.getWidth() / 17) * i, 0, (this.getWidth() / 17) * i, this.getHeight());
 
         g.drawLine(this.getWidth() - 1, 0, this.getWidth() - 1, this.getHeight());
-        for (int i = 0; i < 4; i++) {
-            if (i == 1)
-                g.drawLine(0, 30, this.getWidth(), 30);
-            g.drawLine(0, (this.getHeight() + 30) / 3 * i, this.getWidth(), (this.getHeight() + 30) / 3 * i);
+
+
+        for (int i = 0; i <3; i++) {
+            g.drawLine(0, t*i+a, this.getWidth(), t*i+a);
         }
+        g.drawLine(0,0,this.getWidth(),0);
         g.drawLine(0, this.getHeight() - 1, this.getWidth(), this.getHeight() - 1);
+        g.drawLine(0,a,this.getWidth(),a);
+
+        for(int i=0; i<3; i++){
+            g.setColor(new Color(71,132,78));
+            g.fillRect(1,(t*i)+a+1,this.getWidth()/17-2,t-2);
+            g.fillRect(2+this.getWidth()/17,(t*i)+a+1,this.getWidth()/17-3,t-2);
+        }
+
+        for(int i=0; i<3; i++){
+            g.setColor(new Color(225,15,50));
+            g.fillRect(1+this.getWidth()/17*15,(t*i)+a+1,this.getWidth()/17-2,t-2);
+            g.fillRect(2+this.getWidth()/17*16,(t*i)+a+1,this.getWidth()/17-3,t-2);
+        }
+
+        for(int i=0; i<3; i++){
+            g.setColor(new Color(225,150,115));
+            g.fillRect(1+this.getWidth()/17*8,(t*i)+a+1,this.getWidth()/17-2,t-2);
+        }
+
+
+//225,150,115
+
+
     }
 
     @Override
