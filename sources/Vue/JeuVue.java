@@ -218,36 +218,9 @@ public class JeuVue extends JComponent {
         this.frame.repaint();
     }
     public void updateMains(){
-        int tA = this.mainA.size();
-        int tb = this.mainB.size();
-/*
-        this.mainA.sort(new Comparator<CarteVue>() {
-            @Override
-            public int compare(CarteVue o1, CarteVue o2) {
-                if (o1.getCarte() == o2.getCarte()){
-                    return 0;
-                }else {
-                    return 1;
-                }
-            }
-        });
-        this.mainB.sort(new Comparator<CarteVue>() {
-            @Override
-            public int compare(CarteVue o1, CarteVue o2) {
-                if (o1.getCarte() == o2.getCarte()){
-                    return 0;
-                }else {
-                    return 1;
-                }
-            }
-        });
+        Collections.sort(this.mainA);
+        Collections.sort(this.mainB);
         this.afficheMain();
-        this.frame.repaint();
-
-*/
-        for (int i = 0; i < tA; i++){this.mainA.remove(this.mainA.size() - 1);}
-        for (int i=0; i<tb; i++){this.mainB.remove(this.mainB.size()-1);}
-        this.GenererMains();
         this.frame.repaint();
 
     }
