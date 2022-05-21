@@ -91,6 +91,11 @@ public class JeuVue extends JComponent {
         this.afficheTerrain();
         this.afficherBoutons();
         super.paintComponent(g);
+        g.setColor(Color.darkGray);
+        int w = this.carteW + (this.OFFSET/2);
+        int h = this.carteH + (this.OFFSET*2);
+        g.fillRect(this.OFFSET - (this.OFFSET/4),(this.heigth/2) - (h/2) - 40,w,h);
+        g.fillRect(( (2 * this.OFFSET ) - (this.OFFSET/4) ) + this.carteW,((this.heigth / 2) - (h / 2)) - 40,w,h);
     }
 
     /* GENERATIONS & GESTION DES LISTES */
