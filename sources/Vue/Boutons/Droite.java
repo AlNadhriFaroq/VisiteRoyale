@@ -18,7 +18,10 @@ public class Droite extends Bouton {
         if (jeu.peutSelectionnerDirection(Jeu.JOUEUR_RGE)) {
             ctrl.selectionnerDirection(Jeu.JOUEUR_RGE);
             this.frame.defausserJeu(jeu.getJoueurCourant());
-            System.out.println("Position " + jeu.getPlateau().getPositionPion(Pion.SOR));
+            this.frame.terrain.majPositions();
+            System.out.println("Position FOU " + jeu.getPlateau().getPositionPion(Pion.FOU)+" Position Frame FOU  "+ frame.terrain.getPosFou());
+
+            System.out.println("Position SOR " + jeu.getPlateau().getPositionPion(Pion.SOR)+" Position Frame SOR  "+ frame.terrain.getPosSor());
         }
     }
 }

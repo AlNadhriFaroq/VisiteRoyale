@@ -16,9 +16,8 @@ public class Gauche extends Bouton {
     @Override
     void action() {
         if (jeu.peutSelectionnerDirection(Jeu.JOUEUR_VRT)) {
-            ctrl.selectionnerDirection(Jeu.JOUEUR_VRT);
+            ctrl.selectionnerDirection(-1);
             this.frame.defausserJeu(jeu.getJoueurCourant());
-            System.out.println("Position " + jeu.getPlateau().getPositionPion(Pion.SOR));
         }
     }
 }
