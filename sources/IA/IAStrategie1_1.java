@@ -302,10 +302,27 @@ public class IAStrategie1_1 extends IA {
                         if((jeu.getTypeCourant().equals(Type.SOR) || jeu.getTypeCourant().equals(Type.IND)) && jeu.getMain(joueurCourant).getNombreTypeCarte(Type.SOR) == 0) {
                             System.out.println("sorcier duche adverse et carte == 0");
                             if (jeu.peutUtiliserPouvoirFou() && jeu.getMain(joueurCourant).getNombreTypeCarte(Type.FOU) > 0){
+                                int dist = distancePionFontaineJoueurCarteFM(Pion.SOR);
+                                if(dist == 0){
+                                    List<Coup> tmp = new ArrayList<>();
+                                    for (Coup c : lc){
+                                        if(c.getCarte() != null){
+                                            if(!c.getCarte().estDeplacementFouCentre()){
+                                                tmp.add(c);
+                                            }
+                                        }
+                                        else{
+                                            tmp.add(c);
+                                        }
+                                    }
+                                    lc = tmp;
+                                }
+                                else{
+                                    fmPouvoirFou = true;
+                                }
                                 for (Coup c : lc) {
                                     if (c.getTypeCoup() == Coup.ACTIVER_POUVOIR_FOU) {
-                                        fouSurSorcier = true;
-                                        System.out.println("fous sur sorcier a true");
+                                        fouSurGardeRouge = true;
                                         return c;
                                     }
                                 }
@@ -760,14 +777,14 @@ public class IAStrategie1_1 extends IA {
 
             }
 
-            /*if (!coup.getCarte().estDeplacementFouCentre()) {
+            if (!coup.getCarte().estDeplacementFouCentre() ) {
                 System.out.println("verif debordement");
                 if (coup.getCarte().getType().equals(Type.SOR)) {
                     coup = verifNonDebordement(coup.getCarte().getType(), posSorcier, coup);
-                } else if (coup.getCarte().getType().equals(Type.FOU)) {
+                } else if (coup.getCarte().getType().equals(Type.FOU) && !jeu.getActivationPouvoirFou()) {
                     coup = verifNonDebordement(coup.getCarte().getType(), posFou, coup);
                 }
-            }*/
+            }
         }
         if (coup == null) {
             System.out.println("a fait un coup aleatoire 233");
@@ -927,10 +944,15 @@ public class IAStrategie1_1 extends IA {
                 return false;
         }
         else{
-            if(pionGarde == Pion.GAR_RGE)
+            if(pionGarde == Pion.GAR_RGE){
                 fouSurGardeRouge = true;
-            if(pionGarde == Pion.GAR_VRT)
+                fouSurGardeVert = false;
+            }
+            if(pionGarde == Pion.GAR_VRT){
                 fouSurGardeVert = true;
+                fouSurGardeRouge = false;
+            }
+
         }
         System.out.println("test pouvoir fou sur garde");
         if(joueurCourant == Jeu.JOUEUR_VRT && fouSurGardeVert){
