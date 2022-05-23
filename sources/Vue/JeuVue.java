@@ -57,7 +57,7 @@ public class JeuVue extends JComponent {
         this.jeu = jeu;
         this.ctrl = ctrl;
 
-        this.terrain = new PlateauVue(ctrl, this.jeu.getPlateau());
+        this.terrain = new PlateauVue(ctrl, this.jeu);
 
         this.heigth = this.frame.getHeight();
         this.width = this.frame.getWidth();
@@ -183,6 +183,12 @@ public class JeuVue extends JComponent {
         }
     }
 
+
+    public void viderMains(){
+
+        this.mainA.clear();
+        this.mainB.clear();
+    }
     public void GenererMains() {
         Paquet main = this.jeu.getMain(Jeu.JOUEUR_RGE);
         int taille = main.getTaille();
@@ -402,6 +408,18 @@ public class JeuVue extends JComponent {
             bouton.setVisible(true);
             bouton.setLocation(bouton.getLocation());
         }
+    }
+
+    public void carteSelecTaille(CarteVue carteVue, int decalage){
+        System.out.println("AVANT : " + carteVue.getHeight() + " / " + carteVue.getWidth());
+        carteVue.setSize(carteVue.getWidth() + decalage, carteVue.getHeight() + decalage);
+        System.out.println("APRES : " + carteVue.getHeight() + " / " + carteVue.getWidth());
+        /*
+        System.out.println("AVANT : " + carteVue.getX() + " / " + carteVue.getY());
+        carteVue.setLocation(carteVue.getX(), carteVue.getY() + decalage);
+        System.out.println("APRES : " + carteVue.getX() + " / " + carteVue.getY());
+         */
+        this.frame.repaint();
     }
 
 

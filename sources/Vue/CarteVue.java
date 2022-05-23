@@ -123,16 +123,22 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        System.out.println("PASSE SUR " + carte.toString());
+        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())){
+            this.frame.carteSelecTaille(this, this.frame.carteH/5);
+        }
 
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())){
+            this.frame.carteSelecTaille(this, -(this.frame.carteH/5) );
+        }
 
     }
 

@@ -114,8 +114,15 @@ public class ControleurMediateur {
     }
 
     public void finirTour() {
+        System.out.println("FIN DU TOUR !!!!!!!!!");
         Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
         jouer(coup);
+        /*
+        jeuVue.viderMains();
+        jeuVue.GenererMains();
+        jeuVue.repaint();
+         */
+
     }
 
     private void jouer(Coup coup) {

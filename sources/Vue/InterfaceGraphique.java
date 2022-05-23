@@ -18,6 +18,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
         this.prog = prog;
         this.ctrl = ctrl;
         this.ctrl.nouvellePartie(false, false);
+        //this.ctrl.nouvellePartie(true, true);
         this.ctrl.definirJoueurQuiCommence();
         pleinEcran = false;
         this.jeuVue = new JeuVue(ctrl, this.prog.getJeu());
@@ -70,6 +71,11 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
     @Override
     public void mettreAJour() {
         /* mise a jour des components de l'interface graphique */
+        /*
+        jeuVue.viderMains();
+        jeuVue.GenererMains();
+
+         */
         jeuVue.repaint();
         System.out.println(prog.getJeu().getJoueurCourant());
     }
