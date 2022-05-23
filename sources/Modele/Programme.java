@@ -139,8 +139,10 @@ public class Programme extends Observable {
             SimpleDateFormat date = new SimpleDateFormat("yy-MM-dd-HH-mm-ss");
             String nom = DOSSIER + File.separator + "Partie_vs_" + (joueursSontIA[Jeu.JOUEUR_VRT] ? "IA" : "JH") + "_du_" + date.format(new Date()) + ".sauvegarde";
 
-            if (sauvegarde < sauvegardes.length)
-                supprimerSauvegarde(sauvegarde);
+            if (sauvegarde < sauvegardes.length) {
+                fichier = new File(DOSSIER + File.separator + sauvegardes[sauvegarde]);
+                fichier.delete();
+            }
 
             fichier = new File(nom);
             fichier.createNewFile();
