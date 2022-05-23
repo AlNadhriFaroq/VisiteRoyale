@@ -140,13 +140,12 @@ public class Programme extends Observable {
             String nom = DOSSIER + File.separator + "Partie_vs_" + (joueursSontIA[Jeu.JOUEUR_VRT] ? "IA" : "JH") + "_du_" + date.format(new Date()) + ".sauvegarde";
 
             if (sauvegarde < sauvegardes.length) {
-                fichier = new File(sauvegardes[sauvegarde]);
-                fichier.renameTo(new File(nom));
-            } else {
-                fichier = new File(nom);
-                fichier.createNewFile();
+                fichier = new File(DOSSIER + File.separator + sauvegardes[sauvegarde]);
+                fichier.delete();
             }
 
+            fichier = new File(nom);
+            fichier.createNewFile();
             FileOutputStream fichierOut = new FileOutputStream(fichier);
             ObjectOutputStream out = new ObjectOutputStream(fichierOut);
             out.writeObject(jeu);
