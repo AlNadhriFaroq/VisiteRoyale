@@ -89,7 +89,7 @@ public class ControleurMediateur {
 
     public void selectionnerCarte(Carte carte) {
         Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
-        jeuVue.jouer(this.prog.getJeu().getMain(prog.getJeu().getJoueurCourant()).getIndice(carte), this.prog.getJeu().getJoueurCourant()==this.prog.getJeu().JOUEUR_RGE);
+        //jeuVue.jouer(this.prog.getJeu().getMain(prog.getJeu().getJoueurCourant()).getIndice(carte), this.prog.getJeu().getJoueurCourant()==this.prog.getJeu().getJoueurCourant());
         jouer(coup);
     }
 
