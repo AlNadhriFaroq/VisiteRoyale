@@ -16,7 +16,7 @@ public class PlateauVue extends JPanel {
         this.plateau = plateau;
 
         setBackground(new Color(0, 0, 0, 0));
-        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+        setLayout(new GridLayout(1, 17));
 
         couronneVue = new JetonVue();
         pionsVue = new PionVue[5];
@@ -31,15 +31,8 @@ public class PlateauVue extends JPanel {
             casesVue[c] = new CaseVue(c);
             add(casesVue[c]);
 
-            if (plateau.getPositionCouronne() == c)
-                casesVue[c].add(couronneVue);
-            else
-                casesVue[c].add(Box.createGlue());
-
-            if (plateau.getPositionPion(Pion.SOR) == c)
-                casesVue[c].add(pionsVue[3]);
-            else
-                casesVue[c].add(Box.createGlue());
+            casesVue[c].add(plateau.getPositionCouronne() == c ? couronneVue : Box.createVerticalGlue());
+            casesVue[c].add(plateau.getPositionPion(Pion.SOR) == c ? pionsVue[3] : Box.createVerticalGlue());
 
             if (plateau.getPositionPion(Pion.ROI) == c)
                 casesVue[c].add(pionsVue[0]);
@@ -48,12 +41,9 @@ public class PlateauVue extends JPanel {
             else if (plateau.getPositionPion(Pion.GAR_RGE) == c)
                 casesVue[c].add(pionsVue[2]);
             else
-                casesVue[c].add(Box.createGlue());
+                casesVue[c].add(Box.createVerticalGlue());
 
-            if (plateau.getPositionPion(Pion.FOU) == c)
-                casesVue[c].add(pionsVue[4]);
-            else
-                casesVue[c].add(Box.createGlue());
+            casesVue[c].add(plateau.getPositionPion(Pion.FOU) == c ? pionsVue[4] : Box.createVerticalGlue());
         }
     }
 
@@ -73,7 +63,31 @@ public class PlateauVue extends JPanel {
         return casesVue[indice];
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        for (int c = Plateau.BORDURE_VRT; c <= Plateau.BORDURE_RGE; c++) {
+            casesVue[c].removeAll();
+
+            casesVue[c].add(plateau.getPositionCouronne() == c ? couronneVue : Box.createVerticalGlue());
+            casesVue[c].add(plateau.getPositionPion(Pion.SOR) == c ? pionsVue[3] : Box.createVerticalGlue());
+
+            if (plateau.getPositionPion(Pion.ROI) == c)
+                casesVue[c].add(pionsVue[0]);
+            else if (plateau.getPositionPion(Pion.GAR_VRT) == c)
+                casesVue[c].add(pionsVue[1]);
+            else if (plateau.getPositionPion(Pion.GAR_RGE) == c)
+                casesVue[c].add(pionsVue[2]);
+            else
+                casesVue[c].add(Box.createVerticalGlue());
+
+            casesVue[c].add(plateau.getPositionPion(Pion.FOU) == c ? pionsVue[4] : Box.createVerticalGlue());
+        }
+    }
+
     public void mettreAJour() {
+        couronneVue.mettreAJour(plateau.getFaceCouronne());
         repaint();
     }
 }

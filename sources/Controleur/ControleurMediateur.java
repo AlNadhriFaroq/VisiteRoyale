@@ -3,7 +3,7 @@ package Controleur;
 import Global.Configuration;
 import IA.*;
 import Modele.*;
-import Vue.Audio;
+import Global.Audios;
 
 import java.util.Random;
 
@@ -17,6 +17,7 @@ public class ControleurMediateur {
     public ControleurMediateur(Programme prog) {
         this.prog = prog;
         joueursIA = new IA[2];
+        Audios.setVolume(Audios.getVolume());
     }
 
     public void clicSouris(int x, int y) {
@@ -44,7 +45,7 @@ public class ControleurMediateur {
         definirJoueurIA(Jeu.JOUEUR_VRT, joueurVrtEstIA);
         definirJoueurIA(Jeu.JOUEUR_RGE, joueurRgeEstIA);
         prog.nouvellePartie(joueurVrtEstIA, joueurRgeEstIA);
-        Audio.MUSIQUE_MENUS1.arreter();
+        Audios.MUSIQUE_MENUS1.arreter();
     }
 
     private void definirJoueurIA(int joueur, boolean estIA) {
@@ -114,7 +115,7 @@ public class ControleurMediateur {
         if (coup != null)
             prog.jouerCoup(coup);
         if (prog.getJeu().estTerminee())
-            Audio.SON_VICTOIRE.jouer();
+            Audios.SON_VICTOIRE.jouer();
     }
 
     public void annuler() {
@@ -127,22 +128,22 @@ public class ControleurMediateur {
 
     public void demarrerProgramme() {
         prog.changerEtat(Programme.ETAT_MENU_PRINCIPAL);
-        Audio.MUSIQUE_MENUS1.boucler();
+        Audios.MUSIQUE_MENUS1.boucler();
     }
 
     public void reprendrePartie() {
         prog.changerEtat(Programme.ETAT_EN_JEU);
-        Audio.MUSIQUE_MENUS1.arreter();
+        Audios.MUSIQUE_MENUS1.arreter();
     }
 
     public void ouvrirMenuJeu() {
         prog.changerEtat(Programme.ETAT_MENU_JEU);
-        Audio.MUSIQUE_MENUS1.boucler();
+        Audios.MUSIQUE_MENUS1.boucler();
     }
 
     public void ouvrirMenuSauvegardes() {
         prog.changerEtat(Programme.ETAT_MENU_SAUVEGARDES);
-        Audio.MUSIQUE_MENUS1.boucler();
+        Audios.MUSIQUE_MENUS1.boucler();
     }
 
     public void ouvrirMenuOptions() {
@@ -151,11 +152,11 @@ public class ControleurMediateur {
 
     public void changerVolume(int changement) {
         if (changement == -1)
-            Audio.diminuerVolume();
+            Audios.diminuerVolume();
         else if (changement == 1)
-            Audio.augmenterVolume();
+            Audios.augmenterVolume();
         else
-            Audio.arreterDemarrer();
+            Audios.arreterDemarrer();
     }
 
     public void ouvrirTutoriel() {
@@ -168,7 +169,7 @@ public class ControleurMediateur {
 
     public void retourMenuPrecedant() {
         prog.retourMenuPrecedant();
-        Audio.MUSIQUE_MENUS1.boucler();
+        Audios.MUSIQUE_MENUS1.boucler();
     }
 
     public void quitter() {
@@ -188,6 +189,10 @@ public class ControleurMediateur {
 
     public void supprimerSauvegarde(int sauvegarde) {
         prog.supprimerSauvegarde(sauvegarde);
+    }
+
+    public void changerPleinEcran() {
+        Configuration.instance().ecrire("PleinEcran", Boolean.toString(!Boolean.parseBoolean(Configuration.instance().lire("PleinEcran"))));
     }
 
     public void changerDifficulte(int joueur, int difficulte) {

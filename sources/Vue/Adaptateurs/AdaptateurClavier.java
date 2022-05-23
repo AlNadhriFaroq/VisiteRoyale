@@ -1,17 +1,20 @@
 package Vue.Adaptateurs;
 
 import Controleur.ControleurMediateur;
-import Vue.InterfaceUtilisateur;
+import Modele.Programme;
+import Vue.InterfaceGraphique;
 
 import java.awt.event.*;
 
 public class AdaptateurClavier extends KeyAdapter {
     ControleurMediateur ctrl;
-    InterfaceUtilisateur vue;
+    InterfaceGraphique vue;
+    Programme prog;
 
-    public AdaptateurClavier(ControleurMediateur ctrl, InterfaceUtilisateur vue) {
+    public AdaptateurClavier(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
         this.ctrl = ctrl;
         this.vue = vue;
+        this.prog = prog;
     }
 
     @Override
@@ -27,7 +30,8 @@ public class AdaptateurClavier extends KeyAdapter {
                 ctrl.ouvrirMenuJeu();
                 break;
             case KeyEvent.VK_ESCAPE:
-                vue.basculerPleinEcran();
+                ctrl.changerPleinEcran();
+                vue.mettreAJourPleinEcran();
                 break;
             case KeyEvent.VK_N:
                 ctrl.nouvellePartie(true, true);

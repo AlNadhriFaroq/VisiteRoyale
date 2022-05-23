@@ -3,74 +3,59 @@ package Vue.PanelsEtats;
 import Controleur.ControleurMediateur;
 import Modele.Jeu;
 import Modele.Programme;
-import Patterns.Observateur;
-import Vue.ComponentsJeu.PaquetVue;
-import Vue.ComponentsJeu.PlateauVue;
+import Vue.InterfaceGraphique;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class PanelEnJeu extends JPanel implements Observateur {
-    Programme prog;
-    PaquetVue mainVrtVue;
-    PaquetVue selectionVrtVue;
-    PlateauVue plateauVue;
-    PaquetVue selectionRgeVue;
-    PaquetVue mainRgeVue;
+public class PanelEnJeu extends Panel {
+    private final CardLayout panels;
 
-    public PanelEnJeu(Programme prog) {
-        this.prog = prog;
-        Jeu jeu = prog.getJeu();
+    private final PanelJeu panelJeu;
+    private final PanelChoixJoueur panelChoixJoueur;
+    private final PanelFinPartie panelFinPartie;
 
-        setBackground(new Color(169, 56, 56, 255));
-        mainVrtVue = new PaquetVue(jeu.getMain(Jeu.JOUEUR_VRT));
-        selectionVrtVue = new PaquetVue(jeu.getSelectionCartes(Jeu.JOUEUR_VRT));
-        plateauVue = new PlateauVue(jeu.getPlateau());
-        selectionRgeVue = new PaquetVue(jeu.getSelectionCartes(Jeu.JOUEUR_RGE));
-        mainRgeVue = new PaquetVue(jeu.getMain(Jeu.JOUEUR_RGE));
+    public PanelEnJeu(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
+        super(ctrl , vue, prog);
 
-        mainVrtVue.setPreferredSize(new Dimension(500, 100));
-        selectionVrtVue.setPreferredSize(new Dimension(500, 100));
-        plateauVue.setPreferredSize(new Dimension(800, 200));
-        selectionRgeVue.setPreferredSize(new Dimension(500, 100));
-        mainRgeVue.setPreferredSize(new Dimension(500, 100));
+        panels = new CardLayout();
+        setLayout(panels);
 
-        add(mainVrtVue);
-        add(selectionVrtVue);
-        add(plateauVue);
-        add(selectionRgeVue);
-        add(mainRgeVue);
+        panelJeu = new PanelJeu(ctrl, vue, prog);
+        panelChoixJoueur = new PanelChoixJoueur(ctrl, vue, prog);
+        panelFinPartie = new PanelFinPartie(ctrl, vue, prog);
+
+        add(panelJeu, "jeu");
+        add(panelChoixJoueur, "choixJoueur");
+        add(panelFinPartie, "finPartie");
     }
 
-    public PaquetVue getMainVrtVue() {
-        return mainVrtVue;
+    public PanelJeu getPanelJeu() {
+        return panelJeu;
     }
 
-    public PaquetVue getSelectionVrtVue() {
-        return selectionVrtVue;
+    public PanelChoixJoueur getPanelChoixJoueur() {
+        return panelChoixJoueur;
     }
 
-    public PlateauVue getPlateauVue() {
-        return plateauVue;
-    }
-
-    public PaquetVue getSelectionRgeVue() {
-        return selectionRgeVue;
-    }
-
-    public PaquetVue getMainRgeVue() {
-        return mainRgeVue;
+    public PanelFinPartie getPanelFinPartie() {
+        return panelFinPartie;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D dessin = (Graphics2D) g;
     }
 
     @Override
     public void mettreAJour() {
-        if (prog.getEtat() == Programme.ETAT_EN_JEU)
+        if (prog.getEtat() == Programme.ETAT_EN_JEU) {
             repaint();
+            if (prog.getJeu().getEtatJeu() == Jeu.ETAT_CHOIX_JOUEUR)
+                panels.show(this, "choixJoueur");
+            else if (prog.getJeu().getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE)
+                panels.show(this, "finPartie");
+            else
+                panels.show(this, "jeu");
+        }
     }
 }

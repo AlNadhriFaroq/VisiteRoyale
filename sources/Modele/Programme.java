@@ -31,7 +31,6 @@ public class Programme extends Observable {
         etat = ETAT_ACCUEIL;
 
         jeu = new Jeu();
-        jeu.setEtatJeu(Jeu.ETAT_FIN_DE_PARTIE);
 
         joueursSontIA = new boolean[2];
 
@@ -76,10 +75,8 @@ public class Programme extends Observable {
 
     public void nouvellePartie(boolean joueurVrtEstIA, boolean joueurRgeEstIA) {
         etat = ETAT_EN_JEU;
-        //jeu.nouvellePartie();
-        Carte [] cartesmainv = {};
-        Carte [] cartesmainr = {};
-        jeu.nouvellePartiePersonalise(Jeu.JOUEUR_RGE, 6, 5, 14, 5, 5, 10, Plateau.FACE_PTT_CRN, 0,cartesmainv,cartesmainr);
+        jeu.nouvellePartie();
+        //jeu.nouvellePartiePersonalise(Jeu.JOUEUR_RGE, 2, 0, 3, 8, 8, 8, Plateau.FACE_GRD_CRN, 0, null, null);
         joueursSontIA[Jeu.JOUEUR_VRT] = joueurVrtEstIA;
         joueursSontIA[Jeu.JOUEUR_RGE] = joueurRgeEstIA;
         mettreAJour();
@@ -140,13 +137,12 @@ public class Programme extends Observable {
             String nom = DOSSIER + File.separator + "Partie_vs_" + (joueursSontIA[Jeu.JOUEUR_VRT] ? "IA" : "JH") + "_du_" + date.format(new Date()) + ".sauvegarde";
 
             if (sauvegarde < sauvegardes.length) {
-                fichier = new File(sauvegardes[sauvegarde]);
-                fichier.renameTo(new File(nom));
-            } else {
-                fichier = new File(nom);
-                fichier.createNewFile();
+                fichier = new File(DOSSIER + File.separator + sauvegardes[sauvegarde]);
+                fichier.delete();
             }
 
+            fichier = new File(nom);
+            fichier.createNewFile();
             FileOutputStream fichierOut = new FileOutputStream(fichier);
             ObjectOutputStream out = new ObjectOutputStream(fichierOut);
             out.writeObject(jeu);

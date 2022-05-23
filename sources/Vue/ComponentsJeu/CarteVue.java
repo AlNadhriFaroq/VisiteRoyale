@@ -1,25 +1,20 @@
 package Vue.ComponentsJeu;
 
+import Global.Images;
 import Modele.Carte;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
 public class CarteVue extends JPanel {
     Carte carte;
+    boolean dos;
     Image img;
 
-    public CarteVue(Carte carte) {
-        this.carte = carte;
+    public CarteVue() {
         setBackground(new Color(0, 0, 0, 0));
-        String nom = "Images" + File.separator + "Cartes" + File.separator + carte.toString() + ".png";
-        try {
-            img = ImageIO.read(ClassLoader.getSystemClassLoader().getResourceAsStream(nom));
-        } catch (Exception e) {
-            throw new RuntimeException("Vue.ComponentsJeu.CarteVue() : Impossible d'ouvrir l'image.\n" + e);
-        }
+        dos = false;
+        img = Images.CARTE_VIDE;
     }
 
     public Carte getCarte() {
@@ -30,10 +25,18 @@ public class CarteVue extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D dessin = (Graphics2D) g;
-        dessin.drawImage(img.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
+        dessin.drawImage(img, 0, 0, getWidth()-1, getHeight()-1, null);
     }
 
-    public void mettreAJour() {
+    public void mettreAJour(Carte carte, boolean dos) {
+        this.carte = carte;
+        this.dos = dos;
+        if (carte == null)
+            img = Images.getImageCarte("Vide");
+        else if (dos)
+            img = Images.getImageCarte("Dos");
+        else
+            img = Images.getImageCarte(carte.toString());
         repaint();
     }
 }

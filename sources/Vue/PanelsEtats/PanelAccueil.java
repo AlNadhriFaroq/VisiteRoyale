@@ -1,25 +1,25 @@
 package Vue.PanelsEtats;
 
 import Controleur.ControleurMediateur;
+import Global.Images;
 import Modele.Programme;
-import Patterns.Observateur;
+import Vue.InterfaceGraphique;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class PanelAccueil extends JPanel implements Observateur {
-    ControleurMediateur ctrl;
-    Programme prog;
+public class PanelAccueil extends Panel {
 
-    public PanelAccueil(ControleurMediateur ctrl, Programme prog) {
-        this.ctrl = ctrl;
-        this.prog = prog;
+    public PanelAccueil(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
+        super(ctrl, vue, prog);
 
-        setBackground(new Color(56, 91, 252, 255));
+        imgFond = Images.TEXTE_TITRE;
 
-        JLabel texte = new JLabel("Ouverture en cours, veuillez patienter...");
+        setBackground(new Color(0, 0, 0, 0));
+    }
 
-        add(texte, BorderLayout.SOUTH);
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
     }
 
     @Override

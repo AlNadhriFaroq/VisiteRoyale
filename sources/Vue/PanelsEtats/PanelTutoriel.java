@@ -2,22 +2,35 @@ package Vue.PanelsEtats;
 
 import Controleur.ControleurMediateur;
 import Modele.Programme;
-import Patterns.Observateur;
+import Vue.Adaptateurs.AdaptateurBoutons;
+import Vue.Bouton;
+import Vue.InterfaceGraphique;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PanelTutoriel extends JPanel implements Observateur {
-    ControleurMediateur ctrl;
-    Programme prog;
+public class PanelTutoriel extends Panel {
+    Bouton boutonRetour;
 
-    public PanelTutoriel(ControleurMediateur ctrl, Programme prog) {
-        this.ctrl = ctrl;
-        this.prog = prog;
+    public PanelTutoriel(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
+        super(ctrl, vue, prog);
 
-        setBackground(new Color(252, 56, 56, 255));
         JLabel texte = new JLabel("Tutoriel");
+        boutonRetour = new Bouton("Retour");
+
+        boutonRetour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+
         add(texte, BorderLayout.NORTH);
+        add(boutonRetour);
+    }
+
+    public Bouton getBoutonRetour() {
+        return boutonRetour;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
     }
 
     @Override

@@ -1,17 +1,14 @@
 package Vue.PanelsEtats;
 
+import Controleur.ControleurMediateur;
 import Modele.Programme;
-import Patterns.Observateur;
-import Vue.Bouton;
+import Vue.Adaptateurs.AdaptateurBoutons;
+import Vue.*;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
-public class PanelMenuPrincipal extends JPanel implements Observateur {
-    Programme prog;
-    Image img;
+public class PanelMenuPrincipal extends Panel {
     Bouton boutonJouer1vs1;
     Bouton boutonJouerVsIA;
     Bouton boutonSauvegardes;
@@ -20,25 +17,38 @@ public class PanelMenuPrincipal extends JPanel implements Observateur {
     Bouton boutonCredits;
     Bouton boutonQuitter;
 
-    public PanelMenuPrincipal(Programme prog) {
-        this.prog = prog;
+    public PanelMenuPrincipal(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
+        super(ctrl, vue, prog);
 
-        try {
-            img = ImageIO.read(ClassLoader.getSystemClassLoader().getResourceAsStream("Images" + File.separator + "bg.jpg"));
-        } catch (Exception e) {
-            throw new RuntimeException("Vue.PanelMenuPrincipal() : Impossible d'ouvrir l'image.\n" + e);
-        }
+        boutonJouer1vs1 = new Bouton("Jouer 1vs1");
+        boutonJouerVsIA = new Bouton("Joueur contre IA");
+        boutonSauvegardes = new Bouton("Sauvegardes");
+        boutonOptions = new Bouton("Options");
+        boutonTutoriel = new Bouton("Tutoriel");
+        boutonCredits = new Bouton("Crédits");
+        boutonQuitter = new Bouton("Quitter");
 
-        Box box = Box.createVerticalBox();
-        box.add(Box.createGlue());
-        box.add(creerBoutons());
-        box.add(Box.createGlue());
+        boutonJouer1vs1.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonJouerVsIA.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonSauvegardes.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonOptions.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonTutoriel.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonCredits.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonQuitter.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
 
-        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-        add(Box.createGlue());
-        add(box);
-        for (int i = 0; i < 10; i++)
-            add(Box.createGlue());
+        JPanel panelBoutons = new JPanel();
+        panelBoutons.setBackground(new Color(0, 0, 0, 0));
+        panelBoutons.setLayout(new GridLayout(7, 1, 0, 10));
+
+        panelBoutons.add(boutonJouer1vs1);
+        panelBoutons.add(boutonJouerVsIA);
+        panelBoutons.add(boutonSauvegardes);
+        panelBoutons.add(boutonOptions);
+        panelBoutons.add(boutonTutoriel);
+        panelBoutons.add(boutonCredits);
+        panelBoutons.add(boutonQuitter);
+
+        add(new Cadre(panelBoutons, 1, 10, 1, 1));
     }
 
     public Bouton getBoutonJouer1vs1() {
@@ -69,35 +79,9 @@ public class PanelMenuPrincipal extends JPanel implements Observateur {
         return boutonQuitter;
     }
 
-    private JPanel creerBoutons() {
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(0, 0, 0, 0));
-        panel.setLayout(new GridLayout(7, 1, 0, 10));
-
-        boutonJouer1vs1 = new Bouton("Jouer 1vs1");
-        boutonJouerVsIA = new Bouton("Joueur contre IA");
-        boutonSauvegardes = new Bouton("Sauvegardes");
-        boutonOptions = new Bouton("Options");
-        boutonTutoriel = new Bouton("Tutoriel");
-        boutonCredits = new Bouton("Crédits");
-        boutonQuitter = new Bouton("Quitter");
-
-        panel.add(boutonJouer1vs1);
-        panel.add(boutonJouerVsIA);
-        panel.add(boutonSauvegardes);
-        panel.add(boutonOptions);
-        panel.add(boutonTutoriel);
-        panel.add(boutonCredits);
-        panel.add(boutonQuitter);
-
-        return panel;
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D dessin = (Graphics2D) g;
-        dessin.drawImage(img.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
     }
 
     @Override

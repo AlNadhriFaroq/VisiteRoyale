@@ -1,17 +1,19 @@
 package Vue.ComponentsJeu;
 
-import Vue.Couleur;
+import Modele.Plateau;
+import Global.Format;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class CaseVue extends JPanel {
     int c;
-    Image img;
+    Color couleurLignes;
 
     public CaseVue(int c) {
         this.c = c;
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        couleurLignes = (c <= Plateau.CHATEAU_VRT || c >= Plateau.CHATEAU_RGE || c == Plateau.FONTAINE) ? new Color(200, 240, 200) : Color.BLACK;
+        setLayout(new GridLayout(4, 1));
     }
 
     public int getCase() {
@@ -22,10 +24,13 @@ public class CaseVue extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D dessin = (Graphics2D) g;
-        int[] couleur = Couleur.getCouleurCase(c);
-        setBackground(new Color(couleur[0], couleur[1], couleur[2], 255));
-        dessin.setColor(Color.BLACK);
+
+        setBackground(Format.getCouleurCase(c));
+
+        dessin.setColor(couleurLignes);
+        dessin.setStroke(new BasicStroke(5));
         dessin.drawRect(0, 0, getWidth(), getHeight());
+        dessin.drawLine(0, getHeight()/4, getWidth(), getHeight()/4);
     }
 
     public void mettreAJour() {
