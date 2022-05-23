@@ -4,6 +4,7 @@ import Global.Configuration;
 import IA.*;
 import Modele.*;
 import Vue.Audio;
+import Vue.JeuVue;
 
 import java.io.*;
 import java.util.Random;
@@ -15,6 +16,8 @@ public class ControleurMediateur {
     IA[] joueursIA;
     int decompte;
     Audio audio;
+
+    JeuVue jeuVue;
 
     public ControleurMediateur(Programme prog) {
         this.prog = prog;
@@ -86,6 +89,7 @@ public class ControleurMediateur {
 
     public void selectionnerCarte(Carte carte) {
         Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
+        jeuVue.jouer(this.prog.getJeu().getMain(prog.getJeu().getJoueurCourant()).getIndice(carte), this.prog.getJeu().getJoueurCourant()==this.prog.getJeu().JOUEUR_RGE);
         jouer(coup);
     }
 

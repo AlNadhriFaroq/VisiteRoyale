@@ -15,8 +15,8 @@ public class Droite extends Bouton {
 
     @Override
     void action() {
-        if (jeu.peutSelectionnerDirection(Jeu.JOUEUR_RGE)) {
-            ctrl.selectionnerDirection(Jeu.JOUEUR_RGE);
+        if (jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE))); {
+            ctrl.selectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE));
             this.frame.defausserJeu(jeu.getJoueurCourant());
             this.frame.terrain.majPositions();
             System.out.println("Position FOU " + jeu.getPlateau().getPositionPion(Pion.FOU)+" Position Frame FOU  "+ frame.terrain.getPosFou());
