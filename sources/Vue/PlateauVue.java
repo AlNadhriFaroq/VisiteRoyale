@@ -1,6 +1,7 @@
 package Vue;
 
 import Controleur.ControleurMediateur;
+import Modele.Jeu;
 import Modele.Pion;
 import Modele.Plateau;
 
@@ -12,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 public class PlateauVue extends JPanel implements MouseInputListener {
     private static int taille = 17;
-    Plateau plateau;
+    Jeu jeu;
     private int posRoi;
     private int posGR;
     private int posGV;
@@ -21,20 +22,33 @@ public class PlateauVue extends JPanel implements MouseInputListener {
 
     private int posJeton;
 
+    PionVue pionRoi = new PionVue(Pion.ROI);
+    PionVue pionGardeR = new PionVue(Pion.GAR_RGE);
+    PionVue pionGardeV = new PionVue(Pion.GAR_VRT);
+    PionVue pionSor = new PionVue(Pion.SOR);
+    PionVue pionFou = new PionVue(Pion.FOU);
+
+    CarteVue  carteVue;
+
+    JeuVue jeuVue;
+
     ControleurMediateur ctrl;
 
-    public PlateauVue(ControleurMediateur ctrl, Plateau p) {
-        this.plateau = p;
+    public PlateauVue(ControleurMediateur ctrl, Jeu jeu) {
+        this.jeu = jeu;
 
-        posRoi = p.getPositionPion(Pion.ROI);
-        posGR = p.getPositionPion(Pion.GAR_RGE);
-        posGV = p.getPositionPion(Pion.GAR_VRT);
-        posFou = p.getPositionPion(Pion.FOU);
-        posSor = p.getPositionPion(Pion.SOR);
-        posJeton = p.getPositionCouronne();
+        posRoi = jeu.getPlateau().getPositionPion(Pion.ROI);
+        posGR = jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
+        posGV = jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
+        posFou = jeu.getPlateau().getPositionPion(Pion.FOU);
+        posSor = jeu.getPlateau().getPositionPion(Pion.SOR);
+        posJeton = jeu.getPlateau().getPositionCouronne();
 
 
         this.ctrl = ctrl;
+
+        this.setPions();
+
 
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
@@ -75,7 +89,7 @@ public class PlateauVue extends JPanel implements MouseInputListener {
             g.setColor(new Color(225,150,115));
             g.fillRect(1+this.getWidth()/17*8,(t*i)+a+1,this.getWidth()/17-2,t-2);
         }
-        g.setColor(Color.ORANGE);
+        /*g.setColor(Color.ORANGE);
         g.drawOval(posSor*this.getWidth()/17,a,this.getWidth()/17,t);
         g.fillOval(posSor*this.getWidth()/17,a,this.getWidth()/17,t);
 
@@ -92,11 +106,32 @@ public class PlateauVue extends JPanel implements MouseInputListener {
         g.fillOval(posGR*this.getWidth()/17,t+a,this.getWidth()/17,t);
 
         g.drawOval(posGV*this.getWidth()/17,t+a,this.getWidth()/17,t);
-        g.fillOval(posGV*this.getWidth()/17,t+a,this.getWidth()/17,t);
+        g.fillOval(posGV*this.getWidth()/17,t+a,this.getWidth()/17,t);*/
 
         g.setColor(Color.YELLOW);
         g.drawOval(posJeton*this.getWidth()/17,0,this.getWidth()/17,a);
         g.fillOval(posJeton*this.getWidth()/17,0,this.getWidth()/17,a);
+
+        this.pionSor.setSize(this.getWidth()/17, t);
+        this.pionSor.setLocation(posSor*this.getWidth()/17,a);
+
+        this.pionRoi.setSize(this.getWidth()/17,t+5);
+        this.pionRoi.setLocation(posRoi*this.getWidth()/17,t+a);
+
+        this.pionGardeV.setSize(this.getWidth()/17,t);
+        this.pionGardeV.setLocation(posGV*this.getWidth()/17,t+a);
+
+        this.pionGardeR.setSize(this.getWidth()/17,t);
+        this.pionGardeR.setLocation(posGR*this.getWidth()/17,t+a);
+
+        this.pionFou.setSize(this.getWidth()/17,t);
+        this.pionFou.setLocation(posFou*this.getWidth()/17,2*t+a);
+
+
+
+
+
+
 
 
     }
@@ -177,11 +212,38 @@ public class PlateauVue extends JPanel implements MouseInputListener {
     }
 
     public void majPositions(){
-        posRoi = plateau.getPositionPion(Pion.ROI);
-        posGR = plateau.getPositionPion(Pion.GAR_RGE);
-        posGV = plateau.getPositionPion(Pion.GAR_VRT);
-        posFou = plateau.getPositionPion(Pion.FOU);
-        posSor = plateau.getPositionPion(Pion.SOR);
-        posJeton = plateau.getPositionCouronne();
+        posRoi = jeu.getPlateau().getPositionPion(Pion.ROI);
+        posGR = jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
+        posGV = jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
+        posFou = jeu.getPlateau().getPositionPion(Pion.FOU);
+        posSor = jeu.getPlateau().getPositionPion(Pion.SOR);
+        posJeton = jeu.getPlateau().getPositionCouronne();
+    }
+
+    public void setPions(){
+        this.pionRoi.setSize(30,55);
+        this.pionRoi.setLocation(0,0);
+        this.pionRoi.setVisible(true);
+        this.add(pionRoi);
+
+        this.pionFou.setSize(30,55);
+        this.pionFou.setLocation(0,0);
+        this.pionFou.setVisible(true);
+        this.add(pionFou);
+
+        this.pionSor.setSize(30,55);
+        this.pionSor.setLocation(0,0);
+        this.pionSor.setVisible(true);
+        this.add(pionSor);
+
+        this.pionGardeR.setSize(30,55);
+        this.pionGardeR.setLocation(0,0);
+        this.pionGardeR.setVisible(true);
+        this.add(pionGardeR);
+
+        this.pionGardeV.setSize(30,55);
+        this.pionGardeV.setLocation(0,0);
+        this.pionGardeV.setVisible(true);
+        this.add(pionGardeV);
     }
 }
