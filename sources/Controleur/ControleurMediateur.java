@@ -115,7 +115,13 @@ public class ControleurMediateur {
         if (coup != null)
             prog.jouerCoup(coup);
         if (prog.getJeu().estTerminee())
-            Audios.SON_VICTOIRE.jouer();
+            if (prog.getJoueurEstIA(Jeu.JOUEUR_VRT) && !prog.getJoueurEstIA(Jeu.JOUEUR_RGE))
+                if (prog.getJeu().getJoueurGagnant() == Jeu.JOUEUR_RGE)
+                    Audios.SON_VICTOIRE.jouer();
+                else
+                    Audios.SON_DEFAITE.jouer();
+            else
+                Audios.SON_VICTOIRE.jouer();
     }
 
     public void annuler() {

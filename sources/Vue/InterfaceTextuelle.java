@@ -622,10 +622,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 afficherJeu(prog.getJeu());
                 System.out.println("\n");
                 if (prog.getJoueurEstIA(Jeu.JOUEUR_VRT) && !prog.getJoueurEstIA(Jeu.JOUEUR_RGE))
-                    if (prog.getJeu().getJoueurGagnant() == Jeu.JOUEUR_RGE)
-                        System.out.println("VOUS AVEZ GAGNEZ !!!\n");
-                    else
-                        System.out.println("VOUS AVEZ PERDU...\n");
+                    System.out.println(prog.getJeu().getJoueurGagnant() == Jeu.JOUEUR_RGE ? "VOUS AVEZ GAGNEZ !!!\n" : "VOUS AVEZ PERDU...\n");
                 else
                     System.out.println("VICTOIRE DE " + Jeu.joueurEnTexte(prog.getJeu().getJoueurGagnant()).toUpperCase() + " !!!\n");
                 System.out.println("FIN DE PARTIE");
