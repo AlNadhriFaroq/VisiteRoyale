@@ -134,18 +134,27 @@ public class Coup implements Cloneable, Serializable {
             jeu.setActivationPrivilegeRoi(2);
         } else if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_CARTE) {
             if (jeu.getActivationPouvoirFou()) {
-                if (jeu.getTypeCourant().equals(Type.IND) || jeu.getTypeCourant().equals(Type.GAR))
+                if (jeu.getTypeCourant().equals(Type.IND) || jeu.getTypeCourant().equals(Type.GAR)) {
                     jeu.setEtatJeu(Jeu.ETAT_CHOIX_PION);
-                else if (carte.estDeplacementFouCentre())
+                } else if (carte.estDeplacementFouCentre()) {
+                    jeu.putSelectionPions(0, Pion.typeEnPion(jeu.getTypeCourant()));
                     executerDeplacement();
-                else
+                } else {
+                    jeu.putSelectionPions(0, Pion.typeEnPion(jeu.getTypeCourant()));
                     jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
+                }
             } else {
-                if (carte.estDeplacementFouCentre() || carte.estDeplacementGarCentre())
+                if (carte.estDeplacementFouCentre()) {
+                    jeu.putSelectionPions(0, Pion.FOU);
                     executerDeplacement();
-                else if (carte.getType().equals(Type.GAR)) {
+                } else if (carte.estDeplacementGarCentre()) {
+                    jeu.putSelectionPions(0, Pion.GAR_VRT);
+                    jeu.putSelectionPions(1, Pion.GAR_RGE);
+                    executerDeplacement();
+                } else if (carte.getType().equals(Type.GAR)) {
                     jeu.setEtatJeu(Jeu.ETAT_CHOIX_PION);
                 } else {
+                    jeu.putSelectionPions(0, Pion.typeEnPion(carte.getType()));
                     jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
                     if (carte.getType().equals(Type.ROI))
                         jeu.setActivationPrivilegeRoi(1);
@@ -163,11 +172,18 @@ public class Coup implements Cloneable, Serializable {
                 jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
                 if (carte.estDeplacementFouCentre() && !typePasse.equals(Type.IND) && !typePasse.equals(Type.GAR))
                     desexecuterDeplacement();
+                else
+                    jeu.putSelectionPions(0, null);
             } else {
                 jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
-                if (carte.estDeplacementFouCentre() || carte.estDeplacementGarCentre())
+                jeu.putSelectionPions(0, null);
+                if (carte.estDeplacementFouCentre())
                     desexecuterDeplacement();
-                else if (carte.getType().equals(Type.ROI))
+                if (carte.estDeplacementGarCentre()) {
+                    jeu.putSelectionPions(1, null);
+                    desexecuterDeplacement();
+                }
+                if (carte.getType().equals(Type.ROI))
                     jeu.setActivationPrivilegeRoi(0);
             }
         }
@@ -272,15 +288,7 @@ public class Coup implements Cloneable, Serializable {
     private void executerDeplacement() {
         Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
-        Pion pion = null;
-        if ((jeu.getTypeCourant().equals(Type.IND) && carte.getType().equals(Type.GAR)) ||
-                jeu.getTypeCourant().equals(Type.GAR) || carte.estDeplacementGar1Plus1() ||
-                (jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND)))
-            pion = jeu.getSelectionPions(0);
-        else if (jeu.getActivationPouvoirFou())
-            pion = Pion.typeEnPion(jeu.getTypeCourant());
-        else if (!carte.estDeplacementGarCentre() && !carte.estDeplacementGar1Plus1())
-            pion = Pion.typeEnPion(carte.getType());
+        Pion pion = jeu.getSelectionPions(0);
         pionsPasse[0] = pion;
 
         if (carte.estDeplacementFouCentre()) {

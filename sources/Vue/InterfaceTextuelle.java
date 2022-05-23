@@ -1,17 +1,21 @@
 package Vue;
 
 import Controleur.ControleurMediateur;
+import Global.Audios;
+import Global.Format;
 import IA.IA;
 import Modele.*;
+import Vue.Adaptateurs.AdaptateurTemps;
 
+import java.awt.*;
 import java.util.Scanner;
 import javax.swing.*;
 
 public class InterfaceTextuelle extends InterfaceUtilisateur {
     Jeu jeu;
 
-    public InterfaceTextuelle(Programme prog, ControleurMediateur ctrl) {
-        super(prog, ctrl);
+    public InterfaceTextuelle(ControleurMediateur ctrl, Programme prog) {
+        super(ctrl, prog);
         jeu = prog.getJeu();
     }
 
@@ -245,15 +249,23 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case "7":
             case "+":
             case "augmenter":
-                ctrl.changerVolume(-1);
-                System.out.println("Augmentation du volume.");
+                if (Audios.peutAugmenterVolume()) {
+                    ctrl.changerVolume(+1);
+                    System.out.println("Augmentation du volume.");
+                } else {
+                    System.out.println("Volume déjà au maximum.");
+                }
                 System.out.print("Commande > ");
                 break;
             case "8":
             case "-":
             case "diminuer":
-                ctrl.changerVolume(-2);
-                System.out.println("Diminution du volume.");
+                if (Audios.peutDiminuerVolume()) {
+                    ctrl.changerVolume(-1);
+                    System.out.println("Diminution du volume.");
+                } else {
+                    System.out.println("Volume déjà au minimum.");
+                }
                 System.out.print("Commande > ");
                 break;
             case "9":
@@ -476,7 +488,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 else
                     System.out.println("Impossible de jouer ce coup dans cette direction.");
             } catch (RuntimeException e) {
-                System.out.println("Cette direction n'existe pas." + e);
+                System.out.println("Cette direction n'existe pas.");
             }
         } else {
             System.out.println("Commande invalide.");
@@ -515,7 +527,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
         Scanner s = new Scanner(System.in);
 
-        prog.changerEtat(Programme.ETAT_MENU_PRINCIPAL);
+        ctrl.demarrerProgramme();
         while (prog.getEtat() != Programme.ETAT_FIN_PROGRAMME)
             interpreterCommande(s.nextLine());
     }
@@ -685,34 +697,34 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
     private void afficherJeu(Jeu jeu) {
         String joueurCourant = Jeu.joueurEnTexte(jeu.getJoueurCourant()) + (jeu.getJoueurCourant() == Jeu.JOUEUR_VRT ? " " : "");
-        String couleurJoueur = jeu.getJoueurCourant() == Jeu.JOUEUR_VRT ? Couleur.VERT : Couleur.ROUGE;
+        Color couleurJoueur = jeu.getJoueurCourant() == Jeu.JOUEUR_VRT ? Color.GREEN : Color.RED;
 
         System.out.println("╔═══════════════════════════════════════════════════╗");
         System.out.print("║AU TOUR DE : ");
-        System.out.print(Couleur.formaterTexte(joueurCourant.toUpperCase(), couleurJoueur));
+        System.out.print(Format.formater(joueurCourant.toUpperCase(), couleurJoueur));
         System.out.printf("%24s%2d║\n", "Tour : ", jeu.getNbTour());
 
         System.out.printf("║%49s%2d║\n", "Pioche : ", jeu.getPioche().getTaille());
 
-        System.out.print("║" + Couleur.formaterTexte("    Joueur    ", Couleur.VERT));
+        System.out.print("║" + Format.formater("    Joueur    ", Color.GREEN));
         afficherPaquet(prog.getJeu().getMain(Jeu.JOUEUR_VRT), prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_VRT);
         System.out.println("             ║");
 
-        System.out.print("║" + Couleur.formaterTexte("      vert    ", Couleur.VERT));
+        System.out.print("║" + Format.formater("      vert    ", Color.GREEN));
         afficherPaquet(prog.getJeu().getSelectionCartes(Jeu.JOUEUR_VRT), false);
         System.out.println("             ║");
 
         afficherPlateau(prog.getJeu());
 
-        System.out.print("║" + Couleur.formaterTexte("              ", Couleur.ROUGE));
+        System.out.print("║" + Format.formater("              ", Color.RED));
         afficherPaquet(prog.getJeu().getSelectionCartes(Jeu.JOUEUR_RGE), false);
-        System.out.println(Couleur.formaterTexte("   Joueur    ", Couleur.ROUGE) + "║");
+        System.out.println(Format.formater("   Joueur    ", Color.RED) + "║");
 
-        System.out.print("║" + Couleur.formaterTexte("              ", Couleur.ROUGE));
+        System.out.print("║" + Format.formater("              ", Color.RED));
         afficherPaquet(prog.getJeu().getMain(Jeu.JOUEUR_RGE), prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_RGE);
-        System.out.println(Couleur.formaterTexte("   rouge     ", Couleur.ROUGE) + "║");
+        System.out.println(Format.formater("   rouge     ", Color.RED) + "║");
 
-        System.out.println("║< Annuler        Retour       Aide        Refaire >║");
+        System.out.println("║< Annuler        Pause        Aide        Refaire >║");
         System.out.println("╚═══════════════════════════════════════════════════╝");
     }
 
@@ -721,13 +733,13 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             Carte carte = paquet.getCarte(i);
             String grasItalique = (estJoueurCourant && prog.getJeu().peutSelectionnerCarte(carte)) ? "11" : "00";
             if (carte.getType().equals(Type.ROI))
-                System.out.print(Couleur.formaterTexte(carte.toString(), 190, 68, 125, grasItalique + "01"));
+                System.out.print(Format.formater(carte.toString(), Format.getCouleurType(Type.ROI.toString()), grasItalique + "01"));
             else if (carte.getType().equals(Type.GAR))
-                System.out.print(Couleur.formaterTexte(carte.toString(), 149, 169, 177, grasItalique + "01"));
+                System.out.print(Format.formater(carte.toString(), Format.getCouleurType(Type.GAR.toString()), grasItalique + "01"));
             else if (carte.getType().equals(Type.SOR))
-                System.out.print(Couleur.formaterTexte(carte.toString(), 255, 133, 55, grasItalique + "01"));
+                System.out.print(Format.formater(carte.toString(), Format.getCouleurType(Type.SOR.toString()), grasItalique + "01"));
             else if (carte.getType().equals(Type.FOU))
-                System.out.print(Couleur.formaterTexte(carte.toString(), 100, 199, 194, grasItalique + "01"));
+                System.out.print(Format.formater(carte.toString(), Format.getCouleurType(Type.FOU.toString()), grasItalique + "01"));
             System.out.print(" ");
         }
         for (int i = paquet.getTaille(); i < paquet.getTailleMax(); i++) {
@@ -765,10 +777,9 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                     txt = "   ";
                 }
 
-                int[] couleurs = Couleur.obtenirCouleur(c);
                 String grasItalique = pionSelectionnable ? "11" : "00";
                 String souligne = l == 0 ? "1" : "0";
-                System.out.print(Couleur.formaterTexte(txt, couleurs[0], couleurs[1], couleurs[2], grasItalique + souligne + "1"));
+                System.out.print(Format.formater(txt, Format.getCouleurCase(c), grasItalique + souligne + "1"));
             }
             System.out.println("║");
         }
