@@ -597,6 +597,15 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.println("   Maxime Bouchenoua");
                 System.out.println("   Sacha Isaac--Chassande");
                 System.out.println("   Landry Rolland\n");
+                System.out.println("Jeu de société :");
+                System.out.println("   Auteur : Reiner Knizia");
+                System.out.println("   Illustrateur : Karl James Mountford");
+                System.out.println("   Chefs de projet : Mathilde Audinet");
+                System.out.println("                     Adrien Fenouillet");
+                System.out.println("   Rédacteur : Mathilde Audinet");
+                System.out.println("               Reiner Knizia");
+                System.out.println("   Graphiste : Cindy Roth");
+                System.out.println("   Relecteur : Xavier Taverne\n");
                 break;
             case Programme.ETAT_FIN_PROGRAMME:
                 System.out.println("\nFermeture en cours...\n");
