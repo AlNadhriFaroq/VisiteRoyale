@@ -13,8 +13,11 @@ import java.util.Random;
 public class IAMinMax extends IA{
     private static final int  PROFONDEUR = 1 ;
     Tas<Jeu> lj;
+
     //List<Jeu> lj;
     List<Integer> lpoids;
+    List<Coup> lcf;
+    int tailleLcf;
     Hashtable<Jeu,List<Coup>> listeDeJeu;
     Hashtable<Jeu,Integer> listePoidJeuConf ;
     Hashtable<Jeu,Jeu>predecessor;
@@ -25,14 +28,25 @@ public class IAMinMax extends IA{
     public IAMinMax(Jeu jeu) {
         super(jeu);
         lj = new Tas<>();
+        lcf = new ArrayList<>();
     }
     public Coup calculerCoup (){
-        Random r = new Random();
-        //System.out.println("lj : " + evaluationTour(jeu));
-        evaluationTour(jeu);
-        Jeu j = lj.extraire();
-        List<Coup> lc = jeu.calculerListeCoup();
-        return lc.get(r.nextInt(lc.size()));
+        Coup cp = null;
+
+        if(tailleLcf == lcf.size()){
+            lcf.clear();
+            evaluationTour(jeu);
+            Jeu j = lj.extraire();
+            System.out.println("jeu : " + j);
+            lcf = j.getPasse();
+            tailleLcf = 0;
+        }
+        if(tailleLcf != lcf.size()){
+            cp = lcf.get(tailleLcf);
+            tailleLcf ++;
+        }
+        System.out.println("coup cp: " + cp);
+        return cp;
     }
 
     private boolean  estFeuille(Jeu jeu){
@@ -72,12 +86,14 @@ public class IAMinMax extends IA{
 
     private void evaluationTour (Jeu jeu){
         List<Coup> lc =  jeu.calculerListeCoup();
+        Jeu clone = jeu.clone();
         for (Coup c : lc){
-            evaluationTourRec(c , jeu);
+            evaluationTourRec(c , clone);
         }
     }
     private void evaluationTourRec (Coup coup , Jeu jeu){
         jeu.jouerCoup(coup);
+        System.out.println("Coup " + coup);
         if (coup.getTypeCoup() == Coup.FINIR_TOUR ) {
             lj.inserer(jeu, evaluationTerrain(jeu));
         }else{

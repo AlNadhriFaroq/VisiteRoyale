@@ -23,6 +23,10 @@ public class Historique implements Serializable {
         return passe.get(passe.size()-1);
     }
 
+    public List<Coup> getPasse() {
+        return passe;
+    }
+
     public Coup getCoupFutur() {
         return futur.get(futur.size()-1);
     }
