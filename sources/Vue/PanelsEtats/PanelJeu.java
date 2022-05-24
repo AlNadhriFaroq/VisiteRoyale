@@ -6,11 +6,12 @@ import Modele.*;
 import Vue.*;
 import Vue.Adaptateurs.*;
 import Vue.ComponentsJeu.*;
+import Vue.ComponentsMenus.BoutonMenu;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PanelJeu extends Panel {
+public class PanelJeu extends PanelEtat {
     Jeu jeu;
 
     PaquetVue mainVrtVue;
@@ -19,18 +20,20 @@ public class PanelJeu extends Panel {
     PaquetVue selectionRgeVue;
     PaquetVue mainRgeVue;
 
-    Bouton boutonPause;
-    Bouton boutonAnnuler;
-    Bouton boutonRefaire;
-    Bouton boutonFinTour;
-    Bouton boutonPouvoirSor;
-    Bouton boutonPouvoirFou;
+    BoutonMenu boutonMenuPause;
+    BoutonMenu boutonMenuIndice;
+    BoutonMenu boutonMenuAnnuler;
+    BoutonMenu boutonMenuRefaire;
+    BoutonMenu boutonMenuPouvoirSor;
+    BoutonMenu boutonMenuPouvoirFou;
+    BoutonMenu boutonMenuFinTour;
 
     public PanelJeu(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
         super(ctrl, vue, prog);
         jeu = prog.getJeu();
 
-        setLayout(new GridLayout(3, 1, 0, 10));
+        setLayout(new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
         imgFond = Images.FOND_JEU;
 
         /* Construction des composants */
@@ -40,12 +43,16 @@ public class PanelJeu extends Panel {
         selectionRgeVue = new PaquetVue(jeu.getSelectionCartes(Jeu.JOUEUR_RGE));
         mainRgeVue = new PaquetVue(jeu.getMain(Jeu.JOUEUR_RGE));
 
-        boutonPause = new Bouton("Pause");
-        boutonAnnuler = new Bouton("Annuler");
-        boutonRefaire = new Bouton("Refaire");
-        boutonFinTour = new Bouton("Fin de tour");
-        boutonPouvoirSor = new Bouton("Sorcier");
-        boutonPouvoirFou = new Bouton("Fou");
+        boutonMenuPause = new BoutonMenu("Pause");
+        boutonMenuIndice = new BoutonMenu("Indice");
+        boutonMenuAnnuler = new BoutonMenu("Annuler");
+        boutonMenuRefaire = new BoutonMenu("Refaire");
+        boutonMenuPouvoirSor = new BoutonMenu("Sorcier");
+        boutonMenuPouvoirFou = new BoutonMenu("Fou");
+        boutonMenuFinTour = new BoutonMenu("Fin de tour");
+
+        ImageChateau chateauVrt = new ImageChateau(Images.CHATEAU_VRT, true);
+        ImageChateau chateauRge = new ImageChateau(Images.CHATEAU_RGE, false);
 
         /* Retransmission des evenements au controleur */
         for (int i = 0; i < Jeu.TAILLE_MAIN; i++) {
@@ -59,56 +66,32 @@ public class PanelJeu extends Panel {
         for (int i = Plateau.BORDURE_VRT; i <= Plateau.BORDURE_RGE; i++)
             plateauVue.getCaseVue(i).addMouseListener(new AdaptateurSouris(ctrl, vue, prog));
 
-        boutonPause.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonAnnuler.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonRefaire.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonFinTour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonPouvoirSor.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonPouvoirFou.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuPause.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuAnnuler.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuRefaire.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuFinTour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuPouvoirSor.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuPouvoirFou.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
 
         /* Disposition des composants dans la fenetre */
-        Box boxBoutonsHistorique = Box.createHorizontalBox();
-        boxBoutonsHistorique.add(boutonAnnuler);
-        boxBoutonsHistorique.add(Box.createHorizontalGlue());
-        boxBoutonsHistorique.add(boutonRefaire);
+        add(chateauVrt, new GridBagConstraints(0, 0, 2, 2, 1.0 / 15.0, 1.0 / 6.0, GridBagConstraints.FIRST_LINE_START, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        add(mainVrtVue, new GridBagConstraints(2, 0, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_START, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        add(selectionVrtVue, new GridBagConstraints(2, 1, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_END, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        add(boutonMenuIndice, new GridBagConstraints(3, 0, 1, 1, 1.0 / 15.0, 1.0 / 6.0, GridBagConstraints.FIRST_LINE_END, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+        add(boutonMenuPause, new GridBagConstraints(4, 0, 1, 1, 1.0 / 15.0, 1.0 / 6.0, GridBagConstraints.FIRST_LINE_END, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-        Box boxBoutonsPouvoirs = Box.createVerticalBox();
-        boxBoutonsPouvoirs.add(boutonPouvoirSor);
-        boxBoutonsPouvoirs.add(Box.createVerticalGlue());
-        boxBoutonsPouvoirs.add(boutonPouvoirFou);
+        add(boutonMenuAnnuler, new GridBagConstraints(0, 3, 1, 1, 1.0 / 15.0, 1.0 / 9.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+        add(boutonMenuRefaire, new GridBagConstraints(1, 3, 1, 1, 1.0 / 15.0, 1.0 / 9.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-        Box boxMainVrt = Box.createVerticalBox();
-        boxMainVrt.add(mainVrtVue);
-        boxMainVrt.add(selectionVrtVue);
+        add(plateauVue, new GridBagConstraints(2, 2, 1, 3, 10.0 / 15.0, 1.0 / 9.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-        Box boxMainRge = Box.createVerticalBox();
-        boxMainRge.add(selectionRgeVue);
-        boxMainRge.add(mainRgeVue);
+        add(boutonMenuPouvoirSor, new GridBagConstraints(3, 2, 2, 1, 1.0 / 15.0, 1.0 / 9.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+        add(boutonMenuPouvoirFou, new GridBagConstraints(3, 4, 2, 1, 1.0 / 15.0, 1.0 / 9.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-        JPanel panelVrt = new JPanel();
-        panelVrt.setBackground(new Color(0, 0, 0, 0));
-        panelVrt.setLayout(new BorderLayout());
-        panelVrt.add(Box.createGlue(), BorderLayout.WEST);
-        panelVrt.add(boxMainVrt, BorderLayout.CENTER);
-        panelVrt.add(boutonPause, BorderLayout.EAST);
-
-        JPanel panelRge = new JPanel();
-        panelRge.setBackground(new Color(0, 0, 0, 0));
-        panelRge.setLayout(new BorderLayout());
-        panelRge.add(Box.createGlue(), BorderLayout.WEST);
-        panelRge.add(boxMainRge, BorderLayout.CENTER);
-        panelRge.add(boutonFinTour, BorderLayout.EAST);
-
-        JPanel panelPlateau = new JPanel();
-        panelPlateau.setBackground(new Color(0, 0, 0, 0));
-        panelPlateau.setLayout(new BorderLayout());
-        panelPlateau.add(boxBoutonsHistorique, BorderLayout.WEST);
-        panelPlateau.add(plateauVue, BorderLayout.CENTER);
-        panelPlateau.add(boxBoutonsPouvoirs, BorderLayout.EAST);
-
-        add(panelVrt);
-        add(panelPlateau);
-        add(panelRge);
+        add(chateauRge, new GridBagConstraints(0, 5, 2, 2, 1.0 / 15.0, 1.0 / 6.0, GridBagConstraints.LAST_LINE_START, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        add(selectionRgeVue, new GridBagConstraints(2, 5, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_START, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        add(mainRgeVue, new GridBagConstraints(2, 6, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_END, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        add(boutonMenuFinTour, new GridBagConstraints(3, 6, 2, 1, 1.0 / 15.0, 1.0 / 6.0, GridBagConstraints.LAST_LINE_END, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     }
 
     public PaquetVue getMainVue(int joueur) {
@@ -123,28 +106,28 @@ public class PanelJeu extends Panel {
         return plateauVue;
     }
 
-    public Bouton getBoutonPause() {
-        return boutonPause;
+    public BoutonMenu getBoutonPause() {
+        return boutonMenuPause;
     }
 
-    public Bouton getBoutonAnnuler() {
-        return boutonAnnuler;
+    public BoutonMenu getBoutonAnnuler() {
+        return boutonMenuAnnuler;
     }
 
-    public Bouton getBoutonRefaire() {
-        return boutonRefaire;
+    public BoutonMenu getBoutonRefaire() {
+        return boutonMenuRefaire;
     }
 
-    public Bouton getBoutonFinTour() {
-        return boutonFinTour;
+    public BoutonMenu getBoutonFinTour() {
+        return boutonMenuFinTour;
     }
 
-    public Bouton getBoutonPouvoirSor() {
-        return boutonPouvoirSor;
+    public BoutonMenu getBoutonPouvoirSor() {
+        return boutonMenuPouvoirSor;
     }
 
-    public Bouton getBoutonPouvoirFou() {
-        return boutonPouvoirFou;
+    public BoutonMenu getBoutonPouvoirFou() {
+        return boutonMenuPouvoirFou;
     }
 
     @Override

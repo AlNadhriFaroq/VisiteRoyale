@@ -5,73 +5,74 @@ import Global.Images;
 import Modele.Programme;
 import Vue.*;
 import Vue.Adaptateurs.AdaptateurBoutons;
+import Vue.ComponentsMenus.BoutonMenu;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PanelMenuJeu extends Panel {
-    Bouton boutonReprendre;
-    Bouton boutonNouvellePartie;
-    Bouton boutonSauvegardes;
-    Bouton boutonOptions;
-    Bouton boutonTutoriel;
-    Bouton boutonRetour;
+public class PanelMenuJeu extends PanelEtat {
+    BoutonMenu boutonMenuReprendre;
+    BoutonMenu boutonMenuNouvellePartie;
+    BoutonMenu boutonMenuSauvegardes;
+    BoutonMenu boutonMenuOptions;
+    BoutonMenu boutonMenuTutoriel;
+    BoutonMenu boutonMenuRetour;
 
     public PanelMenuJeu(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
         super(ctrl, vue, prog);
 
         imgFond = Images.FOND_JEU;
 
-        boutonReprendre = new Bouton("Reprendre");
-        boutonNouvellePartie = new Bouton("Nouvelle partie");
-        boutonSauvegardes = new Bouton("Sauvegardes");
-        boutonOptions = new Bouton("Options");
-        boutonTutoriel = new Bouton("Tutoriel");
-        boutonRetour = new Bouton("Retour au menu principal");
+        boutonMenuReprendre = new BoutonMenu("Reprendre");
+        boutonMenuNouvellePartie = new BoutonMenu("Nouvelle partie");
+        boutonMenuSauvegardes = new BoutonMenu("Sauvegardes");
+        boutonMenuOptions = new BoutonMenu("Options");
+        boutonMenuTutoriel = new BoutonMenu("Tutoriel");
+        boutonMenuRetour = new BoutonMenu("Retour au menu principal");
 
-        boutonReprendre.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonNouvellePartie.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonSauvegardes.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonOptions.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonTutoriel.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonRetour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuReprendre.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuNouvellePartie.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuSauvegardes.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuOptions.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuTutoriel.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
 
         JPanel panelBoutons = new JPanel();
         panelBoutons.setBackground(new Color(0, 0, 0, 0));
         panelBoutons.setLayout(new GridLayout(7, 1, 0, 10));
 
-        panelBoutons.add(boutonReprendre);
-        panelBoutons.add(boutonNouvellePartie);
-        panelBoutons.add(boutonSauvegardes);
-        panelBoutons.add(boutonOptions);
-        panelBoutons.add(boutonTutoriel);
-        panelBoutons.add(boutonRetour);
+        panelBoutons.add(boutonMenuReprendre);
+        panelBoutons.add(boutonMenuNouvellePartie);
+        panelBoutons.add(boutonMenuSauvegardes);
+        panelBoutons.add(boutonMenuOptions);
+        panelBoutons.add(boutonMenuTutoriel);
+        panelBoutons.add(boutonMenuRetour);
 
         add(new Cadre(panelBoutons, 10, 10, 8, 8));
     }
 
-    public Bouton getBoutonReprendre() {
-        return boutonReprendre;
+    public BoutonMenu getBoutonReprendre() {
+        return boutonMenuReprendre;
     }
 
-    public Bouton getBoutonNouvellePartie() {
-        return boutonNouvellePartie;
+    public BoutonMenu getBoutonNouvellePartie() {
+        return boutonMenuNouvellePartie;
     }
 
-    public Bouton getBoutonSauvegardes() {
-        return boutonSauvegardes;
+    public BoutonMenu getBoutonSauvegardes() {
+        return boutonMenuSauvegardes;
     }
 
-    public Bouton getBoutonOptions() {
-        return boutonOptions;
+    public BoutonMenu getBoutonOptions() {
+        return boutonMenuOptions;
     }
 
-    public Bouton getBoutonTutoriel() {
-        return boutonTutoriel;
+    public BoutonMenu getBoutonTutoriel() {
+        return boutonMenuTutoriel;
     }
 
-    public Bouton getBoutonRetour() {
-        return boutonRetour;
+    public BoutonMenu getBoutonRetour() {
+        return boutonMenuRetour;
     }
 
     @Override

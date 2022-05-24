@@ -5,7 +5,6 @@ import Global.Configuration;
 import Modele.Programme;
 import Vue.Adaptateurs.*;
 import Vue.PanelsEtats.*;
-import Vue.PanelsEtats.Panel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,18 +14,52 @@ public class InterfaceGraphique extends InterfaceUtilisateur {
     private JFrame fenetre;
     private CardLayout pages;
 
-    private Panel[] panels;
+    private PanelAccueil panelAccueil;
+    private PanelMenuPrincipal panelMenuPrincipal;
+    private PanelEnJeu panelEnJeu;
+    private PanelMenuJeu panelMenuJeu;
+    private PanelMenuSauvegardes panelMenuSauvegardes;
+    private PanelMenuOptions panelMenuOptions;
+    private PanelTutoriel panelTutoriel;
+    private PanelCredits panelCredits;
 
     int etat;
 
     public InterfaceGraphique(ControleurMediateur ctrl, Programme prog) {
         super(ctrl, prog);
         etat = prog.getEtat();
-        panels = new Panel[8];
     }
 
-    public Panel getPanel(int etat) {
-        return panels[etat];
+    public PanelAccueil getPanelAccueil() {
+        return panelAccueil;
+    }
+
+    public PanelMenuPrincipal getPanelMenuPrincipal() {
+        return panelMenuPrincipal;
+    }
+
+    public PanelEnJeu getPanelEnJeu() {
+        return panelEnJeu;
+    }
+
+    public PanelMenuJeu getPanelMenuJeu() {
+        return panelMenuJeu;
+    }
+
+    public PanelMenuSauvegardes getPanelMenuSauvegardes() {
+        return panelMenuSauvegardes;
+    }
+
+    public PanelMenuOptions getPanelMenuOptions() {
+        return panelMenuOptions;
+    }
+
+    public PanelTutoriel getPanelTutoriel() {
+        return panelTutoriel;
+    }
+
+    public PanelCredits getPanelCredits() {
+        return panelCredits;
     }
 
     public void run() {
@@ -41,28 +74,28 @@ public class InterfaceGraphique extends InterfaceUtilisateur {
         fenetre.setLayout(pages);
 
         /* Affichage de la fenetre d'accueil */
-        panels[Programme.ETAT_ACCUEIL] = new PanelAccueil(ctrl, this, prog);
-        fenetre.add(panels[Programme.ETAT_ACCUEIL], Integer.toString(Programme.ETAT_ACCUEIL));
+        panelAccueil = new PanelAccueil(ctrl, this, prog);
+        fenetre.add(panelAccueil, Integer.toString(Programme.ETAT_ACCUEIL));
         pages.show(fenetre.getContentPane(), Integer.toString(Programme.ETAT_ACCUEIL));
         fenetre.setVisible(true);
 
         /* Construction des composants */
-        panels[Programme.ETAT_MENU_PRINCIPAL] = new PanelMenuPrincipal(ctrl, this, prog);
-        panels[Programme.ETAT_EN_JEU] = new PanelEnJeu(ctrl, this, prog);
-        panels[Programme.ETAT_MENU_JEU] = new PanelMenuJeu(ctrl, this, prog);
-        panels[Programme.ETAT_MENU_SAUVEGARDES] = new PanelMenuSauvegardes(ctrl, this, prog);
-        panels[Programme.ETAT_MENU_OPTIONS] = new PanelMenuOptions(ctrl, this, prog);
-        panels[Programme.ETAT_TUTORIEL] = new PanelTutoriel(ctrl, this, prog);
-        panels[Programme.ETAT_CREDITS] = new PanelCredits(ctrl, this, prog);
+        panelMenuPrincipal = new PanelMenuPrincipal(ctrl, this, prog);
+        panelEnJeu = new PanelEnJeu(ctrl, this, prog);
+        panelMenuJeu = new PanelMenuJeu(ctrl, this, prog);
+        panelMenuSauvegardes = new PanelMenuSauvegardes(ctrl, this, prog);
+        panelMenuOptions = new PanelMenuOptions(ctrl, this, prog);
+        panelTutoriel = new PanelTutoriel(ctrl, this, prog);
+        panelCredits = new PanelCredits(ctrl, this, prog);
 
         /* Disposition des composants dans la fenetre */
-        fenetre.add(panels[Programme.ETAT_MENU_PRINCIPAL], Integer.toString(Programme.ETAT_MENU_PRINCIPAL));
-        fenetre.add(panels[Programme.ETAT_EN_JEU], Integer.toString(Programme.ETAT_EN_JEU));
-        fenetre.add(panels[Programme.ETAT_MENU_JEU], Integer.toString(Programme.ETAT_MENU_JEU));
-        fenetre.add(panels[Programme.ETAT_MENU_SAUVEGARDES], Integer.toString(Programme.ETAT_MENU_SAUVEGARDES));
-        fenetre.add(panels[Programme.ETAT_MENU_OPTIONS], Integer.toString(Programme.ETAT_MENU_OPTIONS));
-        fenetre.add(panels[Programme.ETAT_TUTORIEL], Integer.toString(Programme.ETAT_TUTORIEL));
-        fenetre.add(panels[Programme.ETAT_CREDITS], Integer.toString(Programme.ETAT_CREDITS));
+        fenetre.add(panelMenuPrincipal, Integer.toString(Programme.ETAT_MENU_PRINCIPAL));
+        fenetre.add(panelEnJeu, Integer.toString(Programme.ETAT_EN_JEU));
+        fenetre.add(panelMenuJeu, Integer.toString(Programme.ETAT_MENU_JEU));
+        fenetre.add(panelMenuSauvegardes, Integer.toString(Programme.ETAT_MENU_SAUVEGARDES));
+        fenetre.add(panelMenuOptions, Integer.toString(Programme.ETAT_MENU_OPTIONS));
+        fenetre.add(panelTutoriel, Integer.toString(Programme.ETAT_TUTORIEL));
+        fenetre.add(panelCredits, Integer.toString(Programme.ETAT_CREDITS));
 
         /* Retransmission des evenements au controleur */
         prog.ajouterObservateur(this);

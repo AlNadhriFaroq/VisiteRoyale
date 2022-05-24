@@ -5,13 +5,14 @@ import Global.Images;
 import Modele.*;
 import Vue.Adaptateurs.AdaptateurBoutons;
 import Vue.*;
+import Vue.ComponentsMenus.BoutonMenu;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PanelChoixJoueur extends Panel {
-    Bouton boutonGauche;
-    Bouton boutonDroite;
+public class PanelChoixJoueur extends PanelEtat {
+    BoutonMenu boutonMenuGauche;
+    BoutonMenu boutonMenuDroite;
 
     public PanelChoixJoueur(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
         super(ctrl, vue, prog);
@@ -22,18 +23,18 @@ public class PanelChoixJoueur extends Panel {
         txt1.setHorizontalAlignment(JLabel.CENTER);
         JLabel txt2 = new JLabel("Main gauche ou main droite ?");
         txt2.setHorizontalAlignment(JLabel.CENTER);
-        boutonGauche = new Bouton("Gauche");
-        boutonDroite = new Bouton("Droite");
+        boutonMenuGauche = new BoutonMenu("Gauche");
+        boutonMenuDroite = new BoutonMenu("Droite");
 
-        boutonGauche.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonDroite.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuGauche.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuDroite.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
 
         JPanel panelBoutons = new JPanel();
         panelBoutons.setBackground(new Color(0, 0, 0, 0));
         panelBoutons.setLayout(new GridLayout(1, 3));
-        panelBoutons.add(boutonGauche);
+        panelBoutons.add(boutonMenuGauche);
         panelBoutons.add(Box.createHorizontalGlue());
-        panelBoutons.add(boutonDroite);
+        panelBoutons.add(boutonMenuDroite);
 
         JPanel sousPanel = new JPanel();
         sousPanel.setBackground(new Color(94, 125, 203, 0));
@@ -46,12 +47,12 @@ public class PanelChoixJoueur extends Panel {
         add(new Cadre(sousPanel, 10, 10, 10, 10));
     }
 
-    public Bouton getBoutonGauche() {
-        return boutonGauche;
+    public BoutonMenu getBoutonGauche() {
+        return boutonMenuGauche;
     }
 
-    public Bouton getBoutonDroite() {
-        return boutonDroite;
+    public BoutonMenu getBoutonDroite() {
+        return boutonMenuDroite;
     }
 
     @Override

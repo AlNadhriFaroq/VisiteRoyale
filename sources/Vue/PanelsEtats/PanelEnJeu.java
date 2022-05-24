@@ -7,7 +7,7 @@ import Vue.InterfaceGraphique;
 
 import java.awt.*;
 
-public class PanelEnJeu extends Panel {
+public class PanelEnJeu extends PanelEtat {
     private final CardLayout panels;
 
     private final PanelJeu panelJeu;

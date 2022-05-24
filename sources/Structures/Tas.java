@@ -3,9 +3,9 @@ package Structures;
 import java.util.*;
 
 public class Tas<E> {
-    List<E> valeurs;
-    List<Integer> poids;
-    int taille;
+    private List<E> valeurs;
+    private List<Integer> poids;
+    private int taille;
 
     public Tas() {
         valeurs = new ArrayList<>();
@@ -16,7 +16,7 @@ public class Tas<E> {
         return taille;
     }
 
-    void echanger(int ind1, int ind2) {
+    private void echanger(int ind1, int ind2) {
         E valeurTmp = valeurs.get(ind1);
         Integer poidsTmp = poids.get(ind1);
 

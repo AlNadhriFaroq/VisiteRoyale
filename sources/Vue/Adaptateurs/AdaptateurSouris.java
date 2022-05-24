@@ -1,15 +1,12 @@
 package Vue.Adaptateurs;
 
 import Controleur.ControleurMediateur;
-import Modele.Jeu;
-import Modele.Plateau;
-import Modele.Programme;
+import Modele.*;
 import Vue.ComponentsJeu.*;
-import Vue.InterfaceGraphique;
 import Vue.PanelsEtats.PanelEnJeu;
+import Vue.InterfaceGraphique;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public class AdaptateurSouris extends MouseAdapter {
     ControleurMediateur ctrl;
@@ -25,7 +22,7 @@ public class AdaptateurSouris extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getSource() instanceof CarteVue &&
-                ((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelJeu().getMainVue(prog.getJeu().getJoueurCourant()).contientCarteVue((CarteVue) e.getSource()) &&
+                vue.getPanelEnJeu().getPanelJeu().getMainVue(prog.getJeu().getJoueurCourant()).contientCarteVue((CarteVue) e.getSource()) &&
                 prog.getJeu().peutSelectionnerCarte(((CarteVue) e.getSource()).getCarte()))
             ctrl.selectionnerCarte(((CarteVue) e.getSource()).getCarte());
         else if (e.getSource() instanceof PionVue &&

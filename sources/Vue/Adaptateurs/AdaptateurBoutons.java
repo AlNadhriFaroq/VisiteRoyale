@@ -3,6 +3,8 @@ package Vue.Adaptateurs;
 import Controleur.ControleurMediateur;
 import Modele.Jeu;
 import Modele.Programme;
+import Vue.ComponentsMenus.BoutonSauvegarde;
+import Vue.ComponentsMenus.BoutonSupprimer;
 import Vue.InterfaceGraphique;
 import Vue.PanelsEtats.*;
 
@@ -22,54 +24,69 @@ public class AdaptateurBoutons implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(((PanelMenuPrincipal) vue.getPanel(Programme.ETAT_MENU_PRINCIPAL)).getBoutonJouer1vs1()))
+        if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.jouer1vs1)))
             ctrl.nouvellePartie(false, false);
-        else if (e.getSource().equals(((PanelMenuPrincipal) vue.getPanel(Programme.ETAT_MENU_PRINCIPAL)).getBoutonJouerVsIA()))
+        else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.jouerVsIA)))
             ctrl.nouvellePartie(true, false);
-        else if (e.getSource().equals(((PanelMenuPrincipal) vue.getPanel(Programme.ETAT_MENU_PRINCIPAL)).getBoutonSauvegardes()) ||
-                e.getSource().equals(((PanelMenuJeu) vue.getPanel(Programme.ETAT_MENU_JEU)).getBoutonSauvegardes()))
+        else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.sauvegardes)) ||
+                e.getSource().equals(vue.getPanelMenuJeu().getBoutonSauvegardes()))
             ctrl.ouvrirMenuSauvegardes();
-        else if (e.getSource().equals(((PanelMenuPrincipal) vue.getPanel(Programme.ETAT_MENU_PRINCIPAL)).getBoutonOptions()) ||
-                e.getSource().equals(((PanelMenuJeu) vue.getPanel(Programme.ETAT_MENU_JEU)).getBoutonOptions()))
+        else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.options)) ||
+                e.getSource().equals(vue.getPanelMenuJeu().getBoutonOptions()))
             ctrl.ouvrirMenuOptions();
-        else if (e.getSource().equals(((PanelMenuPrincipal) vue.getPanel(Programme.ETAT_MENU_PRINCIPAL)).getBoutonTutoriel()) ||
-                e.getSource().equals(((PanelMenuJeu) vue.getPanel(Programme.ETAT_MENU_JEU)).getBoutonTutoriel()))
+        else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.tutoriel)) ||
+                e.getSource().equals(vue.getPanelMenuJeu().getBoutonTutoriel()))
             ctrl.ouvrirTutoriel();
-        else if (e.getSource().equals(((PanelMenuPrincipal) vue.getPanel(Programme.ETAT_MENU_PRINCIPAL)).getBoutonCredits()))
+        else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.credits)))
             ctrl.ouvrirCredits();
-        else if (e.getSource().equals(((PanelMenuPrincipal) vue.getPanel(Programme.ETAT_MENU_PRINCIPAL)).getBoutonQuitter()))
+        else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.quitter)))
             ctrl.quitter();
-        else if (e.getSource().equals(((PanelMenuJeu) vue.getPanel(Programme.ETAT_MENU_JEU)).getBoutonReprendre()))
+        else if (e.getSource().equals(vue.getPanelMenuJeu().getBoutonReprendre()))
             ctrl.reprendrePartie();
-        else if (e.getSource().equals(((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelFinPartie().getBoutonNouvellePartie()) ||
-                e.getSource().equals(((PanelMenuJeu) vue.getPanel(Programme.ETAT_MENU_JEU)).getBoutonNouvellePartie()))
+        else if (e.getSource().equals(vue.getPanelEnJeu().getPanelFinPartie().getBoutonNouvellePartie()) ||
+                e.getSource().equals(vue.getPanelMenuJeu().getBoutonNouvellePartie()))
             ctrl.nouvellePartie(prog.getJoueurEstIA(Jeu.JOUEUR_VRT), prog.getJoueurEstIA(Jeu.JOUEUR_RGE));
-        else if (e.getSource().equals(((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelFinPartie().getBoutonRetour()) ||
-                e.getSource().equals(((PanelMenuJeu) vue.getPanel(Programme.ETAT_MENU_JEU)).getBoutonRetour()) ||
-                e.getSource().equals(((PanelMenuSauvegardes) vue.getPanel(Programme.ETAT_MENU_SAUVEGARDES)).getBoutonRetour()) ||
-                e.getSource().equals(((PanelMenuOptions) vue.getPanel(Programme.ETAT_MENU_OPTIONS)).getBoutonRetour()) ||
-                e.getSource().equals(((PanelTutoriel) vue.getPanel(Programme.ETAT_TUTORIEL)).getBoutonRetour()) ||
-                e.getSource().equals(((PanelCredits) vue.getPanel(Programme.ETAT_CREDITS)).getBoutonRetour()))
+        else if (e.getSource().equals(vue.getPanelEnJeu().getPanelFinPartie().getBoutonRetour()) ||
+                e.getSource().equals(vue.getPanelMenuJeu().getBoutonRetour()) ||
+                e.getSource().equals(vue.getPanelMenuSauvegardes().getBoutonRetour()) ||
+                e.getSource().equals(vue.getPanelMenuOptions().getBoutonRetour()) ||
+                e.getSource().equals(vue.getPanelTutoriel().getBoutonRetour()) ||
+                e.getSource().equals(vue.getPanelCredits().getBoutonRetour()))
             ctrl.retourMenuPrecedant();
-        else if (e.getSource().equals(((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelChoixJoueur().getBoutonGauche()) ||
-                e.getSource().equals(((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelChoixJoueur().getBoutonDroite()))
+        else if (e.getSource().equals(vue.getPanelEnJeu().getPanelChoixJoueur().getBoutonGauche()) ||
+                e.getSource().equals(vue.getPanelEnJeu().getPanelChoixJoueur().getBoutonDroite()))
             ctrl.definirJoueurQuiCommence();
-        else if (e.getSource().equals(((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelJeu().getBoutonPause()))
+        else if (e.getSource().equals(vue.getPanelEnJeu().getPanelJeu().getBoutonPause()))
             ctrl.ouvrirMenuJeu();
-        else if (e.getSource().equals(((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelJeu().getBoutonAnnuler()) &&
+        else if (e.getSource().equals(vue.getPanelEnJeu().getPanelJeu().getBoutonAnnuler()) &&
                 prog.getJeu().peutAnnuler())
             ctrl.annuler();
-        else if (e.getSource().equals(((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelJeu().getBoutonRefaire()) &&
+        else if (e.getSource().equals(vue.getPanelEnJeu().getPanelJeu().getBoutonRefaire()) &&
                 prog.getJeu().peutRefaire())
             ctrl.refaire();
-        else if (e.getSource().equals(((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelJeu().getBoutonFinTour()) &&
+        else if (e.getSource().equals(vue.getPanelEnJeu().getPanelJeu().getBoutonFinTour()) &&
                 prog.getJeu().peutFinirTour())
             ctrl.finirTour();
-        else if (e.getSource().equals(((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelJeu().getBoutonPouvoirSor()) &&
+        else if (e.getSource().equals(vue.getPanelEnJeu().getPanelJeu().getBoutonPouvoirSor()) &&
                 prog.getJeu().peutUtiliserPouvoirSorcier())
             ctrl.activerPouvoirSor();
-        else if (e.getSource().equals(((PanelEnJeu) vue.getPanel(Programme.ETAT_EN_JEU)).getPanelJeu().getBoutonPouvoirFou()) &&
+        else if (e.getSource().equals(vue.getPanelEnJeu().getPanelJeu().getBoutonPouvoirFou()) &&
                 prog.getJeu().peutUtiliserPouvoirFou())
             ctrl.activerPouvoirFou();
+        else if (e.getSource() instanceof BoutonSupprimer) {
+            for (int i = 0; i < prog.getSauvegardes().length; i++)
+                if (e.getSource().equals(vue.getPanelMenuSauvegardes().getBoutonSupprimer(i)))
+                    ctrl.supprimerSauvegarde(i);
+        } else if (e.getSource() instanceof BoutonSauvegarde) {
+            if (prog.getJeu().getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE) {
+                for (int i = 0; i < prog.getSauvegardes().length; i++)
+                    if (e.getSource().equals(vue.getPanelMenuSauvegardes().getBoutonSauvegarde(i)))
+                        ctrl.chargerSauvegarde(i);
+            } else {
+                for (int i = 0; i < Programme.NB_SAUVEGARDES; i++)
+                    if (e.getSource().equals(vue.getPanelMenuSauvegardes().getBoutonSauvegarde(i)))
+                        ctrl.sauvegarderPartie(i);
+            }
+        }
     }
 }

@@ -3,29 +3,29 @@ package Vue.PanelsEtats;
 import Controleur.ControleurMediateur;
 import Modele.Programme;
 import Vue.Adaptateurs.AdaptateurBoutons;
-import Vue.Bouton;
+import Vue.ComponentsMenus.BoutonMenu;
 import Vue.InterfaceGraphique;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PanelTutoriel extends Panel {
-    Bouton boutonRetour;
+public class PanelTutoriel extends PanelEtat {
+    BoutonMenu boutonMenuRetour;
 
     public PanelTutoriel(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
         super(ctrl, vue, prog);
 
         JLabel texte = new JLabel("Tutoriel");
-        boutonRetour = new Bouton("Retour");
+        boutonMenuRetour = new BoutonMenu("Retour");
 
-        boutonRetour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
 
         add(texte, BorderLayout.NORTH);
-        add(boutonRetour);
+        add(boutonMenuRetour);
     }
 
-    public Bouton getBoutonRetour() {
-        return boutonRetour;
+    public BoutonMenu getBoutonRetour() {
+        return boutonMenuRetour;
     }
 
     @Override

@@ -1,26 +1,25 @@
 package Vue.ComponentsJeu;
 
-import Global.Images;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class ImageChateau extends JPanel {
     Image img;
-    int sens;
+    boolean tournee;
 
-    public ImageChateau(Image img, int sens) {
+    public ImageChateau(Image img, boolean tournee) {
         this.img = img;
-        this.sens = sens;
+        this.tournee = tournee;
+        setBackground(new Color(0, 0, 0, 0));
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D dessin = (Graphics2D) g;
-        dessin.setBackground(Color.CYAN);
-        dessin.drawImage(img, 0, 0, getWidth(), getHeight(), null);
-        dessin.setStroke(new BasicStroke(3));
-        dessin.drawRect(0, 0, getWidth(), getHeight());
+        if (tournee)
+            dessin.drawImage(img, 0, getHeight(), getWidth(), -getHeight(), null);
+        else
+            dessin.drawImage(img, 0, 0, getWidth(), getHeight(), null);
     }
 }

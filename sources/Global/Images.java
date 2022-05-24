@@ -35,6 +35,7 @@ public class Images {
     public static final Image TEXTE_VICTOIRE = lireImage("Textes" + File.separator + "Victoire");
     public static final Image TEXTE_VICTOIRE_VRT = lireImage("Textes" + File.separator + "VictoireJoueurVrt");
     public static final Image TEXTE_VICTOIRE_RGE = lireImage("Textes" + File.separator + "VictoireJoueurRge");
+    public static final Image TEXTE_CROIX = lireImage("Textes" + File.separator + "Croix");
 
     public static final Image CHATEAU_VRT = lireImage("Decors" + File.separator + "ChateauVrt");
     public static final Image CHATEAU_RGE = lireImage("Decors" + File.separator + "ChateauRge");

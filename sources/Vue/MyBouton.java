@@ -27,33 +27,34 @@ public class MyBouton extends JButton {
         this.setBackground(colorBackGround);
         this.setForeground(colorForeGround);
         this.setFont(font);
-        setSize(120,70);
+        setSize(120, 70);
         //this.setBorder(BorderFactory.createBevelBorder(1));
         setContentAreaFilled(false);
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-               setBackground(colorOver);
+                setBackground(colorOver);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-               setBackground(colorBackGround);
+                setBackground(colorBackGround);
             }
 
         });
     }
+
     @Override
     protected void paintBorder(Graphics g) {
         g.setColor(getBackground());
-        g.drawOval(0, 0, getSize().width-1,     getSize().height-1);
+        g.drawOval(0, 0, getSize().width - 1, getSize().height - 1);
     }
 
     Shape shape;
+
     @Override
     public boolean contains(int x, int y) {
-        if (shape == null ||
-                !shape.getBounds().equals(getBounds())) {
+        if (shape == null || !shape.getBounds().equals(getBounds())) {
             shape = new Ellipse2D.Float(0, 0, getWidth(), getHeight());
         }
         return shape.contains(x, y);
@@ -66,7 +67,7 @@ public class MyBouton extends JButton {
         } else {
             g.setColor(getBackground());
         }
-        g.fillOval(0, 0, getSize().width-1,getSize().height-1);
+        g.fillOval(0, 0, getSize().width - 1, getSize().height - 1);
 
         super.paintComponent(g);
 

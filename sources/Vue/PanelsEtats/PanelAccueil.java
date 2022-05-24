@@ -7,7 +7,7 @@ import Vue.InterfaceGraphique;
 
 import java.awt.*;
 
-public class PanelAccueil extends Panel {
+public class PanelAccueil extends PanelEtat {
 
     public PanelAccueil(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
         super(ctrl, vue, prog);

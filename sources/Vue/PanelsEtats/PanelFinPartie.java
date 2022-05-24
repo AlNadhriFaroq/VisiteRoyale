@@ -5,13 +5,14 @@ import Global.Images;
 import Modele.*;
 import Vue.Adaptateurs.AdaptateurBoutons;
 import Vue.*;
+import Vue.ComponentsMenus.BoutonMenu;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PanelFinPartie extends Panel {
-    Bouton boutonNouvellePartie;
-    Bouton boutonRetour;
+public class PanelFinPartie extends PanelEtat {
+    BoutonMenu boutonMenuNouvellePartie;
+    BoutonMenu boutonMenuRetour;
 
     Image img;
 
@@ -21,27 +22,27 @@ public class PanelFinPartie extends Panel {
         imgFond = Images.FOND_JEU;
 
         img = Images.TEXTE_VICTOIRE;
-        boutonNouvellePartie = new Bouton("Nouvelle partie");
-        boutonRetour = new Bouton("Retour au menu principal");
+        boutonMenuNouvellePartie = new BoutonMenu("Nouvelle partie");
+        boutonMenuRetour = new BoutonMenu("Retour au menu principal");
 
-        boutonNouvellePartie.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonRetour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuNouvellePartie.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
 
         JPanel panelBoutons = new JPanel();
         panelBoutons.setBackground(new Color(0, 0, 0, 0));
         panelBoutons.setLayout(new GridLayout(2, 1, 0, 10));
-        panelBoutons.add(boutonNouvellePartie);
-        panelBoutons.add(boutonRetour);
+        panelBoutons.add(boutonMenuNouvellePartie);
+        panelBoutons.add(boutonMenuRetour);
 
         add(new Cadre(panelBoutons, 10, 10, 7, 5));
     }
 
-    public Bouton getBoutonNouvellePartie() {
-        return boutonNouvellePartie;
+    public BoutonMenu getBoutonNouvellePartie() {
+        return boutonMenuNouvellePartie;
     }
 
-    public Bouton getBoutonRetour() {
-        return boutonRetour;
+    public BoutonMenu getBoutonRetour() {
+        return boutonMenuRetour;
     }
 
     @Override

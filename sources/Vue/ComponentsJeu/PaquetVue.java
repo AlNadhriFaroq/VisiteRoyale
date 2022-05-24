@@ -45,10 +45,11 @@ public class PaquetVue extends JPanel {
     }
 
     public void mettreAJour(boolean cachee) {
-        for (int i = 0; i < paquet.getTaille(); i++)
+        removeAll();
+        for (int i = 0; i < paquet.getTaille(); i++) {
             cartesVue[i].mettreAJour(paquet.getCarte(i), cachee);
-        for (int i = paquet.getTaille(); i < paquet.getTailleMax(); i++)
-            cartesVue[i].mettreAJour(null, false);
+            add(cartesVue[i]);
+        }
         repaint();
     }
 }
