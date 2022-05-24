@@ -8,22 +8,14 @@ import Structures.Tas;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Random;
 
 public class IAMinMax extends IA{
     private static final int  PROFONDEUR = 1 ;
     Tas<Jeu> lj;
 
-    //List<Jeu> lj;
     List<Integer> lpoids;
     List<Coup> lcf;
     int tailleLcf;
-    Hashtable<Jeu,List<Coup>> listeDeJeu;
-    Hashtable<Jeu,Integer> listePoidJeuConf ;
-    Hashtable<Jeu,Jeu>predecessor;
-    List<Coup> listeDeCoup ;
-    List<List<Coup>> nomdelaliste;
-
 
     public IAMinMax(Jeu jeu) {
         super(jeu);
@@ -33,19 +25,19 @@ public class IAMinMax extends IA{
     public Coup calculerCoup (){
         Coup cp = null;
 
-        if(tailleLcf == lcf.size()){
-            lcf.clear();
+        if(tailleLcf == 0){
             evaluationTour(jeu);
             Jeu j = lj.extraire();
-            System.out.println("jeu : " + j);
-            lcf = j.getPasse();
-            tailleLcf = 0;
+            System.out.println(j);
+            lcf = j.getDernierTour();
+            System.out.println("lcf : " + lcf);
+            System.out.println(evaluationTerrain(j));
+            tailleLcf = lcf.size();
         }
-        if(tailleLcf != lcf.size()){
-            cp = lcf.get(tailleLcf);
-            tailleLcf ++;
+        if(tailleLcf != 0){
+            cp = lcf.get(tailleLcf - 1);
+            tailleLcf --;
         }
-        System.out.println("coup cp: " + cp);
         return cp;
     }
 
@@ -93,7 +85,6 @@ public class IAMinMax extends IA{
     }
     private void evaluationTourRec (Coup coup , Jeu jeu){
         jeu.jouerCoup(coup);
-        System.out.println("Coup " + coup);
         if (coup.getTypeCoup() == Coup.FINIR_TOUR ) {
             lj.inserer(jeu, evaluationTerrain(jeu));
         }else{
