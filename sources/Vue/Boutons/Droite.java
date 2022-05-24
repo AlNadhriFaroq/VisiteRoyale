@@ -17,6 +17,7 @@ public class Droite extends Bouton {
     void action() {
         if (jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE))); {
             ctrl.selectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE));
+
             this.frame.defausserJeu(jeu.getJoueurCourant());
             this.frame.terrain.majPositions();
         }

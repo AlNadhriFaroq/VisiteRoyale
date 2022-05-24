@@ -87,7 +87,6 @@ public class PionVue extends JPanel implements MouseInputListener {
         switch (name){
             case "R":
                 images.put(name,Utils.loadImg(path+"ROI.png"));
-                System.out.println(path+"ROI.png");
                 return images.get(name);
             case "GV":
                 images.put(name, Utils.loadImg(path+"GARDEA.png"));

@@ -4,6 +4,7 @@ import Global.Configuration;
 import IA.*;
 import Modele.*;
 import Vue.Audio;
+import Vue.CarteVue;
 import Vue.JeuVue;
 
 import java.io.*;
@@ -25,7 +26,9 @@ public class ControleurMediateur {
         audio = new Audio();
         audio.boucler(Audio.MUSIQUE_MENUS1);
     }
-
+    public void setJeuVue(JeuVue j){
+        this.jeuVue = j;
+    }
     public void clicSouris(int x, int y) {
         System.out.println("Clic souris : (" + x + ", " + y + ")");
     }
@@ -126,8 +129,26 @@ public class ControleurMediateur {
     }
 
     private void jouer(Coup coup) {
-        if (coup != null)
+        if (coup != null) {
+            int j = prog.getJeu().getJoueurCourant();
+            if (this.prog.getJoueurEstIA(j)) {
+
+                CarteVue carteVue = this.jeuVue.carteFromCartevue(coup.getCarte(), jeuVue.getMainJoueur(j));
+                jeuVue.jouerCarte(carteVue);
+                if (j == Jeu.JOUEUR_RGE) {
+                    jeuVue.PlacerJeuA(carteVue);
+                } else {
+                    jeuVue.PlacerJeuB(carteVue);
+                }
+                System.out.println(carteVue.getCarte().toString());
+                jeuVue.defausserJeu(j);
+                jeuVue.terrain.majPositions();
+
+                System.out.println("IA " + j + " a joué " + carteVue.getCarte().toString());
+            }
+
             prog.jouerCoup(coup);
+        }
         if (prog.getJeu().estTerminee())
             audio.jouer(Audio.SON_VICTOIRE);
     }

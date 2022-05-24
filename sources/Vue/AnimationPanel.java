@@ -27,7 +27,7 @@ public class AnimationPanel {
         carteVue.setVisible(true);
         carteVue.setLocation(this.debut);
         //this.delai = 25;
-        this.delai = delai;
+        this.delai = 20; //delai;
         timer = new Timer(delai, new MvtListener());
     }
 

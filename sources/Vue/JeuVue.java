@@ -1,6 +1,7 @@
 package Vue;
 
 import Controleur.ControleurMediateur;
+import Modele.Carte;
 import Modele.Jeu;
 import Modele.Paquet;
 import Modele.Pion;
@@ -72,12 +73,13 @@ public class JeuVue extends JComponent {
         this.setVisible(true);
 
         this.genererDeck();
-        this.GenererMains();
-        //this.afficheMain();
         this.afficheTerrain();
         this.genererBoutons();
-
+        this.GenererMains();
         this.FinAnim = false;
+        this.repaint();
+
+        this.ctrl.setJeuVue(this);
     }
 
     public JFrame getFrame() {
@@ -99,6 +101,25 @@ public class JeuVue extends JComponent {
     }
 
     /* GENERATIONS & GESTION DES LISTES */
+
+    public List<CarteVue> getMainJoueur(int joueur){
+        if (joueur == jeu.JOUEUR_RGE){
+            return this.mainA;
+        }else{
+            return  this.mainB;
+        }
+    }
+
+    public CarteVue carteFromCartevue(Carte carte, List<CarteVue> list){
+        int t =list.size();
+        for (int i=0; i<t; i++) {
+            if (carte == list.get(i).getCarte()) {
+                return list.get(i);
+            }
+        }
+        return null;
+    }
+
     public void genererDeck() {
         int taille = this.jeu.getPioche().getTaille();
         int y = ((this.heigth / 2) - (this.carteH / 2)) - 40;
@@ -171,13 +192,13 @@ public class JeuVue extends JComponent {
         if (joueur == Jeu.JOUEUR_RGE) {
             taille = this.joueesA.size();
             for (int i = 0; i < taille; i++) {
-                donnerCarte(i, this.defausse, this.joueesA);
+                donnerCarte(0, this.defausse, this.joueesA);
                 PlacerDefausse(this.defausse.get(this.defausse.size() - 1));
             }
         } else {
             taille = this.joueesB.size();
             for (int i = 0; i < taille; i++) {
-                donnerCarte(i, this.defausse, this.joueesB);
+                donnerCarte(0, this.defausse, this.joueesB);
                 PlacerDefausse(this.defausse.get(this.defausse.size() - 1));
             }
         }
@@ -206,7 +227,7 @@ public class JeuVue extends JComponent {
             this.mainA.add(carteVue);
             this.frame.add(carteVue);
 
-            envoiPioche(carteVue, new Point(this.xDep, this.yA));
+            creerMain(carteVue, new Point(this.xDep, this.yA));
         }
 
         main = this.jeu.getMain(Jeu.JOUEUR_VRT);
@@ -222,7 +243,7 @@ public class JeuVue extends JComponent {
             this.mainB.add(carteVue);
             this.frame.add(carteVue);
 
-            envoiPioche(carteVue, new Point(this.xDep, this.yB));
+            creerMain(carteVue, new Point(this.xDep, this.yB));
         }
 
 
@@ -299,22 +320,25 @@ public class JeuVue extends JComponent {
         int x = (this.width / 2) - (c.getWidth() / 2);
         int y = this.terrain.getY() + this.terrain.getHeight() + (this.carteH/4);
 
-        decaler(this.joueesA);
+
         Point posC = new Point(c.getX(), c.getY());
         Point posD = new Point(x,y);
         Dimension resize = new Dimension(this.joueeW, this.joueeH);
         envoiCarte(c, posC, posD, resize, this.delai);
+
+        decaler(this.joueesA);
         this.frame.repaint();
     }
     public void PlacerJeuB(CarteVue c) {
         int x = (this.width / 2) - (c.getWidth() / 2);
         int y = this.terrain.getY() - (this.carteH/4) - (this.joueeH);
 
-        decaler(this.joueesB);
+
         Point posC = new Point(c.getX(), c.getY());
         Point posD = new Point(x,y);
         Dimension resize = new Dimension(this.joueeW, this.joueeH);
         envoiCarte(c, posC, posD, resize, this.delai);
+        decaler(this.joueesB);
         this.frame.repaint();
     }
 
@@ -410,15 +434,14 @@ public class JeuVue extends JComponent {
         }
     }
 
-    public void carteSelecTaille(CarteVue carteVue, int decalage){
-        System.out.println("AVANT : " + carteVue.getHeight() + " / " + carteVue.getWidth());
-        carteVue.setSize(carteVue.getWidth() + decalage, carteVue.getHeight() + decalage);
-        System.out.println("APRES : " + carteVue.getHeight() + " / " + carteVue.getWidth());
-        /*
-        System.out.println("AVANT : " + carteVue.getX() + " / " + carteVue.getY());
-        carteVue.setLocation(carteVue.getX(), carteVue.getY() + decalage);
-        System.out.println("APRES : " + carteVue.getX() + " / " + carteVue.getY());
-         */
+    public void carteSelecTaille(CarteVue carteVue, boolean b){
+        int decalage = (this.carteH/5);
+        if (b) {
+            carteVue.setSize(this.carteW, this.carteH);
+
+        }else {
+            carteVue.setSize(this.carteW + decalage, this.carteH + decalage);
+        }
         this.frame.repaint();
     }
 
@@ -428,13 +451,19 @@ public class JeuVue extends JComponent {
     public void envoiCarte(CarteVue c, Point dep, Point fin, Dimension d,int delai){
         AnimationPanel animationPanel = new AnimationPanel(c, dep, fin, d, delai);
         animationPanel.AnimStart();
+
     }
 
+    public void creerMain(CarteVue carteVue, Point dest){
+        Point depart = new Point(carteVue.getX(), carteVue.getY());
+        AnimationPanel animationPanel = new AnimationPanel(carteVue, depart, dest,new Dimension(carteVue.getSize()), 5);
+        animationPanel.AnimStart();
+        while ( animationPanel.timer.isRunning()){}
+    }
     public void envoiPioche(CarteVue carteVue, Point dest){
         Point depart = new Point(carteVue.getX(), carteVue.getY());
-        envoiCarte(carteVue, depart, dest, new Dimension(carteVue.getSize()), 200);
+        envoiCarte(carteVue, depart, dest, new Dimension(carteVue.getSize()), 5);
     }
-
 
 
 
