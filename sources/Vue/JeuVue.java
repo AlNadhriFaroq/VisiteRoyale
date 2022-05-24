@@ -171,12 +171,15 @@ public class JeuVue extends JComponent {
         if (joueur == Jeu.JOUEUR_RGE) {
             taille = this.joueesA.size();
             for (int i = 0; i < taille; i++) {
+                //System.out.println(this.joueesA.get(i).getCarte().toString());
                 donnerCarte(i, this.defausse, this.joueesA);
                 PlacerDefausse(this.defausse.get(this.defausse.size() - 1));
             }
+
         } else {
             taille = this.joueesB.size();
             for (int i = 0; i < taille; i++) {
+                //System.out.println(this.joueesB.get(i).getCarte().toString());
                 donnerCarte(i, this.defausse, this.joueesB);
                 PlacerDefausse(this.defausse.get(this.defausse.size() - 1));
             }
@@ -411,14 +414,7 @@ public class JeuVue extends JComponent {
     }
 
     public void carteSelecTaille(CarteVue carteVue, int decalage){
-        System.out.println("AVANT : " + carteVue.getHeight() + " / " + carteVue.getWidth());
         carteVue.setSize(carteVue.getWidth() + decalage, carteVue.getHeight() + decalage);
-        System.out.println("APRES : " + carteVue.getHeight() + " / " + carteVue.getWidth());
-        /*
-        System.out.println("AVANT : " + carteVue.getX() + " / " + carteVue.getY());
-        carteVue.setLocation(carteVue.getX(), carteVue.getY() + decalage);
-        System.out.println("APRES : " + carteVue.getX() + " / " + carteVue.getY());
-         */
         this.frame.repaint();
     }
 

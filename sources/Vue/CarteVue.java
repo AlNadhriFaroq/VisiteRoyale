@@ -92,7 +92,7 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
         //this.setSize(90, 160);
         //setBounds(0,0, 400, 400);
         super.paintComponent(g);
-        g.drawImage(this.image, 0, 0, this.getWidth(), this.getHeight(), this);
+        g.drawImage(this.image, 0, 0, 90, 160, this);
     }
 
     private boolean estValide(int y) {
@@ -112,7 +112,6 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
             }else{
                 frame.PlacerJeuB(this);
             }
-            System.out.println(carte.toString() + ", " + e.getYOnScreen());
         }
     }
 
@@ -127,7 +126,6 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        System.out.println("PASSE SUR " + carte.toString());
         if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())){
             this.frame.carteSelecTaille(this, this.frame.carteH/5);
         }
