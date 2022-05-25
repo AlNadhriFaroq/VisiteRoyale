@@ -141,7 +141,7 @@ public class ControleurMediateur {
 
         if (visuel){
             this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
-            this.jeuVue.piocher(this.prog.getJeu().getJoueurCourant());
+           // this.jeuVue.piocher(this.prog.getJeu().getJoueurCourant());
             this.jeuVue.updateMains();
         }
 
@@ -150,6 +150,7 @@ public class ControleurMediateur {
 
     private void jouer(Coup coup) {
         if (coup != null) {
+
             if (visuel && this.prog.getJoueurEstIA(this.prog.getJeu().getJoueurCourant()) ){
                 if (coup.getTypeCoup() == Coup.CHOISIR_CARTE) {
                     CarteVue carteVue = this.jeuVue.carteFromCartevue(coup.getCarte(), this.jeuVue.getMainJoueur(this.prog.getJeu().getJoueurCourant()));
@@ -168,6 +169,7 @@ public class ControleurMediateur {
 
                 if (coup.getTypeCoup() == Coup.FINIR_TOUR) {
                     this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
+                    System.out.println("MEDIATEUR DEFAUSSE " + this.jeuVue.TailleDefausse());
                     this.jeuVue.piocher(this.prog.getJeu().getJoueurCourant());
                     this.jeuVue.updateMains();
                 }
@@ -175,6 +177,7 @@ public class ControleurMediateur {
 
             }
             prog.jouerCoup(coup);
+
 
         }
         if (prog.getJeu().estTerminee())
