@@ -40,16 +40,12 @@ public class AdaptateurSouris extends MouseAdapter {
                 if (this.jeuVue.jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE)) && !this.jeuVue.cartesJoueesEstVide(this.jeuVue.jeu.getJoueurCourant())) {
                     if (e.getX() > pos*(this.jeuVue.terrain.getWidth()/17) + this.jeuVue.terrain.getX() + this.jeuVue.terrain.getWidth()/17) {
                         ctrl.selectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE));
-                        this.jeuVue.defausserJeu(this.jeuVue.jeu.getJoueurCourant());
-                        this.jeuVue.terrain.majPositions();
                     }
                 }
                 if (this.jeuVue.jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_VRT)) && !this.jeuVue.cartesJoueesEstVide(this.jeuVue.jeu.getJoueurCourant())) {
 
                     if (e.getX() < pos*(this.jeuVue.terrain.getWidth()/17) + this.jeuVue.terrain.getX()) {
                         ctrl.selectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_VRT));
-                        this.jeuVue.defausserJeu(this.jeuVue.jeu.getJoueurCourant());
-                        this.jeuVue.terrain.majPositions();
                     }
                 }
             }

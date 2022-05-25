@@ -4,6 +4,8 @@ import Global.Configuration;
 import IA.*;
 import Modele.*;
 import Global.Audios;
+import Vue.CarteVue;
+import Vue.JeuVue;
 
 import java.util.Random;
 
@@ -14,12 +16,20 @@ public class ControleurMediateur {
     IA[] joueursIA;
     int decompte;
 
+    JeuVue jeuVue;
+    Boolean visuel;
+
     public ControleurMediateur(Programme prog) {
         this.prog = prog;
         joueursIA = new IA[2];
         Audios.setVolume(Audios.getVolume());
+        this.visuel = false;
     }
 
+    public void setJeuVue(JeuVue j){
+        this.jeuVue = j;
+        this.visuel = true;
+    }
     public void clicSouris(int x, int y) {
         System.out.println("Clic souris : (" + x + ", " + y + ")");
     }
@@ -83,6 +93,17 @@ public class ControleurMediateur {
 
     public void selectionnerCarte(Carte carte) {
         Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
+
+        if (visuel){
+            CarteVue carteVue = this.jeuVue.carteFromCartevue(coup.getCarte(),this.jeuVue.getMainJoueur(this.prog.getJeu().getJoueurCourant()));
+            this.jeuVue.jouerCarte(carteVue);
+            if (this.prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_RGE){
+                this.jeuVue.PlacerJeuA(carteVue);
+            }else{
+                this.jeuVue.PlacerJeuB(carteVue);
+            }
+        }
+
         jouer(coup);
     }
 
@@ -93,6 +114,13 @@ public class ControleurMediateur {
 
     public void selectionnerDirection(int direction) {
         Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_DIRECTION, null, null, direction);
+
+        if (visuel){
+            this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
+            this.jeuVue.terrain.majPositions();
+        }
+
+
         jouer(coup);
     }
 
@@ -108,6 +136,13 @@ public class ControleurMediateur {
 
     public void finirTour() {
         Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
+
+        if (visuel){
+            this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
+            this.jeuVue.piocher(this.prog.getJeu().getJoueurCourant());
+            this.jeuVue.updateMains();
+        }
+
         jouer(coup);
     }
 
