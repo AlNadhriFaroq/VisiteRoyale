@@ -18,8 +18,8 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
         super(ctrl, prog);
         this.prog = prog;
         this.ctrl = ctrl;
-        this.ctrl.nouvellePartie(false, false);
-        //this.ctrl.nouvellePartie(true, true);
+        //this.ctrl.nouvellePartie(false, false);
+        this.ctrl.nouvellePartie(true, true);
         this.ctrl.definirJoueurQuiCommence();
         pleinEcran = false;
         this.jeuVue = new JeuVue(ctrl, this.prog.getJeu());

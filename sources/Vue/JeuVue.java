@@ -489,10 +489,95 @@ public class JeuVue extends JComponent {
     }
 
 
+    public void genererSansAnimMains() {
+        Paquet main = this.jeu.getMain(Jeu.JOUEUR_RGE);
+        int taille = main.getTaille();
+        Point dest = new Point(this.xDep, this.yA);
+
+
+        for (int i = 0; i < taille; i++) {
+            dest.x = this.xDep + (i*this.carteW);
+            CarteVue carteVue = new CarteVue(jeu, ctrl, this);
+            carteVue.setCarte(main.getCarte(i));
+            carteVue.setSize(this.carteW, this.carteH);
+            carteVue.setVisible(true);
+            carteVue.setLocation(dest);
+
+            this.mainA.add(carteVue);
+            this.frame.add(carteVue);
+
+
+        }
+
+        main = this.jeu.getMain(Jeu.JOUEUR_VRT);
+        taille = main.getTaille();
+        dest = new Point(this.xDep, this.yB);
+
+        for (int i = 0; i < taille; i++) {
+            dest.x = this.xDep +(i*this.carteW);
+            CarteVue carteVue = new CarteVue(jeu, ctrl, this);
+            carteVue.setCarte(main.getCarte(i));
+            carteVue.setSize(this.carteW, this.carteH);
+            carteVue.setVisible(true);
+            carteVue.setLocation(dest);
+
+            this.mainB.add(carteVue);
+            this.frame.add(carteVue);
 
 
 
+        }
 
 
+    }
 
+    public boolean testMains(){
+        int j = this.jeu.JOUEUR_RGE;
+        int t = this.jeu.getMain(j).getTaille();
+        for (int i=0; i<t; i++){
+            if (this.jeu.getMain(j).getCarte(i) != this.mainA.get(i).getCarte())
+                return false;
+        }
+
+        j = this.jeu.JOUEUR_VRT;
+        t =  this.jeu.getMain(j).getTaille();
+        for (int i=0; i<t; i++){
+            if (this.jeu.getMain(j).getCarte(i) != this.mainB.get(i).getCarte())
+                return false;
+        }
+
+        return true;
+    }
+
+    public void refaireMains(){
+        int t1 = this.mainA.size();
+        int t2 = this.mainB.size();
+        int t3 = this.jeu.getMain(this.jeu.JOUEUR_RGE).getTaille();
+        int t4 = this.jeu.getMain(this.jeu.JOUEUR_VRT).getTaille();
+        if (t1 != t3 || t2 != t4 || !this.testMains()) {
+            for (int i=0; i<t1; i++){
+                this.frame.remove(this.mainA.get(i));
+            }
+            for (int i=0; i<t2; i++){
+                this.frame.remove(this.mainB.get(i));
+            }
+            this.mainA.clear();
+            this.mainB.clear();
+            this.genererSansAnimMains();
+        }
+
+    }
+    public void refairePioche() {
+        if (this.deck.isEmpty()){
+            int t = this.defausse.size();
+            for (int i=0; i<t; i++){
+                this.frame.remove(this.defausse.get(i));
+            }
+            this.defausse.clear();
+
+            genererDeck();
+
+            refaireMains();
+        }
+    }
 }

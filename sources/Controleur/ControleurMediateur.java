@@ -175,6 +175,7 @@ public class ControleurMediateur {
 
             }
             prog.jouerCoup(coup);
+
         }
         if (prog.getJeu().estTerminee())
             if (prog.getJoueurEstIA(Jeu.JOUEUR_VRT) && !prog.getJoueurEstIA(Jeu.JOUEUR_RGE))
