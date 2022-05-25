@@ -12,7 +12,6 @@ import java.io.IOException;
 
 public class MenuPrincipal {
     JFrame frame;
-    Audio audio;
     JButton boutonJouer1vs1, boutonJouerContrIA, boutonChargerPartie;
     JButton boutonOptions, boutonTuturiel, boutonCredits, boutonQuitter;
     JLabel label;
@@ -21,7 +20,6 @@ public class MenuPrincipal {
     int larageurFenetre, hauteurFenetre;
 
     public MenuPrincipal() throws IOException {
-        audio = new Audio();
         larageurFenetre = 960 ;
         hauteurFenetre = 680 ;
         imgBackGround=  new ImageIcon(new ImageIcon(String.valueOf(new File("resources/Images/bg.jpg"))).getImage().getScaledInstance(larageurFenetre, hauteurFenetre, Image.SCALE_DEFAULT));
@@ -70,7 +68,6 @@ public class MenuPrincipal {
 
     public void run() throws IOException {
         frame = new JFrame("Menu");
-        audio.boucler(0);
         frame.setSize(larageurFenetre, hauteurFenetre);
         label.setLayout(new FlowLayout());
         label.setLayout(new BorderLayout());

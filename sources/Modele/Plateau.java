@@ -21,13 +21,13 @@ public class Plateau implements Cloneable, Serializable {
     private boolean faceCouronne;
     private int positionCouronne;
 
-    Plateau(int directionQuiCommence) {
+    Plateau() {
         positionsPions = new Hashtable<>();
         positionsPions.put(Pion.ROI, FONTAINE);
         positionsPions.put(Pion.GAR_VRT, FONTAINE + 2 * DIRECTION_VRT);
         positionsPions.put(Pion.GAR_RGE, FONTAINE + 2 * DIRECTION_RGE);
-        positionsPions.put(Pion.SOR, FONTAINE + directionQuiCommence);
-        positionsPions.put(Pion.FOU, FONTAINE - directionQuiCommence);
+        positionsPions.put(Pion.SOR, FONTAINE + 1);
+        positionsPions.put(Pion.FOU, FONTAINE - 1);
         faceCouronne = FACE_GRD_CRN;
         positionCouronne = FONTAINE;
     }
@@ -54,6 +54,16 @@ public class Plateau implements Cloneable, Serializable {
 
     void setFaceCouronne(boolean face) {
         faceCouronne = face;
+    }
+
+    void nouveauPlateau(int directionQuiCommence) {
+        positionsPions.put(Pion.ROI, FONTAINE);
+        positionsPions.put(Pion.GAR_VRT, FONTAINE + 2 * DIRECTION_VRT);
+        positionsPions.put(Pion.GAR_RGE, FONTAINE + 2 * DIRECTION_RGE);
+        positionsPions.put(Pion.SOR, FONTAINE + directionQuiCommence);
+        positionsPions.put(Pion.FOU, FONTAINE - directionQuiCommence);
+        faceCouronne = FACE_GRD_CRN;
+        positionCouronne = FONTAINE;
     }
 
     int evaluerDeplacementCouronneVrt() {

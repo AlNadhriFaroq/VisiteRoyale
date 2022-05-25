@@ -7,7 +7,7 @@ class PlateauTest {
 
     @Test
     void testEvaluerDeplacementCouronneVrt() {
-        Plateau p = new Plateau(Plateau.DIRECTION_VRT);
+        Plateau p = new Plateau();
         Assertions.assertEquals(0, p.evaluerDeplacementCouronneVrt());
         p.setPositionPion(Pion.GAR_VRT, Plateau.CHATEAU_VRT);
         Assertions.assertEquals(1, p.evaluerDeplacementCouronneVrt());
@@ -17,7 +17,7 @@ class PlateauTest {
 
     @Test
     void testEvaluerDeplacementCouronneRge() {
-        Plateau p = new Plateau(Plateau.DIRECTION_RGE);
+        Plateau p = new Plateau();
         Assertions.assertEquals(0, p.evaluerDeplacementCouronneRge());
         p.setPositionPion(Pion.GAR_RGE, Plateau.CHATEAU_RGE);
         Assertions.assertEquals(1, p.evaluerDeplacementCouronneRge());
@@ -27,7 +27,7 @@ class PlateauTest {
 
     @Test
     void pionROIestDeplacable() {
-        Plateau p = new Plateau(Plateau.DIRECTION_RGE);
+        Plateau p = new Plateau();
         Assertions.assertTrue(p.pionEstDeplacable(Pion.ROI, Plateau.FONTAINE + 1));
         Assertions.assertTrue(p.pionEstDeplacable(Pion.ROI, Plateau.FONTAINE - 1));
         Assertions.assertFalse(p.pionEstDeplacable(Pion.ROI, Plateau.FONTAINE + 2));
@@ -38,7 +38,7 @@ class PlateauTest {
 
     @Test
     void pionGAR_VRTestDeplacable() {
-        Plateau p = new Plateau(Plateau.DIRECTION_VRT);
+        Plateau p = new Plateau();
         Assertions.assertFalse(p.pionEstDeplacable(Pion.GAR_VRT, Plateau.FONTAINE + 1));
         Assertions.assertTrue(p.pionEstDeplacable(Pion.GAR_VRT, Plateau.FONTAINE - 1));
         Assertions.assertFalse(p.pionEstDeplacable(Pion.GAR_VRT, Plateau.FONTAINE + 2));
@@ -50,7 +50,7 @@ class PlateauTest {
 
     @Test
     void pionGAR_RGEestDeplacable() {
-        Plateau p = new Plateau(Plateau.DIRECTION_RGE);
+        Plateau p = new Plateau();
         Assertions.assertFalse(p.pionEstDeplacable(Pion.GAR_RGE, Plateau.FONTAINE - 1));
         Assertions.assertTrue(p.pionEstDeplacable(Pion.GAR_RGE, Plateau.FONTAINE + 1));
         Assertions.assertFalse(p.pionEstDeplacable(Pion.GAR_RGE, Plateau.FONTAINE - 2));
@@ -63,7 +63,7 @@ class PlateauTest {
 
     @Test
     void pionSORetFOUestDeplacable() {
-        Plateau p = new Plateau(Plateau.DIRECTION_RGE);
+        Plateau p = new Plateau();
         Assertions.assertTrue(p.pionEstDeplacable(Pion.SOR, Plateau.FONTAINE - 1));
         Assertions.assertTrue(p.pionEstDeplacable(Pion.SOR, Plateau.FONTAINE + 1));
         Assertions.assertTrue(p.pionEstDeplacable(Pion.SOR, Plateau.FONTAINE - 4));
@@ -79,7 +79,7 @@ class PlateauTest {
 
     @Test
     void couronneEstDeplacable() {
-        Plateau p = new Plateau(Plateau.DIRECTION_RGE);
+        Plateau p = new Plateau();
         Assertions.assertTrue(p.couronneEstDeplacable(Plateau.FONTAINE - 1));
         Assertions.assertTrue(p.couronneEstDeplacable(Plateau.FONTAINE + 1));
         Assertions.assertTrue(p.couronneEstDeplacable(Plateau.FONTAINE - 3));
@@ -134,27 +134,28 @@ class PlateauTest {
 
     @Test
     void estTerminee() {
-        Plateau p1 = new Plateau(Plateau.DIRECTION_VRT);
+        Plateau p1 = new Plateau();
         p1.setPositionPion(Pion.ROI, Plateau.CHATEAU_RGE);
         Assertions.assertTrue(p1.estTerminee());
 
-        Plateau p2 = new Plateau(Plateau.DIRECTION_VRT);
+        Plateau p2 = new Plateau();
         p2.setPositionCouronne(Plateau.CHATEAU_RGE);
         Assertions.assertTrue(p2.estTerminee());
     }
 
     @Test
     void testEquals() {
-        Plateau p1 = new Plateau(Plateau.DIRECTION_VRT);
-        Plateau p2 = new Plateau(Plateau.DIRECTION_RGE);
-        Plateau p3 = new Plateau(Plateau.DIRECTION_VRT);
-        Assertions.assertTrue(p1.equals(p3));
-        Assertions.assertFalse(p1.equals(p2));
+        Plateau p1 = new Plateau();
+        Plateau p2 = new Plateau();
+        Plateau p3 = new Plateau();
+        p3.setPositionPion(Pion.GAR_RGE, 14);
+        Assertions.assertTrue(p1.equals(p2));
+        Assertions.assertFalse(p1.equals(p3));
     }
 
     @Test
     void testClone() {
-        Plateau p1 = new Plateau(Plateau.DIRECTION_VRT);
+        Plateau p1 = new Plateau();
         Plateau p2 = p1.clone();
         Assertions.assertEquals(p1, p2);
         p2.setPositionPion(Pion.ROI, Plateau.FONTAINE + 1);

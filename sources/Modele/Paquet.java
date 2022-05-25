@@ -16,10 +16,6 @@ public class Paquet implements Cloneable, Serializable {
         return cartes.get(indice);
     }
 
-    public int getIndice(Carte carte) {
-        return cartes.indexOf(carte);
-    }
-
     public int getTaille() {
         return cartes.size();
     }
