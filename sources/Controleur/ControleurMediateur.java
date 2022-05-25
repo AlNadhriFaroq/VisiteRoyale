@@ -3,11 +3,8 @@ package Controleur;
 import Global.Configuration;
 import IA.*;
 import Modele.*;
-import Vue.Audio;
-import Vue.CarteVue;
-import Vue.JeuVue;
+import Global.Audios;
 
-import java.io.*;
 import java.util.Random;
 
 public class ControleurMediateur {
@@ -16,19 +13,13 @@ public class ControleurMediateur {
     Programme prog;
     IA[] joueursIA;
     int decompte;
-    Audio audio;
-
-    JeuVue jeuVue;
 
     public ControleurMediateur(Programme prog) {
         this.prog = prog;
         joueursIA = new IA[2];
-        audio = new Audio();
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audios.setVolume(Audios.getVolume());
     }
-    public void setJeuVue(JeuVue j){
-        this.jeuVue = j;
-    }
+
     public void clicSouris(int x, int y) {
         System.out.println("Clic souris : (" + x + ", " + y + ")");
     }
@@ -54,7 +45,7 @@ public class ControleurMediateur {
         definirJoueurIA(Jeu.JOUEUR_VRT, joueurVrtEstIA);
         definirJoueurIA(Jeu.JOUEUR_RGE, joueurRgeEstIA);
         prog.nouvellePartie(joueurVrtEstIA, joueurRgeEstIA);
-        audio.arreter(Audio.MUSIQUE_MENUS1);
+        Audios.MUSIQUE_MENUS1.arreter();
     }
 
     private void definirJoueurIA(int joueur, boolean estIA) {
@@ -68,7 +59,7 @@ public class ControleurMediateur {
                     joueursIA[joueur] = new IAAleatoirePonderee(prog.getJeu());
                     break;
                 case IA.INTERMEDIAIRE:
-                    joueursIA[joueur] = new IAStrategie1_1(prog.getJeu());
+                    joueursIA[joueur] = new IAStrategie(prog.getJeu());
                     break;
                 case IA.PROFESSIONNEL:
                     joueursIA[joueur] = new IAMinMax(prog.getJeu());
@@ -92,7 +83,6 @@ public class ControleurMediateur {
 
     public void selectionnerCarte(Carte carte) {
         Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
-        //jeuVue.jouer(this.prog.getJeu().getMain(prog.getJeu().getJoueurCourant()).getIndice(carte), this.prog.getJeu().getJoueurCourant()==this.prog.getJeu().getJoueurCourant());
         jouer(coup);
     }
 
@@ -117,40 +107,21 @@ public class ControleurMediateur {
     }
 
     public void finirTour() {
-        System.out.println("FIN DU TOUR !!!!!!!!!");
         Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
         jouer(coup);
-        /*
-        jeuVue.viderMains();
-        jeuVue.GenererMains();
-        jeuVue.repaint();
-         */
-
     }
 
     private void jouer(Coup coup) {
-        if (coup != null) {
-            int j = prog.getJeu().getJoueurCourant();
-            if (this.prog.getJoueurEstIA(j)) {
-
-                CarteVue carteVue = this.jeuVue.carteFromCartevue(coup.getCarte(), jeuVue.getMainJoueur(j));
-                jeuVue.jouerCarte(carteVue);
-                if (j == Jeu.JOUEUR_RGE) {
-                    jeuVue.PlacerJeuA(carteVue);
-                } else {
-                    jeuVue.PlacerJeuB(carteVue);
-                }
-                System.out.println(carteVue.getCarte().toString());
-                jeuVue.defausserJeu(j);
-                jeuVue.terrain.majPositions();
-
-                System.out.println("IA " + j + " a joué " + carteVue.getCarte().toString());
-            }
-
+        if (coup != null)
             prog.jouerCoup(coup);
-        }
         if (prog.getJeu().estTerminee())
-            audio.jouer(Audio.SON_VICTOIRE);
+            if (prog.getJoueurEstIA(Jeu.JOUEUR_VRT) && !prog.getJoueurEstIA(Jeu.JOUEUR_RGE))
+                if (prog.getJeu().getJoueurGagnant() == Jeu.JOUEUR_RGE)
+                    Audios.SON_VICTOIRE.jouer();
+                else
+                    Audios.SON_DEFAITE.jouer();
+            else
+                Audios.SON_VICTOIRE.jouer();
     }
 
     public void annuler() {
@@ -161,19 +132,24 @@ public class ControleurMediateur {
         prog.refaireCoup();
     }
 
+    public void demarrerProgramme() {
+        prog.changerEtat(Programme.ETAT_MENU_PRINCIPAL);
+        Audios.MUSIQUE_MENUS1.boucler();
+    }
+
     public void reprendrePartie() {
         prog.changerEtat(Programme.ETAT_EN_JEU);
-        audio.arreter(Audio.MUSIQUE_MENUS1);
+        Audios.MUSIQUE_MENUS1.arreter();
     }
 
     public void ouvrirMenuJeu() {
         prog.changerEtat(Programme.ETAT_MENU_JEU);
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audios.MUSIQUE_MENUS1.boucler();
     }
 
     public void ouvrirMenuSauvegardes() {
         prog.changerEtat(Programme.ETAT_MENU_SAUVEGARDES);
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audios.MUSIQUE_MENUS1.boucler();
     }
 
     public void ouvrirMenuOptions() {
@@ -181,12 +157,12 @@ public class ControleurMediateur {
     }
 
     public void changerVolume(int changement) {
-        if (changement == -2)
-            audio.diminuerVolume();
-        else if (changement == -1)
-            audio.augmenterVolume();
+        if (changement == -1)
+            Audios.diminuerVolume();
+        else if (changement == 1)
+            Audios.augmenterVolume();
         else
-            audio.setVolume(changement);
+            Audios.arreterDemarrer();
     }
 
     public void ouvrirTutoriel() {
@@ -199,7 +175,7 @@ public class ControleurMediateur {
 
     public void retourMenuPrecedant() {
         prog.retourMenuPrecedant();
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audios.MUSIQUE_MENUS1.boucler();
     }
 
     public void quitter() {
@@ -219,6 +195,10 @@ public class ControleurMediateur {
 
     public void supprimerSauvegarde(int sauvegarde) {
         prog.supprimerSauvegarde(sauvegarde);
+    }
+
+    public void changerPleinEcran() {
+        Configuration.instance().ecrire("PleinEcran", Boolean.toString(!Boolean.parseBoolean(Configuration.instance().lire("PleinEcran"))));
     }
 
     public void changerDifficulte(int joueur, int difficulte) {

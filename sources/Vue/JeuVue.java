@@ -76,7 +76,7 @@ public class JeuVue extends JComponent {
         this.FinAnim = false;
         this.repaint();
 
-        this.ctrl.setJeuVue(this);
+        //this.ctrl.setJeuVue(this);
     }
 
     public JFrame getFrame() {

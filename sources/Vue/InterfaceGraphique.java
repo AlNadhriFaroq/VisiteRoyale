@@ -14,7 +14,8 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
     JFrame frame;
     JeuVue jeuVue;
 
-    public InterfaceGraphique(Programme prog, ControleurMediateur ctrl) {
+    public InterfaceGraphique(ControleurMediateur ctrl, Programme prog) {
+        super(ctrl, prog);
         this.prog = prog;
         this.ctrl = ctrl;
         this.ctrl.nouvellePartie(false, false);
@@ -25,7 +26,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur implements Runnable
     }
 
     public static void demarrer(Programme prog, ControleurMediateur ctrl) {
-        InterfaceGraphique vue = new InterfaceGraphique(prog, ctrl);
+        InterfaceGraphique vue = new InterfaceGraphique(ctrl, prog);
         SwingUtilities.invokeLater(vue);
     }
 

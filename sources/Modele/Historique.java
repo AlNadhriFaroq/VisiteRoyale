@@ -23,23 +23,6 @@ public class Historique implements Serializable {
         return passe.get(passe.size()-1);
     }
 
-    public List<Coup> getPasse() {
-        return passe;
-    }
-
-    public List<Coup> getDernierTour(){
-        int taillePassee = passe.size();
-        List<Coup> coups = new ArrayList<>();
-        coups.add(passe.get(taillePassee - 1));
-        taillePassee --;
-        Coup coup = passe.get(taillePassee);
-        System.out.println("historique : " + passe);
-        while(coup.getTypeCoup() != Coup.FINIR_TOUR && taillePassee != 0) {
-            coups.add(coup);
-            taillePassee --;
-        }
-        return coups;
-    }
     public Coup getCoupFutur() {
         return futur.get(futur.size()-1);
     }
