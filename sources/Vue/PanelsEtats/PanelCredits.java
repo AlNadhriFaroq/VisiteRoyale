@@ -7,6 +7,7 @@ import Vue.*;
 import Vue.ComponentsMenus.BoutonMenu;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
 public class PanelCredits extends PanelEtat {
@@ -50,6 +51,7 @@ public class PanelCredits extends PanelEtat {
 
         JPanel sousPanel = new JPanel();
         sousPanel.setBackground(new Color(142, 142, 225, 255));
+        sousPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         sousPanel.add(new Cadre(panelTextes, 1, 1, 1, 1));
 
         add(new Cadre(sousPanel, 6, 6, 1, 1));

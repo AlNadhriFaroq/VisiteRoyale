@@ -2,6 +2,7 @@ package Vue;
 
 import Controleur.ControleurMediateur;
 import Global.Configuration;
+import Global.Images;
 import Modele.Programme;
 import Vue.Adaptateurs.*;
 import Vue.PanelsEtats.*;
@@ -65,7 +66,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur {
     public void run() {
         /* Configuration initiale de la fenetre */
         fenetre = new JFrame();
-        fenetre.setSize(500, 300);
+        fenetre.setSize(700, 500);
         fenetre.setLocationRelativeTo(null);
         fenetre.setUndecorated(true);
         fenetre.setResizable(false);

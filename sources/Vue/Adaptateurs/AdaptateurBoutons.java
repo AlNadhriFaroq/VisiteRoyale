@@ -1,6 +1,7 @@
 package Vue.Adaptateurs;
 
 import Controleur.ControleurMediateur;
+import Global.Configuration;
 import Modele.Jeu;
 import Modele.Programme;
 import Vue.ComponentsMenus.BoutonSauvegarde;
@@ -87,6 +88,11 @@ public class AdaptateurBoutons implements ActionListener {
                     if (e.getSource().equals(vue.getPanelMenuSauvegardes().getBoutonSauvegarde(i)))
                         ctrl.sauvegarderPartie(i);
             }
+        } else if (e.getSource().equals(vue.getPanelMenuOptions().getPleinEcran())) {
+            Configuration.instance().ecrire("PleinEcran", Boolean.toString(vue.getPanelMenuOptions().getPleinEcran().isSelected()));
+            vue.mettreAJourPleinEcran();
+        } else if (e.getSource().equals(vue.getPanelMenuOptions().getMainCachee())) {
+            Configuration.instance().ecrire("MainCachee", Boolean.toString(vue.getPanelMenuOptions().getMainCachee().isSelected()));
         }
     }
 }

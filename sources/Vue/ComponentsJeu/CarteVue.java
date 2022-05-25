@@ -13,14 +13,15 @@ public class CarteVue extends JPanel {
     boolean cachee;
     Image img;
 
-    public CarteVue(boolean parcourable, boolean selectionnable, int hauteur) {
-        this.parcourable = parcourable;
-        this.selectionnable = selectionnable;
+    public CarteVue(boolean alenvers) {
+        this.parcourable = false;
+        this.selectionnable = true;
         cachee = false;
         img = Images.CARTE_VIDE;
 
         setBackground(new Color(0, 0, 0, 0));
-        redimensionner(hauteur);
+        setAlignmentX(Component.CENTER_ALIGNMENT);
+        setAlignmentY(alenvers ? Component.TOP_ALIGNMENT : Component.BOTTOM_ALIGNMENT);
     }
 
     public Carte getCarte() {

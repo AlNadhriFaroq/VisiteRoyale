@@ -292,7 +292,7 @@ public class Coup implements Cloneable, Serializable {
     }
 
     private void executerDeplacement() {
-        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
+        Carte carte = this.carte != null ? this.carte : jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
         Pion pion = jeu.getSelectionPions(0);
         pionsPasse[0] = pion;
@@ -335,7 +335,7 @@ public class Coup implements Cloneable, Serializable {
     }
 
     private void desexecuterDeplacement() {
-        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
+        Carte carte = this.carte != null ? this.carte : jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
         desexecuterChangerTypeCourant();
 

@@ -6,6 +6,8 @@ import java.io.File;
 import java.util.Objects;
 
 public class Images {
+    private static String dossier = "Images";
+
     public static final Image CARTE_VIDE = lireImage("Cartes" + File.separator + "Vide");
     public static final Image CARTE_DOS = lireImage("Cartes" + File.separator + "Dos");
     public static final Image CARTE_R1 = lireImage("Cartes" + File.separator + "R1");
@@ -48,7 +50,7 @@ public class Images {
 
     private static Image lireImage(String nom) {
         try {
-            return ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream("Images" + File.separator + nom + ".png")));
+            return ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream(dossier + File.separator + nom + ".png")));
         } catch (Exception e) {
             throw new RuntimeException("Global.Images.lireImage() : Impossible d'ouvrir l'image.\n" + e);
         }
@@ -60,5 +62,15 @@ public class Images {
 
     public static Image getImagePion(String nom) {
         return lireImage("Pions" + File.separator + nom );
+    }
+
+    public static void setTexture(String texture) {
+        Configuration.instance().ecrire("Texture", texture);
+        switch (texture) {
+            case "Daltonien":
+                dossier = "Images";
+            default:
+                dossier = "Images";
+        }
     }
 }

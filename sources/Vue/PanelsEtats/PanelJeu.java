@@ -36,11 +36,11 @@ public class PanelJeu extends PanelEtat {
         imgFond = Images.FOND_JEU;
 
         /* Construction des composants */
-        mainVrtVue = new PaquetVue(jeu.getMain(Jeu.JOUEUR_VRT));
-        selectionVrtVue = new PaquetVue(jeu.getSelectionCartes(Jeu.JOUEUR_VRT));
+        mainVrtVue = new PaquetVue(jeu.getMain(Jeu.JOUEUR_VRT), true);
+        selectionVrtVue = new PaquetVue(jeu.getSelectionCartes(Jeu.JOUEUR_VRT), false);
         plateauVue = new PlateauVue(jeu.getPlateau());
-        selectionRgeVue = new PaquetVue(jeu.getSelectionCartes(Jeu.JOUEUR_RGE));
-        mainRgeVue = new PaquetVue(jeu.getMain(Jeu.JOUEUR_RGE));
+        selectionRgeVue = new PaquetVue(jeu.getSelectionCartes(Jeu.JOUEUR_RGE), true);
+        mainRgeVue = new PaquetVue(jeu.getMain(Jeu.JOUEUR_RGE), false);
 
         boutonMenuPause = new BoutonMenu("Pause");
         boutonMenuIndice = new BoutonMenu("Indice");
@@ -146,10 +146,14 @@ public class PanelJeu extends PanelEtat {
                 mainsCachees[Jeu.JOUEUR_RGE] = true;
 
             mainVrtVue.mettreAJour(mainsCachees[Jeu.JOUEUR_VRT]);
+            mainVrtVue.redimensionner(getHeight() / 6);
             selectionVrtVue.mettreAJour(false);
+            selectionVrtVue.redimensionner(getHeight() / 6);
             plateauVue.mettreAJour();
             selectionRgeVue.mettreAJour(false);
+            selectionRgeVue.redimensionner(getHeight() / 6);
             mainRgeVue.mettreAJour(mainsCachees[Jeu.JOUEUR_RGE]);
+            mainRgeVue.redimensionner(getHeight() / 6);
 
             repaint();
         }
