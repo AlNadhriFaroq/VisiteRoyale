@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.Random;
 
 public class ControleurMediateur {
-    final int lenteurAttente = 10;
+    final int lenteurAttente = 20;
 
     Programme prog;
     IA[] joueursIA;

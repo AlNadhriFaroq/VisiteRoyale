@@ -473,6 +473,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     public Jeu clone() {
         try {
             Jeu resultat = (Jeu) super.clone();
+            resultat.passe = passe;
             resultat.joueurCourant = joueurCourant;
             resultat.typeCourant = typeCourant.clone();
             resultat.plateau = plateau.clone();

@@ -3,16 +3,19 @@ package IA;
 import Modele.Coup;
 import Modele.Jeu;
 import Modele.Pion;
+import Modele.Plateau;
 import Structures.Tas;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class IAMinMax extends IA{
     private static final int  PROFONDEUR = 1 ;
-    Tas<Jeu> lj;
+    Tas<List<Coup>> lj;
 
+    Hashtable<Jeu, List<Coup>> jeuListeCoup;
     List<Integer> lpoids;
     List<Coup> lcf;
     int tailleLcf;
@@ -24,19 +27,19 @@ public class IAMinMax extends IA{
     }
     public Coup calculerCoup (){
         Coup cp = null;
-
-        if(tailleLcf == 0){
+        if(tailleLcf == lcf.size()){
             evaluationTour(jeu);
-            Jeu j = lj.extraire();
-            System.out.println(j);
-            lcf = j.getDernierTour();
-            System.out.println("lcf : " + lcf);
-            System.out.println(evaluationTerrain(j));
-            tailleLcf = lcf.size();
+            lcf = lj.extraire();
+            System.out.println(lcf);
         }
-        if(tailleLcf != 0){
-            cp = lcf.get(tailleLcf - 1);
-            tailleLcf --;
+        if(tailleLcf != lcf.size()){
+            cp = lcf.get(tailleLcf);
+            tailleLcf ++;
+        }
+        if(cp.getTypeCoup() == Coup.FINIR_TOUR){
+            tailleLcf = 0;
+            lcf.clear();
+            lj = new Tas<>();
         }
         return cp;
     }
@@ -77,100 +80,63 @@ public class IAMinMax extends IA{
     }
 
     private void evaluationTour (Jeu jeu){
+        List<Coup> listeCoup = new ArrayList<>();
         List<Coup> lc =  jeu.calculerListeCoup();
-        Jeu clone = jeu.clone();
         for (Coup c : lc){
-            evaluationTourRec(c , clone);
+            evaluationTourRec(c , jeu, listeCoup);
+            System.out.println("coup : " + c);
+            System.out.println(listeCoup);
+            listeCoup.remove(listeCoup.size() - 1);
+            jeu.annulerCoup();
+
         }
     }
-    private void evaluationTourRec (Coup coup , Jeu jeu){
+    private void evaluationTourRec (Coup coup , Jeu jeu, List<Coup> listeCoup){
+        System.out.println("joue : " + coup);
         jeu.jouerCoup(coup);
+        listeCoup.add(coup);
         if (coup.getTypeCoup() == Coup.FINIR_TOUR ) {
-            lj.inserer(jeu, evaluationTerrain(jeu));
+            List<Coup> tmp = new ArrayList<>(listeCoup);
+            lj.inserer(tmp, evaluationTerrain(jeu));
+
         }else{
             List<Coup> lc = jeu.calculerListeCoup();
-            Jeu jeuSuite;
             for (Coup c : lc){
-                jeuSuite = jeu.clone();
-                evaluationTourRec(c, jeuSuite);
+                System.out.println(lc);
+                System.out.println("coup avant : " + c);
+                evaluationTourRec(c, jeu, listeCoup);
+                System.out.println("coup : " + c);
+                System.out.println(listeCoup);
+                listeCoup.remove(listeCoup.size() - 1);
+                jeu.annulerCoup();
             }
         }
     }
 
     private int evaluationTerrain (Jeu jeu){
         int valeur = 0;
-        if(jeu.getJoueurCourant() == Jeu.JOUEUR_RGE){
-            if(jeu.pionDansChateau(Jeu.JOUEUR_VRT, Pion.GAR_VRT))
-                valeur -= 2;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_VRT, Pion.GAR_VRT))
-                valeur -= 1;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_RGE, Pion.GAR_VRT))
-                valeur += 1;
-            if(jeu.pionDansDuche(Jeu.JOUEUR_VRT, Pion.GAR_RGE))
-                valeur -= 1;
-            else if(jeu.pionDansChateau(Jeu.JOUEUR_RGE, Pion.GAR_RGE))
-                valeur += 2;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_RGE, Pion.GAR_RGE))
-                valeur += 1;
-            if(jeu.pionDansChateau(Jeu.JOUEUR_VRT, Pion.SOR))
-                valeur -= 3;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_VRT, Pion.SOR))
-                valeur -= 1;
-            else if(jeu.pionDansChateau(Jeu.JOUEUR_RGE, Pion.SOR))
-                valeur += 3;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_RGE, Pion.SOR))
-                valeur += 1;
-            if(jeu.pionDansChateau(Jeu.JOUEUR_VRT, Pion.FOU))
-                valeur -= 2;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_VRT, Pion.FOU))
-                valeur -= 1;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_RGE, Pion.FOU))
-                valeur += 1;
-            else if(jeu.pionDansChateau(Jeu.JOUEUR_RGE, Pion.FOU))
-                valeur += 2;
-            if(jeu.pionDansDuche(Jeu.JOUEUR_RGE, Pion.ROI))
-                valeur += 1;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_VRT, Pion.ROI))
-                valeur -= 1;
+        if(jeu.getJoueurCourant() != Jeu.JOUEUR_RGE){
+            if(jeu.getPlateau().getPositionPion(Pion.ROI) == Plateau.CHATEAU_RGE)
+                valeur += 1000;
+            valeur += jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - Plateau.FONTAINE;
+            valeur += jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - Plateau.FONTAINE;
+            valeur += jeu.getPlateau().getPositionPion(Pion.SOR) - Plateau.FONTAINE;
+            valeur += jeu.getPlateau().getPositionPion(Pion.FOU) - Plateau.FONTAINE;
+            valeur += jeu.getPlateau().getPositionPion(Pion.ROI) - Plateau.FONTAINE;
             if (jeu.getPlateau().getPositionPion(Pion.FOU) > jeu.getPlateau().getPositionPion(Pion.ROI))
                 valeur += 1;
             else if(jeu.getPlateau().getPositionPion(Pion.FOU) < jeu.getPlateau().getPositionPion(Pion.ROI))
                 valeur -= 1;
         }
 
-        if(jeu.getJoueurCourant() == Jeu.JOUEUR_VRT) {
-            if(jeu.pionDansChateau(Jeu.JOUEUR_VRT, Pion.GAR_VRT))
-                valeur += 2;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_VRT, Pion.GAR_VRT))
-                valeur += 1;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_RGE, Pion.GAR_VRT))
-                valeur += 1;
-            if(jeu.pionDansDuche(Jeu.JOUEUR_VRT, Pion.GAR_RGE))
-                valeur += 1;
-            else if(jeu.pionDansChateau(Jeu.JOUEUR_RGE, Pion.GAR_RGE))
-                valeur -= 2;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_RGE, Pion.GAR_RGE))
-                valeur -= 1;
-            if(jeu.pionDansChateau(Jeu.JOUEUR_VRT, Pion.SOR))
-                valeur += 3;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_VRT, Pion.SOR))
-                valeur += 1;
-            else if(jeu.pionDansChateau(Jeu.JOUEUR_RGE, Pion.SOR))
-                valeur -= 3;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_RGE, Pion.SOR))
-                valeur -= 1;
-            if(jeu.pionDansChateau(Jeu.JOUEUR_VRT, Pion.FOU))
-                valeur += 2;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_VRT, Pion.FOU))
-                valeur += 1;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_RGE, Pion.FOU))
-                valeur -= 1;
-            else if(jeu.pionDansChateau(Jeu.JOUEUR_RGE, Pion.FOU))
-                valeur -= 2;
-            if(jeu.pionDansDuche(Jeu.JOUEUR_VRT, Pion.ROI))
-                valeur += 1;
-            else if(jeu.pionDansDuche(Jeu.JOUEUR_RGE, Pion.ROI))
-                valeur -= 1;
+        if(jeu.getJoueurCourant() != Jeu.JOUEUR_VRT) {
+            if(jeu.getPlateau().getPositionPion(Pion.ROI) == Plateau.CHATEAU_VRT)
+                valeur += 1000;
+            valeur += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
+            valeur += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
+            valeur += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.FOU);
+            valeur += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.SOR);
+            valeur += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.ROI);
             if (jeu.getPlateau().getPositionPion(Pion.FOU) < jeu.getPlateau().getPositionPion(Pion.ROI))
                 valeur += 1;
             else if(jeu.getPlateau().getPositionPion(Pion.FOU) > jeu.getPlateau().getPositionPion(Pion.ROI))

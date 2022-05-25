@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Historique implements Serializable {
-    private List<Coup> passe;
+    protected List<Coup> passe;
     private List<Coup> futur;
     private int tour;
 
@@ -34,6 +34,7 @@ public class Historique implements Serializable {
         taillePassee --;
         Coup coup = passe.get(taillePassee);
         System.out.println("historique : " + passe);
+        System.out.println("taille : " + passe.size());
         while(coup.getTypeCoup() != Coup.FINIR_TOUR && taillePassee != 0) {
             coups.add(coup);
             taillePassee --;
