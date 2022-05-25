@@ -29,7 +29,7 @@ public class PlateauVue extends JPanel implements MouseInputListener {
     PionVue pionSor = new PionVue(Pion.SOR);
     PionVue pionFou = new PionVue(Pion.FOU);
 
-    JetonVue jetonCouronne = new JetonVue();
+    //JetonVue jetonCouronne = new JetonVue();
 
     JeuVue jeuVue;
 

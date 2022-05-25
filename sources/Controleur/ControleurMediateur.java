@@ -10,7 +10,9 @@ import Vue.JeuVue;
 import java.util.Random;
 
 public class ControleurMediateur {
-    final int lenteurAttente = 10;
+    //final int lenteurAttente = 10;
+    final int lenteurAttente = 20;
+
 
     Programme prog;
     IA[] joueursIA;
@@ -147,8 +149,33 @@ public class ControleurMediateur {
     }
 
     private void jouer(Coup coup) {
-        if (coup != null)
+        if (coup != null) {
+            if (visuel && this.prog.getJoueurEstIA(this.prog.getJeu().getJoueurCourant()) ){
+                if (coup.getTypeCoup() == Coup.CHOISIR_CARTE) {
+                    CarteVue carteVue = this.jeuVue.carteFromCartevue(coup.getCarte(), this.jeuVue.getMainJoueur(this.prog.getJeu().getJoueurCourant()));
+                    this.jeuVue.jouerCarte(carteVue);
+                    if (this.prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_RGE) {
+                        this.jeuVue.PlacerJeuA(carteVue);
+                    } else {
+                        this.jeuVue.PlacerJeuB(carteVue);
+                    }
+                }
+
+                if (coup.getTypeCoup() == Coup.CHOISIR_DIRECTION){
+                    this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
+                    this.jeuVue.terrain.majPositions();
+                }
+
+                if (coup.getTypeCoup() == Coup.FINIR_TOUR) {
+                    this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
+                    this.jeuVue.piocher(this.prog.getJeu().getJoueurCourant());
+                    this.jeuVue.updateMains();
+                }
+
+
+            }
             prog.jouerCoup(coup);
+        }
         if (prog.getJeu().estTerminee())
             if (prog.getJoueurEstIA(Jeu.JOUEUR_VRT) && !prog.getJoueurEstIA(Jeu.JOUEUR_RGE))
                 if (prog.getJeu().getJoueurGagnant() == Jeu.JOUEUR_RGE)
