@@ -40,6 +40,7 @@ public class Images {
     public static final Image TEXTE_VICTOIRE_RGE = lireImage("Textes" + File.separator + "VictoireJoueurRge");
     public static final Image TEXTE_SUPPRIMER = lireImage("Textes" + File.separator + "Supprimer");
     public static final Image TEXTE_ANNULER_REFAIRE = lireImage("Textes" + File.separator + "AnnulerRefaire");
+    public static final Image TEXTE_PRECEDENT_SUIVANT = lireImage("Textes" + File.separator + "PrecedentSuivant");
     public static final Image TEXTE_OUVRIR_MENU = lireImage("Textes" + File.separator + "OuvrirMenu");
 
     public static final Image CHATEAU_VRT = lireImage("Decors" + File.separator + "ChateauVrt");
