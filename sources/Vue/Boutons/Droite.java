@@ -15,7 +15,7 @@ public class Droite extends Bouton {
 
     @Override
     void action() {
-        if (jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE))); {
+        if (jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE)) && !this.frame.cartesJoueesEstVide(this.jeu.getJoueurCourant())) {
             ctrl.selectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE));
 
             this.frame.defausserJeu(jeu.getJoueurCourant());

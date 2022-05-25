@@ -15,7 +15,7 @@ public class Gauche extends Bouton {
 
     @Override
     void action() {
-        if (jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_VRT))) {
+        if (jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_VRT))  && !this.frame.cartesJoueesEstVide(this.jeu.getJoueurCourant())) {
             ctrl.selectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_VRT));
             this.frame.defausserJeu(jeu.getJoueurCourant());
             this.frame.terrain.majPositions();

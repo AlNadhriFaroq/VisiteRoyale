@@ -465,6 +465,17 @@ public class JeuVue extends JComponent {
         envoiCarte(carteVue, depart, dest, new Dimension(carteVue.getSize()), 5);
     }
 
+    public boolean cartesJoueesEstVide (int joueur){
+        if(joueur == this.jeu.JOUEUR_RGE && this.joueesA.isEmpty()){
+            return true;
+        } else if (joueur == this.jeu.JOUEUR_VRT && this.joueesB.isEmpty()){
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
 
 
 
