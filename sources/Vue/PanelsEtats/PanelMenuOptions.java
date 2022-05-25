@@ -40,6 +40,7 @@ public class PanelMenuOptions extends PanelEtat {
 
         volumeMusique = new JSlider();
         volumeMusique.setBackground(new Color(0, 0, 0, 0));
+        volumeMusique.setOpaque(false);
         volumeMusique.setMinimum(0);
         volumeMusique.setMaximum(10);
         volumeMusique.setMinorTickSpacing(1);
@@ -51,6 +52,7 @@ public class PanelMenuOptions extends PanelEtat {
 
         volumeSons = new JSlider();
         volumeSons.setBackground(new Color(0, 0, 0, 0));
+        volumeSons.setOpaque(false);
         volumeSons.setMinimum(0);
         volumeSons.setMaximum(10);
         volumeSons.setMinorTickSpacing(1);
@@ -74,10 +76,12 @@ public class PanelMenuOptions extends PanelEtat {
 
         pleinEcran = new JCheckBox();
         pleinEcran.setBackground(new Color(0, 0, 0, 0));
+        pleinEcran.setOpaque(false);
         pleinEcran.setSelected(Boolean.parseBoolean(Configuration.instance().lire("PleinEcran")));
 
         mainCachee = new JCheckBox();
         mainCachee.setBackground(new Color(0, 0, 0, 0));
+        mainCachee.setOpaque(false);
         mainCachee.setSelected(Boolean.parseBoolean(Configuration.instance().lire("MainCachee")));
 
         boutonMenuRetour = new BoutonMenu("Retour");

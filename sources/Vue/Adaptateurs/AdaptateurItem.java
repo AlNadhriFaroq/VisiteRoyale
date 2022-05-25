@@ -27,13 +27,13 @@ public class AdaptateurItem implements ItemListener {
             Audios.MUSIQUE_MENU.arreter();
             Audios.setMusiqueMenu((String) e.getItem());
             Audios.MUSIQUE_MENU.boucler();
-            vue.getPanelMenuOptions().repaint();
+            //vue.getPanelMenuOptions().repaint();
         } else if (e.getSource().equals(vue.getPanelMenuOptions().getNiveau())) {
             Configuration.instance().ecrire("NiveauDifficulteIA", Integer.toString(IA.texteEnIA((String) e.getItem())));
-            vue.getPanelMenuOptions().repaint();
+           // vue.getPanelMenuOptions().repaint();
         } else if (e.getSource().equals(vue.getPanelMenuOptions().getTexture())) {
             Images.setTexture((String) e.getItem());
-            vue.getPanelMenuOptions().repaint();
+            //vue.getPanelMenuOptions().repaint();
         }
     }
 }
