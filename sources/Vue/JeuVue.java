@@ -215,6 +215,7 @@ public class JeuVue extends JComponent {
         int taille = main.getTaille();
         int x = this.OFFSET;
         int y = ((this.heigth / 2) - (this.carteH / 2)) - 40;
+        Point dest = new Point(this.xDep, this.yA);
 
 
         for (int i = 0; i < taille; i++) {
@@ -226,12 +227,13 @@ public class JeuVue extends JComponent {
 
             this.mainA.add(carteVue);
             this.frame.add(carteVue);
-
-            creerMain(carteVue, new Point(this.xDep, this.yA));
+            dest.x = this.xDep + (i*this.carteW);
+            creerMain(carteVue, dest);
         }
 
         main = this.jeu.getMain(Jeu.JOUEUR_VRT);
         taille = main.getTaille();
+        dest = new Point(this.xDep, this.yB);
 
         for (int i = 0; i < taille; i++) {
             CarteVue carteVue = new CarteVue(jeu, ctrl, this);
@@ -242,8 +244,9 @@ public class JeuVue extends JComponent {
 
             this.mainB.add(carteVue);
             this.frame.add(carteVue);
+            dest.x = this.xDep +(i*this.carteW);
 
-            creerMain(carteVue, new Point(this.xDep, this.yB));
+            creerMain(carteVue, dest);
         }
 
 
