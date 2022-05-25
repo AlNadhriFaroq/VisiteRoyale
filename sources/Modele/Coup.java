@@ -167,6 +167,7 @@ public class Coup implements Cloneable, Serializable {
         if (jeu.getActivationPrivilegeRoi() == 2) {
             jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
             jeu.setActivationPrivilegeRoi(1);
+            jeu.putSelectionPions(0, Pion.ROI);
         } else {
             if (jeu.getActivationPouvoirFou()) {
                 jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
@@ -176,15 +177,15 @@ public class Coup implements Cloneable, Serializable {
                     jeu.putSelectionPions(0, null);
             } else {
                 jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
-                jeu.putSelectionPions(0, null);
                 if (carte.estDeplacementFouCentre())
                     desexecuterDeplacement();
                 if (carte.estDeplacementGarCentre()) {
-                    jeu.putSelectionPions(1, null);
                     desexecuterDeplacement();
+                    jeu.putSelectionPions(1, null);
                 }
                 if (carte.getType().equals(Type.ROI))
                     jeu.setActivationPrivilegeRoi(0);
+                jeu.putSelectionPions(0, null);
             }
         }
 
@@ -241,10 +242,9 @@ public class Coup implements Cloneable, Serializable {
 
     private void executerChoisirDirection() {
         Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
+        activationPrivilegeRoiPasse = jeu.getActivationPrivilegeRoi();
 
         if (jeu.getActivationPrivilegeRoi() == 2) {
-            activationPrivilegeRoiPasse = jeu.getActivationPrivilegeRoi();
-
             jeu.getPlateau().setPositionPion(Pion.GAR_VRT, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + direction);
             jeu.getPlateau().setPositionPion(Pion.ROI, jeu.getPlateau().getPositionPion(Pion.ROI) + direction);
             jeu.getPlateau().setPositionPion(Pion.GAR_RGE, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + direction);
@@ -252,15 +252,19 @@ public class Coup implements Cloneable, Serializable {
             executerChangerTypeCourant();
             jeu.setActivationPrivilegeRoi(0);
 
+            jeu.putSelectionPions(0, null);
             jeu.setEtatJeu(jeu.getPlateau().estTerminee() ? Jeu.ETAT_FIN_DE_PARTIE : Jeu.ETAT_CHOIX_CARTE);
-        } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null && jeu.getSelectionDirections(0) == Plateau.DIRECTION_IND) {
-            jeu.putSelectionDirections(0, direction);
-        } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null && jeu.getSelectionDirections(1) == Plateau.DIRECTION_IND) {
-            jeu.putSelectionDirections(1, direction);
-            executerDeplacement();
         } else {
-            jeu.putSelectionDirections(0, direction);
-            executerDeplacement();
+            jeu.setActivationPrivilegeRoi(0);
+            if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null && jeu.getSelectionDirections(0) == Plateau.DIRECTION_IND) {
+                jeu.putSelectionDirections(0, direction);
+            } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null && jeu.getSelectionDirections(1) == Plateau.DIRECTION_IND) {
+                jeu.putSelectionDirections(1, direction);
+                executerDeplacement();
+            } else {
+                jeu.putSelectionDirections(0, direction);
+                executerDeplacement();
+            }
         }
     }
 
@@ -268,8 +272,10 @@ public class Coup implements Cloneable, Serializable {
         jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
         Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
+        jeu.setActivationPrivilegeRoi(activationPrivilegeRoiPasse);
+
         if (activationPrivilegeRoiPasse == 2) {
-            jeu.setActivationPrivilegeRoi(activationPrivilegeRoiPasse);
+            jeu.putSelectionPions(0, Pion.ROI);
             desexecuterChangerTypeCourant();
             jeu.getPlateau().setPositionPion(Pion.GAR_RGE, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - direction);
             jeu.getPlateau().setPositionPion(Pion.ROI, jeu.getPlateau().getPositionPion(Pion.ROI) - direction);

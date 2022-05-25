@@ -118,9 +118,9 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         for (int i = 0; i < cartesMainRge.length; i++)
             pioche.inserer(mainJoueurRge.extraire());
         for (Carte carte : cartesMainVrt)
-            mainJoueurVrt.inserer(carte, true);
+            mainJoueurVrt.inserer(pioche.extraire(carte), true);
         for (Carte carte : cartesMainRge)
-            mainJoueurRge.inserer(carte, true);
+            mainJoueurRge.inserer(pioche.extraire(carte), true);
 
         /* mettre des cartes dans la défausse */
         for (int i = 0; i < nbCartesDefausse; i++)
@@ -242,7 +242,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
             case ETAT_CHOIX_CARTE:
                 if (activationPouvoirFou) {
                     coups = calculerCoupsCartes();
-                    if (coups.isEmpty())
+                    if (peutFinirTour())
                         coups.add(new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
                 } else {
                     coups = calculerCoupsPouvoirs();

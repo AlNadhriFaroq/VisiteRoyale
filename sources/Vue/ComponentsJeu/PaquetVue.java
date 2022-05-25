@@ -17,10 +17,12 @@ public class PaquetVue extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
         cartesVue = new CarteVue[Jeu.TAILLE_MAIN];
+        add(Box.createHorizontalGlue());
         for (int i = 0; i < Jeu.TAILLE_MAIN; i++) {
-            cartesVue[i] = new CarteVue();
+            cartesVue[i] = new CarteVue(false, false, 110);
             add(cartesVue[i]);
         }
+        add(Box.createHorizontalGlue());
     }
 
     public Paquet getPaquet() {
@@ -46,10 +48,12 @@ public class PaquetVue extends JPanel {
 
     public void mettreAJour(boolean cachee) {
         removeAll();
+        add(Box.createHorizontalGlue());
         for (int i = 0; i < paquet.getTaille(); i++) {
-            cartesVue[i].mettreAJour(paquet.getCarte(i), cachee);
+            cartesVue[i].mettreAJour(paquet.getCarte(i), false, false, cachee);
             add(cartesVue[i]);
         }
+        add(Box.createHorizontalGlue());
         repaint();
     }
 }

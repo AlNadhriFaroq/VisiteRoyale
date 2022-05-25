@@ -4,6 +4,7 @@ import Controleur.ControleurMediateur;
 import Modele.Programme;
 import Vue.*;
 import Vue.Adaptateurs.AdaptateurBoutons;
+import Vue.Adaptateurs.AdaptateurSouris;
 import Vue.ComponentsMenus.BoutonMenu;
 
 import javax.swing.*;
@@ -31,8 +32,10 @@ public class PanelMenuPrincipal extends PanelEtat {
         boutons[credits] = new BoutonMenu("Crédits");
         boutons[quitter] = new BoutonMenu("Quitter");
 
-        for (BoutonMenu bouton : boutons)
+        for (BoutonMenu bouton : boutons) {
             bouton.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+            bouton.addMouseListener(new AdaptateurSouris(ctrl, vue, prog));
+        }
 
         JPanel panelBoutons = new JPanel();
         panelBoutons.setBackground(new Color(0, 0, 0, 0));

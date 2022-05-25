@@ -3,6 +3,7 @@ package Global;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
+import java.util.Objects;
 
 public class Images {
     public static final Image CARTE_VIDE = lireImage("Cartes" + File.separator + "Vide");
@@ -35,17 +36,19 @@ public class Images {
     public static final Image TEXTE_VICTOIRE = lireImage("Textes" + File.separator + "Victoire");
     public static final Image TEXTE_VICTOIRE_VRT = lireImage("Textes" + File.separator + "VictoireJoueurVrt");
     public static final Image TEXTE_VICTOIRE_RGE = lireImage("Textes" + File.separator + "VictoireJoueurRge");
-    public static final Image TEXTE_CROIX = lireImage("Textes" + File.separator + "Croix");
+    public static final Image TEXTE_SUPPRIMER = lireImage("Textes" + File.separator + "Supprimer");
+    public static final Image TEXTE_ANNULER_REFAIRE = lireImage("Textes" + File.separator + "AnnulerRefaire");
+    public static final Image TEXTE_OUVRIR_MENU = lireImage("Textes" + File.separator + "OuvrirMenu");
 
     public static final Image CHATEAU_VRT = lireImage("Decors" + File.separator + "ChateauVrt");
     public static final Image CHATEAU_RGE = lireImage("Decors" + File.separator + "ChateauRge");
 
-    public static final Image FOND_JEU = lireImage("FondBois");
-    public static final Image FOND_MENU = lireImage("FondDosCarte");
+    public static final Image FOND_JEU = lireImage("Fonds" + File.separator + "FondBoisFonce");
+    public static final Image FOND_MENU = lireImage("Fonds" + File.separator + "FondDosCarte");
 
     private static Image lireImage(String nom) {
         try {
-            return ImageIO.read(ClassLoader.getSystemClassLoader().getResourceAsStream("Images" + File.separator + nom + ".png"));
+            return ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream("Images" + File.separator + nom + ".png")));
         } catch (Exception e) {
             throw new RuntimeException("Global.Images.lireImage() : Impossible d'ouvrir l'image.\n" + e);
         }

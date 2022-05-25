@@ -8,7 +8,6 @@ import Vue.Adaptateurs.*;
 import Vue.ComponentsJeu.*;
 import Vue.ComponentsMenus.BoutonMenu;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class PanelJeu extends PanelEtat {
@@ -75,8 +74,8 @@ public class PanelJeu extends PanelEtat {
 
         /* Disposition des composants dans la fenetre */
         add(chateauVrt, new GridBagConstraints(0, 0, 2, 2, 1.0 / 15.0, 1.0 / 6.0, GridBagConstraints.FIRST_LINE_START, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        add(mainVrtVue, new GridBagConstraints(2, 0, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_START, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        add(selectionVrtVue, new GridBagConstraints(2, 1, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_END, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        add(mainVrtVue, new GridBagConstraints(2, 0, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_START, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+        add(selectionVrtVue, new GridBagConstraints(2, 1, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_END, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
         add(boutonMenuIndice, new GridBagConstraints(3, 0, 1, 1, 1.0 / 15.0, 1.0 / 6.0, GridBagConstraints.FIRST_LINE_END, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
         add(boutonMenuPause, new GridBagConstraints(4, 0, 1, 1, 1.0 / 15.0, 1.0 / 6.0, GridBagConstraints.FIRST_LINE_END, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
@@ -89,8 +88,8 @@ public class PanelJeu extends PanelEtat {
         add(boutonMenuPouvoirFou, new GridBagConstraints(3, 4, 2, 1, 1.0 / 15.0, 1.0 / 9.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
         add(chateauRge, new GridBagConstraints(0, 5, 2, 2, 1.0 / 15.0, 1.0 / 6.0, GridBagConstraints.LAST_LINE_START, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        add(selectionRgeVue, new GridBagConstraints(2, 5, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_START, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        add(mainRgeVue, new GridBagConstraints(2, 6, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_END, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        add(selectionRgeVue, new GridBagConstraints(2, 5, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_START, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+        add(mainRgeVue, new GridBagConstraints(2, 6, 1, 1, 10.0 / 15.0, 1.0 / 6.0, GridBagConstraints.PAGE_END, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
         add(boutonMenuFinTour, new GridBagConstraints(3, 6, 2, 1, 1.0 / 15.0, 1.0 / 6.0, GridBagConstraints.LAST_LINE_END, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     }
 

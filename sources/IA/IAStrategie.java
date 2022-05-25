@@ -73,8 +73,9 @@ public class IAStrategie extends IA {
             if (lc.get(0).getTypeCoup() != Coup.FINIR_TOUR && !jeu.getTypeCourant().equals(Type.IND)) {
                 if (jeu.getEtatJeu() != Jeu.ETAT_CHOIX_DIRECTION)
                     lc.add(new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
-            } else
+            } else {
                 return lc.get(0);
+            }
         }
         switch (jeu.getEtatJeu()) {
             case Jeu.ETAT_CHOIX_CARTE:
@@ -89,8 +90,7 @@ public class IAStrategie extends IA {
             case Jeu.ETAT_FIN_DE_PARTIE:
                 return lc.get(0);
             default:
-                throw new RuntimeException("IA.IAMoyenne.calculerCoup() : Etat du jeu invalide.");
-
+                throw new RuntimeException("IA.IAStrategie.calculerCoup() : Etat du jeu invalide.");
         }
         return coup;
     }
@@ -107,9 +107,8 @@ public class IAStrategie extends IA {
             fouSurSorcier = false;
             fmPouvoirFou = false;
             coup = choisirCartePouvoirDebutTour(); //coup gagnant ou type gagnant s il y a sinon pouvoir sorcier si ca vaut le coup sinon le max de carte en main
-            if (coup != null) {
+            if (coup != null)
                 return coup;
-            }
         }
 
         if (defausseCarte)
@@ -133,8 +132,9 @@ public class IAStrategie extends IA {
                 if (c.getCarte() != null) {
                     if (!c.getCarte().estDeplacementFouCentre())
                         tmp.add(c);
-                } else
+                } else {
                     tmp.add(c);
+                }
             }
             lc = tmp;
             if (jeu.getTypeCourant().equals(Type.IND) && !fouSurGardeVert && !fouSurGardeRouge)
@@ -185,8 +185,9 @@ public class IAStrategie extends IA {
                             if (posRoi + coup.getCarte().getDeplacement() < posGardeRouge)
                                 tmp.add(lc.get(i));
                         }
-                    } else
+                    } else {
                         tmp.add(lc.get(i));
+                    }
                     i++;
                     if (i < tailleLc)
                         coup = lc.get(i);
@@ -200,11 +201,9 @@ public class IAStrategie extends IA {
             coup = choisirCarte(Type.FOU);
 
             if (coup == null) {
-                for (Coup c : lc) {
-                    if (c.getTypeCoup() == Coup.FINIR_TOUR) {
+                for (Coup c : lc)
+                    if (c.getTypeCoup() == Coup.FINIR_TOUR)
                         return c;
-                    }
-                }
             }
         }
 

@@ -5,6 +5,7 @@ import Modele.Jeu;
 import Modele.Programme;
 import Vue.*;
 import Vue.Adaptateurs.AdaptateurBoutons;
+import Vue.Adaptateurs.AdaptateurSouris;
 import Vue.ComponentsMenus.*;
 
 import javax.swing.*;
@@ -31,11 +32,16 @@ public class PanelMenuSauvegardes extends PanelEtat {
 
         boutonMenuRetour = new BoutonMenu("Retour");
 
-        for (BoutonSauvegarde bouton : boutonsSauvegardes)
+        for (BoutonSauvegarde bouton : boutonsSauvegardes) {
             bouton.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        for (BoutonSupprimer bouton : boutonsSupprimer)
+            bouton.addMouseListener(new AdaptateurSouris(ctrl, vue, prog));
+        }
+        for (BoutonSupprimer bouton : boutonsSupprimer) {
             bouton.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+            bouton.addMouseListener(new AdaptateurSouris(ctrl, vue, prog));
+        }
         boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        boutonMenuRetour.addMouseListener(new AdaptateurSouris(ctrl, vue, prog));
 
         setLayout(new GridBagLayout());
         add(new JLabel(), new GridBagConstraints(0, 0, 1, 1, 0.33, 1.0 / (Programme.NB_SAUVEGARDES+4), GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));

@@ -5,74 +5,51 @@ import Global.Images;
 import Modele.Programme;
 import Vue.*;
 import Vue.Adaptateurs.AdaptateurBoutons;
+import Vue.Adaptateurs.AdaptateurSouris;
 import Vue.ComponentsMenus.BoutonMenu;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class PanelMenuJeu extends PanelEtat {
-    BoutonMenu boutonMenuReprendre;
-    BoutonMenu boutonMenuNouvellePartie;
-    BoutonMenu boutonMenuSauvegardes;
-    BoutonMenu boutonMenuOptions;
-    BoutonMenu boutonMenuTutoriel;
-    BoutonMenu boutonMenuRetour;
+    BoutonMenu[] boutons;
+    public static final int reprendre = 0;
+    public static final int nouvellePartie = 1;
+    public static final int sauvegardes = 2;
+    public static final int options = 3;
+    public static final int tutoriel = 4;
+    public static final int retour = 5;
 
     public PanelMenuJeu(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
         super(ctrl, vue, prog);
 
         imgFond = Images.FOND_JEU;
 
-        boutonMenuReprendre = new BoutonMenu("Reprendre");
-        boutonMenuNouvellePartie = new BoutonMenu("Nouvelle partie");
-        boutonMenuSauvegardes = new BoutonMenu("Sauvegardes");
-        boutonMenuOptions = new BoutonMenu("Options");
-        boutonMenuTutoriel = new BoutonMenu("Tutoriel");
-        boutonMenuRetour = new BoutonMenu("Retour au menu principal");
+        boutons = new BoutonMenu[6];
+        boutons[reprendre] = new BoutonMenu("Reprendre");
+        boutons[nouvellePartie] = new BoutonMenu("Nouvelle partie");
+        boutons[sauvegardes] = new BoutonMenu("Sauvegardes");
+        boutons[options] = new BoutonMenu("Options");
+        boutons[tutoriel] = new BoutonMenu("Tutoriel");
+        boutons[retour] = new BoutonMenu("Retour au menu principal");
 
-        boutonMenuReprendre.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonMenuNouvellePartie.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonMenuSauvegardes.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonMenuOptions.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonMenuTutoriel.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        for (BoutonMenu bouton : boutons) {
+            bouton.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+            bouton.addMouseListener(new AdaptateurSouris(ctrl, vue, prog));
+        }
 
         JPanel panelBoutons = new JPanel();
         panelBoutons.setBackground(new Color(0, 0, 0, 0));
         panelBoutons.setLayout(new GridLayout(7, 1, 0, 10));
 
-        panelBoutons.add(boutonMenuReprendre);
-        panelBoutons.add(boutonMenuNouvellePartie);
-        panelBoutons.add(boutonMenuSauvegardes);
-        panelBoutons.add(boutonMenuOptions);
-        panelBoutons.add(boutonMenuTutoriel);
-        panelBoutons.add(boutonMenuRetour);
+        for (BoutonMenu bouton : boutons)
+            panelBoutons.add(bouton);
 
-        add(new Cadre(panelBoutons, 10, 10, 8, 8));
+        add(new Cadre(panelBoutons, 4, 4, 1, 1));
     }
 
-    public BoutonMenu getBoutonReprendre() {
-        return boutonMenuReprendre;
-    }
-
-    public BoutonMenu getBoutonNouvellePartie() {
-        return boutonMenuNouvellePartie;
-    }
-
-    public BoutonMenu getBoutonSauvegardes() {
-        return boutonMenuSauvegardes;
-    }
-
-    public BoutonMenu getBoutonOptions() {
-        return boutonMenuOptions;
-    }
-
-    public BoutonMenu getBoutonTutoriel() {
-        return boutonMenuTutoriel;
-    }
-
-    public BoutonMenu getBoutonRetour() {
-        return boutonMenuRetour;
+    public BoutonMenu getBouton(int indice) {
+        return boutons[indice];
     }
 
     @Override

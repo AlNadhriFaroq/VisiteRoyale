@@ -29,25 +29,25 @@ public class AdaptateurBoutons implements ActionListener {
         else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.jouerVsIA)))
             ctrl.nouvellePartie(true, false);
         else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.sauvegardes)) ||
-                e.getSource().equals(vue.getPanelMenuJeu().getBoutonSauvegardes()))
+                e.getSource().equals(vue.getPanelMenuJeu().getBouton(PanelMenuJeu.sauvegardes)))
             ctrl.ouvrirMenuSauvegardes();
         else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.options)) ||
-                e.getSource().equals(vue.getPanelMenuJeu().getBoutonOptions()))
+                e.getSource().equals(vue.getPanelMenuJeu().getBouton(PanelMenuJeu.options)))
             ctrl.ouvrirMenuOptions();
         else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.tutoriel)) ||
-                e.getSource().equals(vue.getPanelMenuJeu().getBoutonTutoriel()))
+                e.getSource().equals(vue.getPanelMenuJeu().getBouton(PanelMenuJeu.tutoriel)))
             ctrl.ouvrirTutoriel();
         else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.credits)))
             ctrl.ouvrirCredits();
         else if (e.getSource().equals(vue.getPanelMenuPrincipal().getBouton(PanelMenuPrincipal.quitter)))
             ctrl.quitter();
-        else if (e.getSource().equals(vue.getPanelMenuJeu().getBoutonReprendre()))
+        else if (e.getSource().equals(vue.getPanelMenuJeu().getBouton(PanelMenuJeu.reprendre)))
             ctrl.reprendrePartie();
         else if (e.getSource().equals(vue.getPanelEnJeu().getPanelFinPartie().getBoutonNouvellePartie()) ||
-                e.getSource().equals(vue.getPanelMenuJeu().getBoutonNouvellePartie()))
+                e.getSource().equals(vue.getPanelMenuJeu().getBouton(PanelMenuJeu.nouvellePartie)))
             ctrl.nouvellePartie(prog.getJoueurEstIA(Jeu.JOUEUR_VRT), prog.getJoueurEstIA(Jeu.JOUEUR_RGE));
         else if (e.getSource().equals(vue.getPanelEnJeu().getPanelFinPartie().getBoutonRetour()) ||
-                e.getSource().equals(vue.getPanelMenuJeu().getBoutonRetour()) ||
+                e.getSource().equals(vue.getPanelMenuJeu().getBouton(PanelMenuJeu.retour)) ||
                 e.getSource().equals(vue.getPanelMenuSauvegardes().getBoutonRetour()) ||
                 e.getSource().equals(vue.getPanelMenuOptions().getBoutonRetour()) ||
                 e.getSource().equals(vue.getPanelTutoriel().getBoutonRetour()) ||
