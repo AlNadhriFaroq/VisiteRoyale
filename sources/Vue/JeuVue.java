@@ -30,6 +30,7 @@ public class JeuVue extends JComponent {
     List<Bouton> boutons;
 
     int heigth, width, carteH, carteW, joueeH, joueeW, xDep, yA, yB, delai;
+    Point jeuPosA, jeuPosB;
     boolean FinAnim;
     Dimension screenSize;
 
@@ -67,11 +68,18 @@ public class JeuVue extends JComponent {
         this.xDep = (this.width / 2) - (this.carteW * 4);
         this.yA = this.heigth - this.carteH - 40;
         this.yB = 5;
+
+        this.jeuPosA = new Point( (this.width / 2) - (this.joueeW *3), this.terrain.getY() + this.terrain.getHeight() + (this.carteH/4) );
+        this.jeuPosB =new Point( (this.width / 2) - (this.joueeW*3), this.terrain.getY() - (this.carteH/4) - (this.joueeH) );
+
         this.setVisible(true);
 
         this.genererDeck();
         this.afficheTerrain();
         this.genererBoutons();
+
+
+
         this.GenererMains();
         this.FinAnim = false;
         this.repaint();
@@ -95,6 +103,12 @@ public class JeuVue extends JComponent {
         int h = this.carteH + (this.OFFSET*2);
         g.fillRect(this.OFFSET - (this.OFFSET/4),(this.heigth/2) - (h/2) - 40,w,h);
         g.fillRect(( (2 * this.OFFSET ) - (this.OFFSET/4) ) + this.carteW,((this.heigth / 2) - (h / 2)) - 40,w,h);
+        g.setColor(new Color(225,15, 50));
+        g.drawRect((this.width/2) - (this.joueeW*3), this.terrain.getY() + this.terrain.getHeight() + (this.joueeH/8), this.joueeW*6, this.joueeH + (this.joueeH/2)   );
+
+        g.setColor(new Color(71, 132, 78));
+        g.drawRect((this.width/2) - (this.joueeW*3), this.terrain.getY() - (this.carteH/4) - (this.joueeH + this.joueeH/4) , this.joueeW*6, this.joueeH + (this.joueeH/2)   );
+
     }
 
     /* GENERATIONS & GESTION DES LISTES */
@@ -384,8 +398,7 @@ public class JeuVue extends JComponent {
         BoutonFinirTour finTour = new BoutonFinirTour(ctrl, this.jeu, this);
         BoutonAnnuler annuler = new BoutonAnnuler(ctrl, this.jeu);
         BoutonRefaire refaire = new BoutonRefaire(ctrl, this.jeu);
-        Gauche gauche = new Gauche(ctrl, this,this.jeu);
-        Droite droite = new Droite(ctrl,this, this.jeu);
+
 
         pouvoirFou.setSize(BoutonLargeur, BoutonHauteur);
         pouvoirFou.setLocation(x, y);
@@ -412,21 +425,12 @@ public class JeuVue extends JComponent {
         refaire.setLocation(x, y);
         refaire.setVisible(true);
 
-        gauche.setSize(BoutonLargeur, BoutonHauteur);
-        gauche.setLocation(0, 0);
-        gauche.setVisible(true);
-
-        droite.setSize(BoutonLargeur, BoutonHauteur);
-        droite.setLocation(BoutonLargeur*2, 0);
-        droite.setVisible(true);
-
         this.boutons.add(pouvoirFou);
         this.boutons.add(pouvoirSorcier);
         this.boutons.add(finTour);
         this.boutons.add(annuler);
         this.boutons.add(refaire);
-        this.boutons.add(gauche);
-        this.boutons.add(droite);
+
 
         ajoutBoutons();
     }
