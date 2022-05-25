@@ -1,10 +1,7 @@
 package Vue;
 
 import Controleur.ControleurMediateur;
-import Modele.Carte;
-import Modele.Jeu;
-import Modele.Paquet;
-import Modele.Pion;
+import Modele.*;
 import Vue.Boutons.*;
 
 import java.util.Collections;
@@ -107,6 +104,14 @@ public class JeuVue extends JComponent {
             return this.mainA;
         }else{
             return  this.mainB;
+        }
+    }
+
+    public Type getTypeJoueur(int joueur){
+        if (joueur == jeu.JOUEUR_RGE){
+            return this.joueesA.get(0).getCarte().getType();
+        }else{
+            return  this.joueesB.get(0).getCarte().getType();
         }
     }
 
@@ -478,6 +483,8 @@ public class JeuVue extends JComponent {
         }
 
     }
+
+
 
 
 
