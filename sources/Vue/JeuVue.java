@@ -131,6 +131,14 @@ public class JeuVue extends JComponent {
         }
     }
 
+    public Carte getCarteJouee(int joueur){
+        if(joueur == jeu.JOUEUR_RGE){
+            return this.joueesA.get(0).getCarte();
+        } else {
+            return this.joueesB.get(0).getCarte();
+        }
+    }
+
     public CarteVue carteFromCartevue(Carte carte, List<CarteVue> list){
         int t =list.size();
         for (int i=0; i<t; i++) {

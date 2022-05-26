@@ -218,7 +218,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         this.selectionPions[indice] = pion;
     }
 
-    void putSelectionDirections(int indice, int direction) {
+    public void putSelectionDirections(int indice, int direction) {
         this.selectionDirections[indice] = direction;
     }
 
