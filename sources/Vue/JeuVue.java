@@ -5,7 +5,6 @@ import Modele.*;
 import Vue.Boutons.*;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -90,6 +89,9 @@ public class JeuVue extends JComponent {
     public JFrame getFrame() {
         return frame;
     }
+    public int JA(int j){
+        return this.jeu.getSelectionCartes(j).getTaille();
+    }
 
     /* PaintComponent */
     @Override
@@ -132,14 +134,11 @@ public class JeuVue extends JComponent {
     public CarteVue carteFromCartevue(Carte carte, List<CarteVue> list){
         int t =list.size();
         for (int i=0; i<t; i++) {
-            if (this.deck.isEmpty()){
-                System.out.println("LECTURE " + i + " -> " + list.get(i).getCarte().toString());
-            }
             if ( carte.equals(list.get(i).getCarte()) ) {
                 return list.get(i);
             }
         }
-        //System.out.println("PAS DE CARTE");
+
         return null;
     }
 
@@ -167,30 +166,25 @@ public class JeuVue extends JComponent {
         Source.remove(i);
     }
 
-    public void piocher(int joueur) {
-        int max = jeu.getSelectionCartes(joueur).getTaille();
-        System.out.println("PIOCHER MODELE: " + this.jeu.getPioche().getTaille() + " VUE: " + this.deck.size() + " DEFAUSSE: " + this.defausse.size());
+    public void piocher(int joueur, int nbcartes) {
+        //int max = jeu.getSelectionCartes(joueur).getTaille();
+        int max = nbcartes;
         Point dest;
 
         if (joueur == this.jeu.JOUEUR_RGE) {
             dest = new Point(this.xDep, this.yA);
             for (int i=0; i< max; i++){
-                System.out.println("DANS PIOCHE MODELE: " + this.jeu.getPioche().getTaille() + " VUE: " + this.deck.size()+ " DEFAUSSE: " + this.defausse.size());
-                refaireCartes();
                 envoiPioche(this.deck.get(this.deck.size()-1), dest);
                 donnerCarte(this.deck.size()-1, this.mainA, this.deck);
-
-
             }
         }else {
             dest = new Point(this.xDep, this.yB);
             for (int i=0; i< max; i++){
-                System.out.println("DANS PIOCHE MODELE: " + this.jeu.getPioche().getTaille() + " VUE: " + this.deck.size()+ " DEFAUSSE: " + this.defausse.size());
-                refaireCartes();
                 envoiPioche(this.deck.get(this.deck.size()-1), dest);
                 donnerCarte(this.deck.size()-1, this.mainB, this.deck);
             }
         }
+
     }
 
     public void jouer(int i, boolean joueur) {
@@ -224,7 +218,6 @@ public class JeuVue extends JComponent {
             for (int i = 0; i < taille; i++) {
                 donnerCarte(0, this.defausse, this.joueesA);
                 PlacerDefausse(this.defausse.get(this.defausse.size() - 1));
-                System.out.println("MISE EN DEFAUSSE DE " + i + " / " + this.defausse.size());
             }
 
         } else {
@@ -232,7 +225,6 @@ public class JeuVue extends JComponent {
             for (int i = 0; i < taille; i++) {
                 donnerCarte(0, this.defausse, this.joueesB);
                 PlacerDefausse(this.defausse.get(this.defausse.size() - 1));
-                System.out.println("MISE EN DEFAUSSE DE " + i + " / " + this.defausse.size());
             }
 
         }
@@ -566,24 +558,17 @@ public class JeuVue extends JComponent {
     }
     public void refaireDeck(){
         int t1 = this.jeu.getPioche().getTaille();
-        System.out.println("REFAIRE MODELE " + t1 + " DECK " + this.deck.size() + " DEFAUSSE " + this.defausse.size());
-        int j;
-        int c = 0;
+
+
         for (int i=0; i<t1; i++){
 
-            System.out.println("MODELE CARTE " + this.jeu.getPioche().getCarte(i).toString());
             CarteVue carteVue = carteFromCartevue(this.jeu.getPioche().getCarte(i), this.defausse );
-            System.out.println("MA CARTE " + carteVue.getCarte().toString());
+            this.defausse.remove(carteVue);
             this.deck.add(carteVue);
-            System.out.println("MA CARTE DECK " + this.deck.get(i).getCarte().toString());
-            carteVue.setLocation(this.OFFSET, this.heigth - (this.carteH/2) - 40);
-
+            carteVue.setLocation(this.OFFSET, ((this.heigth / 2) - (this.carteH / 2)) - 40);
 
         }
-        if (this.deck.size() == this.jeu.getPioche().getTaille() ) {
-            this.defausse.clear();
-            System.out.println("LA BOUCLE");
-        }
+
     }
 
     public void refaireMains(){
@@ -604,15 +589,29 @@ public class JeuVue extends JComponent {
         }
 
     }
-    public void refaireCartes() {
-        if (this.deck.isEmpty() || this.jeu.getPioche().getTaille() == 0 ){
-            System.out.println("AVANT MODELE: " + this.jeu.getPioche().getTaille() + " VUE: " + this.deck.size());
+    public void refaireCartes(int nbCartes, int joueur) {
+        Point dest;
+        if (this.deck.isEmpty() || this.jeu.getPioche().getTaille() == 0 || nbCartes > this.deck.size()){
 
+            if (nbCartes > this.deck.size()){
+                if (joueur == this.jeu.JOUEUR_RGE) {
+                    dest = new Point(this.xDep, this.yA);
+                    for (int i=0; i< nbCartes; i++){
+                        envoiPioche(this.deck.get(this.deck.size()-1), dest);
+                        donnerCarte(this.deck.size()-1, this.mainA, this.deck);
+                    }
+                }else {
+                    dest = new Point(this.xDep, this.yB);
+                    for (int i=0; i< nbCartes; i++){
+                        envoiPioche(this.deck.get(this.deck.size()-1), dest);
+                        donnerCarte(this.deck.size()-1, this.mainB, this.deck);
+                    }
+                }
+            }
 
             refaireDeck();
 
-            //refaireMains();
-            System.out.println("APRES MODELE: " + this.jeu.getPioche().getTaille() + " VUE: " + this.deck.size());
+
         }
     }
 

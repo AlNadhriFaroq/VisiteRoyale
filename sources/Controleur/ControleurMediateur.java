@@ -141,14 +141,14 @@ public class ControleurMediateur {
 
         if (visuel){
             this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
-           // this.jeuVue.piocher(this.prog.getJeu().getJoueurCourant());
-            this.jeuVue.updateMains();
         }
 
         jouer(coup);
     }
 
     private void jouer(Coup coup) {
+        boolean FinTour =false;
+        int i, nbCartes = 0;
         if (coup != null) {
 
             if (visuel && this.prog.getJoueurEstIA(this.prog.getJeu().getJoueurCourant()) ){
@@ -168,15 +168,27 @@ public class ControleurMediateur {
                 }
 
                 if (coup.getTypeCoup() == Coup.FINIR_TOUR) {
+                    FinTour = true;
+                    nbCartes = this.prog.getJeu().getSelectionCartes(this.prog.getJeu().getJoueurCourant()).getTaille();
                     this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
-                    System.out.println("MEDIATEUR DEFAUSSE " + this.jeuVue.TailleDefausse());
-                    this.jeuVue.piocher(this.prog.getJeu().getJoueurCourant());
-                    this.jeuVue.updateMains();
                 }
 
 
             }
             prog.jouerCoup(coup);
+            if (visuel){
+                if (this.prog.getJeu().getJoueurCourant() == this.prog.getJeu().JOUEUR_RGE){
+                    i = this.prog.getJeu().JOUEUR_VRT;
+
+                }else{
+                    i = this.prog.getJeu().JOUEUR_RGE;
+                }
+                this.jeuVue.refaireCartes(nbCartes, i);
+                if (FinTour) {
+                    this.jeuVue.piocher(i, nbCartes);
+                    this.jeuVue.updateMains();
+                }
+            }
 
 
         }
