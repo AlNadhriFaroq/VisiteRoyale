@@ -118,9 +118,9 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         for (int i = 0; i < cartesMainRge.length; i++)
             pioche.inserer(mainJoueurRge.extraire());
         for (Carte carte : cartesMainVrt)
-            mainJoueurVrt.inserer(pioche.extraire(carte), true);
+            mainJoueurVrt.inserer(carte, true);
         for (Carte carte : cartesMainRge)
-            mainJoueurRge.inserer(pioche.extraire(carte), true);
+            mainJoueurRge.inserer(carte, true);
 
         /* mettre des cartes dans la défausse */
         for (int i = 0; i < nbCartesDefausse; i++)
