@@ -32,6 +32,12 @@ public class JeuVue extends JComponent {
     Point jeuPosA, jeuPosB;
     boolean FinAnim;
     Dimension screenSize;
+    MenuPanel menuPanel;
+    BoutonPouvoirFou pouvoirFou ;
+    BoutonPouvoirSorcier pouvoirSorcier ;
+    BoutonFinirTour finTour ;
+    BoutonAnnuler annuler ;
+    BoutonRefaire refaire ;
 
     public JeuVue(ControleurMediateur ctrl, Jeu jeu) {
         this.delai = 25;
@@ -72,6 +78,11 @@ public class JeuVue extends JComponent {
         this.jeuPosB =new Point( (this.width / 2) - (this.joueeW*3), this.terrain.getY() - (this.carteH/4) - (this.joueeH) );
 
         this.setVisible(true);
+
+
+
+        this.menuPanel = new MenuPanel(this, this.ctrl);
+        this.frame.add(this.menuPanel);
 
         this.genererDeck();
         this.afficheTerrain();
@@ -408,11 +419,11 @@ public class JeuVue extends JComponent {
         int x = this.terrain.getX() + this.terrain.getWidth() + BoutonLargeur;
         int y = this.terrain.getY() + BoutonHauteur;
 
-        BoutonPouvoirFou pouvoirFou = new BoutonPouvoirFou(ctrl, this.jeu);
-        BoutonPouvoirSorcier pouvoirSorcier = new BoutonPouvoirSorcier(ctrl, this.jeu);
-        BoutonFinirTour finTour = new BoutonFinirTour(ctrl, this.jeu, this);
-        BoutonAnnuler annuler = new BoutonAnnuler(ctrl, this.jeu);
-        BoutonRefaire refaire = new BoutonRefaire(ctrl, this.jeu);
+        this.pouvoirFou = new BoutonPouvoirFou(ctrl, this.jeu);
+        this.pouvoirSorcier = new BoutonPouvoirSorcier(ctrl, this.jeu);
+        this.finTour = new BoutonFinirTour(ctrl, this.jeu, this);
+        this.annuler = new BoutonAnnuler(ctrl, this.jeu);
+        this.refaire = new BoutonRefaire(ctrl, this.jeu);
 
 
         pouvoirFou.setSize(BoutonLargeur, BoutonHauteur);
@@ -454,11 +465,34 @@ public class JeuVue extends JComponent {
         for (Bouton bouton : this.boutons) this.frame.add(bouton);
     }
 
+    public void majBoutons(){
+        if (this.jeu.peutUtiliserPouvoirFou()){
+            this.pouvoirFou.setIcon(new ImageIcon(this.pouvoirFou.getImageCouleur()) );
+            this.pouvoirFou.setBackground(Color.cyan);
+        }
+        if (!this.jeu.peutUtiliserPouvoirFou()){
+            this.pouvoirFou.setIcon(new ImageIcon(this.pouvoirFou.getImageGris()) );
+            this.pouvoirFou.setBackground(Color.darkGray);
+        }
+        if (!this.jeu.peutUtiliserPouvoirSorcier() ){
+            this.pouvoirSorcier.setIcon(new ImageIcon(this.pouvoirSorcier.getImageGris()) );
+            this.pouvoirSorcier.setBackground(Color.darkGray);
+        }
+        if (this.jeu.peutUtiliserPouvoirSorcier()){
+            this.pouvoirSorcier.setIcon(new ImageIcon(this.pouvoirSorcier.getImageCouleur()) );
+            this.pouvoirSorcier.setBackground(Color.orange);
+        }
+        this.pouvoirSorcier.repaint();
+        this.pouvoirFou.repaint();
+    }
+
     public void afficherBoutons() {
         for (Bouton bouton : this.boutons) {
             bouton.setVisible(true);
             bouton.setLocation(bouton.getLocation());
+
         }
+        majBoutons();
     }
 
     public void carteSelecTaille(CarteVue carteVue, boolean b){

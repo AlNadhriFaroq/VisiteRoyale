@@ -16,4 +16,5 @@ public abstract class Bouton extends JButton {
     }
 
     abstract void action();
+
 }
