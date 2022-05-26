@@ -168,19 +168,23 @@ public class ControleurMediateur {
                 }
 
                 if (coup.getTypeCoup() == Coup.FINIR_TOUR) {
-                    FinTour = true;
-                    nbCartes = this.prog.getJeu().getSelectionCartes(this.prog.getJeu().getJoueurCourant()).getTaille();
                     this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
                 }
 
 
             }
+            if (visuel && coup.getTypeCoup()==Coup.FINIR_TOUR) {
+                nbCartes = this.prog.getJeu().getSelectionCartes(this.prog.getJeu().getJoueurCourant()).getTaille();
+                FinTour = true;
+            }
+
             prog.jouerCoup(coup);
-            if (visuel){
-                if (this.prog.getJeu().getJoueurCourant() == this.prog.getJeu().JOUEUR_RGE){
+
+            if(visuel) {
+                if (this.prog.getJeu().getJoueurCourant() == this.prog.getJeu().JOUEUR_RGE) {
                     i = this.prog.getJeu().JOUEUR_VRT;
 
-                }else{
+                } else {
                     i = this.prog.getJeu().JOUEUR_RGE;
                 }
                 this.jeuVue.refaireCartes(nbCartes, i);
