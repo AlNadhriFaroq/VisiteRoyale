@@ -33,6 +33,8 @@ public class JeuVue extends JComponent {
     boolean FinAnim;
     Dimension screenSize;
     MenuPanel menuPanel;
+    TourPanel tourA;
+    TourPanel tourB;
     BoutonPouvoirFou pouvoirFou ;
     BoutonPouvoirSorcier pouvoirSorcier ;
     BoutonFinirTour finTour ;
@@ -87,6 +89,7 @@ public class JeuVue extends JComponent {
         this.genererDeck();
         this.afficheTerrain();
         this.genererBoutons();
+        this.genererTours();
 
 
 
@@ -107,6 +110,7 @@ public class JeuVue extends JComponent {
     /* PaintComponent */
     @Override
     public void paintComponent(Graphics g) {
+        this.afficherTours();
         this.afficheMain();
         this.afficheTerrain();
         this.afficherBoutons();
@@ -504,6 +508,32 @@ public class JeuVue extends JComponent {
             carteVue.setSize(this.carteW + decalage, this.carteH + decalage);
         }
         this.frame.repaint();
+    }
+
+    public void genererTours(){
+        this.tourA = new TourPanel(this, this.ctrl);
+        this.tourB = new TourPanel(this, this.ctrl);
+
+        this.tourA.setLocation(this.tourA.getWidth(), this.yA );
+        this.tourB.setLocation(this.tourB.getWidth(), this.yB + this.carteH - this.tourB.getHeight() );
+
+        this.tourA.setVisible(true);
+        this.tourB.setVisible(true);
+
+        this.frame.add(this.tourA);
+        this.frame.add(this.tourB);
+
+    }
+    public void afficherTours(){
+        if (this.jeu.getJoueurCourant() == this.jeu.JOUEUR_RGE){
+            this.tourA.setImage(this.tourA.getRougeBase());
+            this.tourB.setImage(this.tourB.getBleuSec());
+        }else{
+            this.tourA.setImage(this.tourA.getRougeSec());
+            this.tourB.setImage(this.tourB.getBleuBase());
+        }
+        this.tourA.repaint();
+        this.tourB.repaint();
     }
 
 
