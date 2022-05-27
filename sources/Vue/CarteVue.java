@@ -29,7 +29,7 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
         this.jeu = jeu;
         this.ctrl = ctrl;
         this.frame = f;
-        this.dos = false;
+        this.dos = true;
         this.jouable = false;
         this.dragged = false;
 
@@ -61,6 +61,7 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
 
     public void setDos(Boolean dos) {
         this.dos = dos;
+        this.setImage();
     }
 
     public void setDragged(Boolean dragged) {
@@ -103,29 +104,14 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
     public void mouseClicked(MouseEvent e) {
         if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())) {
             ctrl.selectionnerCarte(carte);
-/*
-            frame.jouerCarte(this);
-            if (jeu.getJoueurCourant() == Jeu.JOUEUR_RGE){
-                frame.PlacerJeuA(this);
-            }else{
-                frame.PlacerJeuB(this);
-            }
-
- */
-
-
-
         }
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
+    public void mousePressed(MouseEvent e) {}
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-    }
+    public void mouseReleased(MouseEvent e) {}
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -145,21 +131,21 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        setFocusable(true);
-        this.requestFocus();
-        this.dragged = true;
-        Point p1 = e.getLocationOnScreen();
-        Point p2 = this.frame.getLocationOnScreen();
-        Point p = new Point(p1.x - p2.x, p1.y - p2.y);
-        this.setLocation(p.x - (getWidth() / 2), p.y - (getHeight() / 2));
-        this.setVisible(true);
-        this.repaint();
+        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())) {
+            setFocusable(true);
+            this.requestFocus();
+            this.dragged = true;
+            Point p1 = e.getLocationOnScreen();
+            Point p2 = this.frame.getLocationOnScreen();
+            Point p = new Point(p1.x - p2.x, p1.y - p2.y);
+            this.setLocation(p.x - (getWidth() / 2), p.y - (getHeight() / 2));
+            this.setVisible(true);
+            this.repaint();
+        }
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
+    public void mouseMoved(MouseEvent e) {}
 
     @Override
     public int compareTo(CarteVue o) {
