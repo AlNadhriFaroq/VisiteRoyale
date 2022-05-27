@@ -77,7 +77,7 @@ public class ControleurMediateur {
                     joueursIA[joueur] = new IAMinMax(prog.getJeu());
                     break;
                 case IA.EXPERT:
-                    joueursIA[joueur] = new IAStrategie(prog.getJeu());
+                    joueursIA[joueur] = new IAMinMax(prog.getJeu());
                     break;
                 default:
                     throw new RuntimeException("Controleur.JoueurIA() : Difficulté de l'IA introuvable.");

@@ -1,9 +1,6 @@
 package IA;
 
-import Modele.Coup;
-import Modele.Jeu;
-import Modele.Pion;
-import Modele.Plateau;
+import Modele.*;
 import Structures.Tas;
 
 import java.util.ArrayList;
@@ -14,6 +11,9 @@ public class IAMinMax extends IA {
     private static final int PROFONDEUR = 1;
     Tas<List<Coup>> lj;
 
+    boolean finirPartie = false;
+    int poidsPlateauMax;
+    int nombrePas;
     Hashtable<Jeu, List<Coup>> jeuListeCoup;
     List<Integer> lpoids;
     List<Coup> lcf;
@@ -23,6 +23,8 @@ public class IAMinMax extends IA {
         super(jeu);
         lj = new Tas<>();
         lcf = new ArrayList<>();
+        poidsPlateauMax = 0;
+        nombrePas = 0;
     }
 
     @Override
@@ -41,6 +43,8 @@ public class IAMinMax extends IA {
             tailleLcf = 0;
             lcf.clear();
             lj = new Tas<>();
+            poidsPlateauMax = 0;
+            nombrePas = 0;
         }
         return cp;
     }
@@ -83,11 +87,27 @@ public class IAMinMax extends IA {
 
     private void evaluerTour(List<Coup> listeCoup) {
         List<Coup> lc = jeu.calculerListeCoup();
+        Coup prec = null;
         for (Coup coup : lc) {
+            if(poidsPlateauMax > 500)
+                return;
+            if(jeu.getEtatJeu() == Jeu.ETAT_CHOIX_CARTE){
+                if(coup.getCarte() != null)
+                    if(prec == null || !prec.getCarte().equals(coup.getCarte())){
+                        prec = coup;
+                    }
+                    else{
+                        continue;
+                    }
+            }
             jeu.jouerCoup(coup);
             listeCoup.add(coup);
-            if (coup.getTypeCoup() == Coup.FINIR_TOUR || jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE)
+            if (coup.getTypeCoup() == Coup.FINIR_TOUR || jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE){
+                if(jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE)
+                    finirPartie = true;
                 lj.inserer(new ArrayList<>(listeCoup), evaluerPlateau());
+                poidsPlateauMax = evaluerPlateau();
+            }
             else
                 evaluerTour(listeCoup);
             listeCoup.remove(listeCoup.size() - 1);
@@ -97,9 +117,16 @@ public class IAMinMax extends IA {
 
     private int evaluerPlateau() {
         int valeur = 0;
-        if (jeu.getJoueurCourant() != Jeu.JOUEUR_RGE) {
+        if (jeu.getJoueurCourant() != Jeu.JOUEUR_RGE && !finirPartie || finirPartie && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE ) {
+            System.out.println("joueur rouge");
             if (jeu.getPlateau().getPositionPion(Pion.ROI) == Plateau.CHATEAU_RGE)
                 valeur += 1000;
+            if(jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE)
+                valeur += 1000;
+            if(jeu.getPlateau().getPositionPion(Pion.SOR) <= Plateau.CHATEAU_VRT)
+                valeur -= 5;
+            if(jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)
+                valeur += 5;
             valeur += jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - Plateau.FONTAINE;
             valeur += jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - Plateau.FONTAINE;
             valeur += jeu.getPlateau().getPositionPion(Pion.SOR) - Plateau.FONTAINE;
@@ -111,9 +138,16 @@ public class IAMinMax extends IA {
                 valeur -= 1;
         }
 
-        if (jeu.getJoueurCourant() != Jeu.JOUEUR_VRT) {
+        if (jeu.getJoueurCourant() != Jeu.JOUEUR_VRT && !finirPartie || jeu.getJoueurCourant() == Jeu.JOUEUR_VRT && finirPartie ) {
+            System.out.println("au joueur vert");
             if (jeu.getPlateau().getPositionPion(Pion.ROI) == Plateau.CHATEAU_VRT)
                 valeur += 1000;
+            if(jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
+                valeur += 1000;
+            if(jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)
+                valeur -= 5;
+            if(jeu.getPlateau().getPositionPion(Pion.SOR) <= Plateau.CHATEAU_VRT)
+                valeur += 5;
             valeur += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
             valeur += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
             valeur += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.FOU);
