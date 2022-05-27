@@ -221,7 +221,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         this.selectionPions[indice] = pion;
     }
 
-    void putSelectionDirections(int indice, int direction) {
+    public void putSelectionDirections(int indice, int direction) {
         this.selectionDirections[indice] = direction;
     }
 
@@ -254,7 +254,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
                 coups.addAll(calculerCoupsDirections());
                 break;
             default:
-                throw new RuntimeException("Controleur.IAALeatoire.calculerCoup() : Erreur d'etat dans le jeu.");
+                throw new RuntimeException("Controleur.IAALeatoire.calculerCoup() : Erreur d'etat dans le jeu." + etatJeu);
         }
         return coups;
     }
@@ -488,7 +488,6 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     public Jeu clone() {
         try {
             Jeu resultat = (Jeu) super.clone();
-            resultat.passe = passe;
             resultat.joueurCourant = joueurCourant;
             resultat.typeCourant = typeCourant.clone();
             resultat.plateau = plateau.clone();
