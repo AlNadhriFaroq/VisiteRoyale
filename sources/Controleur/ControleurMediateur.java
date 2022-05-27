@@ -24,7 +24,7 @@ public class ControleurMediateur {
     public ControleurMediateur(Programme prog) {
         this.prog = prog;
         joueursIA = new IA[2];
-        Audios.setVolume(Audios.getVolume());
+        Audios.setVolume(Audios.getVolume(Audios.MUSIQUE), Audios.MUSIQUE);
         this.visuel = false;
     }
 
@@ -94,7 +94,7 @@ public class ControleurMediateur {
     }
 
     public void selectionnerCarte(Carte carte) {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
 
         if (visuel){
             CarteVue carteVue = this.jeuVue.carteFromCartevue(coup.getCarte(),this.jeuVue.getMainJoueur(this.prog.getJeu().getJoueurCourant()));
@@ -110,12 +110,12 @@ public class ControleurMediateur {
     }
 
     public void selectionnerPion(Pion pion) {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_PION, null, pion, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.CHOISIR_PION, null, pion, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 
     public void selectionnerDirection(int direction) {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_DIRECTION, null, null, direction);
+        Coup coup = new Coup(Coup.CHOISIR_DIRECTION, null, null, direction);
 
         if (visuel){
             this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
@@ -127,17 +127,17 @@ public class ControleurMediateur {
     }
 
     public void activerPouvoirSor() {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.ACTIVER_POUVOIR_SOR, null, null, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.ACTIVER_POUVOIR_SOR, null, null, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 
     public void activerPouvoirFou() {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.ACTIVER_POUVOIR_FOU, null, null, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.ACTIVER_POUVOIR_FOU, null, null, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 
     public void finirTour() {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
 
         if (visuel){
             this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
@@ -240,11 +240,11 @@ public class ControleurMediateur {
 
     public void changerVolume(int changement) {
         if (changement == -1)
-            Audios.diminuerVolume();
+            Audios.diminuerVolume(Audios.MUSIQUE);
         else if (changement == 1)
-            Audios.augmenterVolume();
+            Audios.augmenterVolume(Audios.MUSIQUE);
         else
-            Audios.arreterDemarrer();
+            Audios.arreterDemarrer(Audios.MUSIQUE);
     }
 
     public void ouvrirTutoriel() {
