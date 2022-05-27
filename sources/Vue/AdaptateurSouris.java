@@ -52,11 +52,41 @@ public class AdaptateurSouris extends MouseAdapter {
 
     }
 
+    public int choixPion(int x){
+        if((x >= this.jeuVue.terrain.getX() + this.jeuVue.jeu.getPlateau().getPositionPion(Pion.ROI) * this.jeuVue.terrain.getWidth()/17) && (x <= this.jeuVue.terrain.getX() + this.jeuVue.jeu.getPlateau().getPositionPion(Pion.ROI) * this.jeuVue.terrain.getWidth()/17 +this.jeuVue.terrain.getWidth()/17)){
+            return 0;
+        }
+        if((x >= this.jeuVue.terrain.getX() + this.jeuVue.jeu.getPlateau().getPositionPion(Pion.FOU) * this.jeuVue.terrain.getWidth()/17) && (x <= this.jeuVue.terrain.getX() + this.jeuVue.jeu.getPlateau().getPositionPion(Pion.FOU) * this.jeuVue.terrain.getWidth()/17 +this.jeuVue.terrain.getWidth()/17)){
+            return 1;
+        }
+        if((x >= this.jeuVue.terrain.getX() + this.jeuVue.jeu.getPlateau().getPositionPion(Pion.SOR) * this.jeuVue.terrain.getWidth()/17) && (x <= this.jeuVue.terrain.getX() + this.jeuVue.jeu.getPlateau().getPositionPion(Pion.SOR) * this.jeuVue.terrain.getWidth()/17 +this.jeuVue.terrain.getWidth()/17)){
+            return 2;
+        }
+        return 3;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         int pos, posB;
         Carte c;
         if((e.getX() >= this.jeuVue.terrain.getX()) && (e.getX() <= this.jeuVue.terrain.getWidth() + this.jeuVue.terrain.getX()) && (e.getY()>= this.jeuVue.terrain.getY()) && (e.getY()<= this.jeuVue.terrain.getHeight()+this.jeuVue.terrain.getY())){
+            if(this.jeuVue.jeu.getActivationPouvoirSor()){
+                if((choixPion(e.getX()) == 0) && this.jeuVue.jeu.peutSelectionnerPion(Pion.ROI)){
+                    this.ctrl.selectionnerPion(Pion.ROI);
+                    this.ctrl.selectionnerDirection(Plateau.DIRECTION_IND);
+                }
+                if((choixGarde(e.getX()) == 0) && this.jeuVue.jeu.peutSelectionnerPion(Pion.GAR_VRT)){
+                    this.ctrl.selectionnerPion(Pion.GAR_VRT);
+                    this.ctrl.selectionnerDirection(Plateau.DIRECTION_IND);
+                }
+                if((choixGarde(e.getX()) == 1)  && this.jeuVue.jeu.peutSelectionnerPion(Pion.GAR_RGE)){
+                    this.ctrl.selectionnerPion(Pion.GAR_RGE);
+                    this.ctrl.selectionnerDirection(Plateau.DIRECTION_IND);
+                }
+
+            }
+
+
             if((this.jeuVue.getTypeJoueur(this.jeuVue.jeu.getJoueurCourant())).toString()=="G" && this.jeuVue.jeu.getSelectionPions(0)==null){
 
                 if (this.choixGarde(e.getX())==0) {

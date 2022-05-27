@@ -187,8 +187,9 @@ public class ControleurMediateur {
                 } else {
                     i = this.prog.getJeu().JOUEUR_RGE;
                 }
-                this.jeuVue.refaireCartes(nbCartes, i);
+                this.jeuVue.refaireCartes( i, nbCartes);
                 if (FinTour) {
+
                     this.jeuVue.piocher(i, nbCartes);
                     this.jeuVue.updateMains();
                 }

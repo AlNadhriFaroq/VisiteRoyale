@@ -156,42 +156,26 @@ public class PlateauVue extends JPanel implements MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("CLICK SUR LE PLATEAU");
-
         estValide(e.getXOnScreen(),e.getYOnScreen());
-
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-        System.out.println("PRESSE SUR LE PLATEAU");
-    }
+    public void mousePressed(MouseEvent e) { }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
+    public void mouseReleased(MouseEvent e) {}
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-        System.out.println("PASSE SUR LE PLATEAU");
-
-    }
+    public void mouseEntered(MouseEvent e) {}
 
     @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
+    public void mouseExited(MouseEvent e) {}
 
     @Override
-    public void mouseDragged(MouseEvent e) {
-
-    }
+    public void mouseDragged(MouseEvent e) {}
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
+    public void mouseMoved(MouseEvent e) {}
 
     public int getPosRoi() {
         return posRoi;

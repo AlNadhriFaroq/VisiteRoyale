@@ -533,7 +533,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
     @Override
     public void run() {
-        mettreAJour();
+        this.mettreAJour();
 
         Timer timer = new Timer(16, new AdaptateurTemps(ctrl));
         timer.start();

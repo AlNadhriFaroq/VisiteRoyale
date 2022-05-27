@@ -42,6 +42,7 @@ public class MenuPanel extends JPanel implements MouseInputListener {
 
 
         this.setLocation(this.jeuVue.width - this.largeur - (this.largeur/2) , 5   );
+        this.setOpaque(false);
         this.setVisible(true);
 
         this.addMouseMotionListener(this);
