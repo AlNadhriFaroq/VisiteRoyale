@@ -80,10 +80,12 @@ public class Programme extends Observable {
         //jeu.nouvellePartiePersonalise(Jeu.JOUEUR_RGE, 10, 5, 12, 7, 9, 8, Plateau.FACE_GRD_CRN, 0, null, mainRge);
         joueursSontIA[Jeu.JOUEUR_VRT] = joueurVrtEstIA;
         joueursSontIA[Jeu.JOUEUR_RGE] = joueurRgeEstIA;
+        mettreAJour();
     }
 
     public void definirJoueurQuiCommence(int joueur) {
         jeu.definirJoueurQuiCommence(joueur);
+        mettreAJour();
     }
 
     public void jouerCoup(Coup coup) {

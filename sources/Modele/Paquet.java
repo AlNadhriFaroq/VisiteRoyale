@@ -6,10 +6,12 @@ import java.util.*;
 public class Paquet implements Cloneable, Serializable {
     private List<Carte> cartes;
     private int tailleMax;
+    private boolean trier;
 
-    Paquet(int tailleMax) {
+    Paquet(int tailleMax, boolean trier) {
         cartes = new ArrayList<>();
         this.tailleMax = tailleMax;
+        this.trier = trier;
     }
 
     public Carte getCarte(int indice) {
@@ -42,10 +44,6 @@ public class Paquet implements Cloneable, Serializable {
 
     void inserer(Carte carte) {
         cartes.add(carte);
-    }
-
-    void inserer(Carte carte, boolean trier) {
-        inserer(carte);
         if (trier)
             trier();
     }
@@ -144,6 +142,7 @@ public class Paquet implements Cloneable, Serializable {
             resultat.cartes = new ArrayList<>();
             resultat.copier(this);
             resultat.tailleMax = tailleMax;
+            resultat.trier = trier;
             return resultat;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Modele.Paquet.cloner() : Paquet non clonable.");

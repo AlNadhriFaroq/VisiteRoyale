@@ -72,7 +72,7 @@ public class IAStrategie extends IA {
         if (lc.size() == 1) {
             if (lc.get(0).getTypeCoup() != Coup.FINIR_TOUR && !jeu.getTypeCourant().equals(Type.IND)) {
                 if (jeu.getEtatJeu() != Jeu.ETAT_CHOIX_DIRECTION)
-                    lc.add(new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
+                    lc.add(new Coup(Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
             } else {
                 return lc.get(0);
             }
@@ -153,7 +153,7 @@ public class IAStrategie extends IA {
             }
             if (lc.size() == 0) {
                 if (tmp.size() == 0)
-                    return new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
+                    return new Coup(Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
                 return tmp.get(0);
             }
             coup = lc.get(i);
@@ -196,7 +196,7 @@ public class IAStrategie extends IA {
 
             lc = tmp;
             if (!jeu.getTypeCourant().equals(Type.IND))
-                lc.add(new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
+                lc.add(new Coup(Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
 
             coup = choisirCarte(Type.FOU);
 
@@ -911,14 +911,14 @@ public class IAStrategie extends IA {
             return listeDirectionOk.get(r.nextInt(listeDirectionOk.size()));
         else {
             if (lc.size() == 0 && !jeu.getTypeCourant().equals(Type.IND))
-                return new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
+                return new Coup(Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
             return lc.get(r.nextInt(lc.size()));
         }
     }
 
     private Coup choisirCoupAleaCarte() {
         if (lc.size() == 0)
-            return new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
+            return new Coup(Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
         return lc.get(r.nextInt(lc.size()));
     }
 

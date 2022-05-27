@@ -5,6 +5,7 @@ import Global.Audios;
 import Global.Format;
 import IA.IA;
 import Modele.*;
+import Vue.Adaptateurs.AdaptateurTemps;
 
 import java.awt.*;
 import java.util.Scanner;
@@ -238,36 +239,50 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
                 System.out.print("Commande > ");
                 break;
             case "6":
-            case "musique":
-            case "arreter":
-            case "demarrer":
-                ctrl.changerVolume(0);
-                System.out.println("Arrêt/Démarrage de la musique.");
-                System.out.print("Commande > ");
-                break;
-            case "7":
-            case "+":
-            case "augmenter":
-                if (Audios.peutAugmenterVolume()) {
-                    ctrl.changerVolume(+1);
+            case "musique+":
+            case "augmentermusique":
+                if (Audios.peutAugmenterVolume(Audios.MUSIQUE)) {
+                    ctrl.changerVolume(-1, Audios.MUSIQUE);
                     System.out.println("Augmentation du volume.");
                 } else {
                     System.out.println("Volume déjà au maximum.");
                 }
                 System.out.print("Commande > ");
                 break;
-            case "8":
-            case "-":
-            case "diminuer":
-                if (Audios.peutDiminuerVolume()) {
-                    ctrl.changerVolume(-1);
+            case "7":
+            case "musique-":
+            case "diminuermusique":
+                if (Audios.peutDiminuerVolume(Audios.MUSIQUE)) {
+                    ctrl.changerVolume(-2, Audios.MUSIQUE);
                     System.out.println("Diminution du volume.");
                 } else {
                     System.out.println("Volume déjà au minimum.");
                 }
                 System.out.print("Commande > ");
                 break;
+            case "8":
+            case "sons+":
+            case "augmentersons":
+                if (Audios.peutAugmenterVolume(Audios.SONS)) {
+                    ctrl.changerVolume(-1, Audios.SONS);
+                    System.out.println("Augmentation du volume.");
+                } else {
+                    System.out.println("Volume déjà au maximum.");
+                }
+                System.out.print("Commande > ");
+                break;
             case "9":
+            case "sons-":
+            case "diminuersons":
+                if (Audios.peutDiminuerVolume(Audios.SONS)) {
+                    ctrl.changerVolume(-2, Audios.SONS);
+                    System.out.println("Diminution du volume.");
+                } else {
+                    System.out.println("Volume déjà au minimum.");
+                }
+                System.out.print("Commande > ");
+                break;
+            case "10":
             case "menu":
             case "retour":
             case "menuPrecedant":
@@ -645,16 +660,17 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
     private void afficherOptions() {
         System.out.println("\nOPTIONS");
         System.out.println("Niveau de difficulté :");
-        System.out.println("   1. Débutant             *");
-        System.out.println("   2. Amateur              **");
-        System.out.println("   3. Intermédiaire        ***");
-        System.out.println("   4. Professionnel        ****");
-        System.out.println("   5. Expert               *****");
+        System.out.println("   1. Débutant        *");
+        System.out.println("   2. Amateur         **");
+        System.out.println("   3. Intermédiaire   ***");
+        System.out.println("   4. Professionnel   ****");
+        System.out.println("   5. Expert          *****");
         System.out.println("Musique :");
-        System.out.println("   6. Démarrer/Arrêter");
-        System.out.println("   7. Augmenter le volume  +");
-        System.out.println("   8. Diminuer le volume   -");
-        System.out.println("9. Retour\n");
+        System.out.println("   6. Augmenter le volume de la musique");
+        System.out.println("   7. Diminuer  le volume de la musique");
+        System.out.println("   8. Augmenter le volume des effets sonores");
+        System.out.println("   9. Diminuer  le volume des effets sonores");
+        System.out.println("10. Retour\n");
     }
 
     private void afficherTutoriel() {
