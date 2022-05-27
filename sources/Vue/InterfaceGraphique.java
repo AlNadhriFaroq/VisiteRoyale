@@ -29,6 +29,7 @@ public class InterfaceGraphique extends InterfaceUtilisateur {
     public InterfaceGraphique(ControleurMediateur ctrl, Programme prog) {
         super(ctrl, prog);
         etat = prog.getEtat();
+        device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     }
 
     public PanelAccueil getPanelAccueil() {
@@ -64,14 +65,20 @@ public class InterfaceGraphique extends InterfaceUtilisateur {
     }
 
     public void run() {
+        int largeur, hauteur;
+
         /* Configuration initiale de la fenetre */
-        fenetre = new JFrame();
-        fenetre.setSize(700, 500);
-        fenetre.setLocationRelativeTo(null);
-        fenetre.setUndecorated(true);
-        fenetre.setResizable(false);
-        fenetre.setBackground(new Color(0, 0, 0, 0));
+        largeur = Toolkit.getDefaultToolkit().getScreenSize().width / 2;
+        hauteur = largeur * Images.TEXTE_TITRE.getHeight(null) / Images.TEXTE_TITRE.getWidth(null);
         pages = new CardLayout();
+        fenetre = new JFrame();
+        fenetre.setUndecorated(true);
+        fenetre.setTitle("Visite Royale");
+        fenetre.setBackground(new Color(0, 0, 0, 0));
+        fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        fenetre.setSize(largeur, hauteur);
+        fenetre.setLocationRelativeTo(fenetre.getParent());
+        fenetre.setResizable(false);
         fenetre.setLayout(pages);
 
         /* Affichage de la fenetre d'accueil */
@@ -81,6 +88,8 @@ public class InterfaceGraphique extends InterfaceUtilisateur {
         fenetre.setVisible(true);
 
         /* Construction des composants */
+        largeur = Integer.parseInt(Configuration.instance().lire("FenetreLargeur"));
+        hauteur = Integer.parseInt(Configuration.instance().lire("FenetreHauteur"));
         panelMenuPrincipal = new PanelMenuPrincipal(ctrl, this, prog);
         panelEnJeu = new PanelEnJeu(ctrl, this, prog);
         panelMenuJeu = new PanelMenuJeu(ctrl, this, prog);
@@ -106,34 +115,33 @@ public class InterfaceGraphique extends InterfaceUtilisateur {
 
         /* Configuration finale de la fenetre */
         fenetre.setVisible(false);
-        fenetre.setTitle("Visite Royale");
         fenetre.setBackground(Color.GRAY);
-        fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Dimension dim = new Dimension(Integer.parseInt(Configuration.instance().lire("FenetreLargeur")), Integer.parseInt(Configuration.instance().lire("FenetreHauteur")));
-        fenetre.setSize(1300, 800);
-        fenetre.setLocationRelativeTo(null);
+        fenetre.setSize(largeur, hauteur);
+        fenetre.setLocationRelativeTo(fenetre.getParent());
         fenetre.setResizable(true);
-        ctrl.demarrerProgramme();
         fenetre.dispose();
         fenetre.setUndecorated(false);
+        ctrl.demarrerProgramme();
         fenetre.setVisible(true);
     }
 
     public void mettreAJourPleinEcran() {
-        if (device == null)
-            device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         if (device.isFullScreenSupported()) {
             fenetre.dispose();
             if (Boolean.parseBoolean(Configuration.instance().lire("PleinEcran"))) {
                 fenetre.setUndecorated(true);
-                fenetre.setVisible(true);
                 device.setFullScreenWindow(fenetre);
+                fenetre.setVisible(true);
             } else {
                 fenetre.setUndecorated(false);
-                fenetre.setVisible(true);
                 device.setFullScreenWindow(null);
+                fenetre.setVisible(true);
             }
         }
+    }
+
+    public void redimensionner(int largeur, int hauteur) {
+        fenetre.setSize(largeur, hauteur);
     }
 
     @Override

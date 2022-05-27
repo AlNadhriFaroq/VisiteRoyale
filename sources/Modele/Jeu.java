@@ -33,17 +33,16 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     private int[] selectionDirections;
 
     public Jeu() {
-        joueurCourant = JOUEUR_RGE;
         typeCourant = Type.IND;
         plateau = new Plateau();
-        pioche = new Paquet(54);
-        defausse = new Paquet(54);
-        mainJoueurVrt = new Paquet(TAILLE_MAIN);
-        mainJoueurRge = new Paquet(TAILLE_MAIN);
+        pioche = new Paquet(54, false);
+        defausse = new Paquet(54, false);
+        mainJoueurVrt = new Paquet(TAILLE_MAIN, true);
+        mainJoueurRge = new Paquet(TAILLE_MAIN, true);
 
         etatJeu = ETAT_FIN_DE_PARTIE;
-        selectionCartesVrt = new Paquet(TAILLE_MAIN);
-        selectionCartesRge = new Paquet(TAILLE_MAIN);
+        selectionCartesVrt = new Paquet(TAILLE_MAIN, false);
+        selectionCartesRge = new Paquet(TAILLE_MAIN, false);
         selectionPions = new Pion[2];
         selectionDirections = new int[2];
     }
@@ -60,10 +59,6 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         mainJoueurRge.vider();
 
         pioche.remplir();
-        for (int c = 0; c < TAILLE_MAIN; c++) {
-            mainJoueurVrt.inserer(pioche.extraire(), true);
-            mainJoueurRge.inserer(pioche.extraire(), true);
-        }
 
         etatJeu = ETAT_CHOIX_JOUEUR;
         activationPrivilegeRoi = 0;
@@ -77,28 +72,11 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         selectionDirections[1] = Plateau.DIRECTION_IND;
     }
 
-    public void partieAleatoire() {
-        Random rand = new Random();
-        int joueur = rand.nextInt(2);
-        int posRoi = rand.nextInt(Plateau.CHATEAU_RGE - 2) + 2;
-        int posGV = rand.nextInt(posRoi - Plateau.BORDURE_VRT) + Plateau.BORDURE_VRT;
-        int posGR = rand.nextInt(Plateau.BORDURE_RGE + 1 - posRoi) + posRoi;
-        System.out.println("Garde Rouge " + posGR);
-        int posSor = rand.nextInt(Plateau.BORDURE_RGE + 1);
-        int posFou = rand.nextInt(Plateau.BORDURE_RGE + 1);
-        int posCouronne = rand.nextInt(Plateau.BORDURE_RGE - 3) + 2;
-        boolean faceCouronne = rand.nextBoolean();
-        int cartesDefausse = rand.nextInt(27);
-        Carte[] cartesmainv = new Carte[0];
-        Carte[] cartesmainr = new Carte[0];
-        nouvellePartiePersonalise(joueur, posRoi, posGV, posGR, posSor, posFou, posCouronne, faceCouronne, cartesDefausse, cartesmainv, cartesmainr);
-    }
-
     public void nouvellePartiePersonalise(int joueur, int posRoi, int posGV, int posGR, int posSor, int posFou, int posCouronne, boolean faceCouronne, int nbCartesDefausse, Carte[] cartesMainVrt, Carte[] cartesMainRge) {
         nouvellePartie();
 
-        etatJeu = ETAT_CHOIX_CARTE;
         joueurCourant = joueur;
+        etatJeu = ETAT_CHOIX_CARTE;
 
         plateau.setPositionPion(Pion.ROI, posRoi);
         plateau.setPositionPion(Pion.GAR_VRT, posGV);
@@ -113,18 +91,43 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         if (cartesMainRge == null)
             cartesMainRge = new Carte[0];
 
-        for (int i = 0; i < cartesMainVrt.length; i++)
-            pioche.inserer(mainJoueurVrt.extraire());
-        for (int i = 0; i < cartesMainRge.length; i++)
-            pioche.inserer(mainJoueurRge.extraire());
         for (Carte carte : cartesMainVrt)
-            mainJoueurVrt.inserer(pioche.extraire(carte), true);
+            mainJoueurVrt.inserer(pioche.extraire(carte));
         for (Carte carte : cartesMainRge)
-            mainJoueurRge.inserer(pioche.extraire(carte), true);
+            mainJoueurRge.inserer(pioche.extraire(carte));
+        for (int i = cartesMainVrt.length; i < TAILLE_MAIN; i++)
+            mainJoueurVrt.inserer(pioche.extraire());
+        for (int i = cartesMainRge.length; i < TAILLE_MAIN; i++)
+            mainJoueurRge.inserer(pioche.extraire());
 
-        /* mettre des cartes dans la défausse */
         for (int i = 0; i < nbCartesDefausse; i++)
             defausse.inserer(pioche.extraire());
+    }
+
+    public void nouvellePartieAleatoire() {
+        Random r = new Random();
+        int joueur = r.nextInt(2);
+        int posRoi = r.nextInt(Plateau.CHATEAU_RGE - 2) + 2;
+        int posGV = r.nextInt(posRoi - Plateau.BORDURE_VRT) + Plateau.BORDURE_VRT;
+        int posGR = r.nextInt(Plateau.BORDURE_RGE + 1 - posRoi) + posRoi;
+        int posSor = r.nextInt(Plateau.BORDURE_RGE + 1);
+        int posFou = r.nextInt(Plateau.BORDURE_RGE + 1);
+        int posCouronne = r.nextInt(Plateau.BORDURE_RGE - 3) + 2;
+        boolean faceCouronne = r.nextBoolean();
+        int cartesDefausse = r.nextInt(27);
+        nouvellePartiePersonalise(joueur, posRoi, posGV, posGR, posSor, posFou, posCouronne, faceCouronne, cartesDefausse, null, null);
+    }
+
+    public void definirJoueurQuiCommence(int joueur) {
+        setJoueurCourant(joueur);
+        plateau.nouveauPlateau(getDirectionJoueur(joueur));
+
+        for (int c = 0; c < TAILLE_MAIN; c++) {
+            mainJoueurVrt.inserer(pioche.extraire());
+            mainJoueurRge.inserer(pioche.extraire());
+        }
+
+        setEtatJeu(ETAT_CHOIX_CARTE);
     }
 
     public int getJoueurCourant() {
@@ -222,12 +225,6 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         this.selectionDirections[indice] = direction;
     }
 
-    public void definirJoueurQuiCommence(int joueur) {
-        setJoueurCourant(joueur);
-        plateau.nouveauPlateau(getDirectionJoueur(joueur));
-        setEtatJeu(ETAT_CHOIX_CARTE);
-    }
-
     void alternerJoueurCourant() {
         setJoueurCourant(1 - joueurCourant);
     }
@@ -243,7 +240,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
                 if (activationPouvoirFou) {
                     coups = calculerCoupsCartes();
                     if (peutFinirTour())
-                        coups.add(new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
+                        coups.add(new Coup(Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
                 } else {
                     coups = calculerCoupsPouvoirs();
                 }
@@ -265,11 +262,11 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     private List<Coup> calculerCoupsPouvoirs() {
         List<Coup> pouvoirsJouables = calculerCoupsCartes();
         if (peutUtiliserPouvoirSorcier())
-            pouvoirsJouables.add(new Coup(joueurCourant, Coup.ACTIVER_POUVOIR_SOR, null, null, Plateau.DIRECTION_IND));
+            pouvoirsJouables.add(new Coup(Coup.ACTIVER_POUVOIR_SOR, null, null, Plateau.DIRECTION_IND));
         if (peutUtiliserPouvoirFou())
-            pouvoirsJouables.add(new Coup(joueurCourant, Coup.ACTIVER_POUVOIR_FOU, null, null, Plateau.DIRECTION_IND));
+            pouvoirsJouables.add(new Coup(Coup.ACTIVER_POUVOIR_FOU, null, null, Plateau.DIRECTION_IND));
         if (peutFinirTour())
-            pouvoirsJouables.add(new Coup(joueurCourant, Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
+            pouvoirsJouables.add(new Coup(Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND));
         return pouvoirsJouables;
     }
 
@@ -278,7 +275,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         for (int i = 0; i < getMain(joueurCourant).getTaille(); i++) {
             Carte carte = getMain(joueurCourant).getCarte(i);
             if (peutSelectionnerCarte(carte))
-                cartesJouables.add(new Coup(joueurCourant, Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND));
+                cartesJouables.add(new Coup(Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND));
         }
         return cartesJouables;
     }
@@ -288,7 +285,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         for (int i = 0; i < 5; i++) {
             Pion pion = Pion.valeurEnPion(i);
             if (peutSelectionnerPion(pion))
-                pionsJouables.add(new Coup(joueurCourant, Coup.CHOISIR_PION, null, pion, Plateau.DIRECTION_IND));
+                pionsJouables.add(new Coup(Coup.CHOISIR_PION, null, pion, Plateau.DIRECTION_IND));
         }
         return pionsJouables;
     }
@@ -296,9 +293,9 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     private List<Coup> calculerCoupsDirections() {
         List<Coup> directionsJouables = new ArrayList<>();
         if (peutSelectionnerDirection(Plateau.DIRECTION_VRT))
-            directionsJouables.add(new Coup(joueurCourant, Coup.CHOISIR_DIRECTION, null, null, Plateau.DIRECTION_VRT));
+            directionsJouables.add(new Coup(Coup.CHOISIR_DIRECTION, null, null, Plateau.DIRECTION_VRT));
         if (peutSelectionnerDirection(Plateau.DIRECTION_RGE))
-            directionsJouables.add(new Coup(joueurCourant, Coup.CHOISIR_DIRECTION, null, null, Plateau.DIRECTION_RGE));
+            directionsJouables.add(new Coup(Coup.CHOISIR_DIRECTION, null, null, Plateau.DIRECTION_RGE));
         return directionsJouables;
     }
 
@@ -356,6 +353,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
             return false;
 
         if (etatJeu == ETAT_CHOIX_DIRECTION) {
+            /* cas du privilege du roi */
             return (typeCourant.equals(Type.ROI) || typeCourant.equals(Type.IND)) &&
                     carte.getType().equals(Type.ROI) &&
                     activationPrivilegeRoi == 1 &&
@@ -364,6 +362,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
             if (activationPouvoirFou &&
                     ((joueurCourant == JOUEUR_VRT && plateau.vrtPeutUtiliserPouvoirFou()) ||
                             (joueurCourant == JOUEUR_RGE && plateau.rgePeutUtiliserPouvoirFou()))) {
+                /* cas du pouvoir du fou */
                 if (carte.estDeplacementFouCentre())
                     return typeCourant.equals(Type.IND) ||
                             (typeCourant.equals(Type.GAR) && (plateau.pionEstDeplacable(Pion.GAR_VRT, Plateau.FONTAINE) || plateau.pionEstDeplacable(Pion.GAR_RGE, Plateau.FONTAINE))) ||
@@ -373,6 +372,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
                             (typeCourant.equals(Type.GAR) && (pionDeplacable(Pion.GAR_VRT, carte.getDeplacement()) || pionDeplacable(Pion.GAR_RGE, carte.getDeplacement()))) ||
                             (!typeCourant.equals(Type.GAR) && pionDeplacable(Pion.typeEnPion(typeCourant), carte.getDeplacement()));
             } else if (!activationPouvoirFou && typeCourant.equals(carte.getType()) || typeCourant.equals(Type.IND)) {
+                /* cas normal de selection d'une carte */
                 if (carte.estDeplacementGarCentre() || carte.estDeplacementFouCentre())
                     return true;
                 else if (carte.estDeplacementGar1Plus1())
@@ -392,18 +392,22 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     }
 
     public boolean peutSelectionnerPion(Pion pion) {
+        /* cas du pouvoir du sorcier */
         if (etatJeu == ETAT_CHOIX_PION && activationPouvoirSor)
             return plateau.peutUtiliserPouvoirSor(pion) && !pion.getType().equals(Type.FOU) && !pion.getType().equals(Type.SOR);
 
+        /* impossible de selectionner un pion si aucune carte n'a etait precedemment selectionnee */
         if (getSelectionCartes(joueurCourant).estVide())
             return false;
-
         Carte carte = getSelectionCartes(joueurCourant).getCarte(getSelectionCartes(joueurCourant).getTaille() - 1);
+
         if (etatJeu == ETAT_CHOIX_DIRECTION) {
+            /* cas de la selection du deuxieme pion garde pour la carte G2 */
             return carte.estDeplacementGar1Plus1() && pion.getType().equals(Type.GAR) &&
                     getSelectionPions(0) != null && getSelectionPions(1) == null &&
                     !pion.equals(getSelectionPions(0)) && pionDeplacable(pion, 1);
         } else if (etatJeu == ETAT_CHOIX_PION) {
+            /* cas normal de selection d'un pion */
             if (activationPouvoirFou && carte.estDeplacementFouCentre())
                 return (typeCourant.equals(Type.IND) || pion.getType().equals(Type.GAR)) && !pion.getType().equals(Type.FOU) && plateau.pionEstDeplacable(pion, Plateau.FONTAINE);
             else if (activationPouvoirFou)
@@ -415,18 +419,20 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     }
 
     public boolean peutSelectionnerDirection(int direction) {
+        /* impossible de selectionner une direction si aucune carte n'a etait precedemment selectionnee */
         if (getSelectionCartes(joueurCourant).estVide())
             return false;
-
         Carte carte = getSelectionCartes(joueurCourant).getCarte(getSelectionCartes(joueurCourant).getTaille() - 1);
 
         if (activationPouvoirFou) {
+            /* cas du pouvoir du fou */
             if ((typeCourant.equals(Type.IND) || typeCourant.equals(Type.GAR)) && getSelectionPions(0) != null)
                 return plateau.pionEstDeplacable(getSelectionPions(0), plateau.getPositionPion(getSelectionPions(0)) + direction * carte.getDeplacement());
             else if (!typeCourant.equals(Type.IND) && !typeCourant.equals(Type.GAR))
                 return plateau.pionEstDeplacable(Pion.typeEnPion(typeCourant), plateau.getPositionPion(Pion.typeEnPion(typeCourant)) + direction * carte.getDeplacement());
         } else {
             if (activationPrivilegeRoi == 2)
+                /* cas du privilege du roi */
                 return plateau.peutUtiliserPrivilegeRoi(direction);
             else if (carte.getType().equals(Type.GAR) && getSelectionPions(0) != null && getSelectionPions(1) == null)
                 return plateau.pionEstDeplacable(getSelectionPions(0), plateau.getPositionPion(getSelectionPions(0)) + direction * carte.getDeplacement());
@@ -464,13 +470,16 @@ public class Jeu extends Historique implements Cloneable, Serializable {
         return joueurCourant == jeu.joueurCourant &&
                 typeCourant.equals(jeu.typeCourant) &&
                 plateau.equals(jeu.plateau) &&
-                pioche.equals(jeu.pioche) && defausse.equals(jeu.defausse) &&
-                mainJoueurVrt.equals(jeu.mainJoueurVrt) && mainJoueurRge.equals(jeu.mainJoueurRge) &&
+                pioche.equals(jeu.pioche) &&
+                defausse.equals(jeu.defausse) &&
+                mainJoueurVrt.equals(jeu.mainJoueurVrt) &&
+                mainJoueurRge.equals(jeu.mainJoueurRge) &&
                 etatJeu == jeu.etatJeu &&
                 activationPrivilegeRoi == jeu.activationPrivilegeRoi &&
                 activationPouvoirSor == jeu.activationPouvoirSor &&
                 activationPouvoirFou == jeu.activationPouvoirFou &&
-                selectionCartesVrt.equals(jeu.selectionCartesVrt) && selectionCartesRge.equals(jeu.selectionCartesRge) &&
+                selectionCartesVrt.equals(jeu.selectionCartesVrt) &&
+                selectionCartesRge.equals(jeu.selectionCartesRge) &&
                 Arrays.equals(selectionPions, jeu.selectionPions) &&
                 Arrays.equals(selectionDirections, jeu.selectionDirections);
     }
@@ -503,13 +512,13 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     @Override
     public String toString() {
         String txt = "";
-        txt += "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase();
-        txt += "              Pioche : " + getPioche().getTaille() + "\n";
-        txt += "     Main vert  : " + mainJoueurVrt.toString() + "\n";
-        txt += "                  " + selectionCartesVrt.toString() + "\n";
+        txt += "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase() + "                    Tour : "+ getNbTour() + "\n";
+        txt += "                                        Pioche : " + pioche.getTaille() + "\n";
+        txt += "    Joueur    " + mainJoueurVrt.toString() + "\n";
+        txt += "      vert    " + selectionCartesVrt + "\n";
         txt += plateau.toString() + "\n";
-        txt += "                  " + selectionCartesRge.toString() + "\n";
-        txt += "     Main rouge : " + mainJoueurRge.toString();
+        txt += "    Joueur    " + selectionCartesRge.toString() + "\n";
+        txt += "     rouge    " + mainJoueurRge;
         return txt;
     }
 }

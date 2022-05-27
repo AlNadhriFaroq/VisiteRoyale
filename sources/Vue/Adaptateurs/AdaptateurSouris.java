@@ -26,7 +26,7 @@ public class AdaptateurSouris extends MouseAdapter {
         if (e.getSource() instanceof CarteVue) {
             CarteVue carteVue = (CarteVue) e.getSource();
             carteVue.redimensionner(carteVue.getHeight() + carteVue.getHeight() / 8);
-            vue.getPanelEnJeu().getPanelJeu().repaint();
+            //vue.getPanelEnJeu().getPanelJeu().repaint();
         } else if (e.getSource() instanceof BoutonMenu) {
             ((BoutonMenu) e.getSource()).setForeground(BoutonMenu.couleurFoncee);
             ((BoutonMenu) e.getSource()).setBackground(BoutonMenu.couleurClaire);
@@ -44,7 +44,7 @@ public class AdaptateurSouris extends MouseAdapter {
         if (e.getSource() instanceof CarteVue) {
             CarteVue carteVue = (CarteVue) e.getSource();
             carteVue.redimensionner(carteVue.getHeight() - carteVue.getHeight() / 9);
-            vue.getPanelEnJeu().getPanelJeu().repaint();
+            //vue.getPanelEnJeu().getPanelJeu().repaint();
         } else if (e.getSource() instanceof BoutonMenu) {
             ((BoutonMenu) e.getSource()).setForeground(BoutonMenu.couleurClaire);
             ((BoutonMenu) e.getSource()).setBackground(BoutonMenu.couleurNormal);

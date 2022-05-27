@@ -23,10 +23,8 @@ public class AdaptateurChange implements ChangeListener {
     public void stateChanged(ChangeEvent e) {
         if (e.getSource().equals(vue.getPanelMenuOptions().getVolumeMusique())) {
             ctrl.changerVolume(((JSlider) e.getSource()).getValue(), Audios.MUSIQUE);
-            //vue.getPanelMenuOptions().repaint();
         } else if (e.getSource().equals(vue.getPanelMenuOptions().getVolumeSons())) {
             ctrl.changerVolume(((JSlider) e.getSource()).getValue(), Audios.SONS);
-            //vue.getPanelMenuOptions().repaint();
         }
     }
 }

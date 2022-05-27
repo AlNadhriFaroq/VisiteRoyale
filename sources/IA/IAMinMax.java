@@ -29,7 +29,7 @@ public class IAMinMax extends IA {
     public Coup calculerCoup() {
         Coup cp = null;
         if (tailleLcf == lcf.size()) {
-            evaluationTour();
+            evaluerTour(new ArrayList<>());
             lcf = lj.extraire();
             System.out.println(lcf);
         }
@@ -52,7 +52,7 @@ public class IAMinMax extends IA {
     private int minMaxA(Jeu jeu, int profondeur) {
         int valeur;
         if (estFeuille(jeu)) {
-            return evaluationTerrain();
+            return evaluerPlateau();
         }
         if (profondeur == PROFONDEUR) {
             return 0;
@@ -68,7 +68,7 @@ public class IAMinMax extends IA {
     private int minMaxB(Jeu jeu, int profondeur) {
         int valeur;
         if (estFeuille(jeu))
-            return evaluationTerrain();
+            return evaluerPlateau();
         if (profondeur == PROFONDEUR)
             return 0;
         else {
@@ -81,35 +81,21 @@ public class IAMinMax extends IA {
         return valeur;
     }
 
-    private void evaluationTour() {
-        List<Coup> listeCoup = new ArrayList<>();
+    private void evaluerTour(List<Coup> listeCoup) {
         List<Coup> lc = jeu.calculerListeCoup();
-        for (Coup c : lc) {
-            evaluationTourRec(c, listeCoup);
+        for (Coup coup : lc) {
+            jeu.jouerCoup(coup);
+            listeCoup.add(coup);
+            if (coup.getTypeCoup() == Coup.FINIR_TOUR || jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE)
+                lj.inserer(new ArrayList<>(listeCoup), evaluerPlateau());
+            else
+                evaluerTour(listeCoup);
             listeCoup.remove(listeCoup.size() - 1);
-            c.fixerJeu(jeu);
-            c.desexecuter();
+            coup.desexecuter();
         }
     }
 
-    private void evaluationTourRec(Coup coup, List<Coup> listeCoup) {
-        jeu.jouerCoup(coup);
-        listeCoup.add(coup);
-        if (coup.getTypeCoup() == Coup.FINIR_TOUR) {
-            List<Coup> tmp = new ArrayList<>(listeCoup);
-            lj.inserer(tmp, evaluationTerrain());
-        } else {
-            List<Coup> lc = jeu.calculerListeCoup();
-            for (Coup c : lc) {
-                evaluationTourRec(c, listeCoup);
-                listeCoup.remove(listeCoup.size() - 1);
-                c.fixerJeu(jeu);
-                c.desexecuter();
-            }
-        }
-    }
-
-    private int evaluationTerrain() {
+    private int evaluerPlateau() {
         int valeur = 0;
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_RGE) {
             if (jeu.getPlateau().getPositionPion(Pion.ROI) == Plateau.CHATEAU_RGE)

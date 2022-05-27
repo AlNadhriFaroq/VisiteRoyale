@@ -75,39 +75,38 @@ public class ControleurMediateur {
         }
     }
 
-
     public void definirJoueurQuiCommence() {
         Random r = new Random();
         prog.definirJoueurQuiCommence(r.nextInt(2));
     }
 
     public void selectionnerCarte(Carte carte) {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 
     public void selectionnerPion(Pion pion) {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_PION, null, pion, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.CHOISIR_PION, null, pion, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 
     public void selectionnerDirection(int direction) {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_DIRECTION, null, null, direction);
+        Coup coup = new Coup(Coup.CHOISIR_DIRECTION, null, null, direction);
         jouer(coup);
     }
 
     public void activerPouvoirSor() {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.ACTIVER_POUVOIR_SOR, null, null, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.ACTIVER_POUVOIR_SOR, null, null, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 
     public void activerPouvoirFou() {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.ACTIVER_POUVOIR_FOU, null, null, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.ACTIVER_POUVOIR_FOU, null, null, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 
     public void finirTour() {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 

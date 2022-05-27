@@ -22,7 +22,7 @@ public abstract class PanelEtat extends JPanel implements Observateur {
         this.prog = prog;
         prog.ajouterObservateur(this);
         imgFond = Images.FOND_MENU;
-        setLayout(new BorderLayout());
+        setLayout(new GridBagLayout());
     }
 
     @Override
