@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 
-public class TourPanel extends JPanel implements MouseInputListener {
+public class TourPanel extends JPanel {
 
 private JeuVue jeuVue;
 private ControleurMediateur ctrl;
@@ -53,12 +53,8 @@ public TourPanel(JeuVue j, ControleurMediateur ctrl){
         this.image = bleuBase;
 
 
-
+        this.setOpaque(false);
         this.setVisible(true);
-
-        this.addMouseMotionListener(this);
-        this.addMouseListener(this);
-
         }
 
 
@@ -87,32 +83,6 @@ public TourPanel(JeuVue j, ControleurMediateur ctrl){
     public void setImage(Image image) {
         this.image = image;
     }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
-    public void mousePressed(MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-            this.setSize(this.largeur + (this.largeur/2), this.hauteur + (this.hauteur/2) );
-            }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-            this.setSize(this.largeur, this.hauteur);
-            }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {}
-
-    @Override
-    public void mouseMoved(MouseEvent e) {}
-
 
 }
 

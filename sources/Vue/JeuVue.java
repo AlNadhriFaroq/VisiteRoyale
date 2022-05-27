@@ -4,9 +4,11 @@ import Controleur.ControleurMediateur;
 import Modele.*;
 import Vue.Boutons.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
