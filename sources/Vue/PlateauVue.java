@@ -3,7 +3,6 @@ package Vue;
 import Controleur.ControleurMediateur;
 import Modele.Jeu;
 import Modele.Pion;
-import Modele.Plateau;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
@@ -22,13 +21,15 @@ public class PlateauVue extends JPanel implements MouseInputListener {
 
     private int posJeton;
 
+    private int tailleZone;
+
     PionVue pionRoi = new PionVue(Pion.ROI);
     PionVue pionGardeR = new PionVue(Pion.GAR_RGE);
     PionVue pionGardeV = new PionVue(Pion.GAR_VRT);
     PionVue pionSor = new PionVue(Pion.SOR);
     PionVue pionFou = new PionVue(Pion.FOU);
 
-    CarteVue  carteVue;
+    //JetonVue jetonCouronne = new JetonVue();
 
     JeuVue jeuVue;
 
@@ -36,6 +37,7 @@ public class PlateauVue extends JPanel implements MouseInputListener {
 
     public PlateauVue(ControleurMediateur ctrl, Jeu jeu) {
         this.jeu = jeu;
+        this.ctrl = ctrl;
 
         posRoi = jeu.getPlateau().getPositionPion(Pion.ROI);
         posGR = jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
@@ -45,49 +47,51 @@ public class PlateauVue extends JPanel implements MouseInputListener {
         posJeton = jeu.getPlateau().getPositionCouronne();
 
 
-        this.ctrl = ctrl;
-
         this.setPions();
 
-
-        this.addMouseListener(this);
         this.addMouseMotionListener(this);
+        this.addMouseListener(this);
+
     }
 
     @Override
     public void paintComponent(Graphics g) {
 
-        int a = (this.getHeight() / 10) - (this.getHeight() % 10);
-        int t = (this.getHeight()-a)/3;
         super.paintComponent(g);
+
+
+        tailleZone = this.getWidth()/17;
+        int caseJeton = (this.getHeight() / 10) - (this.getHeight() % 10);
+        int casePion = (this.getHeight()-caseJeton)/3;
+
         for (int i = 0; i < taille; i++)
-            g.drawLine((this.getWidth() / 17) * i, 0, (this.getWidth() / 17) * i, this.getHeight());
+            g.drawLine(tailleZone * i, 0, tailleZone * i, this.getHeight());
 
         g.drawLine(this.getWidth() - 1, 0, this.getWidth() - 1, this.getHeight());
 
 
         for (int i = 0; i <3; i++) {
-            g.drawLine(0, t*i+a, this.getWidth(), t*i+a);
+            g.drawLine(0, casePion*i+caseJeton, this.getWidth(), casePion*i+caseJeton);
         }
         g.drawLine(0,0,this.getWidth(),0);
         g.drawLine(0, this.getHeight() - 1, this.getWidth(), this.getHeight() - 1);
-        g.drawLine(0,a,this.getWidth(),a);
+        g.drawLine(0,caseJeton,this.getWidth(),caseJeton);
 
         for(int i=0; i<3; i++){
             g.setColor(new Color(71,132,78));
-            g.fillRect(1,(t*i)+a+1,this.getWidth()/17-2,t-2);
-            g.fillRect(2+this.getWidth()/17,(t*i)+a+1,this.getWidth()/17-3,t-2);
+            g.fillRect(1,(casePion*i)+caseJeton+1,tailleZone-2,casePion-2);
+            g.fillRect(2+tailleZone,(casePion*i)+caseJeton+1,tailleZone-3,casePion-2);
         }
 
         for(int i=0; i<3; i++){
             g.setColor(new Color(225,15,50));
-            g.fillRect(1+this.getWidth()/17*15,(t*i)+a+1,this.getWidth()/17-2,t-2);
-            g.fillRect(2+this.getWidth()/17*16,(t*i)+a+1,this.getWidth()/17-3,t-2);
+            g.fillRect(1+tailleZone*15,(casePion*i)+caseJeton+1,tailleZone-2,casePion-2);
+            g.fillRect(2+tailleZone*16,(casePion*i)+caseJeton+1,tailleZone-3,casePion-2);
         }
 
         for(int i=0; i<3; i++){
             g.setColor(new Color(225,150,115));
-            g.fillRect(1+this.getWidth()/17*8,(t*i)+a+1,this.getWidth()/17-2,t-2);
+            g.fillRect(1+tailleZone*8,(casePion*i)+caseJeton+1,tailleZone-2,casePion-2);
         }
         /*g.setColor(Color.ORANGE);
         g.drawOval(posSor*this.getWidth()/17,a,this.getWidth()/17,t);
@@ -109,23 +113,27 @@ public class PlateauVue extends JPanel implements MouseInputListener {
         g.fillOval(posGV*this.getWidth()/17,t+a,this.getWidth()/17,t);*/
 
         g.setColor(Color.YELLOW);
-        g.drawOval(posJeton*this.getWidth()/17,0,this.getWidth()/17,a);
-        g.fillOval(posJeton*this.getWidth()/17,0,this.getWidth()/17,a);
+        g.drawOval(posJeton*tailleZone,0,tailleZone,caseJeton);
+        g.fillOval(posJeton*tailleZone,0,tailleZone,caseJeton);
 
-        this.pionSor.setSize(this.getWidth()/17, t);
-        this.pionSor.setLocation(posSor*this.getWidth()/17,a);
+        this.pionSor.setSize(tailleZone, casePion);
+        this.pionSor.setLocation(posSor*tailleZone,caseJeton);
 
-        this.pionRoi.setSize(this.getWidth()/17,t+5);
-        this.pionRoi.setLocation(posRoi*this.getWidth()/17,t+a);
+        this.pionRoi.setSize(tailleZone,casePion+5);
+        this.pionRoi.setLocation(posRoi*tailleZone,casePion+caseJeton);
 
-        this.pionGardeV.setSize(this.getWidth()/17,t);
-        this.pionGardeV.setLocation(posGV*this.getWidth()/17,t+a);
+        this.pionGardeV.setSize(tailleZone,casePion);
+        this.pionGardeV.setLocation(posGV*tailleZone,casePion+caseJeton);
 
-        this.pionGardeR.setSize(this.getWidth()/17,t);
-        this.pionGardeR.setLocation(posGR*this.getWidth()/17,t+a);
+        this.pionGardeR.setSize(tailleZone,casePion);
+        this.pionGardeR.setLocation(posGR*tailleZone,casePion+caseJeton);
 
-        this.pionFou.setSize(this.getWidth()/17,t);
-        this.pionFou.setLocation(posFou*this.getWidth()/17,2*t+a);
+        this.pionFou.setSize(tailleZone,casePion);
+        this.pionFou.setLocation(posFou*tailleZone,2*casePion+caseJeton);
+
+        /*this.jetonCouronne.setSize(this.getWidth()/17, caseJeton);
+        this.jetonCouronne.setLocation(posJeton*this.getWidth()/17, 0);
+        System.out.println(this.jetonCouronne.getHeight());*/
 
 
 
@@ -136,14 +144,27 @@ public class PlateauVue extends JPanel implements MouseInputListener {
 
     }
 
+    private boolean estValide(int x, int y){
+        int xinit = (jeuVue.frame.getSize().width/2) - ( jeuVue.carteW*10/2);
+        System.out.println("Plateau :" + xinit);
+        if((x>xinit) && (x<xinit+(jeuVue.carteW*10))){
+            System.out.println("Reussi :" + x);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
+        System.out.println("CLICK SUR LE PLATEAU");
+
+        estValide(e.getXOnScreen(),e.getYOnScreen());
 
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        System.out.println("PRESSE SUR LE PLATEAU");
     }
 
     @Override
@@ -153,6 +174,7 @@ public class PlateauVue extends JPanel implements MouseInputListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        System.out.println("PASSE SUR LE PLATEAU");
 
     }
 
@@ -245,5 +267,9 @@ public class PlateauVue extends JPanel implements MouseInputListener {
         this.pionGardeV.setLocation(0,0);
         this.pionGardeV.setVisible(true);
         this.add(pionGardeV);
+    }
+
+    public void gestionEvent(MouseEvent e){
+
     }
 }

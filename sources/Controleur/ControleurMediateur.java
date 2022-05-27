@@ -3,29 +3,35 @@ package Controleur;
 import Global.Configuration;
 import IA.*;
 import Modele.*;
-import Vue.Audio;
+import Global.Audios;
+import Vue.CarteVue;
 import Vue.JeuVue;
 
-import java.io.*;
 import java.util.Random;
 
 public class ControleurMediateur {
+    //final int lenteurAttente = 10;
     final int lenteurAttente = 20;
+
 
     Programme prog;
     IA[] joueursIA;
     int decompte;
-    Audio audio;
 
     JeuVue jeuVue;
+    Boolean visuel;
 
     public ControleurMediateur(Programme prog) {
         this.prog = prog;
         joueursIA = new IA[2];
-        audio = new Audio();
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audios.setVolume(Audios.getVolume(Audios.MUSIQUE), Audios.MUSIQUE);
+        this.visuel = false;
     }
 
+    public void setJeuVue(JeuVue j){
+        this.jeuVue = j;
+        this.visuel = true;
+    }
     public void clicSouris(int x, int y) {
         System.out.println("Clic souris : (" + x + ", " + y + ")");
     }
@@ -51,7 +57,7 @@ public class ControleurMediateur {
         definirJoueurIA(Jeu.JOUEUR_VRT, joueurVrtEstIA);
         definirJoueurIA(Jeu.JOUEUR_RGE, joueurRgeEstIA);
         prog.nouvellePartie(joueurVrtEstIA, joueurRgeEstIA);
-        audio.arreter(Audio.MUSIQUE_MENUS1);
+        Audios.MUSIQUE_MENUS1.arreter();
     }
 
     private void definirJoueurIA(int joueur, boolean estIA) {
@@ -65,7 +71,7 @@ public class ControleurMediateur {
                     joueursIA[joueur] = new IAAleatoirePonderee(prog.getJeu());
                     break;
                 case IA.INTERMEDIAIRE:
-                    joueursIA[joueur] = new IAStrategie1_1(prog.getJeu());
+                    joueursIA[joueur] = new IAStrategie(prog.getJeu());
                     break;
                 case IA.PROFESSIONNEL:
                     joueursIA[joueur] = new IAMinMax(prog.getJeu());
@@ -88,48 +94,116 @@ public class ControleurMediateur {
     }
 
     public void selectionnerCarte(Carte carte) {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
-        //jeuVue.jouer(this.prog.getJeu().getMain(prog.getJeu().getJoueurCourant()).getIndice(carte), this.prog.getJeu().getJoueurCourant()==this.prog.getJeu().getJoueurCourant());
+        Coup coup = new Coup(Coup.CHOISIR_CARTE, carte, null, Plateau.DIRECTION_IND);
+
+        if (visuel){
+            CarteVue carteVue = this.jeuVue.carteFromCartevue(coup.getCarte(),this.jeuVue.getMainJoueur(this.prog.getJeu().getJoueurCourant()));
+            this.jeuVue.jouerCarte(carteVue);
+            if (this.prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_RGE){
+                this.jeuVue.PlacerJeuA(carteVue);
+            }else{
+                this.jeuVue.PlacerJeuB(carteVue);
+            }
+        }
+
         jouer(coup);
     }
 
     public void selectionnerPion(Pion pion) {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_PION, null, pion, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.CHOISIR_PION, null, pion, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 
     public void selectionnerDirection(int direction) {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.CHOISIR_DIRECTION, null, null, direction);
+        Coup coup = new Coup(Coup.CHOISIR_DIRECTION, null, null, direction);
+
+        if (visuel){
+            this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
+            this.jeuVue.terrain.majPositions();
+        }
+
+
         jouer(coup);
     }
 
     public void activerPouvoirSor() {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.ACTIVER_POUVOIR_SOR, null, null, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.ACTIVER_POUVOIR_SOR, null, null, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 
     public void activerPouvoirFou() {
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.ACTIVER_POUVOIR_FOU, null, null, Plateau.DIRECTION_IND);
+        Coup coup = new Coup(Coup.ACTIVER_POUVOIR_FOU, null, null, Plateau.DIRECTION_IND);
         jouer(coup);
     }
 
     public void finirTour() {
-        System.out.println("FIN DU TOUR !!!!!!!!!");
-        Coup coup = new Coup(prog.getJeu().getJoueurCourant(), Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
-        jouer(coup);
-        /*
-        jeuVue.viderMains();
-        jeuVue.GenererMains();
-        jeuVue.repaint();
-         */
+        Coup coup = new Coup(Coup.FINIR_TOUR, null, null, Plateau.DIRECTION_IND);
 
+        if (visuel){
+            this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
+        }
+
+        jouer(coup);
     }
 
     private void jouer(Coup coup) {
-        if (coup != null)
+        boolean FinTour =false;
+        int i, nbCartes = 0;
+        if (coup != null) {
+
+            if (visuel && this.prog.getJoueurEstIA(this.prog.getJeu().getJoueurCourant()) ){
+                if (coup.getTypeCoup() == Coup.CHOISIR_CARTE) {
+                    CarteVue carteVue = this.jeuVue.carteFromCartevue(coup.getCarte(), this.jeuVue.getMainJoueur(this.prog.getJeu().getJoueurCourant()));
+                    this.jeuVue.jouerCarte(carteVue);
+                    if (this.prog.getJeu().getJoueurCourant() == Jeu.JOUEUR_RGE) {
+                        this.jeuVue.PlacerJeuA(carteVue);
+                    } else {
+                        this.jeuVue.PlacerJeuB(carteVue);
+                    }
+                }
+
+                if (coup.getTypeCoup() == Coup.CHOISIR_DIRECTION){
+                    this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
+                    this.jeuVue.terrain.majPositions();
+                }
+
+                if (coup.getTypeCoup() == Coup.FINIR_TOUR) {
+                    this.jeuVue.defausserJeu(this.prog.getJeu().getJoueurCourant());
+                }
+
+
+            }
+            if (visuel && coup.getTypeCoup()==Coup.FINIR_TOUR) {
+                nbCartes = this.prog.getJeu().getSelectionCartes(this.prog.getJeu().getJoueurCourant()).getTaille();
+                FinTour = true;
+            }
+
             prog.jouerCoup(coup);
+
+            if(visuel) {
+                if (this.prog.getJeu().getJoueurCourant() == this.prog.getJeu().JOUEUR_RGE) {
+                    i = this.prog.getJeu().JOUEUR_VRT;
+
+                } else {
+                    i = this.prog.getJeu().JOUEUR_RGE;
+                }
+                this.jeuVue.refaireCartes(nbCartes, i);
+                if (FinTour) {
+                    this.jeuVue.piocher(i, nbCartes);
+                    this.jeuVue.updateMains();
+                }
+            }
+
+
+        }
         if (prog.getJeu().estTerminee())
-            audio.jouer(Audio.SON_VICTOIRE);
+            if (prog.getJoueurEstIA(Jeu.JOUEUR_VRT) && !prog.getJoueurEstIA(Jeu.JOUEUR_RGE))
+                if (prog.getJeu().getJoueurGagnant() == Jeu.JOUEUR_RGE)
+                    Audios.SON_VICTOIRE.jouer();
+                else
+                    Audios.SON_DEFAITE.jouer();
+            else
+                Audios.SON_VICTOIRE.jouer();
     }
 
     public void annuler() {
@@ -140,19 +214,24 @@ public class ControleurMediateur {
         prog.refaireCoup();
     }
 
+    public void demarrerProgramme() {
+        prog.changerEtat(Programme.ETAT_MENU_PRINCIPAL);
+        Audios.MUSIQUE_MENUS1.boucler();
+    }
+
     public void reprendrePartie() {
         prog.changerEtat(Programme.ETAT_EN_JEU);
-        audio.arreter(Audio.MUSIQUE_MENUS1);
+        Audios.MUSIQUE_MENUS1.arreter();
     }
 
     public void ouvrirMenuJeu() {
         prog.changerEtat(Programme.ETAT_MENU_JEU);
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audios.MUSIQUE_MENUS1.boucler();
     }
 
     public void ouvrirMenuSauvegardes() {
         prog.changerEtat(Programme.ETAT_MENU_SAUVEGARDES);
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audios.MUSIQUE_MENUS1.boucler();
     }
 
     public void ouvrirMenuOptions() {
@@ -160,12 +239,12 @@ public class ControleurMediateur {
     }
 
     public void changerVolume(int changement) {
-        if (changement == -2)
-            audio.diminuerVolume();
-        else if (changement == -1)
-            audio.augmenterVolume();
+        if (changement == -1)
+            Audios.diminuerVolume(Audios.MUSIQUE);
+        else if (changement == 1)
+            Audios.augmenterVolume(Audios.MUSIQUE);
         else
-            audio.setVolume(changement);
+            Audios.arreterDemarrer(Audios.MUSIQUE);
     }
 
     public void ouvrirTutoriel() {
@@ -178,7 +257,7 @@ public class ControleurMediateur {
 
     public void retourMenuPrecedant() {
         prog.retourMenuPrecedant();
-        audio.boucler(Audio.MUSIQUE_MENUS1);
+        Audios.MUSIQUE_MENUS1.boucler();
     }
 
     public void quitter() {
@@ -198,6 +277,10 @@ public class ControleurMediateur {
 
     public void supprimerSauvegarde(int sauvegarde) {
         prog.supprimerSauvegarde(sauvegarde);
+    }
+
+    public void changerPleinEcran() {
+        Configuration.instance().ecrire("PleinEcran", Boolean.toString(!Boolean.parseBoolean(Configuration.instance().lire("PleinEcran"))));
     }
 
     public void changerDifficulte(int joueur, int difficulte) {

@@ -31,7 +31,6 @@ public class Programme extends Observable {
         etat = ETAT_ACCUEIL;
 
         jeu = new Jeu();
-        jeu.setEtatJeu(Jeu.ETAT_FIN_DE_PARTIE);
 
         joueursSontIA = new boolean[2];
 
@@ -76,10 +75,9 @@ public class Programme extends Observable {
 
     public void nouvellePartie(boolean joueurVrtEstIA, boolean joueurRgeEstIA) {
         etat = ETAT_EN_JEU;
-        //jeu.nouvellePartie();
-        Carte [] cartesmainv = {Carte.GC ,Carte.G2 , Carte.GC};
-        Carte [] cartesmainr = {};
-        jeu.nouvellePartiePersonalise(Jeu.JOUEUR_RGE, 10, 8, 11, 13, 1, 9, Plateau.FACE_GRD_CRN, 0,cartesmainv,cartesmainr);
+        jeu.nouvellePartie();
+        Carte[] mainRge = {Carte.R1, Carte.R1, Carte.R1, Carte.R1};
+        //jeu.nouvellePartiePersonalise(Jeu.JOUEUR_RGE, 10, 5, 12, 7, 9, 8, Plateau.FACE_GRD_CRN, 0, null, mainRge);
         joueursSontIA[Jeu.JOUEUR_VRT] = joueurVrtEstIA;
         joueursSontIA[Jeu.JOUEUR_RGE] = joueurRgeEstIA;
         mettreAJour();

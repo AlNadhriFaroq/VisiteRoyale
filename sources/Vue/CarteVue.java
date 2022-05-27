@@ -89,8 +89,6 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
 
     @Override
     public void paintComponent(Graphics g) {
-        //this.setSize(90, 160);
-        //setBounds(0,0, 400, 400);
         super.paintComponent(g);
         g.drawImage(this.image, 0, 0, this.getWidth(), this.getHeight(), this);
     }
@@ -105,14 +103,18 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
     public void mouseClicked(MouseEvent e) {
         if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())) {
             ctrl.selectionnerCarte(carte);
-
+/*
             frame.jouerCarte(this);
             if (jeu.getJoueurCourant() == Jeu.JOUEUR_RGE){
                 frame.PlacerJeuA(this);
             }else{
                 frame.PlacerJeuB(this);
             }
-            System.out.println(carte.toString() + ", " + e.getYOnScreen());
+
+ */
+
+
+
         }
     }
 
@@ -127,9 +129,8 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        System.out.println("PASSE SUR " + carte.toString());
         if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())){
-            this.frame.carteSelecTaille(this, this.frame.carteH/5);
+            this.frame.carteSelecTaille(this, false);
         }
 
     }
@@ -137,7 +138,7 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
     @Override
     public void mouseExited(MouseEvent e) {
         if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())){
-            this.frame.carteSelecTaille(this, -(this.frame.carteH/5) );
+            this.frame.carteSelecTaille(this, true );
         }
 
     }

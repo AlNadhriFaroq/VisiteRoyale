@@ -1,6 +1,7 @@
 package Modele;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Coup implements Cloneable, Serializable {
     public static final int CHOISIR_CARTE = 0;
@@ -19,36 +20,33 @@ public class Coup implements Cloneable, Serializable {
     int direction;
 
     Type typePasse;
-    Pion[] pionsPasse;
     int[] positionsPasse;
 
-    int activationPrivilegeRoiPasse;
-    int nbCartesAPiocher;
+    boolean faceCouronnePasse;
+    int indiceMelange;
     Paquet defaussePasse;
     Paquet defausseFutur;
+    int activationPrivilegeRoiPasse;
+    int nbCartesAPiocher;
     Carte[] cartesPiochees;
-    int indiceMelange;
-    boolean faceCouronnePasse;
     Pion[] selectionPionsPasse;
     int[] selectionDirectionsPasse;
 
-    public Coup(int joueur, int typeCoup, Carte carte, Pion pion, int direction) {
-        this.joueur = joueur;
-
+    public Coup(int typeCoup, Carte carte, Pion pion, int direction) {
         this.typeCoup = typeCoup;
         this.carte = carte;
         this.pion = pion;
         this.direction = direction;
 
-        activationPrivilegeRoiPasse = 0;
         typePasse = Type.IND;
-        pionsPasse = new Pion[2];
         positionsPasse = new int[2];
+
         nbCartesAPiocher = -1;
-        defaussePasse = new Paquet(54);
-        defausseFutur = new Paquet(54);
-        cartesPiochees = new Carte[Jeu.TAILLE_MAIN];
         indiceMelange = -1;
+        defaussePasse = new Paquet(54, false);
+        defausseFutur = new Paquet(54, false);
+        activationPrivilegeRoiPasse = 0;
+        cartesPiochees = new Carte[Jeu.TAILLE_MAIN];
         selectionPionsPasse = new Pion[2];
         selectionDirectionsPasse = new int[2];
     }
@@ -75,6 +73,7 @@ public class Coup implements Cloneable, Serializable {
 
     public void fixerJeu(Jeu jeu) {
         this.jeu = jeu;
+        this.joueur = jeu.getJoueurCourant();
     }
 
     public void executer() {
@@ -131,23 +130,25 @@ public class Coup implements Cloneable, Serializable {
         jeu.getSelectionCartes(joueur).inserer(jeu.getMain(joueur).extraire(carte));
 
         if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_DIRECTION) {
+            /* cas du privilège du Roi */
             jeu.setActivationPrivilegeRoi(2);
         } else if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_CARTE) {
             if (jeu.getActivationPouvoirFou()) {
+                /* cas du pouvoir du Fou */
                 if (jeu.getTypeCourant().equals(Type.IND) || jeu.getTypeCourant().equals(Type.GAR)) {
+                    /* cas où il faut choisir un pion (premier coup du tour ou déplacement des Gardes) */
                     jeu.setEtatJeu(Jeu.ETAT_CHOIX_PION);
-                } else if (carte.estDeplacementFouCentre()) {
-                    jeu.putSelectionPions(0, Pion.typeEnPion(jeu.getTypeCourant()));
-                    executerDeplacement();
                 } else {
+                    /* pion déjà choisi précédemment */
                     jeu.putSelectionPions(0, Pion.typeEnPion(jeu.getTypeCourant()));
-                    jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
+                    if (carte.estDeplacementFouCentre())
+                        executerDeplacement();
+                    else
+                        jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
                 }
             } else {
-                if (carte.estDeplacementFouCentre()) {
-                    jeu.putSelectionPions(0, Pion.FOU);
-                    executerDeplacement();
-                } else if (carte.estDeplacementGarCentre()) {
+                /* cas normal de sélection d'une carte */
+                if (carte.estDeplacementGarCentre()) {
                     jeu.putSelectionPions(0, Pion.GAR_VRT);
                     jeu.putSelectionPions(1, Pion.GAR_RGE);
                     executerDeplacement();
@@ -155,9 +156,13 @@ public class Coup implements Cloneable, Serializable {
                     jeu.setEtatJeu(Jeu.ETAT_CHOIX_PION);
                 } else {
                     jeu.putSelectionPions(0, Pion.typeEnPion(carte.getType()));
-                    jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
-                    if (carte.getType().equals(Type.ROI))
-                        jeu.setActivationPrivilegeRoi(1);
+                    if (carte.estDeplacementFouCentre()) {
+                        executerDeplacement();
+                    } else {
+                        if (carte.getType().equals(Type.ROI))
+                            jeu.setActivationPrivilegeRoi(1);
+                        jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
+                    }
                 }
             }
         }
@@ -165,52 +170,52 @@ public class Coup implements Cloneable, Serializable {
 
     private void desexecuterChoisirCarte() {
         if (jeu.getActivationPrivilegeRoi() == 2) {
+            /* cas du privilège du Roi */
             jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
             jeu.setActivationPrivilegeRoi(1);
-            jeu.putSelectionPions(0, Pion.ROI);
         } else {
             if (jeu.getActivationPouvoirFou()) {
-                jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
-                if (carte.estDeplacementFouCentre() && !typePasse.equals(Type.IND) && !typePasse.equals(Type.GAR))
-                    desexecuterDeplacement();
-                else
+                /* cas du pouvoir du Fou */
+                if (jeu.getEtatJeu() != Jeu.ETAT_CHOIX_PION) {
+                    if (carte.estDeplacementFouCentre())
+                        desexecuterDeplacement();
                     jeu.putSelectionPions(0, null);
+                }
             } else {
-                jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
-                jeu.putSelectionPions(0, null);
+                /* cas normal de sélection d'une carte */
+                if (carte.estDeplacementGarCentre()) {
+                    desexecuterDeplacement();
+                    jeu.putSelectionPions(1, null);
+                }
                 if (carte.estDeplacementFouCentre())
                     desexecuterDeplacement();
-                if (carte.estDeplacementGarCentre()) {
-                    jeu.putSelectionPions(1, null);
-                    desexecuterDeplacement();
-                }
                 if (carte.getType().equals(Type.ROI))
                     jeu.setActivationPrivilegeRoi(0);
+                jeu.putSelectionPions(0, null);
             }
+            jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
         }
 
-        jeu.getMain(joueur).inserer(jeu.getSelectionCartes(joueur).extraire(carte), true);
-        jeu.getMain(joueur).trier();
+        jeu.getMain(joueur).inserer(jeu.getSelectionCartes(joueur).extraire());
     }
 
     private void executerChoisirPion() {
         if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_DIRECTION) {
+            /* cas de la sélection d'un deuxième pion Garde */
             jeu.putSelectionPions(1, pion);
         } else if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_PION) {
             jeu.putSelectionPions(0, pion);
 
             if (jeu.getActivationPouvoirSor()) {
+                /* cas du pouvoir du Sorcier */
                 positionsPasse[0] = jeu.getPlateau().getPositionPion(pion);
                 jeu.getPlateau().setPositionPion(pion, jeu.getPlateau().getPositionPion(Pion.SOR));
-                typePasse = jeu.getTypeCourant();
                 jeu.setTypeCourant(Type.FIN);
-
                 jeu.setActivationPouvoirSor(false);
-
                 jeu.setEtatJeu(jeu.getPlateau().estTerminee() ? Jeu.ETAT_FIN_DE_PARTIE : Jeu.ETAT_CHOIX_CARTE);
             } else {
+                /* cas normal de sélection d'un pion */
                 Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
-
                 if (jeu.getActivationPouvoirFou() && carte.estDeplacementFouCentre())
                     executerDeplacement();
                 else
@@ -221,22 +226,23 @@ public class Coup implements Cloneable, Serializable {
 
     private void desexecuterChoisirPion() {
         if (jeu.getSelectionPions(1) != null) {
+            /* cas de la sélection d'un deuxième pion Garde */
             jeu.putSelectionPions(1, null);
-            jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
         } else {
-            jeu.setEtatJeu(Jeu.ETAT_CHOIX_PION);
-
             if (jeu.getSelectionCartes(joueur).estVide()) {
+                /* cas du pouvoir du Sorcier */
                 jeu.setActivationPouvoirSor(true);
-                jeu.setTypeCourant(typePasse);
+                jeu.setTypeCourant(Type.IND);
                 jeu.getPlateau().setPositionPion(pion, positionsPasse[0]);
             } else {
+                /* cas normal de sélection d'un pion */
                 Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
                 if (jeu.getActivationPouvoirFou() && carte.estDeplacementFouCentre())
                     desexecuterDeplacement();
             }
 
             jeu.putSelectionPions(0, null);
+            jeu.setEtatJeu(Jeu.ETAT_CHOIX_PION);
         }
     }
 
@@ -244,134 +250,58 @@ public class Coup implements Cloneable, Serializable {
         Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
         if (jeu.getActivationPrivilegeRoi() == 2) {
-            activationPrivilegeRoiPasse = jeu.getActivationPrivilegeRoi();
-
+            /* cas du privilège du Roi */
             jeu.getPlateau().setPositionPion(Pion.GAR_VRT, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) + direction);
             jeu.getPlateau().setPositionPion(Pion.ROI, jeu.getPlateau().getPositionPion(Pion.ROI) + direction);
             jeu.getPlateau().setPositionPion(Pion.GAR_RGE, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) + direction);
 
             executerChangerTypeCourant();
-            jeu.setActivationPrivilegeRoi(0);
-
+            jeu.putSelectionPions(0, null);
             jeu.setEtatJeu(jeu.getPlateau().estTerminee() ? Jeu.ETAT_FIN_DE_PARTIE : Jeu.ETAT_CHOIX_CARTE);
-        } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null && jeu.getSelectionDirections(0) == Plateau.DIRECTION_IND) {
-            jeu.putSelectionDirections(0, direction);
-        } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null && jeu.getSelectionDirections(1) == Plateau.DIRECTION_IND) {
-            jeu.putSelectionDirections(1, direction);
-            executerDeplacement();
+        } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null) {
+            /* cas de sélection d'une direction dans le cas d'une carte G2 précédemment sélectionnée avec les deux pions Gardes sélectionnés */
+            if (jeu.getSelectionDirections(0) == Plateau.DIRECTION_IND) {
+                jeu.putSelectionDirections(0, direction);
+            } else if (jeu.getSelectionDirections(1) == Plateau.DIRECTION_IND) {
+                jeu.putSelectionDirections(1, direction);
+                executerDeplacement();
+            }
         } else {
+            /* cas normal de sélection d'une direction */
             jeu.putSelectionDirections(0, direction);
             executerDeplacement();
         }
+
+        activationPrivilegeRoiPasse = jeu.getActivationPrivilegeRoi();
+        jeu.setActivationPrivilegeRoi(0);
     }
 
     private void desexecuterChoisirDirection() {
-        jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
         Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
 
         if (activationPrivilegeRoiPasse == 2) {
-            jeu.setActivationPrivilegeRoi(activationPrivilegeRoiPasse);
+            /* cas du privilège du Roi */
+            jeu.putSelectionPions(0, Pion.ROI);
             desexecuterChangerTypeCourant();
             jeu.getPlateau().setPositionPion(Pion.GAR_RGE, jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - direction);
             jeu.getPlateau().setPositionPion(Pion.ROI, jeu.getPlateau().getPositionPion(Pion.ROI) - direction);
             jeu.getPlateau().setPositionPion(Pion.GAR_VRT, jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - direction);
-        } else if (carte.estDeplacementGar1Plus1() && selectionPionsPasse[1] != null && selectionDirectionsPasse[1] != Plateau.DIRECTION_IND) {
+        } else if (carte.estDeplacementGar1Plus1() && (selectionPionsPasse[1] != null || jeu.getSelectionPions(1) != null)) {
+            /* cas de sélection d'une direction dans le cas d'une carte G2 précédemment sélectionnée avec les deux pions Gardes sélectionnés */
+            if (selectionDirectionsPasse[1] != Plateau.DIRECTION_IND) {
+                desexecuterDeplacement();
+                jeu.putSelectionDirections(1, Plateau.DIRECTION_IND);
+            } else if (jeu.getSelectionDirections(0) != Plateau.DIRECTION_IND) {
+                jeu.putSelectionDirections(0, Plateau.DIRECTION_IND);
+            }
+        } else {
+            /* cas normal de sélection d'une direction */
             desexecuterDeplacement();
-            jeu.putSelectionDirections(1, Plateau.DIRECTION_IND);
-        } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null && jeu.getSelectionDirections(0) != Plateau.DIRECTION_IND) {
-            jeu.putSelectionDirections(0, Plateau.DIRECTION_IND);
-        } else {
-            desexecuterDeplacement();
             jeu.putSelectionDirections(0, Plateau.DIRECTION_IND);
         }
-    }
 
-    private void executerDeplacement() {
-        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
-
-        Pion pion = jeu.getSelectionPions(0);
-        pionsPasse[0] = pion;
-
-        if (carte.estDeplacementFouCentre()) {
-            positionsPasse[0] = jeu.getPlateau().getPositionPion(pion);
-            jeu.getPlateau().setPositionPion(pion, Plateau.FONTAINE);
-        } else if (carte.estDeplacementGarCentre()) {
-            positionsPasse[0] = jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
-            jeu.getPlateau().setPositionPion(Pion.GAR_VRT, jeu.getPlateau().getPositionPion(Pion.ROI) + Plateau.DIRECTION_VRT);
-            positionsPasse[1] = jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
-            jeu.getPlateau().setPositionPion(Pion.GAR_RGE, jeu.getPlateau().getPositionPion(Pion.ROI) + Plateau.DIRECTION_RGE);
-        } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null) {
-            pionsPasse[0] = jeu.getSelectionPions(0);
-            positionsPasse[0] = jeu.getPlateau().getPositionPion(pionsPasse[0]);
-            int positionPion0 = jeu.getPlateau().getPositionPion(pionsPasse[0]) + jeu.getSelectionDirections(0);
-            jeu.getPlateau().setPositionPion(jeu.getSelectionPions(0), positionPion0);
-            pionsPasse[1] = jeu.getSelectionPions(1);
-            positionsPasse[1] = jeu.getPlateau().getPositionPion(pionsPasse[1]);
-            int positionPion1 = jeu.getPlateau().getPositionPion(pionsPasse[1]) + jeu.getSelectionDirections(1);
-            jeu.getPlateau().setPositionPion(jeu.getSelectionPions(1), positionPion1);
-        } else {
-            positionsPasse[0] = jeu.getPlateau().getPositionPion(pion);
-            int positionPion = jeu.getPlateau().getPositionPion(pion) + jeu.getSelectionDirections(0) * carte.getDeplacement();
-            jeu.getPlateau().setPositionPion(pion, positionPion);
-        }
-
-        executerChangerTypeCourant();
-
-        selectionPionsPasse[0] = jeu.getSelectionPions(0);
-        selectionPionsPasse[1] = jeu.getSelectionPions(1);
-        selectionDirectionsPasse[0] = jeu.getSelectionDirections(0);
-        selectionDirectionsPasse[1] = jeu.getSelectionDirections(1);
-        jeu.putSelectionPions(0, null);
-        jeu.putSelectionPions(1, null);
-        jeu.putSelectionDirections(0, Plateau.DIRECTION_IND);
-        jeu.putSelectionDirections(1, Plateau.DIRECTION_IND);
-
-        jeu.setEtatJeu(jeu.getPlateau().estTerminee() ? Jeu.ETAT_FIN_DE_PARTIE : Jeu.ETAT_CHOIX_CARTE);
-    }
-
-    private void desexecuterDeplacement() {
-        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
-
-        desexecuterChangerTypeCourant();
-        System.out.println(pionsPasse[1] + " " + positionsPasse[1]);
-        System.out.println(pionsPasse[0] + " " + positionsPasse[0]);
-        jeu.putSelectionDirections(1, selectionDirectionsPasse[1]);
-        jeu.putSelectionDirections(0, selectionDirectionsPasse[0]);
-        jeu.putSelectionPions(1, selectionPionsPasse[1]);
-        jeu.putSelectionPions(0, selectionPionsPasse[0]);
-
-        if (carte.estDeplacementFouCentre()) {
-            jeu.getPlateau().setPositionPion(pionsPasse[0], positionsPasse[0]);
-        } else if (carte.estDeplacementGarCentre()) {
-            System.out.println(pionsPasse[1] + " gar centre " + positionsPasse[1]);
-            System.out.println(pionsPasse[0] + " gar centre " + positionsPasse[0]);
-            jeu.getPlateau().setPositionPion(Pion.GAR_RGE, positionsPasse[1]);
-            jeu.getPlateau().setPositionPion(Pion.GAR_VRT, positionsPasse[0]);
-        } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null) {
-            System.out.println(pionsPasse[1] + " <gar 1 1> " + positionsPasse[1]);
-            System.out.println(pionsPasse[0] + " <gar 1 1> " + positionsPasse[0]);
-            jeu.getPlateau().setPositionPion(pionsPasse[1], positionsPasse[1]);
-            jeu.getPlateau().setPositionPion(pionsPasse[0], positionsPasse[0]);
-        } else {
-            System.out.println(pionsPasse[1] + " " + positionsPasse[1]);
-            System.out.println(pionsPasse[0] + " " + positionsPasse[0]);
-            jeu.getPlateau().setPositionPion(pionsPasse[0], positionsPasse[0]);
-        }
-    }
-
-    private void executerChangerTypeCourant() {
-        typePasse = jeu.getTypeCourant();
-
-        Carte carte = jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
-
-        if (jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND))
-            jeu.setTypeCourant(jeu.getSelectionPions(0).getType());
-        else if (!jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND))
-            jeu.setTypeCourant(carte.getType());
-    }
-
-    private void desexecuterChangerTypeCourant() {
-        jeu.setTypeCourant(typePasse);
+        jeu.setActivationPrivilegeRoi(activationPrivilegeRoiPasse);
+        jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
     }
 
     private void executerActiverPouvoirSorcier() {
@@ -395,42 +325,41 @@ public class Coup implements Cloneable, Serializable {
     private void executerFinirTour() {
         boolean finPartie = false;
 
-        selectionPionsPasse[0] = jeu.getSelectionPions(0);
-        selectionPionsPasse[1] = jeu.getSelectionPions(1);
-        selectionDirectionsPasse[0] = jeu.getSelectionDirections(0);
-        selectionDirectionsPasse[1] = jeu.getSelectionDirections(1);
-        jeu.putSelectionPions(0, null);
-        jeu.putSelectionPions(1, null);
-        jeu.putSelectionDirections(0, Plateau.DIRECTION_IND);
-        jeu.putSelectionDirections(1, Plateau.DIRECTION_IND);
+        /* sauvegarder et vider les sélections */
+        executerViderSelections();
 
-        jeu.setActivationPouvoirFou(false);
         activationPrivilegeRoiPasse = jeu.getActivationPrivilegeRoi();
         jeu.setActivationPrivilegeRoi(0);
-
-        if (joueur == Jeu.JOUEUR_VRT)
-            jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + Plateau.DIRECTION_VRT * jeu.evaluerDeplacementCouronne(joueur));
-        else if (joueur == Jeu.JOUEUR_RGE)
-            jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.evaluerDeplacementCouronne(joueur));
-        else
-            throw new RuntimeException("Modele.Coup.executerFinTour() : Joueur entré invalide.");
+        jeu.setActivationPouvoirFou(false);
 
         nbCartesAPiocher = jeu.getSelectionCartes(joueur).getTaille();
-
         for (int i = 0; i < nbCartesAPiocher; i++)
-            jeu.getDefausse().inserer(jeu.getSelectionCartes(joueur).extraire(jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille()-1)));
+            jeu.getDefausse().inserer(jeu.getSelectionCartes(joueur).extraire());
 
+        typePasse = jeu.getTypeCourant();
+        jeu.setTypeCourant(Type.IND);
+
+        /* déplacer la couronne et vérifier si la partie est finie */
+        jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + (joueur == Jeu.JOUEUR_VRT ? Plateau.DIRECTION_VRT : Plateau.DIRECTION_RGE) * jeu.evaluerDeplacementCouronne(joueur));
+        if (jeu.getPlateau().estTerminee())
+            jeu.setEtatJeu(Jeu.ETAT_FIN_DE_PARTIE);
+
+        /* piocher */
         for (int i = 0; i < nbCartesAPiocher; i++) {
             cartesPiochees[i] = jeu.getPioche().extraire();
-            jeu.getMain(joueur).inserer(cartesPiochees[i], true);
-            if ((jeu.getPioche().estVide() && jeu.getPlateau().getFaceCouronne() == Plateau.FACE_PTT_CRN && !jeu.pionDansFontaine(Pion.ROI))) {
-                finPartie = true;
-                break;
-            } else if (jeu.getPioche().estVide()) {
+            jeu.getMain(joueur).inserer(cartesPiochees[i]);
+            if (jeu.getPioche().estVide()) {
+                /* cas où la pioche est vide */
+                indiceMelange = i;
+
+                /* cas où la partie est finie */
+                if (jeu.getPlateau().getFaceCouronne() == Plateau.FACE_PTT_CRN && !jeu.pionDansFontaine(Pion.ROI))
+                    jeu.setEtatJeu(Jeu.ETAT_FIN_DE_PARTIE);
+
+                /* re-remplir la pioche avec la défausse */
                 faceCouronnePasse = jeu.getPlateau().getFaceCouronne();
                 jeu.getPlateau().setFaceCouronne(Plateau.FACE_PTT_CRN);
 
-                indiceMelange = i;
                 defaussePasse.copier(jeu.getDefausse());
                 if (defausseFutur.estVide()) {
                     jeu.getDefausse().melanger();
@@ -440,56 +369,116 @@ public class Coup implements Cloneable, Serializable {
                 }
                 jeu.getPioche().transferer(jeu.getDefausse());
             }
-
         }
-        jeu.getMain(joueur).trier();
 
-        typePasse = jeu.getTypeCourant();
-        jeu.setTypeCourant(Type.IND);
-
-        if (finPartie || jeu.getPlateau().estTerminee())
-            jeu.setEtatJeu(Jeu.ETAT_FIN_DE_PARTIE);
-        else
-            jeu.alternerJoueurCourant();
+        /* changer le joueur */
+        jeu.alternerJoueurCourant();
     }
 
     private void desexecuterFinirTour() {
-        if (jeu.getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE)
-            jeu.alternerJoueurCourant();
+        /* changer le joueur */
+        jeu.alternerJoueurCourant();
 
-        jeu.setTypeCourant(typePasse);
-
+        /* dépiocher */
         for (int i = nbCartesAPiocher - 1; i >= 0; i--) {
-            jeu.getPioche().inserer(jeu.getMain(joueur).extraire(cartesPiochees[i]));
-            if (i == indiceMelange) {
+            if (i == indiceMelange && !jeu.estTerminee()) {
                 jeu.getDefausse().copier(defaussePasse);
                 jeu.getPioche().vider();
                 jeu.getPlateau().setFaceCouronne(faceCouronnePasse);
             }
+            jeu.getPioche().inserer(jeu.getMain(joueur).extraire(cartesPiochees[i]));
         }
+
+        /* déplacer la couronne */
+        jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + (joueur == Jeu.JOUEUR_VRT ? Plateau.DIRECTION_RGE : Plateau.DIRECTION_VRT) * jeu.evaluerDeplacementCouronne(joueur));
+
+        /* charger et reremplir les sélections */
+        jeu.setTypeCourant(typePasse);
 
         for (int i = nbCartesAPiocher - 1; i >= 0; i--)
             jeu.getSelectionCartes(joueur).inserer(jeu.getDefausse().extraire());
-
-        if (joueur == Jeu.JOUEUR_VRT)
-            jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + Plateau.DIRECTION_RGE * jeu.evaluerDeplacementCouronne(joueur));
-        else if (joueur == Jeu.JOUEUR_RGE)
-            jeu.getPlateau().setPositionCouronne(jeu.getPlateau().getPositionCouronne() + Plateau.DIRECTION_VRT * jeu.evaluerDeplacementCouronne(joueur));
-        else
-            throw new RuntimeException("Modele.Coup.desexecuterFinTour() : Joueur courant invalide.");
-
-        jeu.setActivationPrivilegeRoi(activationPrivilegeRoiPasse);
 
         if (!jeu.getSelectionCartes(joueur).estVide() &&
                 jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1).getType().equals(Type.FOU) &&
                 !typePasse.equals(Type.FOU))
             jeu.setActivationPouvoirFou(true);
+        jeu.setActivationPrivilegeRoi(activationPrivilegeRoiPasse);
 
+        desexecuterViderSelections();
 
-        jeu.putSelectionDirections(1, selectionDirectionsPasse[1]);
-        jeu.putSelectionDirections(0, selectionDirectionsPasse[0]);
-        jeu.putSelectionPions(1, selectionPionsPasse[1]);
+        jeu.setEtatJeu(Jeu.ETAT_CHOIX_CARTE);
+    }
+
+    private void executerDeplacement() {
+        Carte carte = this.carte != null ? this.carte : jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
+
+        positionsPasse[0] = jeu.getPlateau().getPositionPion(jeu.getSelectionPions(0));
+        if (carte.estDeplacementFouCentre()) {
+            jeu.getPlateau().setPositionPion(jeu.getSelectionPions(0), Plateau.FONTAINE);
+        } else if (carte.estDeplacementGarCentre()) {
+            jeu.getPlateau().setPositionPion(jeu.getSelectionPions(0), jeu.getPlateau().getPositionPion(Pion.ROI) + Plateau.DIRECTION_VRT);
+            positionsPasse[1] = jeu.getPlateau().getPositionPion(jeu.getSelectionPions(1));
+            jeu.getPlateau().setPositionPion(jeu.getSelectionPions(1), jeu.getPlateau().getPositionPion(Pion.ROI) + Plateau.DIRECTION_RGE);
+        } else if (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null) {
+            positionsPasse[1] = jeu.getPlateau().getPositionPion(jeu.getSelectionPions(1));
+            int positionFutur0 = jeu.getPlateau().getPositionPion(jeu.getSelectionPions(0)) + jeu.getSelectionDirections(0);
+            int positionFutur1 = jeu.getPlateau().getPositionPion(jeu.getSelectionPions(1)) + jeu.getSelectionDirections(1);
+            jeu.getPlateau().setPositionPion(jeu.getSelectionPions(0), positionFutur0);
+            jeu.getPlateau().setPositionPion(jeu.getSelectionPions(1), positionFutur1);
+        } else {
+            int positionPion = jeu.getPlateau().getPositionPion(jeu.getSelectionPions(0)) + jeu.getSelectionDirections(0) * carte.getDeplacement();
+            jeu.getPlateau().setPositionPion(jeu.getSelectionPions(0), positionPion);
+        }
+
+        executerChangerTypeCourant();
+        executerViderSelections();
+
+        jeu.setEtatJeu(jeu.getPlateau().estTerminee() ? Jeu.ETAT_FIN_DE_PARTIE : Jeu.ETAT_CHOIX_CARTE);
+    }
+
+    private void desexecuterDeplacement() {
+        Carte carte = this.carte != null ? this.carte : jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
+
+        desexecuterViderSelections();
+        desexecuterChangerTypeCourant();
+
+        if (carte.estDeplacementGarCentre() || (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null))
+            jeu.getPlateau().setPositionPion(jeu.getSelectionPions(1), positionsPasse[1]);
+        jeu.getPlateau().setPositionPion(jeu.getSelectionPions(0), positionsPasse[0]);
+
+        jeu.setEtatJeu(Jeu.ETAT_CHOIX_DIRECTION);
+    }
+
+    private void executerChangerTypeCourant() {
+        Carte carte = this.carte != null ? this.carte : jeu.getSelectionCartes(joueur).getCarte(jeu.getSelectionCartes(joueur).getTaille() - 1);
+
+        typePasse = jeu.getTypeCourant();
+        if (jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND))
+            jeu.setTypeCourant(jeu.getSelectionPions(0).getType());
+        else if (!jeu.getActivationPouvoirFou() && jeu.getTypeCourant().equals(Type.IND))
+            jeu.setTypeCourant(carte.getType());
+    }
+
+    private void desexecuterChangerTypeCourant() {
+        jeu.setTypeCourant(typePasse);
+    }
+
+    private void executerViderSelections() {
+        selectionPionsPasse[0] = jeu.getSelectionPions(0);
+        selectionPionsPasse[1] = jeu.getSelectionPions(1);
+        selectionDirectionsPasse[0] = jeu.getSelectionDirections(0);
+        selectionDirectionsPasse[1] = jeu.getSelectionDirections(1);
+        jeu.putSelectionDirections(1, Plateau.DIRECTION_IND);
+        jeu.putSelectionDirections(0, Plateau.DIRECTION_IND);
+        jeu.putSelectionPions(1, null);
+        jeu.putSelectionPions(0, null);
+    }
+
+    private void desexecuterViderSelections() {
         jeu.putSelectionPions(0, selectionPionsPasse[0]);
+        jeu.putSelectionPions(1, selectionPionsPasse[1]);
+        jeu.putSelectionDirections(0, selectionDirectionsPasse[0]);
+        jeu.putSelectionDirections(1, selectionDirectionsPasse[1]);
     }
 
     @Override
@@ -501,9 +490,12 @@ public class Coup implements Cloneable, Serializable {
             return false;
         Coup coup = (Coup) o;
 
-        return jeu.equals(coup.jeu) && joueur == coup.joueur &&
-                typeCoup == coup.typeCoup && carte.equals(coup.carte) &&
-                pion.equals(coup.pion) && direction == coup.direction;
+        return jeu.equals(coup.jeu) &&
+                joueur == coup.joueur &&
+                typeCoup == coup.typeCoup &&
+                carte.equals(coup.carte) &&
+                pion.equals(coup.pion) &&
+                direction == coup.direction;
     }
 
     @Override

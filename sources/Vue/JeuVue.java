@@ -1,13 +1,10 @@
 package Vue;
 
 import Controleur.ControleurMediateur;
-import Modele.Jeu;
-import Modele.Paquet;
-import Modele.Pion;
+import Modele.*;
 import Vue.Boutons.*;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -32,8 +29,17 @@ public class JeuVue extends JComponent {
     List<Bouton> boutons;
 
     int heigth, width, carteH, carteW, joueeH, joueeW, xDep, yA, yB, delai;
+    Point jeuPosA, jeuPosB;
     boolean FinAnim;
     Dimension screenSize;
+    MenuPanel menuPanel;
+    TourPanel tourA;
+    TourPanel tourB;
+    BoutonPouvoirFou pouvoirFou ;
+    BoutonPouvoirSorcier pouvoirSorcier ;
+    BoutonFinirTour finTour ;
+    BoutonAnnuler annuler ;
+    BoutonRefaire refaire ;
 
     public JeuVue(ControleurMediateur ctrl, Jeu jeu) {
         this.delai = 25;
@@ -69,24 +75,42 @@ public class JeuVue extends JComponent {
         this.xDep = (this.width / 2) - (this.carteW * 4);
         this.yA = this.heigth - this.carteH - 40;
         this.yB = 5;
+
+        this.jeuPosA = new Point( (this.width / 2) - (this.joueeW *3), this.terrain.getY() + this.terrain.getHeight() + (this.carteH/4) );
+        this.jeuPosB =new Point( (this.width / 2) - (this.joueeW*3), this.terrain.getY() - (this.carteH/4) - (this.joueeH) );
+
         this.setVisible(true);
 
+
+
+        this.menuPanel = new MenuPanel(this, this.ctrl);
+        this.frame.add(this.menuPanel);
+
         this.genererDeck();
-        this.GenererMains();
-        //this.afficheMain();
         this.afficheTerrain();
         this.genererBoutons();
+        this.genererTours();
 
+
+
+        this.GenererMains();
         this.FinAnim = false;
+        this.repaint();
+
+        this.ctrl.setJeuVue(this);
     }
 
     public JFrame getFrame() {
         return frame;
     }
+    public int JA(int j){
+        return this.jeu.getSelectionCartes(j).getTaille();
+    }
 
     /* PaintComponent */
     @Override
     public void paintComponent(Graphics g) {
+        this.afficherTours();
         this.afficheMain();
         this.afficheTerrain();
         this.afficherBoutons();
@@ -96,9 +120,51 @@ public class JeuVue extends JComponent {
         int h = this.carteH + (this.OFFSET*2);
         g.fillRect(this.OFFSET - (this.OFFSET/4),(this.heigth/2) - (h/2) - 40,w,h);
         g.fillRect(( (2 * this.OFFSET ) - (this.OFFSET/4) ) + this.carteW,((this.heigth / 2) - (h / 2)) - 40,w,h);
+        g.setColor(new Color(225,15, 50));
+        g.drawRect((this.width/2) - (this.joueeW*3), this.terrain.getY() + this.terrain.getHeight() + (this.joueeH/8), this.joueeW*6, this.joueeH + (this.joueeH/2)   );
+
+        g.setColor(new Color(71, 132, 78));
+        g.drawRect((this.width/2) - (this.joueeW*3), this.terrain.getY() - (this.carteH/4) - (this.joueeH + this.joueeH/4) , this.joueeW*6, this.joueeH + (this.joueeH/2)   );
+
     }
 
     /* GENERATIONS & GESTION DES LISTES */
+
+    public List<CarteVue> getMainJoueur(int joueur){
+        if (joueur == jeu.JOUEUR_RGE){
+            return this.mainA;
+        }else{
+            return  this.mainB;
+        }
+    }
+
+    public Type getTypeJoueur(int joueur){
+        if (joueur == jeu.JOUEUR_RGE){
+            return this.joueesA.get(0).getCarte().getType();
+        }else{
+            return  this.joueesB.get(0).getCarte().getType();
+        }
+    }
+
+    public Carte getCarteJouee(int joueur){
+        if(joueur == jeu.JOUEUR_RGE){
+            return this.joueesA.get(0).getCarte();
+        } else {
+            return this.joueesB.get(0).getCarte();
+        }
+    }
+
+    public CarteVue carteFromCartevue(Carte carte, List<CarteVue> list){
+        int t =list.size();
+        for (int i=0; i<t; i++) {
+            if ( carte.equals(list.get(i).getCarte()) ) {
+                return list.get(i);
+            }
+        }
+
+        return null;
+    }
+
     public void genererDeck() {
         int taille = this.jeu.getPioche().getTaille();
         int y = ((this.heigth / 2) - (this.carteH / 2)) - 40;
@@ -112,6 +178,7 @@ public class JeuVue extends JComponent {
 
             this.deck.add(carteVue);
             this.frame.add(carteVue);
+
         }
 
         this.frame.repaint();
@@ -122,16 +189,16 @@ public class JeuVue extends JComponent {
         Source.remove(i);
     }
 
-    public void piocher(int joueur) {
-        int max = jeu.getSelectionCartes(joueur).getTaille();
+    public void piocher(int joueur, int nbcartes) {
+        //int max = jeu.getSelectionCartes(joueur).getTaille();
+        int max = nbcartes;
         Point dest;
+
         if (joueur == this.jeu.JOUEUR_RGE) {
             dest = new Point(this.xDep, this.yA);
             for (int i=0; i< max; i++){
                 envoiPioche(this.deck.get(this.deck.size()-1), dest);
                 donnerCarte(this.deck.size()-1, this.mainA, this.deck);
-
-
             }
         }else {
             dest = new Point(this.xDep, this.yB);
@@ -140,6 +207,7 @@ public class JeuVue extends JComponent {
                 donnerCarte(this.deck.size()-1, this.mainB, this.deck);
             }
         }
+
     }
 
     public void jouer(int i, boolean joueur) {
@@ -171,15 +239,17 @@ public class JeuVue extends JComponent {
         if (joueur == Jeu.JOUEUR_RGE) {
             taille = this.joueesA.size();
             for (int i = 0; i < taille; i++) {
-                donnerCarte(i, this.defausse, this.joueesA);
+                donnerCarte(0, this.defausse, this.joueesA);
                 PlacerDefausse(this.defausse.get(this.defausse.size() - 1));
             }
+
         } else {
             taille = this.joueesB.size();
             for (int i = 0; i < taille; i++) {
-                donnerCarte(i, this.defausse, this.joueesB);
+                donnerCarte(0, this.defausse, this.joueesB);
                 PlacerDefausse(this.defausse.get(this.defausse.size() - 1));
             }
+
         }
     }
 
@@ -194,6 +264,7 @@ public class JeuVue extends JComponent {
         int taille = main.getTaille();
         int x = this.OFFSET;
         int y = ((this.heigth / 2) - (this.carteH / 2)) - 40;
+        Point dest = new Point(this.xDep, this.yA);
 
 
         for (int i = 0; i < taille; i++) {
@@ -205,12 +276,13 @@ public class JeuVue extends JComponent {
 
             this.mainA.add(carteVue);
             this.frame.add(carteVue);
-
-            envoiPioche(carteVue, new Point(this.xDep, this.yA));
+            dest.x = this.xDep + (i*this.carteW);
+            creerMain(carteVue, dest);
         }
 
         main = this.jeu.getMain(Jeu.JOUEUR_VRT);
         taille = main.getTaille();
+        dest = new Point(this.xDep, this.yB);
 
         for (int i = 0; i < taille; i++) {
             CarteVue carteVue = new CarteVue(jeu, ctrl, this);
@@ -221,8 +293,9 @@ public class JeuVue extends JComponent {
 
             this.mainB.add(carteVue);
             this.frame.add(carteVue);
+            dest.x = this.xDep +(i*this.carteW);
 
-            envoiPioche(carteVue, new Point(this.xDep, this.yB));
+            creerMain(carteVue, dest);
         }
 
 
@@ -299,22 +372,25 @@ public class JeuVue extends JComponent {
         int x = (this.width / 2) - (c.getWidth() / 2);
         int y = this.terrain.getY() + this.terrain.getHeight() + (this.carteH/4);
 
-        decaler(this.joueesA);
+
         Point posC = new Point(c.getX(), c.getY());
         Point posD = new Point(x,y);
         Dimension resize = new Dimension(this.joueeW, this.joueeH);
         envoiCarte(c, posC, posD, resize, this.delai);
+
+        decaler(this.joueesA);
         this.frame.repaint();
     }
     public void PlacerJeuB(CarteVue c) {
         int x = (this.width / 2) - (c.getWidth() / 2);
         int y = this.terrain.getY() - (this.carteH/4) - (this.joueeH);
 
-        decaler(this.joueesB);
+
         Point posC = new Point(c.getX(), c.getY());
         Point posD = new Point(x,y);
         Dimension resize = new Dimension(this.joueeW, this.joueeH);
         envoiCarte(c, posC, posD, resize, this.delai);
+        decaler(this.joueesB);
         this.frame.repaint();
     }
 
@@ -347,13 +423,12 @@ public class JeuVue extends JComponent {
         int x = this.terrain.getX() + this.terrain.getWidth() + BoutonLargeur;
         int y = this.terrain.getY() + BoutonHauteur;
 
-        BoutonPouvoirFou pouvoirFou = new BoutonPouvoirFou(ctrl, this.jeu);
-        BoutonPouvoirSorcier pouvoirSorcier = new BoutonPouvoirSorcier(ctrl, this.jeu);
-        BoutonFinirTour finTour = new BoutonFinirTour(ctrl, this.jeu, this);
-        BoutonAnnuler annuler = new BoutonAnnuler(ctrl, this.jeu);
-        BoutonRefaire refaire = new BoutonRefaire(ctrl, this.jeu);
-        Gauche gauche = new Gauche(ctrl, this,this.jeu);
-        Droite droite = new Droite(ctrl,this, this.jeu);
+        this.pouvoirFou = new BoutonPouvoirFou(ctrl, this.jeu);
+        this.pouvoirSorcier = new BoutonPouvoirSorcier(ctrl, this.jeu);
+        this.finTour = new BoutonFinirTour(ctrl, this.jeu, this);
+        this.annuler = new BoutonAnnuler(ctrl, this.jeu);
+        this.refaire = new BoutonRefaire(ctrl, this.jeu);
+
 
         pouvoirFou.setSize(BoutonLargeur, BoutonHauteur);
         pouvoirFou.setLocation(x, y);
@@ -380,21 +455,12 @@ public class JeuVue extends JComponent {
         refaire.setLocation(x, y);
         refaire.setVisible(true);
 
-        gauche.setSize(BoutonLargeur, BoutonHauteur);
-        gauche.setLocation(0, 0);
-        gauche.setVisible(true);
-
-        droite.setSize(BoutonLargeur, BoutonHauteur);
-        droite.setLocation(BoutonLargeur*2, 0);
-        droite.setVisible(true);
-
         this.boutons.add(pouvoirFou);
         this.boutons.add(pouvoirSorcier);
         this.boutons.add(finTour);
         this.boutons.add(annuler);
         this.boutons.add(refaire);
-        this.boutons.add(gauche);
-        this.boutons.add(droite);
+
 
         ajoutBoutons();
     }
@@ -403,23 +469,71 @@ public class JeuVue extends JComponent {
         for (Bouton bouton : this.boutons) this.frame.add(bouton);
     }
 
+    public void majBoutons(){
+        if (this.jeu.peutUtiliserPouvoirFou()){
+            this.pouvoirFou.setIcon(new ImageIcon(this.pouvoirFou.getImageCouleur()) );
+            this.pouvoirFou.setBackground(Color.cyan);
+        }
+        if (!this.jeu.peutUtiliserPouvoirFou()){
+            this.pouvoirFou.setIcon(new ImageIcon(this.pouvoirFou.getImageGris()) );
+            this.pouvoirFou.setBackground(Color.darkGray);
+        }
+        if (!this.jeu.peutUtiliserPouvoirSorcier() ){
+            this.pouvoirSorcier.setIcon(new ImageIcon(this.pouvoirSorcier.getImageGris()) );
+            this.pouvoirSorcier.setBackground(Color.darkGray);
+        }
+        if (this.jeu.peutUtiliserPouvoirSorcier()){
+            this.pouvoirSorcier.setIcon(new ImageIcon(this.pouvoirSorcier.getImageCouleur()) );
+            this.pouvoirSorcier.setBackground(Color.orange);
+        }
+        this.pouvoirSorcier.repaint();
+        this.pouvoirFou.repaint();
+    }
+
     public void afficherBoutons() {
         for (Bouton bouton : this.boutons) {
             bouton.setVisible(true);
             bouton.setLocation(bouton.getLocation());
+
         }
+        majBoutons();
     }
 
-    public void carteSelecTaille(CarteVue carteVue, int decalage){
-        System.out.println("AVANT : " + carteVue.getHeight() + " / " + carteVue.getWidth());
-        carteVue.setSize(carteVue.getWidth() + decalage, carteVue.getHeight() + decalage);
-        System.out.println("APRES : " + carteVue.getHeight() + " / " + carteVue.getWidth());
-        /*
-        System.out.println("AVANT : " + carteVue.getX() + " / " + carteVue.getY());
-        carteVue.setLocation(carteVue.getX(), carteVue.getY() + decalage);
-        System.out.println("APRES : " + carteVue.getX() + " / " + carteVue.getY());
-         */
+    public void carteSelecTaille(CarteVue carteVue, boolean b){
+        int decalage = (this.carteH/5);
+        if (b) {
+            carteVue.setSize(this.carteW, this.carteH);
+
+        }else {
+            carteVue.setSize(this.carteW + decalage, this.carteH + decalage);
+        }
         this.frame.repaint();
+    }
+
+    public void genererTours(){
+        this.tourA = new TourPanel(this, this.ctrl);
+        this.tourB = new TourPanel(this, this.ctrl);
+
+        this.tourA.setLocation(this.tourA.getWidth(), this.yA );
+        this.tourB.setLocation(this.tourB.getWidth(), this.yB + this.carteH - this.tourB.getHeight() );
+
+        this.tourA.setVisible(true);
+        this.tourB.setVisible(true);
+
+        this.frame.add(this.tourA);
+        this.frame.add(this.tourB);
+
+    }
+    public void afficherTours(){
+        if (this.jeu.getJoueurCourant() == this.jeu.JOUEUR_RGE){
+            this.tourA.setImage(this.tourA.getRougeBase());
+            this.tourB.setImage(this.tourB.getBleuSec());
+        }else{
+            this.tourA.setImage(this.tourA.getRougeSec());
+            this.tourB.setImage(this.tourB.getBleuBase());
+        }
+        this.tourA.repaint();
+        this.tourB.repaint();
     }
 
 
@@ -428,17 +542,154 @@ public class JeuVue extends JComponent {
     public void envoiCarte(CarteVue c, Point dep, Point fin, Dimension d,int delai){
         AnimationPanel animationPanel = new AnimationPanel(c, dep, fin, d, delai);
         animationPanel.AnimStart();
+
     }
 
+    public void creerMain(CarteVue carteVue, Point dest){
+        Point depart = new Point(carteVue.getX(), carteVue.getY());
+        AnimationPanel animationPanel = new AnimationPanel(carteVue, depart, dest,new Dimension(carteVue.getSize()), 5);
+        animationPanel.AnimStart();
+        while ( animationPanel.timer.isRunning()){}
+    }
     public void envoiPioche(CarteVue carteVue, Point dest){
         Point depart = new Point(carteVue.getX(), carteVue.getY());
-        envoiCarte(carteVue, depart, dest, new Dimension(carteVue.getSize()), 200);
+        envoiCarte(carteVue, depart, dest, new Dimension(carteVue.getSize()), 5);
+    }
+
+    public boolean cartesJoueesEstVide (int joueur){
+        if(joueur == this.jeu.JOUEUR_RGE && this.joueesA.isEmpty()){
+            return true;
+        } else if (joueur == this.jeu.JOUEUR_VRT && this.joueesB.isEmpty()){
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 
+    public void genererSansAnimMains() {
+        Paquet main = this.jeu.getMain(Jeu.JOUEUR_RGE);
+        int taille = main.getTaille();
+        Point dest = new Point(this.xDep, this.yA);
+
+
+        for (int i = 0; i < taille; i++) {
+            dest.x = this.xDep + (i*this.carteW);
+            CarteVue carteVue = new CarteVue(jeu, ctrl, this);
+            carteVue.setCarte(main.getCarte(i));
+            carteVue.setSize(this.carteW, this.carteH);
+            carteVue.setVisible(true);
+            carteVue.setLocation(dest);
+
+            this.mainA.add(carteVue);
+            this.frame.add(carteVue);
+
+
+        }
+
+        main = this.jeu.getMain(Jeu.JOUEUR_VRT);
+        taille = main.getTaille();
+        dest = new Point(this.xDep, this.yB);
+
+        for (int i = 0; i < taille; i++) {
+            dest.x = this.xDep +(i*this.carteW);
+            CarteVue carteVue = new CarteVue(jeu, ctrl, this);
+            carteVue.setCarte(main.getCarte(i));
+            carteVue.setSize(this.carteW, this.carteH);
+            carteVue.setVisible(true);
+            carteVue.setLocation(dest);
+
+            this.mainB.add(carteVue);
+            this.frame.add(carteVue);
 
 
 
 
+        }
+
+
+    }
+
+    public boolean testMains(){
+        int j = this.jeu.JOUEUR_RGE;
+        int t = this.jeu.getMain(j).getTaille();
+        for (int i=0; i<t; i++){
+            if (this.jeu.getMain(j).getCarte(i) != this.mainA.get(i).getCarte())
+                return false;
+        }
+
+        j = this.jeu.JOUEUR_VRT;
+        t =  this.jeu.getMain(j).getTaille();
+        for (int i=0; i<t; i++){
+            if (this.jeu.getMain(j).getCarte(i) != this.mainB.get(i).getCarte())
+                return false;
+        }
+
+        return true;
+    }
+    public void refaireDeck(){
+        int t1 = this.jeu.getPioche().getTaille();
+
+
+        for (int i=0; i<t1; i++){
+
+            CarteVue carteVue = carteFromCartevue(this.jeu.getPioche().getCarte(i), this.defausse );
+            this.defausse.remove(carteVue);
+            this.deck.add(carteVue);
+            carteVue.setLocation(this.OFFSET, ((this.heigth / 2) - (this.carteH / 2)) - 40);
+
+        }
+
+    }
+
+    public void refaireMains(){
+        int t1 = this.mainA.size();
+        int t2 = this.mainB.size();
+        int t3 = this.jeu.getMain(this.jeu.JOUEUR_RGE).getTaille();
+        int t4 = this.jeu.getMain(this.jeu.JOUEUR_VRT).getTaille();
+        if (t1 != t3 || t2 != t4 || !this.testMains()) {
+            for (int i=0; i<t1; i++){
+                this.frame.remove(this.mainA.get(i));
+            }
+            for (int i=0; i<t2; i++){
+                this.frame.remove(this.mainB.get(i));
+            }
+            this.mainA.clear();
+            this.mainB.clear();
+            this.genererSansAnimMains();
+        }
+
+    }
+    public void refaireCartes(int nbCartes, int joueur) {
+        Point dest;
+        if (this.deck.isEmpty() || this.jeu.getPioche().getTaille() == 0 || nbCartes > this.deck.size()){
+
+            if (nbCartes > this.deck.size()){
+                if (joueur == this.jeu.JOUEUR_RGE) {
+                    dest = new Point(this.xDep, this.yA);
+                    for (int i=0; i< nbCartes; i++){
+                        envoiPioche(this.deck.get(this.deck.size()-1), dest);
+                        donnerCarte(this.deck.size()-1, this.mainA, this.deck);
+                    }
+                }else {
+                    dest = new Point(this.xDep, this.yB);
+                    for (int i=0; i< nbCartes; i++){
+                        envoiPioche(this.deck.get(this.deck.size()-1), dest);
+                        donnerCarte(this.deck.size()-1, this.mainB, this.deck);
+                    }
+                }
+            }
+
+            refaireDeck();
+
+
+        }
+    }
+
+
+    public int TailleDefausse(){
+        return this.defausse.size();
+    }
 
 }
