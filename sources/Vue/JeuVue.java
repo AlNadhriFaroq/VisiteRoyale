@@ -44,9 +44,11 @@ public class JeuVue extends JComponent {
     private String deckTaille;
 
     boolean test;
+    private  boolean dragging;
 
 
     public JeuVue(ControleurMediateur ctrl, Jeu jeu) {
+        this.dragging =false;
         this.test = false;
         this.delai = 25;
 
@@ -116,6 +118,14 @@ public class JeuVue extends JComponent {
         this.repaint();
 
         this.ctrl.setJeuVue(this);
+    }
+
+    public void setDragging(boolean dragging) {
+        this.dragging = dragging;
+    }
+
+    public boolean isDragging() {
+        return dragging;
     }
 
     public JFrame getFrame() {
@@ -356,7 +366,6 @@ public class JeuVue extends JComponent {
         int x, y,  taille;
 
 
-        //boolean joueur = this.jeu.getJoueurCourant()==1;
         x = this.xDep;
         taille = this.mainA.size();
         for (int i = 0; i < taille; i++) {
@@ -365,7 +374,7 @@ public class JeuVue extends JComponent {
             }else{
                 y = this.yA;
             }
-            this.mainA.get(i).setLocation(x, y);
+            if ( !this.mainA.get(i).isDragged() ) {this.mainA.get(i).setLocation(x, y);}
             if (this.mainA.get(i).isDos()) {
                 this.mainA.get(i).setDos(false);
             }
@@ -380,7 +389,7 @@ public class JeuVue extends JComponent {
             }else{
                 y = this.yB;
             }
-            this.mainB.get(i).setLocation(x, y);
+            if ( !this.mainB.get(i).isDragged() ) {this.mainB.get(i).setLocation(x, y);}
             if (this.mainB.get(i).isDos()) {
                 this.mainB.get(i).setDos(false);
             }

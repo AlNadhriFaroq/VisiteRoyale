@@ -95,8 +95,12 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
     }
 
     private boolean estValide(int y) {
-        return (y > (frame.getHeight()/2) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE) ||
-                (y < (frame.getHeight()/2) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT);
+        return (  (y > (frame.getHeight()/2) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE)  ||
+                (y < (frame.getHeight()/2) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT) );
+    }
+    private boolean appartient(){
+        return (jeu.getJoueurCourant() == jeu.JOUEUR_RGE && this.frame.mainA.contains(this))
+                        || (jeu.getJoueurCourant() == jeu.JOUEUR_VRT && this.frame.mainB.contains(this)) ;
     }
 
     /* MOUSE LISTENER*/
@@ -111,11 +115,17 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
     public void mousePressed(MouseEvent e) {}
 
     @Override
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+        if (isDragged()){
+            if (this.jeu.peutSelectionnerCarte(carte) && appartient() ){ this.ctrl.selectionnerCarte(carte); }
+            this.dragged = false;
+            this.frame.setDragging(false);
+        }
+    }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())){
+        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen()) && (!this.frame.isDragging())){
             this.frame.carteSelecTaille(this, false);
         }
 
@@ -123,7 +133,7 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())){
+        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen()) ){
             this.frame.carteSelecTaille(this, true );
         }
 
@@ -134,6 +144,7 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
         if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())) {
             setFocusable(true);
             this.requestFocus();
+            this.frame.setDragging(true);
             this.dragged = true;
             Point p1 = e.getLocationOnScreen();
             Point p2 = this.frame.getLocationOnScreen();
