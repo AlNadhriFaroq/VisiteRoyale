@@ -1,50 +1,66 @@
 package Vue.PanelsEtats;
 
 import Controleur.ControleurMediateur;
-import Global.Images;
 import Modele.*;
 import Vue.Adaptateurs.AdaptateurBoutons;
 import Vue.*;
-import Vue.ComponentsMenus.BoutonMenu;
+import Vue.Composants.ComposantsMenus.BoutonMenu;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
-public class PanelChoixJoueur extends PanelEtat {
+public class PanelChoixJoueur extends JPanel {
+    ControleurMediateur ctrl;
+    Fenetre fenetre;
+    Programme prog;
+
     BoutonMenu boutonMenuGauche;
     BoutonMenu boutonMenuDroite;
 
-    public PanelChoixJoueur(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
-        super(ctrl, vue, prog);
+    public PanelChoixJoueur(ControleurMediateur ctrl, Fenetre fenetre, Programme prog) {
+        super();
+        this.ctrl = ctrl;
+        this.fenetre = fenetre;
+        this.prog = prog;
 
-        imgFond = Images.FOND_JEU;
+        setBackground(new Color(0, 0, 0, 0));
+        setLayout(new GridBagLayout());
 
-        JLabel txt1 = new JLabel("Tirage du joueur qui commence.");
-        txt1.setHorizontalAlignment(JLabel.CENTER);
-        JLabel txt2 = new JLabel("Main gauche ou main droite ?");
-        txt2.setHorizontalAlignment(JLabel.CENTER);
+        /* Construction des composants */
+        JLabel txt1 = new JLabel("Tirage du joueur qui commence.", JLabel.CENTER);
+        JLabel txt2 = new JLabel("Main gauche ou main droite ?", JLabel.CENTER);
+
         boutonMenuGauche = new BoutonMenu("Gauche");
         boutonMenuDroite = new BoutonMenu("Droite");
 
-        boutonMenuGauche.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonMenuDroite.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(142, 142, 225, 255));
+        panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+        panel.setLayout(new GridBagLayout());
 
-        JPanel panelBoutons = new JPanel();
-        panelBoutons.setBackground(new Color(0, 0, 0, 0));
-        panelBoutons.setLayout(new GridLayout(1, 3));
-        panelBoutons.add(boutonMenuGauche);
-        panelBoutons.add(Box.createHorizontalGlue());
-        panelBoutons.add(boutonMenuDroite);
+        /* Disposition des composants dans le panel */
+        panel.add(Box.createGlue(), new GBC(0, 0, 1, 6).setWeightx(10));
+        panel.add(Box.createGlue(), new GBC(4, 0, 1, 6).setWeightx(10));
+        panel.add(Box.createGlue(), new GBC(1, 0, 3, 0).setWeight(80, 10));
+        panel.add(Box.createGlue(), new GBC(1, 5, 3, 1).setWeight(80, 10));
 
-        JPanel sousPanel = new JPanel();
-        sousPanel.setBackground(new Color(94, 125, 203, 0));
-        sousPanel.setLayout(new GridLayout(4, 1));
-        sousPanel.add(txt1);
-        sousPanel.add(txt2);
-        sousPanel.add(Box.createVerticalGlue());
-        sousPanel.add(panelBoutons);
+        panel.add(txt1, new GBC(1, 1, 3, 1).setWeight(80, 23).setFill(GBC.BOTH));
+        panel.add(txt2, new GBC(1, 2, 3, 1).setWeight(80, 23).setFill(GBC.BOTH));
+        panel.add(Box.createGlue(), new GBC(1, 3, 3, 1).setWeight(80, 23));
+        panel.add(boutonMenuGauche, new GBC(1, 4).setWeight(35, 23).setFill(GBC.BOTH));
+        panel.add(Box.createGlue(), new GBC(2, 4).setWeight(10, 23));
+        panel.add(boutonMenuDroite, new GBC(3, 4).setWeight(35, 23).setFill(GBC.BOTH));
 
-        add(new Cadre(sousPanel, 10, 10, 10, 10));
+        add(Box.createGlue(), new GBC(0, 0, 1, 3).setWeightx(35));
+        add(Box.createGlue(), new GBC(2, 0, 1, 3).setWeightx(35));
+        add(Box.createGlue(), new GBC(1, 0).setWeight(30, 40));
+        add(Box.createGlue(), new GBC(1, 2).setWeight(30, 40));
+        add(panel, new GBC(1, 1).setWeight(30, 20).setFill(GBC.BOTH));
+
+        /* Retransmission des événements au contrôleur */
+        boutonMenuGauche.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+        boutonMenuDroite.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
     }
 
     public BoutonMenu getBoutonGauche() {
@@ -53,16 +69,5 @@ public class PanelChoixJoueur extends PanelEtat {
 
     public BoutonMenu getBoutonDroite() {
         return boutonMenuDroite;
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-    }
-
-    @Override
-    public void mettreAJour() {
-        if (prog.getEtat() == Programme.ETAT_EN_JEU && prog.getJeu().getEtatJeu() == Jeu.ETAT_CHOIX_JOUEUR)
-            repaint();
     }
 }

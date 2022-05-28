@@ -2,31 +2,30 @@ package Vue.Adaptateurs;
 
 import Controleur.ControleurMediateur;
 import Modele.*;
-import Vue.ComponentsJeu.*;
-import Vue.ComponentsMenus.*;
-import Vue.InterfaceGraphique;
+import Vue.Composants.ComposantsJeu.*;
+import Vue.Composants.ComposantsMenus.*;
+import Vue.Fenetre;
 
 import javax.swing.*;
 import java.awt.event.*;
 
 public class AdaptateurSouris extends MouseAdapter {
     ControleurMediateur ctrl;
-    InterfaceGraphique vue;
+    Fenetre fenetre;
     Programme prog;
 
-    public AdaptateurSouris(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
+    public AdaptateurSouris(ControleurMediateur ctrl, Fenetre fenetre, Programme prog) {
         this.ctrl = ctrl;
-        this.vue = vue;
+        this.fenetre = fenetre;
         this.prog = prog;
     }
-
 
     @Override
     public void mouseEntered(MouseEvent e) {
         if (e.getSource() instanceof CarteVue) {
             CarteVue carteVue = (CarteVue) e.getSource();
             carteVue.redimensionner(carteVue.getHeight() + carteVue.getHeight() / 8);
-            //vue.getPanelEnJeu().getPanelJeu().repaint();
+            fenetre.getPanelJeu().repaint();
         } else if (e.getSource() instanceof BoutonMenu) {
             ((BoutonMenu) e.getSource()).setForeground(BoutonMenu.couleurFoncee);
             ((BoutonMenu) e.getSource()).setBackground(BoutonMenu.couleurClaire);
@@ -44,7 +43,7 @@ public class AdaptateurSouris extends MouseAdapter {
         if (e.getSource() instanceof CarteVue) {
             CarteVue carteVue = (CarteVue) e.getSource();
             carteVue.redimensionner(carteVue.getHeight() - carteVue.getHeight() / 9);
-            //vue.getPanelEnJeu().getPanelJeu().repaint();
+            fenetre.getPanelJeu().repaint();
         } else if (e.getSource() instanceof BoutonMenu) {
             ((BoutonMenu) e.getSource()).setForeground(BoutonMenu.couleurClaire);
             ((BoutonMenu) e.getSource()).setBackground(BoutonMenu.couleurNormal);
@@ -60,7 +59,7 @@ public class AdaptateurSouris extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getSource() instanceof CarteVue &&
-                vue.getPanelEnJeu().getPanelJeu().getMainVue(prog.getJeu().getJoueurCourant()).contientCarteVue((CarteVue) e.getSource()) &&
+                fenetre.getPanelJeu().getMainVue(prog.getJeu().getJoueurCourant()).contientCarteVue((CarteVue) e.getSource()) &&
                 prog.getJeu().peutSelectionnerCarte(((CarteVue) e.getSource()).getCarte())) {
             ctrl.selectionnerCarte(((CarteVue) e.getSource()).getCarte());
         } else if (e.getSource() instanceof PionVue &&

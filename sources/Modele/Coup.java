@@ -365,6 +365,7 @@ public class Coup implements Cloneable, Serializable {
                     jeu.getDefausse().melanger();
                     defausseFutur.copier(jeu.getDefausse());
                 } else {
+                    jeu.getDefausse().vider();
                     jeu.getDefausse().copier(defausseFutur);
                 }
                 jeu.getPioche().transferer(jeu.getDefausse());

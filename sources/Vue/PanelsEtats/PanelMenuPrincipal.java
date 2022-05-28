@@ -3,14 +3,17 @@ package Vue.PanelsEtats;
 import Controleur.ControleurMediateur;
 import Modele.Programme;
 import Vue.*;
-import Vue.Adaptateurs.AdaptateurBoutons;
-import Vue.Adaptateurs.AdaptateurSouris;
-import Vue.ComponentsMenus.BoutonMenu;
+import Vue.Adaptateurs.*;
+import Vue.Composants.ComposantsMenus.BoutonMenu;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PanelMenuPrincipal extends PanelEtat {
+public class PanelMenuPrincipal extends JPanel {
+    ControleurMediateur ctrl;
+    Fenetre fenetre;
+    Programme prog;
+
     public static final int jouer1vs1 = 0;
     public static final int jouerVsIA = 1;
     public static final int sauvegardes = 2;
@@ -20,8 +23,14 @@ public class PanelMenuPrincipal extends PanelEtat {
     public static final int quitter = 6;
     BoutonMenu[] boutons;
 
-    public PanelMenuPrincipal(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
-        super(ctrl, vue, prog);
+    public PanelMenuPrincipal(ControleurMediateur ctrl, Fenetre fenetre, Programme prog) {
+        super();
+        this.ctrl = ctrl;
+        this.fenetre = fenetre;
+        this.prog = prog;
+
+        setBackground(new Color(0, 0, 0, 0));
+        setLayout(new GridBagLayout());
 
         /* Construction des composants */
         boutons = new BoutonMenu[7];
@@ -34,53 +43,25 @@ public class PanelMenuPrincipal extends PanelEtat {
         boutons[quitter] = new BoutonMenu("Quitter");
 
         /* Disposition dans le panel */
-        GridBagConstraints gbc = new GridBagConstraints();
+        add(Box.createGlue(), new GBC(0, 0, 1, 15).setWeightx(12));
+        add(Box.createGlue(), new GBC(2, 0, 1, 15).setWeightx(75));
+        add(Box.createGlue(), new GBC(1, 0).setWeight(13, 26));
+        add(Box.createGlue(), new GBC(1, 14).setWeight(13, 26));
 
-        gbc.gridheight = 9;
-        gbc.weightx = 12;
-        add(Box.createGlue(), gbc);
-
-        gbc.gridx = 2;
-        gbc.weightx = 75;
-        add(Box.createGlue(), gbc);
-
-        gbc.gridx = 1;
-        gbc.gridheight = 1;
-        gbc.weightx = 13;
-        gbc.weighty = 30;
-        add(Box.createGlue(), gbc);
-
-        gbc.gridy = 8;
-        add(Box.createGlue(), gbc);
-
-        gbc.gridy = 1;
-        gbc.weighty = 6;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(5, 0, 5, 0);
-        for (BoutonMenu bouton : boutons) {
-            add(bouton, gbc);
-            gbc.gridy++;
+        for (int i = 0; i < 7; i++) {
+            add(boutons[i], new GBC(1, 2 * i + 1).setWeight(13, 5).setFill(GBC.BOTH));
+            if (i != 6)
+                add(Box.createGlue(), new GBC(1, 2 * i + 2).setWeight(13, 2));
         }
 
         /* Retransmission des evenements au controleur */
         for (BoutonMenu bouton : boutons) {
-            bouton.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-            bouton.addMouseListener(new AdaptateurSouris(ctrl, vue, prog));
+            bouton.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+            bouton.addMouseListener(new AdaptateurSouris(ctrl, fenetre, prog));
         }
     }
 
     public BoutonMenu getBouton(int indice) {
         return boutons[indice];
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-    }
-
-    @Override
-    public void mettreAJour() {
-        if (prog.getEtat() == Programme.ETAT_MENU_PRINCIPAL)
-            repaint();
     }
 }

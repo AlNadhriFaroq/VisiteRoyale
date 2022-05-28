@@ -1,4 +1,4 @@
-package Vue.ComponentsJeu;
+package Vue.Composants.ComposantsJeu;
 
 import Modele.Plateau;
 import Global.Format;

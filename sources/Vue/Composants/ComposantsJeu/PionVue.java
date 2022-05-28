@@ -1,4 +1,4 @@
-package Vue.ComponentsJeu;
+package Vue.Composants.ComposantsJeu;
 
 import Global.Images;
 import Modele.Pion;

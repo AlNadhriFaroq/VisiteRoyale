@@ -1,11 +1,10 @@
-package Vue.ComponentsJeu;
+package Vue.Composants.ComposantsJeu;
 
 import Global.Images;
 import Modele.Jeu;
 import Modele.Paquet;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class PaquetVue extends JPanel {
@@ -17,7 +16,6 @@ public class PaquetVue extends JPanel {
 
         setBackground(new Color(0, 0, 0, 0));
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-        setBorder(new LineBorder(Color.BLACK));
 
         cartesVue = new CarteVue[Jeu.TAILLE_MAIN];
         add(Box.createHorizontalGlue());
@@ -36,6 +34,13 @@ public class PaquetVue extends JPanel {
         return cartesVue[indice];
     }
 
+    public boolean contientCarteVue(CarteVue carteVue) {
+        for (CarteVue cv : cartesVue)
+            if (carteVue.equals(cv))
+                return true;
+        return false;
+    }
+
     public void redimensionner(int hauteur) {
         Dimension dim = new Dimension(cartesVue.length * hauteur * Images.CARTE_VIDE.getWidth(null) / Images.CARTE_VIDE.getHeight(null), hauteur);
         setMinimumSize(dim);
@@ -44,19 +49,6 @@ public class PaquetVue extends JPanel {
         setSize(dim);
         for (CarteVue carteVue : cartesVue)
             carteVue.redimensionner(getHeight() * 8 / 9);
-    }
-
-    public boolean contientCarteVue(CarteVue carteVue) {
-        for (CarteVue cv : cartesVue)
-            if (carteVue.equals(cv))
-                return true;
-        return false;
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D dessin = (Graphics2D) g;
     }
 
     public void mettreAJour(boolean cachee) {

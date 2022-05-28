@@ -1,4 +1,4 @@
-package Vue.ComponentsJeu;
+package Vue.Composants.ComposantsJeu;
 
 import Modele.Pion;
 import Modele.Plateau;
@@ -63,6 +63,19 @@ public class PlateauVue extends JPanel {
         return casesVue[indice];
     }
 
+    public void redimensionner(int hauteur) {
+        Dimension dim = new Dimension(17 * hauteur / 4, hauteur);
+        setMinimumSize(dim);
+        setMaximumSize(dim);
+        setPreferredSize(dim);
+        setSize(dim);
+    }
+
+    public void mettreAJour() {
+        couronneVue.mettreAJour(plateau.getFaceCouronne());
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -84,10 +97,5 @@ public class PlateauVue extends JPanel {
 
             casesVue[c].add(plateau.getPositionPion(Pion.FOU) == c ? pionsVue[4] : Box.createVerticalGlue());
         }
-    }
-
-    public void mettreAJour() {
-        couronneVue.mettreAJour(plateau.getFaceCouronne());
-        repaint();
     }
 }

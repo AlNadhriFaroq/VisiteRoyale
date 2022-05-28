@@ -6,30 +6,30 @@ import Global.Configuration;
 import Global.Images;
 import IA.IA;
 import Modele.Programme;
-import Vue.InterfaceGraphique;
+import Vue.Fenetre;
 
 import java.awt.event.*;
 
 public class AdaptateurItem implements ItemListener {
     ControleurMediateur ctrl;
-    InterfaceGraphique vue;
+    Fenetre fenetre;
     Programme prog;
 
-    public AdaptateurItem(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
+    public AdaptateurItem(ControleurMediateur ctrl, Fenetre fenetre, Programme prog) {
         this.ctrl = ctrl;
-        this.vue = vue;
+        this.fenetre = fenetre;
         this.prog = prog;
     }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        if (e.getSource().equals(vue.getPanelMenuOptions().getMusique())) {
+        if (e.getSource().equals(fenetre.getPanelMenuOptions().getMusique())) {
             Audios.MUSIQUE_MENU.arreter();
             Audios.setMusiqueMenu((String) e.getItem());
             Audios.MUSIQUE_MENU.boucler();
-        } else if (e.getSource().equals(vue.getPanelMenuOptions().getNiveau())) {
+        } else if (e.getSource().equals(fenetre.getPanelMenuOptions().getNiveau())) {
             Configuration.instance().ecrire("NiveauDifficulteIA", Integer.toString(IA.texteEnIA((String) e.getItem())));
-        } else if (e.getSource().equals(vue.getPanelMenuOptions().getTexture())) {
+        } else if (e.getSource().equals(fenetre.getPanelMenuOptions().getTexture())) {
             Images.setTexture((String) e.getItem());
         }
     }

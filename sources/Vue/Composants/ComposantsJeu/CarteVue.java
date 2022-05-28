@@ -1,4 +1,4 @@
-package Vue.ComponentsJeu;
+package Vue.Composants.ComposantsJeu;
 
 import Global.Images;
 import Modele.Carte;
@@ -9,12 +9,15 @@ import java.awt.geom.RoundRectangle2D;
 
 public class CarteVue extends JPanel {
     Carte carte;
+    boolean alenvers;
     boolean parcourable;
     boolean selectionnable;
     boolean cachee;
+    Shape shape;
     Image img;
 
     public CarteVue(boolean alenvers) {
+        this.alenvers = alenvers;
         this.parcourable = false;
         this.selectionnable = true;
         cachee = false;
@@ -44,27 +47,8 @@ public class CarteVue extends JPanel {
         setMaximumSize(dim);
         setPreferredSize(dim);
         setSize(dim);
-    }
-
-    Shape shape;
-    @Override
-    public boolean contains(int x, int y) {
-        if (shape == null || !shape.getBounds().equals(getBounds())) {
-            shape = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 15, 15);
-        }
-        return shape.contains(x, y);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D dessin = (Graphics2D) g;
-
-        dessin.clearRect(0, 0, getWidth(), getHeight());
-        dessin.drawImage(img, 0, 0, getWidth()-1, getHeight()-1, null);
-        dessin.setColor(new Color(0, 0, 0, 255));
-        if (!selectionnable)
-            dessin.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
+        if (!alenvers)
+            setLocation(getX(), getParent().getHeight() - getHeight());
     }
 
     public void mettreAJour(Carte carte, boolean parcourable, boolean selectionnable, boolean cachee) {
@@ -80,5 +64,25 @@ public class CarteVue extends JPanel {
         else
             img = Images.getImageCarte(carte.toString());
         repaint();
+    }
+
+    @Override
+    public boolean contains(int x, int y) {
+        if (shape == null || !shape.getBounds().equals(getBounds())) {
+            shape = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 15, 15);
+        }
+        return shape.contains(x, y);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D dessin = (Graphics2D) g;
+
+        //dessin.clearRect(0, 0, getWidth(), getHeight());
+        dessin.drawImage(img, 0, 0, getWidth()-1, getHeight()-1, null);
+        dessin.setColor(new Color(0, 0, 0, 255));
+        if (!selectionnable)
+            dessin.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
     }
 }

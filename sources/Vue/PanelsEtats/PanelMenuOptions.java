@@ -5,15 +5,18 @@ import Global.*;
 import IA.IA;
 import Modele.Programme;
 import Vue.Adaptateurs.*;
-import Vue.ComponentsMenus.BoutonMenu;
+import Vue.Composants.ComposantsMenus.BoutonMenu;
 import Vue.*;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
-public class PanelMenuOptions extends PanelEtat {
-    BoutonMenu boutonMenuRetour;
+public class PanelMenuOptions extends JPanel {
+    ControleurMediateur ctrl;
+    Fenetre fenetre;
+    Programme prog;
+
     JSlider volumeMusique;
     JSlider volumeSons;
     JComboBox<String> musique;
@@ -21,15 +24,21 @@ public class PanelMenuOptions extends PanelEtat {
     JComboBox<String> texture;
     JCheckBox pleinEcran;
     JCheckBox mainCachee;
+    BoutonMenu boutonMenuRetour;
 
-    public PanelMenuOptions(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
-        super(ctrl, vue, prog);
+    public PanelMenuOptions(ControleurMediateur ctrl, Fenetre fenetre, Programme prog) {
+        super();
+        this.ctrl = ctrl;
+        this.fenetre = fenetre;
+        this.prog = prog;
 
+        setBackground(new Color(0, 0, 0, 0));
         setLayout(new GridBagLayout());
 
-        /* Creation des components */
+        /* Construction des composants */
         JLabel texteTitre = new JLabel("Options");
-        texteTitre.setFont(new Font(Font.DIALOG, 0, 30));
+        texteTitre.setFont(new Font(null).deriveFont(30f));
+
         JLabel texteVolumeMusique = new JLabel("Volume de la musique");
         JLabel texteVolumeSons = new JLabel("Volume des effets sonores");
         JLabel texteMusique = new JLabel("Musique");
@@ -86,47 +95,49 @@ public class PanelMenuOptions extends PanelEtat {
 
         boutonMenuRetour = new BoutonMenu("Retour");
 
-        /* Lien avec les actions */
-        volumeMusique.addChangeListener(new AdaptateurChange(ctrl, vue, prog));
-        volumeSons.addChangeListener(new AdaptateurChange(ctrl, vue, prog));
-        musique.addItemListener(new AdaptateurItem(ctrl, vue, prog));
-        niveau.addItemListener(new AdaptateurItem(ctrl, vue, prog));
-        texture.addItemListener(new AdaptateurItem(ctrl, vue, prog));
-        pleinEcran.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        mainCachee.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-        boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-
-        /* Disposition dans le panel */
         JPanel panel = new JPanel();
         panel.setBackground(new Color(142, 142, 225, 255));
         panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         panel.setLayout(new GridBagLayout());
-        panel.add(new JLabel(), new GridBagConstraints(0, 0, 1, 11, 0.10, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(new JLabel(), new GridBagConstraints(1, 0, 1, 1, 0.05, 0.15, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(texteTitre, new GridBagConstraints(1, 1, 1, 1, 0.30, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(texteVolumeMusique, new GridBagConstraints(1, 2, 1, 1, 0.50, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(volumeMusique, new GridBagConstraints(2, 2, 1, 1, 0.30, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(texteVolumeSons, new GridBagConstraints(1, 3, 1, 1, 0.50, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(volumeSons, new GridBagConstraints(2, 3, 1, 1, 0.30, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(texteMusique, new GridBagConstraints(1, 4, 1, 1, 0.50, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(musique, new GridBagConstraints(2, 4, 1, 1, 0.30, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(texteNiveau, new GridBagConstraints(1, 5, 1, 1, 0.50, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(niveau, new GridBagConstraints(2, 5, 1, 1, 0.30, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(textePleinEcran, new GridBagConstraints(1, 6, 1, 1, 0.50, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(pleinEcran, new GridBagConstraints(2, 6, 1, 1, 0.30, 1, GridBagConstraints.LINE_START, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(texteMainCachee, new GridBagConstraints(1, 7, 1, 1, 0.50, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(mainCachee, new GridBagConstraints(2, 7, 1, 1, 0.30, 1, GridBagConstraints.LINE_START, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(texteTexture, new GridBagConstraints(1, 8, 1, 1, 0.50, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(texture, new GridBagConstraints(2, 8, 1, 1, 0.30, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(boutonMenuRetour, new GridBagConstraints(2, 9, 1, 1, 0.50, 1, GridBagConstraints.LINE_END, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(new JLabel(), new GridBagConstraints(1, 10, 1, 1, 0.05, 0.15, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        panel.add(new JLabel(), new GridBagConstraints(3, 0, 1, 11, 0.10, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-        add(new JLabel(), new GridBagConstraints(0, 0, 1, 3, 0.35, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        add(new JLabel(), new GridBagConstraints(1, 0, 1, 1, 0.30, 0.15, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        add(panel, new GridBagConstraints(1, 1, 1, 1, 0.30, 0.70, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        add(new JLabel(), new GridBagConstraints(1, 2, 1, 1, 0.30, 0.15, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        add(new JLabel(), new GridBagConstraints(2, 0, 1, 3, 0.35, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        /* Disposition dans le panel */
+        panel.add(Box.createGlue(), new GBC(0, 0, 1, 11).setWeightx(10));
+        panel.add(Box.createGlue(), new GBC(3, 0, 1, 11).setWeightx(10));
+        panel.add(Box.createGlue(), new GBC(1, 0, 2, 0).setWeighty(10));
+        panel.add(Box.createGlue(), new GBC(1, 10, 2, 1).setWeighty(10));
+
+        panel.add(texteTitre, new GBC(1, 1).setWeighty(9).setAnchor(GBC.LINE_START));
+        panel.add(texteVolumeMusique, new GBC(1, 2).setWeight(50, 9).setFill(GBC.BOTH));
+        panel.add(volumeMusique, new GBC(2, 2).setWeight(30, 9).setFill(GBC.BOTH));
+        panel.add(texteVolumeSons, new GBC(1, 3).setWeight(50, 9).setFill(GBC.BOTH));
+        panel.add(volumeSons, new GBC(2, 3).setWeight(30, 9).setFill(GBC.BOTH));
+        panel.add(texteMusique, new GBC(1, 4).setWeight(50, 9).setFill(GBC.BOTH));
+        panel.add(musique, new GBC(2, 4).setWeight(30, 9).setFill(GBC.HORIZONTAL));
+        panel.add(texteNiveau, new GBC(1, 5).setWeight(50, 9).setFill(GBC.BOTH));
+        panel.add(niveau, new GBC(2, 5).setWeight(30, 9).setFill(GBC.HORIZONTAL));
+        panel.add(textePleinEcran, new GBC(1, 6).setWeight(50, 9).setFill(GBC.BOTH));
+        panel.add(pleinEcran, new GBC(2, 6).setWeight(30, 9).setAnchor(GBC.LINE_START));
+        panel.add(texteMainCachee, new GBC(1, 7).setWeight(50, 9).setFill(GBC.BOTH));
+        panel.add(mainCachee, new GBC(2, 7).setWeight(30, 9).setAnchor(GBC.LINE_START));
+        panel.add(texteTexture, new GBC(1, 8).setWeight(50, 9).setFill(GBC.BOTH));
+        panel.add(texture, new GBC(2, 8).setWeight(30, 9).setFill(GBC.HORIZONTAL));
+        panel.add(boutonMenuRetour, new GBC(2, 9).setWeighty(9).setAnchor(GBC.LINE_END));
+
+        add(Box.createGlue(), new GBC(0, 0, 1, 3).setWeightx(40));
+        add(Box.createGlue(), new GBC(2, 0, 1, 3).setWeightx(40));
+        add(Box.createGlue(), new GBC(1, 0).setWeight(20, 25));
+        add(Box.createGlue(), new GBC(1, 2).setWeight(20, 25));
+        add(panel, new GBC(1, 1).setWeight(20, 50).setFill(GBC.BOTH));
+
+        /* Retransmission des événements au contrôleur */
+        volumeMusique.addChangeListener(new AdaptateurChangement(ctrl, fenetre, prog));
+        volumeSons.addChangeListener(new AdaptateurChangement(ctrl, fenetre, prog));
+        musique.addItemListener(new AdaptateurItem(ctrl, fenetre, prog));
+        niveau.addItemListener(new AdaptateurItem(ctrl, fenetre, prog));
+        texture.addItemListener(new AdaptateurItem(ctrl, fenetre, prog));
+        pleinEcran.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+        mainCachee.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+        boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
     }
 
     public JSlider getVolumeMusique() {
@@ -161,14 +172,7 @@ public class PanelMenuOptions extends PanelEtat {
         return boutonMenuRetour;
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-    }
-
-    @Override
     public void mettreAJour() {
-        if (prog.getEtat() == Programme.ETAT_MENU_OPTIONS)
-            repaint();
+        // des/activer boutons
     }
 }

@@ -1,16 +1,20 @@
 package Vue.PanelsEtats;
 
 import Controleur.ControleurMediateur;
-import Global.Images;
 import Modele.Programme;
 import Vue.*;
 import Vue.Adaptateurs.*;
-import Vue.ComponentsMenus.BoutonMenu;
+import Vue.Composants.ComposantsMenus.BoutonMenu;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
-public class PanelMenuJeu extends PanelEtat {
+public class PanelMenuJeu extends JPanel {
+    ControleurMediateur ctrl;
+    Fenetre fenetre;
+    Programme prog;
+
     public static final int reprendre = 0;
     public static final int nouvellePartie = 1;
     public static final int sauvegardes = 2;
@@ -19,10 +23,14 @@ public class PanelMenuJeu extends PanelEtat {
     public static final int retour = 5;
     BoutonMenu[] boutons;
 
-    public PanelMenuJeu(ControleurMediateur ctrl, InterfaceGraphique vue, Programme prog) {
-        super(ctrl, vue, prog);
+    public PanelMenuJeu(ControleurMediateur ctrl, Fenetre fenetre, Programme prog) {
+        super();
+        this.ctrl = ctrl;
+        this.fenetre = fenetre;
+        this.prog = prog;
 
-        imgFond = Images.FOND_JEU;
+        setBackground(new Color(0, 0, 0, 0));
+        setLayout(new GridBagLayout());
 
         /* Construction des composants */
         boutons = new BoutonMenu[6];
@@ -33,35 +41,37 @@ public class PanelMenuJeu extends PanelEtat {
         boutons[tutoriel] = new BoutonMenu("Tutoriel");
         boutons[retour] = new BoutonMenu("Retour au menu principal");
 
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(142, 142, 225, 255));
+        panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+        panel.setLayout(new GridBagLayout());
+
         /* Disposition des composants dans le panel */
-        JPanel panelBoutons = new JPanel();
-        panelBoutons.setBackground(new Color(0, 0, 0, 0));
-        panelBoutons.setLayout(new GridLayout(7, 1, 0, 10));
+        panel.add(Box.createGlue(), new GBC(0, 0, 1, 13).setWeightx(10));
+        panel.add(Box.createGlue(), new GBC(2, 0, 1, 13).setWeightx(10));
+        panel.add(Box.createGlue(), new GBC(1, 0).setWeight(80, 10));
+        panel.add(Box.createGlue(), new GBC(1, 12).setWeight(80, 10));
 
-        for (BoutonMenu bouton : boutons)
-            panelBoutons.add(bouton);
+        for (int i = 0; i < 6; i++) {
+            panel.add(boutons[i], new GBC(1, 2 * i + 1).setWeight(80, 10).setFill(GBC.BOTH));
+            if (i != 5)
+                panel.add(Box.createGlue(), new GBC(1, 2 * i + 2).setWeight(80, 4));
+        }
 
-        add(new Cadre(panelBoutons, 4, 4, 1, 1));
+        add(Box.createGlue(), new GBC(0, 0, 1, 3).setWeightx(40));
+        add(Box.createGlue(), new GBC(2, 0, 1, 3).setWeightx(40));
+        add(Box.createGlue(), new GBC(1, 0).setWeight(8, 25));
+        add(Box.createGlue(), new GBC(1, 2).setWeight(8, 25));
+        add(panel, new GBC(1, 1).setWeight(20, 50).setFill(GBC.BOTH));
 
         /* Retransmission des evenements au controleur */
         for (BoutonMenu bouton : boutons) {
-            bouton.addActionListener(new AdaptateurBoutons(ctrl, vue, prog));
-            bouton.addMouseListener(new AdaptateurSouris(ctrl, vue, prog));
+            bouton.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+            bouton.addMouseListener(new AdaptateurSouris(ctrl, fenetre, prog));
         }
     }
 
     public BoutonMenu getBouton(int indice) {
         return boutons[indice];
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-    }
-
-    @Override
-    public void mettreAJour() {
-        if (prog.getEtat() == Programme.ETAT_MENU_JEU)
-            repaint();
     }
 }
