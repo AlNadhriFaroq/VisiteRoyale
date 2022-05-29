@@ -690,25 +690,27 @@ public class JeuVue extends JComponent {
     public void refaireMains(){
         int t1 = this.jeu.getMain(this.jeu.JOUEUR_RGE).getTaille();
         int t2 = this.jeu.getMain(this.jeu.JOUEUR_VRT).getTaille();
+        int j;
 
         for (int i=0; i<t1; i++){
 
-            CarteVue carteVue = carteFromCartevue(this.jeu.getMain(this.jeu.JOUEUR_RGE).getCarte(i), this.paquet );
-            this.paquet.get(this.paquet.indexOf(carteVue)).setDos(false);
-            this.paquet.get(this.paquet.indexOf(carteVue)).setDragged(false);
-            this.paquet.get(this.paquet.indexOf(carteVue)).setVisible(true);
-            this.paquet.get(this.paquet.indexOf(carteVue)).setLocation(this.xDep, this.yA);
-            this.mainA.add(this.paquet.get(this.paquet.indexOf(carteVue)));
-            System.out.println("MAIN A CARTE est " + carteVue.getCarte().toString() + " pour MODELE " + this.jeu.getMain(this.jeu.JOUEUR_RGE).getCarte(i));
+            j = carteVueValide(this.jeu.getMain(this.jeu.JOUEUR_RGE).getCarte(i));
+            this.paquet.get(j).setDos(false);
+            this.paquet.get(j).setDragged(false);
+            this.paquet.get(j).setVisible(true);
+            this.paquet.get(j).setLocation(this.xDep, this.yA);
+            this.paquet.get(j).setSize(this.carteW, this.carteH);
+            this.mainA.add(this.paquet.get(j));
         }
         for (int i=0; i< t2; i++){
-            CarteVue carteVue2 = carteFromCartevue(this.jeu.getMain(this.jeu.JOUEUR_VRT).getCarte(i), this.paquet);
-            this.paquet.get(this.paquet.indexOf(carteVue2)).setDos(false);
-            this.paquet.get(this.paquet.indexOf(carteVue2)).setDragged(false);
-            this.paquet.get(this.paquet.indexOf(carteVue2)).setVisible(true);
-            this.paquet.get(this.paquet.indexOf(carteVue2)).setLocation(this.xDep, this.yB);
-            this.mainB.add(this.paquet.get(this.paquet.indexOf(carteVue2)));
-            System.out.println("MAIN B CARTE est " + carteVue2.getCarte().toString() + " pour MODELE " + this.jeu.getMain(this.jeu.JOUEUR_VRT).getCarte(i));
+
+            j = carteVueValide(this.jeu.getMain(this.jeu.JOUEUR_VRT).getCarte(i));
+            this.paquet.get(j).setDos(false);
+            this.paquet.get(j).setDragged(false);
+            this.paquet.get(j).setVisible(true);
+            this.paquet.get(j).setLocation(this.xDep, this.yB);
+            this.paquet.get(j).setSize(this.carteW, this.carteH);
+            this.mainB.add(this.paquet.get(j));
         }
         afficheMain();
 
@@ -716,33 +718,37 @@ public class JeuVue extends JComponent {
     public void refaireDeck2(){
         int t1 = this.jeu.getPioche().getTaille();
         int y = ((this.heigth / 2) - (this.carteH / 2)) - 40;
+        int j;
 
         for (int i=0; i<t1; i++){
 
-            CarteVue carteVue = carteFromCartevue(this.jeu.getPioche().getCarte(i), this.paquet );
-            this.paquet.get(this.paquet.indexOf(carteVue)).setVisible(true);
-            this.paquet.get(this.paquet.indexOf(carteVue)).setDos(true);
-            this.deck.add(this.paquet.get(this.paquet.indexOf(carteVue)));
-            this.paquet.get(this.paquet.indexOf(carteVue)).setLocation(this.OFFSET, y);
-
+            j = carteVueValide(this.jeu.getPioche().getCarte(i));
+            this.paquet.get(j).setDos(true);
+            this.paquet.get(j).setDragged(false);
+            this.paquet.get(j).setVisible(true);
+            this.paquet.get(j).setLocation(this.OFFSET, y);
+            this.paquet.get(j).setSize(this.carteW, this.carteH);
+            this.deck.add(this.paquet.get(j));
         }
 
     }
 
     public void refaireDefausse(){
         int t1 = this.jeu.getDefausse().getTaille();
+        int j;
         int x = (2 * OFFSET) + this.carteW;
         int y = ((this.heigth / 2) - (this.carteH / 2)) - 40;
         Point posD = new Point(x,y);
 
         for (int i=0; i<t1; i++){
 
-            CarteVue carteVue = carteFromCartevue(this.jeu.getPioche().getCarte(i), this.paquet );
-            this.paquet.get(this.paquet.indexOf(carteVue)).setVisible(true);
-            this.paquet.get(this.paquet.indexOf(carteVue)).setDos(true);
-            this.defausse.add(this.paquet.get(this.paquet.indexOf(carteVue)));
-            this.paquet.get(this.paquet.indexOf(carteVue)).setLocation(posD);
-
+            j = carteVueValide(this.jeu.getDefausse().getCarte(i));
+            this.paquet.get(j).setDos(false);
+            this.paquet.get(j).setDragged(false);
+            this.paquet.get(j).setVisible(true);
+            this.paquet.get(j).setLocation(posD);
+            this.paquet.get(j).setSize(this.carteW, this.carteH);
+            this.defausse.add(this.paquet.get(j));
         }
 
     }
@@ -750,6 +756,7 @@ public class JeuVue extends JComponent {
     public void refaireJouees(){
         int t1 = this.jeu.getSelectionCartes(this.jeu.JOUEUR_RGE).getTaille();
         int t2 = this.jeu.getSelectionCartes(this.jeu.JOUEUR_VRT).getTaille();
+        int j;
 
         int x = (this.width / 2) - (this.joueeW / 2);
         int y = this.terrain.getY() + this.terrain.getHeight() + (this.carteH/4);
@@ -760,18 +767,23 @@ public class JeuVue extends JComponent {
 
         for (int i=0; i<t1; i++){
 
-            CarteVue carteVue = carteFromCartevue(this.jeu.getMain(this.jeu.JOUEUR_RGE).getCarte(i), this.paquet );
-            this.paquet.get(this.paquet.indexOf(carteVue)).setVisible(true);
-            this.paquet.get(this.paquet.indexOf(carteVue)).setDos(false);
-            this.joueesA.add(this.paquet.get(this.paquet.indexOf(carteVue)));
-            this.paquet.get(this.paquet.indexOf(carteVue)).setLocation(posA);
+            j = carteVueValide(this.jeu.getSelectionCartes(this.jeu.JOUEUR_RGE).getCarte(i));
+            this.paquet.get(j).setDos(false);
+            this.paquet.get(j).setDragged(false);
+            this.paquet.get(j).setVisible(true);
+            this.paquet.get(j).setLocation(posA);
+            this.paquet.get(j).setSize(this.joueeW, this.joueeH);
+            this.joueesA.add(this.paquet.get(j));
         }
         for (int i=0; i< t2; i++){
-            CarteVue carteVue2 = carteFromCartevue(this.jeu.getMain(this.jeu.JOUEUR_VRT).getCarte(i), this.paquet);
-            this.paquet.get(this.paquet.indexOf(carteVue2)).setVisible(true);
-            this.paquet.get(this.paquet.indexOf(carteVue2)).setDos(false);
-            this.joueesB.add(this.paquet.get(this.paquet.indexOf(carteVue2)));
-            this.paquet.get(this.paquet.indexOf(carteVue2)).setLocation(posB);
+
+            j = carteVueValide(this.jeu.getSelectionCartes(this.jeu.JOUEUR_VRT).getCarte(i));
+            this.paquet.get(j).setDos(false);
+            this.paquet.get(j).setDragged(false);
+            this.paquet.get(j).setVisible(true);
+            this.paquet.get(j).setLocation(posB);
+            this.paquet.get(j).setSize(this.joueeW, this.joueeH);
+            this.joueesB.add(this.paquet.get(j));
         }
 
     }
@@ -783,21 +795,32 @@ public class JeuVue extends JComponent {
         }
     }
 
-    public void listVisible(List<CarteVue> list){
-        int t = list.size();
-        for (int i=0; i<t; i++){
-            list.get(i).setVisible(true);
+
+    public int carteVueValide(Carte carte){
+        int j=-1;
+        CarteVue carteVue ;
+        for ( int i=0; i<54; i++){
+            carteVue = this.paquet.get(i);
+
+            if (carteVue.isRefaire()){
+                if (carteVue.getCarte().equals(carte)){
+                    j = i;
+                    this.paquet.get(i).setRefaire(false);
+                    break;
+                }
+            }
         }
+        return j;
     }
 
     public void reconstruireVue(){
         setDragging(false);
-        listInvisible(deck);
-        listInvisible(defausse);
-        listInvisible(joueesA);
-        listInvisible(joueesB);
-        listInvisible(mainA);
-        listInvisible(mainB);
+
+        listInvisible(this.paquet);
+        for (int i=0; i<54; i++){
+            this.paquet.get(i).setRefaire(true);
+        }
+
         this.deck.clear();
         this.defausse.clear();
         this.joueesA.clear();
@@ -810,21 +833,7 @@ public class JeuVue extends JComponent {
         refaireMains();
         refaireJouees();
 
-        for (int i=0; i<this.paquet.size(); i++){
-            System.out.println("PAQUET " + this.paquet.get(i).getCarte().toString() + " en X " + this.paquet.get(i).getX() + " et Y " + this.paquet.get(i).getY());
-        }
-        listVisible(deck);
-        listVisible(defausse);
-        listVisible(joueesA);
-        listVisible(joueesB);
-        listVisible(mainA);
-        listVisible(mainB);
-
         this.repaint();
-        System.out.println("PIOCHE : " + this.deck.size() + " DEFAUSSE: " + defausse.size()
-                + " MAIN A: " + mainA.size() + " MAIN B: " + mainB.size() + " JEU A: " + joueesA.size() + "JEU B: " + joueesB.size());
-        System.out.println("MODELE  PIOCHE: " + jeu.getPioche().getTaille() + " DEFAUSSE: " + jeu.getDefausse().getTaille()
-            + " MAIN A: " + jeu.getMain(jeu.JOUEUR_RGE).getTaille() + " MAIN B: " + jeu.getMain(jeu.JOUEUR_VRT).getTaille());
     }
 
 

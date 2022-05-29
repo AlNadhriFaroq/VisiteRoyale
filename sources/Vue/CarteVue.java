@@ -24,8 +24,10 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
     private static String Mypath = "/Images/Cartes/";
     private Jeu jeu;
     private ControleurMediateur ctrl;
+    private boolean refaire;
 
     public CarteVue(Jeu jeu, ControleurMediateur ctrl, JeuVue f) {
+        this.refaire = false;
         this.jeu = jeu;
         this.ctrl = ctrl;
         this.frame = f;
@@ -36,6 +38,14 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
         this.setSize(90, 160);
+    }
+
+    public boolean isRefaire() {
+        return refaire;
+    }
+
+    public void setRefaire(boolean refaire) {
+        this.refaire = refaire;
     }
 
     public void setJouable(Boolean jouable) {
