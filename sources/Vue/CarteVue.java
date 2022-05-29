@@ -106,7 +106,7 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
     /* MOUSE LISTENER*/
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())) {
+        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen()) && appartient()) {
             ctrl.selectionnerCarte(carte);
         }
     }
@@ -125,7 +125,7 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen()) && (!this.frame.isDragging())){
+        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen()) && appartient() && (!this.frame.isDragging())){
             this.frame.carteSelecTaille(this, false);
         }
 
@@ -133,7 +133,7 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen()) ){
+        if (jeu.peutSelectionnerCarte(carte) && appartient() && estValide(e.getYOnScreen()) ){
             this.frame.carteSelecTaille(this, true );
         }
 
@@ -141,7 +141,7 @@ public class CarteVue extends JPanel implements MouseInputListener, Comparable<C
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen())) {
+        if (jeu.peutSelectionnerCarte(carte) && estValide(e.getYOnScreen()) && appartient()) {
             setFocusable(true);
             this.requestFocus();
             this.frame.setDragging(true);
