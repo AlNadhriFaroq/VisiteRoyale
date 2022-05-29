@@ -3,7 +3,7 @@ package Vue.PanelsEtats;
 import Controleur.ControleurMediateur;
 import Global.Images;
 import Modele.Programme;
-import Vue.Adaptateurs.AdaptateurBoutons;
+import Vue.Adaptateurs.*;
 import Vue.Composants.ComposantsMenus.BoutonMenu;
 import Vue.*;
 
@@ -56,6 +56,10 @@ public class PanelTutoriel extends JPanel {
         boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
         boutonSuivant.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
         boutonPrecedent.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+
+        boutonMenuRetour.addMouseListener(new AdaptateurSouris(ctrl, fenetre, prog));
+        boutonSuivant.addMouseListener(new AdaptateurSouris(ctrl, fenetre, prog));
+        boutonPrecedent.addMouseListener(new AdaptateurSouris(ctrl, fenetre, prog));
     }
 
     public BoutonMenu getBoutonRetour() {

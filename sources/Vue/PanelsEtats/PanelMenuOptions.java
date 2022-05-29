@@ -24,7 +24,7 @@ public class PanelMenuOptions extends JPanel {
     JComboBox<String> texture;
     JCheckBox pleinEcran;
     JCheckBox mainCachee;
-    BoutonMenu boutonMenuRetour;
+    BoutonMenu boutonRetour;
 
     public PanelMenuOptions(ControleurMediateur ctrl, Fenetre fenetre, Programme prog) {
         super();
@@ -93,7 +93,7 @@ public class PanelMenuOptions extends JPanel {
         mainCachee.setOpaque(false);
         mainCachee.setSelected(Boolean.parseBoolean(Configuration.instance().lire("MainCachee")));
 
-        boutonMenuRetour = new BoutonMenu("Retour");
+        boutonRetour = new BoutonMenu("Retour");
 
         JPanel panel = new JPanel();
         panel.setBackground(new Color(142, 142, 225, 255));
@@ -121,7 +121,7 @@ public class PanelMenuOptions extends JPanel {
         panel.add(mainCachee, new GBC(2, 7).setWeight(30, 9).setAnchor(GBC.LINE_START));
         panel.add(texteTexture, new GBC(1, 8).setWeight(50, 9).setFill(GBC.BOTH));
         panel.add(texture, new GBC(2, 8).setWeight(30, 9).setFill(GBC.HORIZONTAL));
-        panel.add(boutonMenuRetour, new GBC(2, 9).setWeighty(9).setAnchor(GBC.LINE_END));
+        panel.add(boutonRetour, new GBC(2, 9).setWeighty(9).setAnchor(GBC.LINE_END));
 
         add(Box.createGlue(), new GBC(0, 0, 1, 3).setWeightx(40));
         add(Box.createGlue(), new GBC(2, 0, 1, 3).setWeightx(40));
@@ -137,7 +137,8 @@ public class PanelMenuOptions extends JPanel {
         texture.addItemListener(new AdaptateurItem(ctrl, fenetre, prog));
         pleinEcran.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
         mainCachee.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
-        boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+        boutonRetour.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+        boutonRetour.addMouseListener(new AdaptateurSouris(ctrl, fenetre, prog));
     }
 
     public JSlider getVolumeMusique() {
@@ -169,7 +170,7 @@ public class PanelMenuOptions extends JPanel {
     }
 
     public BoutonMenu getBoutonRetour() {
-        return boutonMenuRetour;
+        return boutonRetour;
     }
 
     public void mettreAJour() {

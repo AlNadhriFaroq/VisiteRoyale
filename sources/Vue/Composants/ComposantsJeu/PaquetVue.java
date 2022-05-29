@@ -1,29 +1,30 @@
 package Vue.Composants.ComposantsJeu;
 
 import Global.Images;
-import Modele.Jeu;
-import Modele.Paquet;
+import Modele.*;
+import Vue.GBC;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class PaquetVue extends JPanel {
+    Jeu jeu;
     Paquet paquet;
+    int position;
+
     CarteVue[] cartesVue;
 
-    public PaquetVue(Paquet paquet, boolean alenvers) {
+    public PaquetVue(Jeu jeu, Paquet paquet, int position) {
+        this.jeu = jeu;
         this.paquet = paquet;
+        this.position = position;
 
         setBackground(new Color(0, 0, 0, 0));
-        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+        setLayout(new GridBagLayout());
 
         cartesVue = new CarteVue[Jeu.TAILLE_MAIN];
-        add(Box.createHorizontalGlue());
-        for (int i = 0; i < Jeu.TAILLE_MAIN; i++) {
-            cartesVue[i] = new CarteVue(alenvers);
-            add(cartesVue[i]);
-        }
-        add(Box.createHorizontalGlue());
+        for (int i = 0; i < Jeu.TAILLE_MAIN; i++)
+            cartesVue[i] = new CarteVue();
     }
 
     public Paquet getPaquet() {
@@ -48,17 +49,19 @@ public class PaquetVue extends JPanel {
         setPreferredSize(dim);
         setSize(dim);
         for (CarteVue carteVue : cartesVue)
-            carteVue.redimensionner(getHeight() * 8 / 9);
+            carteVue.redimensionner(hauteur * 8 / 9);
     }
 
-    public void mettreAJour(boolean cachee) {
+    public void mettreAJour(boolean faceCachee, boolean parcourable, boolean selectionnable) {
+        setVisible(false);
         removeAll();
-        add(Box.createHorizontalGlue());
+        add(Box.createGlue(), new GBC(0, 0).setWeight(1, 1));
         for (int i = 0; i < paquet.getTaille(); i++) {
-            cartesVue[i].mettreAJour(paquet.getCarte(i), false, false, cachee);
-            add(cartesVue[i]);
+            cartesVue[i].mettreAJour(paquet.getCarte(i), faceCachee, parcourable, selectionnable && jeu.peutSelectionnerCarte(paquet.getCarte(i)));
+            add(cartesVue[i], new GBC(i + 1, 0).setWeighty(1).setAnchor(position));
         }
-        add(Box.createHorizontalGlue());
+        add(Box.createGlue(), new GBC(paquet.getTaille() + 1, 0).setWeight(1, 1));
         repaint();
+        setVisible(true);
     }
 }

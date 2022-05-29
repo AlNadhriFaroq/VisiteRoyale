@@ -1,22 +1,25 @@
 package Vue.Composants.ComposantsJeu;
 
-import Modele.Pion;
-import Modele.Plateau;
+import Modele.*;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class PlateauVue extends JPanel {
+    Jeu jeu;
     Plateau plateau;
+
     JetonVue couronneVue;
     PionVue[] pionsVue;
     CaseVue[] casesVue;
 
-    public PlateauVue(Plateau plateau) {
+    public PlateauVue(Jeu jeu, Plateau plateau) {
+        this.jeu = jeu;
         this.plateau = plateau;
 
         setBackground(new Color(0, 0, 0, 0));
-        setLayout(new GridLayout(1, 17));
+        setOpaque(false);
+        setLayout(new GridLayout(1, Plateau.BORDURE_RGE - Plateau.BORDURE_VRT + 1));
 
         couronneVue = new JetonVue();
         pionsVue = new PionVue[5];
@@ -26,7 +29,7 @@ public class PlateauVue extends JPanel {
         pionsVue[3] = new PionVue(Pion.SOR);
         pionsVue[4] = new PionVue(Pion.FOU);
 
-        casesVue = new CaseVue[Plateau.BORDURE_RGE+1];
+        casesVue = new CaseVue[Plateau.BORDURE_RGE - Plateau.BORDURE_VRT + 1];
         for (int c = Plateau.BORDURE_VRT; c <= Plateau.BORDURE_RGE; c++) {
             casesVue[c] = new CaseVue(c);
             add(casesVue[c]);
@@ -72,6 +75,32 @@ public class PlateauVue extends JPanel {
     }
 
     public void mettreAJour() {
+        Carte carte = jeu.getSelectionCartes(jeu.getJoueurCourant()).estVide() ? null : jeu.getSelectionCartes(jeu.getJoueurCourant()).getCarte(jeu.getSelectionCartes(jeu.getJoueurCourant()).getTaille() - 1);
+        int deplacement = carte != null ? (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null ? 1 : carte.getDeplacement()) : -1;
+        int position = -1, destinationVrt = -1, destinationRge = -1, destinationChoisie = -1;
+        if (jeu.getSelectionPions(0) != null && deplacement != -1) {
+            position = jeu.getPlateau().getPositionPion(jeu.getSelectionPions(0));
+            destinationVrt = position - deplacement;
+            destinationRge = position + deplacement;
+            if (jeu.getSelectionPions(1) != null && jeu.getSelectionDirections(0) != Plateau.DIRECTION_IND) {
+                destinationChoisie = jeu.getSelectionDirections(0) == Plateau.DIRECTION_VRT ? destinationVrt : destinationRge;
+                position = jeu.getPlateau().getPositionPion(jeu.getSelectionPions(1));
+                destinationVrt = position - deplacement;
+                destinationRge = position + deplacement;
+            }
+        }
+        for (int c = Plateau.BORDURE_VRT; c < Plateau.BORDURE_RGE + 1; c++) {
+            boolean bool1 = (destinationVrt != -1 && c < position) || (destinationRge != -1 && c > position);
+            boolean bool2 = c == destinationVrt || c == destinationRge;
+            boolean bool3 = c == destinationChoisie;
+            casesVue[c].mettreAJour(bool1, bool2, false, bool3);
+        }
+        for (PionVue pionVue : pionsVue) {
+            boolean bool1 = jeu.getSelectionPions(0) != null && jeu.getSelectionPions(0).equals(pionVue.getPion());
+            boolean bool2 = jeu.getSelectionPions(1) != null && jeu.getSelectionPions(1).equals(pionVue.getPion());
+            boolean bool3 = pionVue.getPion().getType().equals(Type.GAR) && jeu.getActivationPrivilegeRoi() == 2;
+            pionVue.mettreAJour(jeu.peutSelectionnerPion(pionVue.getPion()), false, bool1 || bool2 || bool3);
+        }
         couronneVue.mettreAJour(plateau.getFaceCouronne());
         repaint();
     }
@@ -97,5 +126,7 @@ public class PlateauVue extends JPanel {
 
             casesVue[c].add(plateau.getPositionPion(Pion.FOU) == c ? pionsVue[4] : Box.createVerticalGlue());
         }
+
+        repaint();
     }
 }

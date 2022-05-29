@@ -41,8 +41,8 @@ class TasTest {
         String txt2 = tas.extraire();
         String txt3 = tas.extraire();
         Assertions.assertTrue(tas.estVide());
-        Assertions.assertEquals("test", txt1);
+        Assertions.assertEquals("motlepluslong", txt1);
         Assertions.assertEquals("essais", txt2);
-        Assertions.assertEquals("motlepluslong", txt3);
+        Assertions.assertEquals("test", txt3);
     }
 }

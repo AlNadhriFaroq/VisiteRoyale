@@ -1,14 +1,14 @@
-package Vue.Composants.ComposantsMenus;
+package Vue.Composants.ComposantsJeu;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class BoutonMenu extends JButton {
-    public static final Color couleurNormal = new Color(253, 62, 69, 255);
-    public static final Color couleurClaire = new Color(247, 225, 201, 255);
-    public static final Color couleurFoncee = new Color(84, 12, 45, 255);
+public class BoutonJeu extends JButton {
+    public static final Color couleurNormal = new Color(215, 40, 39, 255);
+    public static final Color couleurClaire = new Color(233, 137, 84, 255);
+    public static final Color couleurFoncee = new Color(142, 76, 58, 255);
 
-    public BoutonMenu(String texte) {
+    public BoutonJeu(String texte) {
         super(texte);
 
         setBorder(BorderFactory.createRaisedBevelBorder());

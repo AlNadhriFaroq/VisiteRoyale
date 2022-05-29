@@ -1,5 +1,7 @@
 package Vue.Composants.ComposantsJeu;
 
+import Global.Images;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -17,6 +19,6 @@ public class ImageChateau extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D dessin = (Graphics2D) g;
-        dessin.drawImage(img, 0, tournee ? getHeight() : 0, getWidth(), (tournee ? -1 : 1) * getHeight(), null);
+        dessin.drawImage(tournee ? Images.tournerImage(img, 180) : img, 0, 0, getWidth(), getHeight(), null);
     }
 }

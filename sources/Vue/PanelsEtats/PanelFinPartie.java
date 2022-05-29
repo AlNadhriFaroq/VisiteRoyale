@@ -5,6 +5,7 @@ import Global.Images;
 import Modele.*;
 import Vue.Adaptateurs.AdaptateurBoutons;
 import Vue.*;
+import Vue.Adaptateurs.AdaptateurSouris;
 import Vue.Composants.ComposantsMenus.BoutonMenu;
 
 import javax.swing.*;
@@ -16,8 +17,8 @@ public class PanelFinPartie extends JPanel {
     Fenetre fenetre;
     Programme prog;
 
-    BoutonMenu boutonMenuNouvellePartie;
-    BoutonMenu boutonMenuRetour;
+    BoutonMenu boutonNouvellePartie;
+    BoutonMenu boutonRetour;
 
     Image img;
 
@@ -32,8 +33,8 @@ public class PanelFinPartie extends JPanel {
 
         /* Construction des composants */
         img = Images.TEXTE_VICTOIRE;
-        boutonMenuNouvellePartie = new BoutonMenu("Nouvelle partie");
-        boutonMenuRetour = new BoutonMenu("Retour au menu principal");
+        boutonNouvellePartie = new BoutonMenu("Nouvelle partie");
+        boutonRetour = new BoutonMenu("Retour au menu principal");
 
         JPanel panel = new JPanel();
         panel.setBackground(new Color(142, 142, 225, 255));
@@ -46,10 +47,10 @@ public class PanelFinPartie extends JPanel {
         panel.add(Box.createGlue(), new GBC(1, 0, 3, 1).setWeight(80, 10));
         panel.add(Box.createGlue(), new GBC(1, 3, 1, 3).setWeight(80, 10));
 
-        panel.add(Box.createGlue(), new GBC(1, 1, 3, 1).setWeighty(50));
-        panel.add(boutonMenuNouvellePartie, new GBC(1, 2).setWeight(35, 30).setFill(GBC.BOTH));
+        panel.add(Box.createGlue(), new GBC(1, 1, 3, 1).setWeighty(80));
+        panel.add(boutonNouvellePartie, new GBC(1, 2).setWeight(35, 30).setFill(GBC.BOTH));
         panel.add(Box.createGlue(), new GBC(2, 2).setWeight(10, 30));
-        panel.add(boutonMenuRetour, new GBC(3, 2).setWeight(35, 30).setFill(GBC.BOTH));
+        panel.add(boutonRetour, new GBC(3, 2).setWeight(35, 30).setFill(GBC.BOTH));
 
         add(Box.createGlue(), new GBC(0, 0, 1, 3).setWeightx(20));
         add(Box.createGlue(), new GBC(2, 0, 1, 3).setWeightx(20));
@@ -58,16 +59,18 @@ public class PanelFinPartie extends JPanel {
         add(panel, new GBC(1, 1).setWeight(60, 40).setFill(GBC.BOTH));
 
         /* Retransmission des événements au contrôleur */
-        boutonMenuNouvellePartie.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
-        boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+        boutonNouvellePartie.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+        boutonRetour.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+        boutonNouvellePartie.addMouseListener(new AdaptateurSouris(ctrl, fenetre, prog));
+        boutonRetour.addMouseListener(new AdaptateurSouris(ctrl, fenetre, prog));
     }
 
     public BoutonMenu getBoutonNouvellePartie() {
-        return boutonMenuNouvellePartie;
+        return boutonNouvellePartie;
     }
 
     public BoutonMenu getBoutonRetour() {
-        return boutonMenuRetour;
+        return boutonRetour;
     }
 
     public void mettreAJour() {

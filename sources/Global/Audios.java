@@ -35,7 +35,7 @@ public class Audios {
     }
 
     public void boucler() {
-        clip.setMicrosecondPosition(0);
+        //clip.setMicrosecondPosition(0);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 

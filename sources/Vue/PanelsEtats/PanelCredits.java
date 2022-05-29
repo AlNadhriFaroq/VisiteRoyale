@@ -4,6 +4,7 @@ import Controleur.ControleurMediateur;
 import Modele.Programme;
 import Vue.*;
 import Vue.Adaptateurs.AdaptateurBoutons;
+import Vue.Adaptateurs.AdaptateurSouris;
 import Vue.Composants.ComposantsMenus.BoutonMenu;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ public class PanelCredits extends JPanel {
     Fenetre fenetre;
     Programme prog;
 
-    BoutonMenu boutonMenuRetour;
+    BoutonMenu boutonRetour;
 
     public PanelCredits(ControleurMediateur ctrl, Fenetre fenetre, Programme prog) {
         super();
@@ -27,7 +28,7 @@ public class PanelCredits extends JPanel {
         setLayout(new GridBagLayout());
 
         /* Construction des composants */
-        boutonMenuRetour = new BoutonMenu("Retour");
+        boutonRetour = new BoutonMenu("Retour");
 
         JLabel txt1 = new JLabel("CREDITS", JLabel.CENTER);
         JLabel txt2 = new JLabel("Université Grenoble-Alpes", JLabel.CENTER);
@@ -87,7 +88,7 @@ public class PanelCredits extends JPanel {
         panel.add(txt19, gbc.setgridy(23));
         panel.add(txt20, gbc.setgridy(24));
         panel.add(Box.createGlue(), gbc.setgridy(25).setWeighty(12));
-        panel.add(boutonMenuRetour, gbc.setgridy(26).setFill(GBC.VERTICAL));
+        panel.add(boutonRetour, gbc.setgridy(26).setFill(GBC.VERTICAL));
 
         add(Box.createGlue(), new GBC(0, 0, 1, 3).setWeightx(46));
         add(Box.createGlue(), new GBC(2, 0, 1, 3).setWeightx(46));
@@ -96,10 +97,11 @@ public class PanelCredits extends JPanel {
         add(panel, new GBC(1, 1).setWeight(8, 60).setFill(GBC.BOTH));
 
         /* Retransmission des événements au contrôleur */
-        boutonMenuRetour.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+        boutonRetour.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));
+        boutonRetour.addMouseListener(new AdaptateurSouris(ctrl, fenetre, prog));
     }
 
     public BoutonMenu getBoutonRetour() {
-        return boutonMenuRetour;
+        return boutonRetour;
     }
 }
