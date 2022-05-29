@@ -4,9 +4,11 @@ import Controleur.ControleurMediateur;
 import Modele.*;
 import Vue.Boutons.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
@@ -19,6 +21,7 @@ public class JeuVue extends JComponent {
     Jeu jeu;
     ControleurMediateur ctrl;
 
+    List<CarteVue> paquet; /* CONTIENT TOUTES LES CARTES */
     List<CarteVue> deck;
     List<CarteVue> mainA;
     List<CarteVue> mainB;
@@ -52,6 +55,7 @@ public class JeuVue extends JComponent {
         this.test = false;
         this.delai = 25;
 
+        this.paquet = new ArrayList<>();
         this.deck = new ArrayList<>();
         this.mainA = new ArrayList<>();
         this.mainB = new ArrayList<>();
@@ -65,7 +69,13 @@ public class JeuVue extends JComponent {
         this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         //this.frame.setMinimumSize(new Dimension(LARGEURFENETRE, HAUTEURFENETRE));
         //this.frame.setSize(this.screenSize);
+
         this.frame.setSize(1200,800);
+        //this.frame.getContentPane().setBackground(new Color(183,186,188));
+
+
+
+
         this.frame.setVisible(true);
 
         this.jeu = jeu;
@@ -98,6 +108,7 @@ public class JeuVue extends JComponent {
 
 
         this.genererDeck();
+
         this.afficheTerrain();
         this.genererBoutons();
         this.genererTours();
@@ -116,6 +127,7 @@ public class JeuVue extends JComponent {
         this.GenererMains();
         this.FinAnim = false;
         this.repaint();
+
 
         this.ctrl.setJeuVue(this);
     }
@@ -138,11 +150,13 @@ public class JeuVue extends JComponent {
     /* PaintComponent */
     @Override
     public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
         this.afficherTours();
         this.afficheMain();
         this.afficheTerrain();
         this.afficherBoutons();
-        super.paintComponent(g);
+        super.paintComponent(g2);
+        g2.setStroke(new BasicStroke(5));
         g.setColor(Color.darkGray);
         int w = this.carteW + (this.OFFSET/2);
         int h = this.carteH + (this.OFFSET*2);
@@ -204,8 +218,9 @@ public class JeuVue extends JComponent {
             carteVue.setVisible(true);
             carteVue.setLocation(OFFSET, y);
 
-            this.deck.add(carteVue);
-            this.frame.add(carteVue);
+            this.paquet.add(carteVue);
+            this.deck.add(this.paquet.get(this.paquet.size()-1));
+            this.frame.add(this.paquet.get(this.paquet.size()-1));
 
         }
 
@@ -282,13 +297,6 @@ public class JeuVue extends JComponent {
         }
     }
 
-    public void defausserMain(int i, boolean joueur) {
-        if (joueur)
-            donnerCarte(i, this.defausse, this.mainA);
-        else
-            donnerCarte(i, this.defausse, this.mainB);
-        PlacerDefausse(this.defausse.get(this.defausse.size() - 1));
-    }
 
     public void defausserJeu(int joueur) {
         int taille;
@@ -332,8 +340,9 @@ public class JeuVue extends JComponent {
             carteVue.setVisible(true);
             carteVue.setLocation(x, y);
 
-            this.mainA.add(carteVue);
-            this.frame.add(carteVue);
+            this.paquet.add(carteVue);
+            this.mainA.add(this.paquet.get(this.paquet.size()-1));
+            this.frame.add(this.paquet.get(this.paquet.size()-1));
             dest.x = this.xDep + (i*this.carteW);
             creerMain(carteVue, dest);
         }
@@ -350,8 +359,9 @@ public class JeuVue extends JComponent {
             carteVue.setVisible(true);
             carteVue.setLocation(x, y);
 
-            this.mainB.add(carteVue);
-            this.frame.add(carteVue);
+            this.paquet.add(carteVue);
+            this.mainB.add(this.paquet.get(this.paquet.size()-1));
+            this.frame.add(this.paquet.get(this.paquet.size()-1));
             dest.x = this.xDep +(i*this.carteW);
 
             creerMain(carteVue, dest);
@@ -374,7 +384,9 @@ public class JeuVue extends JComponent {
             }else{
                 y = this.yA;
             }
-            if ( !this.mainA.get(i).isDragged() ) {this.mainA.get(i).setLocation(x, y);}
+            if ( !this.mainA.get(i).isDragged() ) {
+                this.mainA.get(i).setLocation(x, y);
+            }
             if (this.mainA.get(i).isDos()) {
                 this.mainA.get(i).setDos(false);
             }
@@ -456,7 +468,6 @@ public class JeuVue extends JComponent {
     public void PlacerJeuB(CarteVue c) {
         int x = (this.width / 2) - (c.getWidth() / 2);
         int y = this.terrain.getY() - (this.carteH/4) - (this.joueeH);
-
 
         Point posC = new Point(c.getX(), c.getY());
         Point posD = new Point(x,y);
@@ -643,44 +654,6 @@ public class JeuVue extends JComponent {
     }
 
 
-    public void genererSansAnimMains() {
-        Paquet main = this.jeu.getMain(Jeu.JOUEUR_RGE);
-        int taille = main.getTaille();
-        Point dest = new Point(this.xDep, this.yA);
-
-
-        for (int i = 0; i < taille; i++) {
-            dest.x = this.xDep + (i*this.carteW);
-            CarteVue carteVue = new CarteVue(jeu, ctrl, this);
-            carteVue.setCarte(main.getCarte(i));
-            carteVue.setDos(false);
-            carteVue.setSize(this.carteW, this.carteH);
-            carteVue.setVisible(true);
-            carteVue.setLocation(dest);
-
-            this.mainA.add(carteVue);
-            this.frame.add(carteVue);
-        }
-
-        main = this.jeu.getMain(Jeu.JOUEUR_VRT);
-        taille = main.getTaille();
-        dest = new Point(this.xDep, this.yB);
-
-        for (int i = 0; i < taille; i++) {
-            dest.x = this.xDep +(i*this.carteW);
-            CarteVue carteVue = new CarteVue(jeu, ctrl, this);
-            carteVue.setCarte(main.getCarte(i));
-            carteVue.setDos(false);
-            carteVue.setSize(this.carteW, this.carteH);
-            carteVue.setVisible(true);
-            carteVue.setLocation(dest);
-
-            this.mainB.add(carteVue);
-            this.frame.add(carteVue);
-        }
-
-
-    }
 
     public boolean testMains(){
         int j = this.jeu.JOUEUR_RGE;
@@ -715,23 +688,147 @@ public class JeuVue extends JComponent {
     }
 
     public void refaireMains(){
-        int t1 = this.mainA.size();
-        int t2 = this.mainB.size();
-        int t3 = this.jeu.getMain(this.jeu.JOUEUR_RGE).getTaille();
-        int t4 = this.jeu.getMain(this.jeu.JOUEUR_VRT).getTaille();
-        if (t1 != t3 || t2 != t4 || !this.testMains()) {
-            for (int i=0; i<t1; i++){
-                this.frame.remove(this.mainA.get(i));
-            }
-            for (int i=0; i<t2; i++){
-                this.frame.remove(this.mainB.get(i));
-            }
-            this.mainA.clear();
-            this.mainB.clear();
-            this.genererSansAnimMains();
+        int t1 = this.jeu.getMain(this.jeu.JOUEUR_RGE).getTaille();
+        int t2 = this.jeu.getMain(this.jeu.JOUEUR_VRT).getTaille();
+
+        for (int i=0; i<t1; i++){
+
+            CarteVue carteVue = carteFromCartevue(this.jeu.getMain(this.jeu.JOUEUR_RGE).getCarte(i), this.paquet );
+            this.paquet.get(this.paquet.indexOf(carteVue)).setDos(false);
+            this.paquet.get(this.paquet.indexOf(carteVue)).setDragged(false);
+            this.paquet.get(this.paquet.indexOf(carteVue)).setVisible(true);
+            this.paquet.get(this.paquet.indexOf(carteVue)).setLocation(this.xDep, this.yA);
+            this.mainA.add(this.paquet.get(this.paquet.indexOf(carteVue)));
+            System.out.println("MAIN A CARTE est " + carteVue.getCarte().toString() + " pour MODELE " + this.jeu.getMain(this.jeu.JOUEUR_RGE).getCarte(i));
+        }
+        for (int i=0; i< t2; i++){
+            CarteVue carteVue2 = carteFromCartevue(this.jeu.getMain(this.jeu.JOUEUR_VRT).getCarte(i), this.paquet);
+            this.paquet.get(this.paquet.indexOf(carteVue2)).setDos(false);
+            this.paquet.get(this.paquet.indexOf(carteVue2)).setDragged(false);
+            this.paquet.get(this.paquet.indexOf(carteVue2)).setVisible(true);
+            this.paquet.get(this.paquet.indexOf(carteVue2)).setLocation(this.xDep, this.yB);
+            this.mainB.add(this.paquet.get(this.paquet.indexOf(carteVue2)));
+            System.out.println("MAIN B CARTE est " + carteVue2.getCarte().toString() + " pour MODELE " + this.jeu.getMain(this.jeu.JOUEUR_VRT).getCarte(i));
+        }
+        afficheMain();
+
+    }
+    public void refaireDeck2(){
+        int t1 = this.jeu.getPioche().getTaille();
+        int y = ((this.heigth / 2) - (this.carteH / 2)) - 40;
+
+        for (int i=0; i<t1; i++){
+
+            CarteVue carteVue = carteFromCartevue(this.jeu.getPioche().getCarte(i), this.paquet );
+            this.paquet.get(this.paquet.indexOf(carteVue)).setVisible(true);
+            this.paquet.get(this.paquet.indexOf(carteVue)).setDos(true);
+            this.deck.add(this.paquet.get(this.paquet.indexOf(carteVue)));
+            this.paquet.get(this.paquet.indexOf(carteVue)).setLocation(this.OFFSET, y);
+
         }
 
     }
+
+    public void refaireDefausse(){
+        int t1 = this.jeu.getDefausse().getTaille();
+        int x = (2 * OFFSET) + this.carteW;
+        int y = ((this.heigth / 2) - (this.carteH / 2)) - 40;
+        Point posD = new Point(x,y);
+
+        for (int i=0; i<t1; i++){
+
+            CarteVue carteVue = carteFromCartevue(this.jeu.getPioche().getCarte(i), this.paquet );
+            this.paquet.get(this.paquet.indexOf(carteVue)).setVisible(true);
+            this.paquet.get(this.paquet.indexOf(carteVue)).setDos(true);
+            this.defausse.add(this.paquet.get(this.paquet.indexOf(carteVue)));
+            this.paquet.get(this.paquet.indexOf(carteVue)).setLocation(posD);
+
+        }
+
+    }
+
+    public void refaireJouees(){
+        int t1 = this.jeu.getSelectionCartes(this.jeu.JOUEUR_RGE).getTaille();
+        int t2 = this.jeu.getSelectionCartes(this.jeu.JOUEUR_VRT).getTaille();
+
+        int x = (this.width / 2) - (this.joueeW / 2);
+        int y = this.terrain.getY() + this.terrain.getHeight() + (this.carteH/4);
+        Point posA = new Point(x,y);
+        int xB = (this.width / 2) - (this.joueeW / 2);
+        int yB = this.terrain.getY() - (this.carteH/4) - (this.joueeH);
+        Point posB = new Point(xB,yB);
+
+        for (int i=0; i<t1; i++){
+
+            CarteVue carteVue = carteFromCartevue(this.jeu.getMain(this.jeu.JOUEUR_RGE).getCarte(i), this.paquet );
+            this.paquet.get(this.paquet.indexOf(carteVue)).setVisible(true);
+            this.paquet.get(this.paquet.indexOf(carteVue)).setDos(false);
+            this.joueesA.add(this.paquet.get(this.paquet.indexOf(carteVue)));
+            this.paquet.get(this.paquet.indexOf(carteVue)).setLocation(posA);
+        }
+        for (int i=0; i< t2; i++){
+            CarteVue carteVue2 = carteFromCartevue(this.jeu.getMain(this.jeu.JOUEUR_VRT).getCarte(i), this.paquet);
+            this.paquet.get(this.paquet.indexOf(carteVue2)).setVisible(true);
+            this.paquet.get(this.paquet.indexOf(carteVue2)).setDos(false);
+            this.joueesB.add(this.paquet.get(this.paquet.indexOf(carteVue2)));
+            this.paquet.get(this.paquet.indexOf(carteVue2)).setLocation(posB);
+        }
+
+    }
+
+    public void listInvisible(List<CarteVue> list){
+        int t = list.size();
+        for (int i=0; i<t; i++){
+            list.get(i).setVisible(false);
+        }
+    }
+
+    public void listVisible(List<CarteVue> list){
+        int t = list.size();
+        for (int i=0; i<t; i++){
+            list.get(i).setVisible(true);
+        }
+    }
+
+    public void reconstruireVue(){
+        setDragging(false);
+        listInvisible(deck);
+        listInvisible(defausse);
+        listInvisible(joueesA);
+        listInvisible(joueesB);
+        listInvisible(mainA);
+        listInvisible(mainB);
+        this.deck.clear();
+        this.defausse.clear();
+        this.joueesA.clear();
+        this.joueesB.clear();
+        this.mainA.clear();
+        this.mainB.clear();
+
+        refaireDeck2();
+        refaireDefausse();
+        refaireMains();
+        refaireJouees();
+
+        for (int i=0; i<this.paquet.size(); i++){
+            System.out.println("PAQUET " + this.paquet.get(i).getCarte().toString() + " en X " + this.paquet.get(i).getX() + " et Y " + this.paquet.get(i).getY());
+        }
+        listVisible(deck);
+        listVisible(defausse);
+        listVisible(joueesA);
+        listVisible(joueesB);
+        listVisible(mainA);
+        listVisible(mainB);
+
+        this.repaint();
+        System.out.println("PIOCHE : " + this.deck.size() + " DEFAUSSE: " + defausse.size()
+                + " MAIN A: " + mainA.size() + " MAIN B: " + mainB.size() + " JEU A: " + joueesA.size() + "JEU B: " + joueesB.size());
+        System.out.println("MODELE  PIOCHE: " + jeu.getPioche().getTaille() + " DEFAUSSE: " + jeu.getDefausse().getTaille()
+            + " MAIN A: " + jeu.getMain(jeu.JOUEUR_RGE).getTaille() + " MAIN B: " + jeu.getMain(jeu.JOUEUR_VRT).getTaille());
+    }
+
+
+
     public void refaireCartes( int joueur, int nbCartes) {
         Point dest;
         if (this.deck.isEmpty() || this.jeu.getPioche().getTaille() == 0 || nbCartes > this.deck.size() ){

@@ -56,9 +56,11 @@ public class PlateauVue extends JPanel implements MouseInputListener {
 
     @Override
     public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
 
-        super.paintComponent(g);
+        super.paintComponent(g2);
 
+        g2.setStroke(new BasicStroke(2));
 
         tailleZone = this.getWidth()/17;
         int caseJeton = (this.getHeight() / 10) - (this.getHeight() % 10);
@@ -73,7 +75,7 @@ public class PlateauVue extends JPanel implements MouseInputListener {
         for (int i = 0; i <3; i++) {
             g.drawLine(0, casePion*i+caseJeton, this.getWidth(), casePion*i+caseJeton);
         }
-        g.drawLine(0,0,this.getWidth(),0);
+        g.drawLine(0,1,this.getWidth(),1);
         g.drawLine(0, this.getHeight() - 1, this.getWidth(), this.getHeight() - 1);
         g.drawLine(0,caseJeton,this.getWidth(),caseJeton);
 

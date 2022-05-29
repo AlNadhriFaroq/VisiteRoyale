@@ -209,10 +209,12 @@ public class ControleurMediateur {
 
     public void annuler() {
         prog.annulerCoup();
+        this.jeuVue.reconstruireVue();
     }
 
     public void refaire() {
         prog.refaireCoup();
+        this.jeuVue.reconstruireVue();
     }
 
     public void demarrerProgramme() {
