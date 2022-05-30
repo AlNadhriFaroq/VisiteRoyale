@@ -174,6 +174,13 @@ public class PanelMenuOptions extends JPanel {
     }
 
     public void mettreAJour() {
-        // des/activer boutons
+        volumeMusique.setValue(Integer.parseInt(Configuration.instance().lire("VolumeMusique")));
+        volumeSons.setValue(Integer.parseInt(Configuration.instance().lire("VolumeSons")));
+        musique.setSelectedItem(Configuration.instance().lire("Musique"));
+        niveau.setSelectedItem(IA.IAenTexte(Integer.parseInt(Configuration.instance().lire("NiveauDifficulteIA"))));
+        texture.setSelectedItem(Configuration.instance().lire("Texture"));
+        pleinEcran.setSelected(Boolean.parseBoolean(Configuration.instance().lire("PleinEcran")));
+        mainCachee.setSelected(Boolean.parseBoolean(Configuration.instance().lire("MainCachee")));
+        repaint();
     }
 }

@@ -74,26 +74,26 @@ public class PanelJeu extends JPanel {
         ImageChateau chateauRge = new ImageChateau(Images.CHATEAU_RGE, false);
 
         /* Disposition des composants dans le panel */
-        add(plateauVue, new GBC(2, 2, 1, 3).setAnchor(GBC.CENTER));
+        add(plateauVue, new GBC(2, 2, 3, 3).setAnchor(GBC.CENTER));
 
-        add(mainVrtVue, new GBC(2, 0).setAnchor(GBC.PAGE_START));
-        add(mainRgeVue, new GBC(2, 6).setAnchor(GBC.PAGE_END));
-        add(selectionVrtVue, new GBC(2, 1).setAnchor(GBC.PAGE_START));
-        add(selectionRgeVue, new GBC(2, 5).setAnchor(GBC.PAGE_END));
+        add(mainVrtVue, new GBC(3, 0).setAnchor(GBC.PAGE_START));
+        add(mainRgeVue, new GBC(3, 6).setAnchor(GBC.PAGE_END));
+        add(selectionVrtVue, new GBC(3, 1).setAnchor(GBC.PAGE_START));
+        add(selectionRgeVue, new GBC(3, 5).setAnchor(GBC.PAGE_END));
 
-        add(piocheVue, new GBC(0, 2, 2, 1).setWeight(16, 11));
-        add(defausseVue, new GBC(0, 4, 2, 1).setWeight(16, 11));
+        add(piocheVue, new GBC(0, 2, 2, 2).setWeight(1, 22).setAnchor(GBC.PAGE_START));
+        add(defausseVue, new GBC(0, 3, 2, 2).setWeight(1, 22).setAnchor(GBC.PAGE_END));
 
-        add(boutonPause, new GBC(4, 0).setWeight(8, 16).setAnchor(GBC.FIRST_LINE_END));
-        add(boutonIndice, new GBC(3, 0).setWeight(8, 16).setAnchor(GBC.FIRST_LINE_END));
-        add(boutonAnnuler, new GBC(0, 3).setWeight(8, 11));
-        add(boutonRefaire, new GBC(1, 3).setWeight(8, 11));
-        add(boutonPouvoirSor, new GBC(3, 2, 2, 1).setWeight(16, 11));
-        add(boutonPouvoirFou, new GBC(3, 4, 2, 1).setWeight(16, 11));
-        add(boutonFinTour, new GBC(3, 5, 2, 2).setWeight(16, 33).setAnchor(GBC.LINE_END));
+        add(boutonIndice, new GBC(5, 0).setWeight(8, 16).setAnchor(GBC.FIRST_LINE_END));
+        add(boutonPause, new GBC(6, 0).setWeight(8, 16).setAnchor(GBC.FIRST_LINE_END));
+        add(boutonAnnuler, new GBC(5, 6).setWeight(8, 16).setAnchor(GBC.LAST_LINE_END));
+        add(boutonRefaire, new GBC(6, 6).setWeight(8, 16).setAnchor(GBC.LAST_LINE_END));
+        add(boutonPouvoirSor, new GBC(5, 2, 2, 1).setWeight(1, 11));
+        add(boutonPouvoirFou, new GBC(5, 3, 2, 1).setWeight(1, 11));
+        add(boutonFinTour, new GBC(5, 4, 2, 1).setWeight(1, 11));
 
-        add(chateauVrt, new GBC(0, 0, 2, 2).setWeight(16, 33).setAnchor(GBC.FIRST_LINE_START).setFill(GBC.BOTH));
-        add(chateauRge, new GBC(0, 5, 2, 2).setWeight(16, 33).setAnchor(GBC.LAST_LINE_START).setFill(GBC.BOTH));
+        add(chateauVrt, new GBC(2, 0, 1, 2).setWeightx(1).setAnchor(GBC.FIRST_LINE_START).setFill(GBC.BOTH));
+        add(chateauRge, new GBC(4, 5, 1, 2).setWeightx(1).setAnchor(GBC.LAST_LINE_START).setFill(GBC.BOTH));
 
         /* Retransmission des événements au contrôleur */
         for (int i = 0; i < Jeu.TAILLE_MAIN; i++) {

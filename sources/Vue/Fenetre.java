@@ -226,7 +226,7 @@ public class Fenetre extends JFrame {
                     layoutMenu.show(panelMenu, "menuSauvegardes");
                     break;
                 case Programme.ETAT_MENU_OPTIONS:
-                    panelMenuOptions.repaint();
+                    panelMenuOptions.mettreAJour();
                     layoutMenu.show(panelMenu, "menuOptions");
                     break;
                 case Programme.ETAT_TUTORIEL:

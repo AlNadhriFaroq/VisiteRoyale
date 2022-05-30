@@ -35,6 +35,7 @@ public class AdaptateurClavier extends KeyAdapter {
                 break;
             case KeyEvent.VK_N:
                 ctrl.nouvellePartie(true, true);
+                break;
             case KeyEvent.VK_Q:
             case KeyEvent.VK_A:
                 ctrl.quitter();
