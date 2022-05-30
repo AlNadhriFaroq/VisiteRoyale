@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-public class PlateauVue extends JPanel implements MouseInputListener {
+public class PlateauVue extends JPanel {
     private static int taille = 17;
     Jeu jeu;
     private int posRoi;
@@ -48,10 +48,6 @@ public class PlateauVue extends JPanel implements MouseInputListener {
 
 
         this.setPions();
-
-        this.addMouseMotionListener(this);
-        this.addMouseListener(this);
-
     }
 
     @Override
@@ -155,29 +151,6 @@ public class PlateauVue extends JPanel implements MouseInputListener {
         }
         return false;
     }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        estValide(e.getXOnScreen(),e.getYOnScreen());
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) { }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {}
-
-    @Override
-    public void mouseDragged(MouseEvent e) {}
-
-    @Override
-    public void mouseMoved(MouseEvent e) {}
 
     public int getPosRoi() {
         return posRoi;

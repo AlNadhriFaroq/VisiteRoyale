@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public class PionVue extends JPanel implements MouseInputListener {
+public class PionVue extends JPanel{
     public static final HashMap<String, BufferedImage> images = new HashMap<>();
 
     private static String path = "/Images/Pions/";
@@ -27,9 +27,6 @@ public class PionVue extends JPanel implements MouseInputListener {
 
         this.setOpaque(false);
 
-        this.addMouseMotionListener(this);
-        this.addMouseListener(this);
-
         this.setSize(30,55);
         this.setVisible(true);
     }
@@ -42,41 +39,6 @@ public class PionVue extends JPanel implements MouseInputListener {
         return dragged;
     }
 
-    /* MOUSE LISTENER*/
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
 
     public void setImage() {
         this.image = getImage(this.pion.toString());
