@@ -2,6 +2,7 @@ package Vue.Composants.ComposantsJeu;
 
 import Global.Images;
 import Modele.Paquet;
+import Vue.GBC;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ public class PiocheVue extends JPanel {
 
     Shape shape;
     Image img;
-    JLabel nbCartes;
+    TexteEntoure nbCartes;
 
     public PiocheVue(Paquet paquet, boolean faceCachee) {
         this.paquet = paquet;
@@ -22,16 +23,19 @@ public class PiocheVue extends JPanel {
 
         setBackground(new Color(0, 0, 0, 0));
         setOpaque(false);
-        setLayout(new BorderLayout());
+        setLayout(new GridBagLayout());
 
-        nbCartes = new JLabel("", JLabel.CENTER);
-        nbCartes.setForeground(Color.BLACK);
+        nbCartes = new TexteEntoure("", 0);
+        nbCartes.setLeftShadow(2,2,Color.BLACK);
+        nbCartes.setRightShadow(2,2, Color.BLACK);
+        nbCartes.setForeground(Color.white);
+
         nbCartes.setVisible(false);
 
-        add(nbCartes, BorderLayout.CENTER);
+        add(nbCartes, new GBC(0,0).setWeight(1,1).setAnchor(GBC.CENTER));
     }
 
-    public JLabel getTxtNbCartes() {
+    public TexteEntoure getTxtNbCartes() {
         return nbCartes;
     }
 
