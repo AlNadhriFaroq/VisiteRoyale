@@ -40,13 +40,13 @@ public class AdaptateurSouris extends MouseAdapter {
         } else if (e.getSource() instanceof BoutonMenu) {
             ((BoutonMenu) e.getSource()).setForeground(BoutonMenu.couleurFoncee);
             ((BoutonMenu) e.getSource()).setBackground(BoutonMenu.couleurClaire);
-        } else if (e.getSource() instanceof BoutonSauvegarde) {
+        } else if (e.getSource() instanceof BoutonSauvegarde && ((BoutonSauvegarde) e.getSource()).isEnabled()) {
             ((BoutonSauvegarde) e.getSource()).setForeground(BoutonSauvegarde.couleurFoncee);
             ((BoutonSauvegarde) e.getSource()).setBackground(BoutonSauvegarde.couleurClaire);
-        } else if (e.getSource() instanceof BoutonSupprimer) {
+        } else if (e.getSource() instanceof BoutonSupprimer && ((BoutonSupprimer) e.getSource()).isEnabled()) {
             ((BoutonSupprimer) e.getSource()).setForeground(BoutonSupprimer.couleurFoncee);
             ((BoutonSupprimer) e.getSource()).setBackground(BoutonSupprimer.couleurClaire);
-        } else if (e.getSource() instanceof BoutonJeu) {
+        } else if (e.getSource() instanceof BoutonJeu && ((BoutonJeu) e.getSource()).isEnabled()) {
             ((BoutonJeu) e.getSource()).setForeground(BoutonJeu.couleurFoncee);
             ((BoutonJeu) e.getSource()).setBackground(BoutonJeu.couleurClaire);
         } else if (e.getSource().equals(fenetre.getPanelJeu().getPiocheVue())) {
@@ -75,13 +75,13 @@ public class AdaptateurSouris extends MouseAdapter {
         } else if (e.getSource() instanceof BoutonMenu) {
             ((BoutonMenu) e.getSource()).setForeground(BoutonMenu.couleurClaire);
             ((BoutonMenu) e.getSource()).setBackground(BoutonMenu.couleurNormal);
-        } else if (e.getSource() instanceof BoutonSauvegarde) {
+        } else if (e.getSource() instanceof BoutonSauvegarde && ((BoutonSauvegarde) e.getSource()).isEnabled()) {
             ((BoutonSauvegarde) e.getSource()).setForeground(BoutonSauvegarde.couleurClaire);
             ((BoutonSauvegarde) e.getSource()).setBackground(BoutonSauvegarde.couleurNormal);
-        } else if (e.getSource() instanceof BoutonSupprimer) {
+        } else if (e.getSource() instanceof BoutonSupprimer && ((BoutonSupprimer) e.getSource()).isEnabled()) {
             ((BoutonSupprimer) e.getSource()).setForeground(BoutonSupprimer.couleurClaire);
             ((BoutonSupprimer) e.getSource()).setBackground(BoutonSupprimer.couleurNormal);
-        } else if (e.getSource() instanceof BoutonJeu) {
+        } else if (e.getSource() instanceof BoutonJeu && ((BoutonJeu) e.getSource()).isEnabled()) {
             ((BoutonJeu) e.getSource()).setForeground(BoutonJeu.couleurClaire);
             ((BoutonJeu) e.getSource()).setBackground(BoutonJeu.couleurNormal);
         } else if (e.getSource().equals(fenetre.getPanelJeu().getPiocheVue())) {
@@ -111,15 +111,15 @@ public class AdaptateurSouris extends MouseAdapter {
             ((BoutonMenu) e.getSource()).setBorder(BorderFactory.createLoweredBevelBorder());
             ((BoutonMenu) e.getSource()).setForeground(BoutonMenu.couleurNormal);
             ((BoutonMenu) e.getSource()).setBackground(BoutonMenu.couleurFoncee);
-        } else if (e.getSource() instanceof BoutonSauvegarde) {
+        } else if (e.getSource() instanceof BoutonSauvegarde && ((BoutonSauvegarde) e.getSource()).isEnabled()) {
             ((BoutonSauvegarde) e.getSource()).setBorder(BorderFactory.createLoweredBevelBorder());
             ((BoutonSauvegarde) e.getSource()).setForeground(BoutonSauvegarde.couleurNormal);
             ((BoutonSauvegarde) e.getSource()).setBackground(BoutonSauvegarde.couleurFoncee);
-        } else if (e.getSource() instanceof BoutonSupprimer) {
+        } else if (e.getSource() instanceof BoutonSupprimer && ((BoutonSupprimer) e.getSource()).isEnabled()) {
             ((BoutonSupprimer) e.getSource()).setBorder(BorderFactory.createLoweredBevelBorder());
             ((BoutonSupprimer) e.getSource()).setForeground(BoutonSupprimer.couleurNormal);
             ((BoutonSupprimer) e.getSource()).setBackground(BoutonSupprimer.couleurFoncee);
-        } else if (e.getSource() instanceof BoutonJeu) {
+        } else if (e.getSource() instanceof BoutonJeu && ((BoutonJeu) e.getSource()).isEnabled()) {
             ((BoutonJeu) e.getSource()).setBorder(BorderFactory.createLoweredBevelBorder());
             ((BoutonJeu) e.getSource()).setForeground(BoutonJeu.couleurNormal);
             ((BoutonJeu) e.getSource()).setBackground(BoutonJeu.couleurFoncee);
@@ -132,15 +132,15 @@ public class AdaptateurSouris extends MouseAdapter {
             ((BoutonMenu) e.getSource()).setBorder(BorderFactory.createRaisedBevelBorder());
             ((BoutonMenu) e.getSource()).setForeground(BoutonMenu.couleurClaire);
             ((BoutonMenu) e.getSource()).setBackground(BoutonMenu.couleurNormal);
-        } else if (e.getSource() instanceof BoutonSauvegarde) {
+        } else if (e.getSource() instanceof BoutonSauvegarde && ((BoutonSauvegarde) e.getSource()).isEnabled()) {
             ((BoutonSauvegarde) e.getSource()).setBorder(BorderFactory.createRaisedBevelBorder());
             ((BoutonSauvegarde) e.getSource()).setForeground(BoutonSauvegarde.couleurClaire);
             ((BoutonSauvegarde) e.getSource()).setBackground(BoutonSauvegarde.couleurNormal);
-        } else if (e.getSource() instanceof BoutonSupprimer) {
+        } else if (e.getSource() instanceof BoutonSupprimer && ((BoutonSupprimer) e.getSource()).isEnabled()) {
             ((BoutonSupprimer) e.getSource()).setBorder(BorderFactory.createRaisedBevelBorder());
             ((BoutonSupprimer) e.getSource()).setForeground(BoutonSupprimer.couleurClaire);
             ((BoutonSupprimer) e.getSource()).setBackground(BoutonSupprimer.couleurNormal);
-        } else if (e.getSource() instanceof BoutonJeu) {
+        } else if (e.getSource() instanceof BoutonJeu && ((BoutonJeu) e.getSource()).isEnabled()) {
             ((BoutonJeu) e.getSource()).setBorder(BorderFactory.createRaisedBevelBorder());
             ((BoutonJeu) e.getSource()).setForeground(BoutonJeu.couleurClaire);
             ((BoutonJeu) e.getSource()).setBackground(BoutonJeu.couleurNormal);

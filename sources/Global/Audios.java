@@ -1,7 +1,6 @@
 package Global;
 
-import java.awt.*;
-import java.io.File;
+import java.io.BufferedInputStream;
 import javax.sound.sampled.*;
 
 public class Audios {
@@ -19,14 +18,14 @@ public class Audios {
     private final Clip clip;
 
     private Audios(String nom, boolean typeAudio) {
-        String dossier = File.separator + "Audios" + File.separator + (typeAudio == MUSIQUE ? "Musiques" : "Sons") + File.separator;
+        String chemin = "/Audios/" + (typeAudio == MUSIQUE ? "Musiques/" : "Sons/") + nom + ".wav";
         try {
             clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemClassLoader().getResourceAsStream(dossier + nom + ".wav")));
+            clip.open(AudioSystem.getAudioInputStream(new BufferedInputStream(Audios.class.getResourceAsStream(chemin))));
             float decibel = 20f * (float) Math.log10(((float) getVolume(typeAudio)) / 10f);
             ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
         } catch (Exception e) {
-            throw new RuntimeException("Global.Audio() : Erreur lors du chargement du son : '" + dossier + nom + ".wav'.\n" + e);
+            throw new RuntimeException("Global.Audio() : Erreur lors du chargement du son : '" + chemin + "'.\n" + e);
         }
     }
 

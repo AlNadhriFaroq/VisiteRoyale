@@ -58,7 +58,7 @@ public class PiocheVue extends JPanel {
     @Override
     public boolean contains(int x, int y) {
         if (shape == null || !shape.getBounds().equals(getBounds()))
-            shape = new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
+            shape = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 15, 15);
         return shape.contains(x, y);
     }
 
@@ -66,6 +66,6 @@ public class PiocheVue extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D dessin = (Graphics2D) g;
-        dessin.drawImage(Images.tournerImage(img, 270), 0, 0, getWidth() - 1, getHeight() - 1, null);
+        dessin.drawImage(Images.tournerImage(img, 270), 0, 0, getWidth(), getHeight(), null);
     }
 }

@@ -46,7 +46,6 @@ public class Fenetre extends JFrame {
         hauteur = largeur * Images.TEXTE_TITRE.getHeight(null) / Images.TEXTE_TITRE.getWidth(null);
 
         setUndecorated(true);
-        setTitle("Visite Royale");
         setBackground(new Color(0, 0, 0, 0));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(largeur, hauteur);
@@ -100,6 +99,8 @@ public class Fenetre extends JFrame {
         int hauteur = Integer.parseInt(Configuration.instance().lire("FenetreHauteur"));
 
         setVisible(false);
+        setTitle("Visite Royale");
+        setIconImage(Images.COURONNE_GRD);
         setBackground(Color.GRAY);
         setSize(largeur, hauteur);
         setLocationRelativeTo(getParent());
@@ -221,7 +222,7 @@ public class Fenetre extends JFrame {
                     layoutMenu.show(panelMenu, "menuJeu");
                     break;
                 case Programme.ETAT_MENU_SAUVEGARDES:
-                    panelMenuSauvegardes.repaint();
+                    panelMenuSauvegardes.mettreAJour();
                     layoutMenu.show(panelMenu, "menuSauvegardes");
                     break;
                 case Programme.ETAT_MENU_OPTIONS:
