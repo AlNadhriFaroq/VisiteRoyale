@@ -4,10 +4,9 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Objects;
 
 public class Images {
-    private static String dossier = "Images";
+    private static String dossier = File.separator + "Images";
 
     public static final Image CARTE_VIDE = lireImage("Cartes" + File.separator + "Vide");
     public static final Image CARTE_DOS = lireImage("Cartes" + File.separator + "Dos");
@@ -55,7 +54,7 @@ public class Images {
 
     private static Image lireImage(String nom) {
         try {
-            return ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream(dossier + File.separator + nom + ".png")));
+            return ImageIO.read(ClassLoader.getSystemClassLoader().getResourceAsStream(dossier + File.separator + nom + ".png"));
         } catch (Exception e) {
             throw new RuntimeException("Global.Images.lireImage() : Impossible d'ouvrir l'image.\n" + e);
         }

@@ -1,5 +1,6 @@
 package Global;
 
+import java.awt.*;
 import java.io.File;
 import javax.sound.sampled.*;
 
@@ -7,25 +8,25 @@ public class Audios {
     public static final boolean MUSIQUE = true;
     public static final boolean SONS = false;
 
-    public static final String[] MUSIQUES = {"Michael Praetorius - Branle de la Torche", "Mozart - Butterflies"};
+    public static final String[] MUSIQUES = {"Michael Praetorius - Bransle de la Torche", "Mozart - Butterflies"};
     public static Audios MUSIQUE_MENU;
-    public static final Audios MUSIQUE_MENUS1 = new Audios("Musiques/antiqua.wav", MUSIQUE);
-    public static final Audios MUSIQUE_MENUS2 = new Audios("Musiques/mozart.wav", MUSIQUE);
+    public static final Audios MUSIQUE_MENUS1 = new Audios("BransleDeLaTorche", MUSIQUE);
+    public static final Audios MUSIQUE_MENUS2 = new Audios("Butterflies", MUSIQUE);
 
-    public static final Audios SON_DEFAITE = new Audios("Sons/defaite.wav", SONS);
-    public static final Audios SON_VICTOIRE = new Audios("Sons/victoire.wav", SONS);
+    public static final Audios SON_DEFAITE = new Audios("Defaite", SONS);
+    public static final Audios SON_VICTOIRE = new Audios("Victoire", SONS);
 
     private final Clip clip;
 
     private Audios(String nom, boolean typeAudio) {
-        String dossier = "resources/Audios/";
+        String dossier = File.separator + "Audios" + File.separator + (typeAudio == MUSIQUE ? "Musiques" : "Sons") + File.separator;
         try {
             clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(new File(dossier + nom)));
+            clip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemClassLoader().getResourceAsStream(dossier + nom + ".wav")));
             float decibel = 20f * (float) Math.log10(((float) getVolume(typeAudio)) / 10f);
             ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
         } catch (Exception e) {
-            throw new RuntimeException("Global.Audio() : Erreur lors du chargement du son : '" + nom + "'.\n" + e);
+            throw new RuntimeException("Global.Audio() : Erreur lors du chargement du son : '" + dossier + nom + ".wav'.\n" + e);
         }
     }
 
@@ -50,7 +51,7 @@ public class Audios {
     public static void setMusiqueMenu(String nom) {
         Configuration.instance().ecrire("Musique", nom);
         switch (nom) {
-            case "Michael Praetorius - Branle de la Torche":
+            case "Michael Praetorius - Bransle de la Torche":
                 MUSIQUE_MENU = MUSIQUE_MENUS1;
                 break;
             case "Mozart - Butterflies":
