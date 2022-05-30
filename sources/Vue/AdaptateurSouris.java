@@ -101,7 +101,7 @@ public class AdaptateurSouris extends MouseAdapter {
                     }
                 } else {
 
-                   /* if (this.jeuVue.jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE)) && !this.jeuVue.cartesJoueesEstVide(this.jeuVue.jeu.getJoueurCourant())) {
+                   if (this.jeuVue.jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE)) && !this.jeuVue.cartesJoueesEstVide(this.jeuVue.jeu.getJoueurCourant())) {
                         if (e.getX() > this.positionGarde(this.jeuVue.jeu.getSelectionPions(0).toString()) * this.jeuVue.terrain.getWidth() / 17 + this.jeuVue.terrain.getX() + this.jeuVue.terrain.getWidth() / 17) {
                             ctrl.selectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE));
                         }
@@ -110,7 +110,7 @@ public class AdaptateurSouris extends MouseAdapter {
                         if (e.getX() < this.positionGarde(this.jeuVue.jeu.getSelectionPions(0).toString()) * this.jeuVue.terrain.getWidth() / 17 + this.jeuVue.terrain.getX()) {
                             ctrl.selectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_VRT));
                         }
-                    }*/
+                    }
 
                     if (this.jeuVue.jeu.peutSelectionnerDirection(Jeu.getDirectionJoueur(Jeu.JOUEUR_RGE)) && !this.jeuVue.cartesJoueesEstVide(this.jeuVue.jeu.getJoueurCourant())) {
                         if (e.getX() > this.positionPion(Type.ROI) * this.jeuVue.terrain.getWidth() / 17 + this.jeuVue.terrain.getX() + this.jeuVue.terrain.getWidth() / 17) {
