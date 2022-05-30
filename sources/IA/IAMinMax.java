@@ -116,7 +116,6 @@ public class IAMinMax extends IA {
     private int evaluerPlateau() {
         int valeur = 0;
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_RGE && !finirPartie || finirPartie && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE) {
-            System.out.println("joueur rouge");
             if (jeu.getPlateau().getPositionPion(Pion.ROI) == Plateau.CHATEAU_RGE)
                 valeur += 1000;
             if (jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE)
@@ -137,7 +136,6 @@ public class IAMinMax extends IA {
         }
 
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_VRT && !finirPartie || jeu.getJoueurCourant() == Jeu.JOUEUR_VRT && finirPartie) {
-            System.out.println("au joueur vert");
             if (jeu.getPlateau().getPositionPion(Pion.ROI) == Plateau.CHATEAU_VRT)
                 valeur += 1000;
             if (jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
