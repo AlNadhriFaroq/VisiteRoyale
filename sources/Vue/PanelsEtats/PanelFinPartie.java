@@ -37,7 +37,7 @@ public class PanelFinPartie extends JPanel {
         boutonRetour = new BoutonMenu("Retour au menu principal");
 
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(142, 142, 225, 255));
+        panel.setBackground(new Color(0, 0, 0, 205));
         panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         panel.setLayout(new GridBagLayout());
 

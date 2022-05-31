@@ -32,12 +32,13 @@ public class PanelMenuOptions extends JPanel {
         this.fenetre = fenetre;
         this.prog = prog;
 
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(new Color(98, 93, 93, 39));
         setLayout(new GridBagLayout());
 
         /* Construction des composants */
         JLabel texteTitre = new JLabel("Options");
         texteTitre.setFont(new Font(null).deriveFont(30f));
+        texteTitre.setForeground(Color.WHITE);
 
         JLabel texteVolumeMusique = new JLabel("Volume de la musique");
         JLabel texteVolumeSons = new JLabel("Volume des effets sonores");
@@ -47,8 +48,17 @@ public class PanelMenuOptions extends JPanel {
         JLabel texteMainCachee = new JLabel("Main adverse cachée");
         JLabel texteTexture = new JLabel("Texture");
 
+        texteVolumeMusique.setForeground(Color.WHITE);
+        texteVolumeSons.setForeground(Color.WHITE);
+        texteMusique.setForeground(Color.WHITE);
+        texteNiveau.setForeground(Color.WHITE);
+        textePleinEcran.setForeground(Color.WHITE);
+        texteMainCachee.setForeground(Color.WHITE);
+        texteTexture.setForeground(Color.WHITE);
+
         volumeMusique = new JSlider();
         volumeMusique.setBackground(new Color(0, 0, 0, 0));
+        volumeMusique.setForeground(Color.WHITE);
         volumeMusique.setOpaque(false);
         volumeMusique.setMinimum(0);
         volumeMusique.setMaximum(10);
@@ -61,6 +71,7 @@ public class PanelMenuOptions extends JPanel {
 
         volumeSons = new JSlider();
         volumeSons.setBackground(new Color(0, 0, 0, 0));
+        volumeSons.setForeground(Color.WHITE);
         volumeSons.setOpaque(false);
         volumeSons.setMinimum(0);
         volumeSons.setMaximum(10);
@@ -96,7 +107,7 @@ public class PanelMenuOptions extends JPanel {
         boutonRetour = new BoutonMenu("Retour");
 
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(142, 142, 225, 255));
+        panel.setBackground(new Color(0, 0, 0, 205));
         panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         panel.setLayout(new GridBagLayout());
 

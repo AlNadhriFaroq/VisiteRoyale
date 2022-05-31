@@ -51,8 +51,32 @@ public class PanelCredits extends JPanel {
         JLabel txt19 = new JLabel("Graphiste : Cindy Roth", JLabel.CENTER);
         JLabel txt20 = new JLabel("Relecteur : Xavier Taverne", JLabel.CENTER);
 
+        txt1.setForeground(Color.WHITE);
+        txt2.setForeground(Color.WHITE);
+        txt3.setForeground(Color.WHITE);
+        txt4.setForeground(Color.WHITE);
+        txt5.setForeground(Color.WHITE);
+        txt6.setForeground(Color.WHITE);
+        txt7.setForeground(Color.WHITE);
+        txt8.setForeground(Color.WHITE);
+        txt9.setForeground(Color.WHITE);
+        txt10.setForeground(Color.WHITE);
+        txt11.setForeground(Color.WHITE);
+        txt12.setForeground(Color.WHITE);
+        txt13.setForeground(Color.WHITE);
+        txt14.setForeground(Color.WHITE);
+        txt15.setForeground(Color.WHITE);
+        txt16.setForeground(Color.WHITE);
+        txt17.setForeground(Color.WHITE);
+        txt18.setForeground(Color.WHITE);
+        txt19.setForeground(Color.WHITE);
+        txt20.setForeground(Color.WHITE);
+
+
+
+
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(142, 142, 225, 255));
+        panel.setBackground(new Color(0, 0, 0, 205));
         panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         panel.setLayout(new GridBagLayout());
 

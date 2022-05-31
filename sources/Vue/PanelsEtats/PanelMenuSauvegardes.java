@@ -33,6 +33,7 @@ public class PanelMenuSauvegardes extends JPanel {
         /* Construction des composants */
         JLabel texte = new JLabel("Sauvegardes");
         texte.setFont(new Font(null).deriveFont(30f));
+        texte.setForeground(Color.WHITE);
 
         boutonsSauvegardes = new BoutonSauvegarde[Programme.NB_SAUVEGARDES];
         boutonsSupprimer = new BoutonSupprimer[Programme.NB_SAUVEGARDES];
@@ -44,7 +45,7 @@ public class PanelMenuSauvegardes extends JPanel {
         boutonMenuRetour = new BoutonMenu("Retour");
 
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(142, 142, 225, 255));
+        panel.setBackground(new Color(0, 0, 0, 205));
         panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         panel.setLayout(new GridBagLayout());
 

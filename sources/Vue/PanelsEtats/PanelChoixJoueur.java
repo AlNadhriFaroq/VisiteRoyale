@@ -32,11 +32,14 @@ public class PanelChoixJoueur extends JPanel {
         JLabel txt1 = new JLabel("Tirage du joueur qui commence.", JLabel.CENTER);
         JLabel txt2 = new JLabel("Main gauche ou main droite ?", JLabel.CENTER);
 
+        txt1.setForeground(Color.WHITE);
+        txt2.setForeground(Color.WHITE);
+
         boutonGauche = new BoutonMenu("Gauche");
         boutonDroite = new BoutonMenu("Droite");
 
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(142, 142, 225, 255));
+        panel.setBackground(new Color(0, 0, 0, 205));
         panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         panel.setLayout(new GridBagLayout());
 
