@@ -15,6 +15,14 @@ public class ImageChateau extends JPanel {
         setBackground(new Color(0, 0, 0, 0));
     }
 
+    public void redimensionner(int taille) {
+        Dimension dim = new Dimension(taille, taille);
+        setMinimumSize(dim);
+        setMaximumSize(dim);
+        setPreferredSize(dim);
+        setSize(dim);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
