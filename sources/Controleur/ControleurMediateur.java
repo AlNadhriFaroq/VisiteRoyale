@@ -74,7 +74,7 @@ public class ControleurMediateur {
                     joueursIA[joueur] = new IAStrategie(prog.getJeu());
                     break;
                 case IA.PROFESSIONNEL:
-                    joueursIA[joueur] = new IAMinMax(prog.getJeu());
+                    joueursIA[joueur] = new IAMeilleureEval(prog.getJeu());
                     break;
                 case IA.EXPERT:
                     joueursIA[joueur] = new IAMinMax(prog.getJeu());

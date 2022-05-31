@@ -382,7 +382,7 @@ public class Coup implements Cloneable, Serializable {
 
         /* dépiocher */
         for (int i = nbCartesAPiocher - 1; i >= 0; i--) {
-            if (i == indiceMelange && !jeu.estTerminee()) {
+            if (i == indiceMelange) {
                 jeu.getDefausse().copier(defaussePasse);
                 jeu.getPioche().vider();
                 jeu.getPlateau().setFaceCouronne(faceCouronnePasse);

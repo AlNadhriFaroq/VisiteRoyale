@@ -254,7 +254,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
                 coups.addAll(calculerCoupsDirections());
                 break;
             default:
-                throw new RuntimeException("Controleur.IAALeatoire.calculerCoup() : Erreur d'etat dans le jeu." + etatJeu);
+                throw new RuntimeException("Modele.jeu.calculerCoup() : Erreur d'etat dans le jeu. Etat " + etatJeu);
         }
         return coups;
     }

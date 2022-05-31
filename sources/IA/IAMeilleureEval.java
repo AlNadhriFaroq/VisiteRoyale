@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-public class IAMinMax extends IA {
-    private static final int PROFONDEUR = 1;
+public class IAMeilleureEval extends IA {
     Tas<List<Coup>> lj;
     Tas<List<Coup>> lj2;
     int poidsPlateauMax;
@@ -20,7 +19,7 @@ public class IAMinMax extends IA {
     int valeur;
     boolean aVuGc;
 
-    public IAMinMax(Jeu jeu) {
+    public IAMeilleureEval(Jeu jeu) {
         super(jeu);
         lj = new Tas<>(true);
         lj2 = new Tas<>(false);
@@ -34,18 +33,19 @@ public class IAMinMax extends IA {
 
     @Override
     public Coup calculerCoup() {
+        System.out.println("IA meilleure eval");
         Coup cp = null;
         nombrePas = 0;
 
         if (tailleLcf == lcf.size()) {
-            minMaxA(0);
+            evaluerTour(new ArrayList<>(), lj);
+            lcf = lj.extraire();
+            System.out.println(lcf);
         }
-
         if (tailleLcf != lcf.size()) {
             cp = lcf.get(tailleLcf);
             tailleLcf++;
         }
-        System.out.println(lcf);
         if (cp.getTypeCoup() == Coup.FINIR_TOUR) {
             tailleLcf = 0;
             lcf.clear();
@@ -56,71 +56,6 @@ public class IAMinMax extends IA {
 
         return cp;
     }
-
-    private boolean estFeuille() {
-        return jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE;
-    }
-
-    private int minMaxA(int profondeur) {
-        System.out.println("minMaxA");
-        int valeur;
-        if (estFeuille()) {
-            return evaluerPlateau();
-        }
-        if (profondeur == PROFONDEUR) {
-            return Integer.MAX_VALUE;
-        } else {
-            List<Coup> tmp = null;
-            valeur = Integer.MIN_VALUE;
-            int val;
-            Tas<List<Coup>> tasA = new Tas<>(true);
-            evaluerTour(new ArrayList<>(), tasA);
-            for(int i = 0; i < 20; i ++){
-                tmp = tasA.extraire();
-                if(tmp != null){
-                    executerCoups(tmp);
-                    val = Math.max(evaluerPlateau(), minMaxB(profondeur + 1));
-                    if(val > valeur) {
-                        valeur = val;
-                        lcf = tmp;
-                    }
-                desexecuterCoups(tmp);
-                }
-            }
-        }
-        return valeur;
-    }
-
-    private int minMaxB(int profondeur) {
-        System.out.println("minMaxB");
-        int valeur;
-        if (estFeuille())
-            return evaluerPlateau();
-        if (profondeur == PROFONDEUR)
-            return Integer.MIN_VALUE;
-        else {
-            List<Coup> tmp;
-            valeur = Integer.MAX_VALUE;
-            int val;
-            Tas<List<Coup>> tasB = new Tas<>(true);
-            evaluerTour(new ArrayList<>(), tasB);
-            for(int i = 0; i < 20; i ++){
-                tmp = tasB.extraire();
-                if(tmp != null){
-                    System.out.println(tmp);
-                    executerCoups(tmp);
-                    val = Math.min(evaluerPlateau(), minMaxA(profondeur + 1));
-                    if(val < valeur) {
-                        valeur = val;
-                        minMaxB = tmp;
-                    }
-                    desexecuterCoups(tmp);
-                }
-            }
-        }
-        return valeur;
-    }
-
     private void evaluerTour(List<Coup> listeCoup, Tas<List<Coup>> tas) {
         List<Coup> lc = jeu.calculerListeCoup();
         if(!aVuGc){
@@ -147,7 +82,7 @@ public class IAMinMax extends IA {
         }
         Coup prec = null;
         for (Coup coup : lc) {
-            if(poidsPlateauMax > 500 || nombrePas > 800000)
+            if(poidsPlateauMax > 500 || nombrePas > 1500000)
                 return;
             if(jeu.getEtatJeu() == Jeu.ETAT_CHOIX_CARTE){
                 if(coup.getCarte() != null)
@@ -243,18 +178,4 @@ public class IAMinMax extends IA {
         }
         return valeur;
     }
-
-    private void executerCoups(List<Coup> l){
-        for (Coup coup : l) {
-            jeu.jouerCoup(coup);
-        }
-    }
-
-    private void desexecuterCoups(List<Coup> l){
-        int taille = l.size();
-        for (int i = taille - 1; i >= 0; i--) {
-            l.get(i).desexecuter();
-        }
-    }
-
 }
