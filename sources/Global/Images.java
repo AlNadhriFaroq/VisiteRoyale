@@ -63,11 +63,11 @@ public class Images {
     }
 
     public static Image getImageCarte(String nom) {
-        return lireImage("Cartes" + File.separator + nom);
+        return lireImage("Cartes/" + nom);
     }
 
     public static Image getImagePion(String nom) {
-        return lireImage("Pions" + File.separator + nom);
+        return lireImage("Pions/" + nom);
     }
 
     public static void setTexture(String texture) {
