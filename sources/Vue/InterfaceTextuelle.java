@@ -5,6 +5,7 @@ import Global.Audios;
 import Global.Format;
 import IA.IA;
 import Modele.*;
+import Vue.Adaptateurs.AdaptateurTemps;
 
 import java.awt.*;
 import java.util.Scanner;
@@ -241,7 +242,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case "musique+":
             case "augmentermusique":
                 if (Audios.peutAugmenterVolume(Audios.MUSIQUE)) {
-                    ctrl.changerVolume(-1);
+                    ctrl.changerVolume(-1, Audios.MUSIQUE);
                     System.out.println("Augmentation du volume.");
                 } else {
                     System.out.println("Volume déjà au maximum.");
@@ -252,7 +253,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case "musique-":
             case "diminuermusique":
                 if (Audios.peutDiminuerVolume(Audios.MUSIQUE)) {
-                    ctrl.changerVolume(-2);
+                    ctrl.changerVolume(-2, Audios.MUSIQUE);
                     System.out.println("Diminution du volume.");
                 } else {
                     System.out.println("Volume déjà au minimum.");
@@ -263,7 +264,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case "sons+":
             case "augmentersons":
                 if (Audios.peutAugmenterVolume(Audios.SONS)) {
-                    ctrl.changerVolume(-1);
+                    ctrl.changerVolume(-1, Audios.SONS);
                     System.out.println("Augmentation du volume.");
                 } else {
                     System.out.println("Volume déjà au maximum.");
@@ -274,7 +275,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
             case "sons-":
             case "diminuersons":
                 if (Audios.peutDiminuerVolume(Audios.SONS)) {
-                    ctrl.changerVolume(-2);
+                    ctrl.changerVolume(-2, Audios.SONS);
                     System.out.println("Diminution du volume.");
                 } else {
                     System.out.println("Volume déjà au minimum.");
@@ -533,7 +534,7 @@ public class InterfaceTextuelle extends InterfaceUtilisateur {
 
     @Override
     public void run() {
-        this.mettreAJour();
+        mettreAJour();
 
         Timer timer = new Timer(16, new AdaptateurTemps(ctrl));
         timer.start();
