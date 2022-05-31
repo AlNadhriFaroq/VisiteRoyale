@@ -47,6 +47,12 @@ public class Tas<E> {
         taille++;
     }
 
+    public int getPoidsPremier(){
+        if(taille == 0)
+            return 0;
+        return poids.get(0);
+    }
+
     public E extraire() {
         if (estVide())
             return null;

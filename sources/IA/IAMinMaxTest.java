@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IAMinMaxTest extends IA {
-    private static final int PROFONDEUR = 1;
+    private static final int PROFONDEUR = 3;
     Tas<List<Coup>> lj;
     Tas<List<Coup>> lj2;
     int poidsPlateauMax;
@@ -55,7 +55,7 @@ public class IAMinMaxTest extends IA {
     }
 
     private int minMaxA(int profondeur) {
-        System.out.println("minMaxA");
+        //System.out.println("minMaxA");
         int valeur;
         if (estFeuille()) {
             return evaluerPlateau();
@@ -67,18 +67,21 @@ public class IAMinMaxTest extends IA {
             valeur = Integer.MIN_VALUE;
             int val;
             Tas<List<Coup>> tasA = new Tas<>(true);
-            evaluerTour(new ArrayList<>(), tasA);
+            int plateauActuelle = evaluerPlateau();
+            evaluerTour(new ArrayList<>(), tasA, plateauActuelle);
             int i = 0;
             while(!tasA.estVide()){
-
+                this.valeur = 0;
                 tmp = tasA.extraire();
+                System.out.println("Meilleure eval " + tmp + " prof = " + profondeur);
                 if(i == 0){
                     i++;
-                    System.out.println("Meilleure eval " + tmp);
                 }
                 if(tmp != null){
                     executerCoups(tmp);
-                    val = Math.max(evaluerPlateau(), minMaxB(profondeur + 1));
+                    int minmaxB = minMaxB(profondeur + 1);
+                    int plateau = evaluerPlateau();
+                    val = Math.max(plateau, minmaxB);
                     if(val > valeur){
                         valeur = val;
                         if(profondeur == 0){
@@ -92,7 +95,7 @@ public class IAMinMaxTest extends IA {
         return valeur;
     }
 
-    private int minMaxB(int profondeur) {
+    private int minMaxB(int profondeur){
        // System.out.println("minMaxB");
         int valeur;
         if (estFeuille())
@@ -104,11 +107,12 @@ public class IAMinMaxTest extends IA {
             valeur = Integer.MAX_VALUE;
             int val;
             Tas<List<Coup>> tasB = new Tas<>(true);
-            evaluerTour(new ArrayList<>(), tasB);
+            int plateauActuelle = evaluerPlateau();
+            evaluerTour(new ArrayList<>(), tasB, plateauActuelle);
             while(!tasB.estVide()){
+                this.valeur = 0;
                 tmp = tasB.extraire();
                 if(tmp != null){
-                    System.out.println(tmp);
                     executerCoups(tmp);
                     val = Math.min(evaluerPlateau(), minMaxA(profondeur + 1));
                     if(val < valeur) {
@@ -121,7 +125,7 @@ public class IAMinMaxTest extends IA {
         return valeur;
     }
 
-    private void evaluerTour(List<Coup> listeCoup, Tas<List<Coup>> tas) {
+    private void evaluerTour(List<Coup> listeCoup, Tas<List<Coup>> tas, int plateauActuel) {
         List<Coup> lc = jeu.calculerListeCoup();
         if(!aVuGc){
             if(jeu.getMain(jeu.getJoueurCourant()).contientCarte(Carte.GC)){
@@ -176,12 +180,13 @@ public class IAMinMaxTest extends IA {
                         valeur += 3000;
                     }
                 }
-                tas.inserer(new ArrayList<>(listeCoup), evaluerPlateau());
+                if(evaluerPlateau() > plateauActuel)
+                    tas.inserer(new ArrayList<>(listeCoup), evaluerPlateau());
                 poidsPlateauMax = valeur;
                 valeur = 0;
             }
             else
-                evaluerTour(listeCoup, tas);
+                evaluerTour(listeCoup, tas, plateauActuel);
             listeCoup.remove(listeCoup.size() - 1);
             coup.desexecuter();
         }
