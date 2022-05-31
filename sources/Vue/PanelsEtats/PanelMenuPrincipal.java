@@ -7,6 +7,7 @@ import Vue.Adaptateurs.*;
 import Vue.Composants.ComposantsMenus.BoutonMenu;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
 public class PanelMenuPrincipal extends JPanel {
@@ -42,17 +43,25 @@ public class PanelMenuPrincipal extends JPanel {
         boutons[credits] = new BoutonMenu("Crédits");
         boutons[quitter] = new BoutonMenu("Quitter");
 
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(0, 0, 0, 200));
+        panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+        panel.setLayout(new GridBagLayout());
+
         /* Disposition dans le panel */
-        add(Box.createGlue(), new GBC(0, 0, 1, 15).setWeightx(12));
-        add(Box.createGlue(), new GBC(2, 0, 1, 15).setWeightx(75));
-        add(Box.createGlue(), new GBC(1, 0).setWeight(13, 26));
-        add(Box.createGlue(), new GBC(1, 14).setWeight(13, 26));
+        panel.add(Box.createGlue(), new GBC(0, 0, 1, 15).setWeightx(10));
+        panel.add(Box.createGlue(), new GBC(2, 0, 1, 15).setWeightx(10));
+        panel.add(Box.createGlue(), new GBC(1, 0).setWeight(80, 26));
+        panel.add(Box.createGlue(), new GBC(1, 14).setWeight(80, 26));
 
         for (int i = 0; i < 7; i++) {
-            add(boutons[i], new GBC(1, 2 * i + 1).setWeight(13, 5).setFill(GBC.BOTH));
+            panel.add(boutons[i], new GBC(1, 2 * i + 1).setWeight(80, 5).setFill(GBC.BOTH));
             if (i != 6)
-                add(Box.createGlue(), new GBC(1, 2 * i + 2).setWeight(13, 2));
+                panel.add(Box.createGlue(), new GBC(1, 2 * i + 2).setWeight(80, 2));
         }
+
+        add(panel, new GBC(0, 0).setWeight(15, 1).setFill(GBC.BOTH));
+        add(Box.createGlue(), new GBC(1, 0).setWeight(85, 1));
 
         /* Retransmission des evenements au controleur */
         for (BoutonMenu bouton : boutons) {
@@ -63,5 +72,10 @@ public class PanelMenuPrincipal extends JPanel {
 
     public BoutonMenu getBouton(int indice) {
         return boutons[indice];
+    }
+
+    public void redimensionner() {
+        for (BoutonMenu bouton : boutons)
+            bouton.setFont(new Font(null).deriveFont(Font.BOLD, (float) bouton.getHeight() / 3));
     }
 }

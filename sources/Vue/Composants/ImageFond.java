@@ -38,6 +38,12 @@ public class ImageFond extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D dessin = (Graphics2D) g;
-        dessin.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+        int hauteur = getHeight();
+        int largeur = hauteur * img.getWidth(null) / img.getHeight(null);
+        if (largeur < getWidth()) {
+            largeur = getWidth();
+            hauteur = largeur * img.getHeight(null) / img.getWidth(null);
+        }
+        dessin.drawImage(img, getWidth() / 2 - largeur / 2, getHeight() / 2 - hauteur / 2, largeur, hauteur, null);
     }
 }

@@ -2,69 +2,87 @@ package Vue.Composants;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.font.LineMetrics;
+import java.awt.font.*;
+import java.awt.geom.AffineTransform;
 
 public class TexteAContour extends JLabel {
+    protected Color couleurContour;
+    protected Stroke epaisseur;
 
-    public TexteAContour(String text, int horizontalAlignement) {
-        super(text, horizontalAlignement);
+    public TexteAContour() {
+        super();
     }
 
-    private int left_x, left_y, right_x, right_y;
-
-    private Color left_color, right_color;
-
-    public void setLeftShadow(int x, int y, Color color) {
-        left_x = x;
-        left_y = y;
-        left_color = color;
+    public TexteAContour(String text) {
+        super(text);
     }
 
-    public void setRightShadow(int x, int y, Color color) {
-        right_x = x;
-        right_y = y;
-        right_color = color;
+    public TexteAContour(String text, int alignment) {
+        super(text, alignment);
     }
 
-    public Dimension getPreferredSize() {
-        String text = getText();
-        FontMetrics fm = this.getFontMetrics(getFont());
-
-        int w = fm.stringWidth(text);
-        w += left_x + right_x;
-
-        int h = fm.getHeight();
-        h += left_y + right_y;
-
-        return new Dimension(w, h);
+    public Color getCouleurContour() {
+        return couleurContour;
     }
 
+    public Stroke getEpaisseur() {
+        return epaisseur;
+    }
+
+    public void setCouleurContour(Color c) {
+        couleurContour = c;
+        repaint();
+    }
+
+    public void setEpaisseur(Stroke s) {
+        epaisseur = s;
+        repaint();
+    }
+
+    @Override
     public void paintComponent(Graphics g) {
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        Dimension dim = getSize();
+        Insets ecarts = getInsets();
+        int x = ecarts.left;
+        int y = ecarts.top;
+        int largeur = dim.width - ecarts.left - ecarts.right;
+        int hauteur = dim.height - ecarts.top - ecarts.bottom;
 
-        char[] chars = getText().toCharArray();
+        if (isOpaque()) {
+            g.setColor(getBackground());
+            g.fillRect(0, 0, dim.width, dim.height);
+        }
+        paintBorder(g);
 
-        FontMetrics fm = this.getFontMetrics(getFont());
-        int h = fm.getAscent();
-        LineMetrics lm = fm.getLineMetrics(getText(), g);
-        g.setFont(getFont());
+        Graphics2D dessin = (Graphics2D) g;
+        dessin.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        dessin.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-        int x = 0;
+        TextLayout tl = new TextLayout(getText(), getFont(), dessin.getFontRenderContext());
+        Shape formeSource = tl.getOutline(AffineTransform.getShearInstance(0.0, 0.0));
+        Rectangle rectTexte = formeSource.getBounds();
 
-        for (char ch : chars) {
-            int w = fm.charWidth(ch);
+        float xTexte = x - rectTexte.x;
+        switch (getHorizontalAlignment()) {
+            case CENTER:
+                xTexte = x + (largeur - rectTexte.width) / 2;
+                break;
+            case RIGHT:
+                xTexte = x + (largeur - rectTexte.width);
+                break;
+        }
+        float yTexte = y + hauteur / 2 + tl.getAscent() / 4;
 
-            g.setColor(left_color);
-            g.drawString("" + ch, x - left_x, h - left_y);
+        Shape forme = AffineTransform.getTranslateInstance(xTexte, yTexte).createTransformedShape(formeSource);
 
-            g.setColor(right_color);
-            g.drawString("" + ch, x + right_x, h + right_y);
-
-            g.setColor(getForeground());
-            g.drawString("" + ch, x, h);
-
-            x += w;
+        if (couleurContour != null) {
+            dessin.setColor(couleurContour);
+            if (epaisseur != null)
+                dessin.setStroke(epaisseur);
+            dessin.draw(forme);
         }
 
+        dessin.setColor(getForeground());
+        dessin.fill(forme);
     }
 }

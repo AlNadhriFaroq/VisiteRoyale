@@ -30,95 +30,58 @@ public class PanelCredits extends JPanel {
         /* Construction des composants */
         boutonRetour = new BoutonMenu("Retour");
 
-        JLabel txt1 = new JLabel("CREDITS", JLabel.CENTER);
-        JLabel txt2 = new JLabel("Université Grenoble-Alpes", JLabel.CENTER);
-        JLabel txt3 = new JLabel("Licence Informatique générale 3e année", JLabel.CENTER);
-        JLabel txt4 = new JLabel("Programmation et projet logiciel", JLabel.CENTER);
-        JLabel txt5 = new JLabel("Sous la direction de :", JLabel.CENTER);
-        JLabel txt6 = new JLabel("Gabriela Nicole González Sáez", JLabel.CENTER);
-        JLabel txt7 = new JLabel("Développeurs :", JLabel.CENTER);
-        JLabel txt8 = new JLabel("Faroq Al-Nadhari", JLabel.CENTER);
-        JLabel txt9 = new JLabel("Nadim Babba", JLabel.CENTER);
-        JLabel txt10 = new JLabel("Rodolphe Beguin", JLabel.CENTER);
-        JLabel txt11 = new JLabel("Maxime Bouchenoua", JLabel.CENTER);
-        JLabel txt12 = new JLabel("Sacha Isaac--Chassande", JLabel.CENTER);
-        JLabel txt13 = new JLabel("Landry Rolland", JLabel.CENTER);
-        JLabel txt14 = new JLabel("Créateurs du jeu de société :", JLabel.CENTER);
-        JLabel txt15 = new JLabel("Auteur : Reiner Knizia", JLabel.CENTER);
-        JLabel txt16 = new JLabel("Illustrateur : Karl James Mountford", JLabel.CENTER);
-        JLabel txt17 = new JLabel("Chefs de projet : Mathilde Audinet, Adrien Fenouillet", JLabel.CENTER);
-        JLabel txt18 = new JLabel("Rédacteur : Mathilde Audinet, Reiner Knizia", JLabel.CENTER);
-        JLabel txt19 = new JLabel("Graphiste : Cindy Roth", JLabel.CENTER);
-        JLabel txt20 = new JLabel("Relecteur : Xavier Taverne", JLabel.CENTER);
+        JLabel[] textes = new JLabel[25];
+        textes[0] = new JLabel("CREDITS", JLabel.CENTER);
+        textes[1] = new JLabel(" ", JLabel.CENTER);
+        textes[2] = new JLabel("Université Grenoble-Alpes", JLabel.CENTER);
+        textes[3] = new JLabel("Licence Informatique générale 3e année", JLabel.CENTER);
+        textes[4] = new JLabel("Programmation et projet logiciel", JLabel.CENTER);
+        textes[5] = new JLabel(" ", JLabel.CENTER);
+        textes[6] = new JLabel("Sous la direction de :", JLabel.CENTER);
+        textes[7] = new JLabel("Gabriela Nicole González Sáez", JLabel.CENTER);
+        textes[8] = new JLabel(" ", JLabel.CENTER);
+        textes[9] = new JLabel("Développeurs :", JLabel.CENTER);
+        textes[10] = new JLabel("Faroq Al-Nadhari", JLabel.CENTER);
+        textes[11] = new JLabel("Nadim Babba", JLabel.CENTER);
+        textes[12] = new JLabel("Rodolphe Beguin", JLabel.CENTER);
+        textes[13] = new JLabel("Maxime Bouchenoua", JLabel.CENTER);
+        textes[14] = new JLabel("Sacha Isaac--Chassande", JLabel.CENTER);
+        textes[15] = new JLabel("Landry Rolland", JLabel.CENTER);
+        textes[16] = new JLabel(" ", JLabel.CENTER);
+        textes[17] = new JLabel("Créateurs du jeu de société :", JLabel.CENTER);
+        textes[18] = new JLabel("Auteur : Reiner Knizia", JLabel.CENTER);
+        textes[19] = new JLabel("Illustrateur : Karl James Mountford", JLabel.CENTER);
+        textes[20] = new JLabel("Chefs de projet : Mathilde Audinet, Adrien Fenouillet", JLabel.CENTER);
+        textes[21] = new JLabel("Rédacteur : Mathilde Audinet, Reiner Knizia", JLabel.CENTER);
+        textes[22] = new JLabel("Graphiste : Cindy Roth", JLabel.CENTER);
+        textes[23] = new JLabel("Relecteur : Xavier Taverne", JLabel.CENTER);
+        textes[24] = new JLabel(" ", JLabel.CENTER);
 
-        txt1.setForeground(Color.WHITE);
-        txt2.setForeground(Color.WHITE);
-        txt3.setForeground(Color.WHITE);
-        txt4.setForeground(Color.WHITE);
-        txt5.setForeground(Color.WHITE);
-        txt6.setForeground(Color.WHITE);
-        txt7.setForeground(Color.WHITE);
-        txt8.setForeground(Color.WHITE);
-        txt9.setForeground(Color.WHITE);
-        txt10.setForeground(Color.WHITE);
-        txt11.setForeground(Color.WHITE);
-        txt12.setForeground(Color.WHITE);
-        txt13.setForeground(Color.WHITE);
-        txt14.setForeground(Color.WHITE);
-        txt15.setForeground(Color.WHITE);
-        txt16.setForeground(Color.WHITE);
-        txt17.setForeground(Color.WHITE);
-        txt18.setForeground(Color.WHITE);
-        txt19.setForeground(Color.WHITE);
-        txt20.setForeground(Color.WHITE);
-
-
-
+        for (JLabel texte : textes)
+            texte.setForeground(Color.WHITE);
 
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(0, 0, 0, 205));
+        panel.setBackground(new Color(0, 0, 0, 220));
         panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         panel.setLayout(new GridBagLayout());
 
         /* Disposition des composants dans le panel */
         panel.add(Box.createGlue(), new GBC(0, 0, 1, 28).setWeightx(10));
         panel.add(Box.createGlue(), new GBC(2, 0, 1, 28).setWeightx(10));
-        panel.add(Box.createGlue(), new GBC(1, 0).setWeight(80, 12));
-        panel.add(Box.createGlue(), new GBC(1, 27).setWeight(80, 12));
+        panel.add(Box.createGlue(), new GBC(1, 0).setWeight(80, 1));
+        panel.add(Box.createGlue(), new GBC(1, 27).setWeight(80, 1));
 
-        GBC gbc = new GBC(1, 1).setWeight(80, 1).setFill(GBC.BOTH);
-        panel.add(txt1, gbc);
-        panel.add(Box.createGlue(), gbc.setgridy(2).setWeighty(12));
-        panel.add(txt2, gbc.setgridy(3));
-        panel.add(txt3, gbc.setgridy(4));
-        panel.add(txt4, gbc.setgridy(5));
-        panel.add(Box.createGlue(), gbc.setgridy(6).setWeighty(12));
-        panel.add(txt5, gbc.setgridy(7));
-        panel.add(txt6, gbc.setgridy(8));
-        panel.add(Box.createGlue(), gbc.setgridy(9).setWeighty(12));
-        panel.add(txt7, gbc.setgridy(10));
-        panel.add(txt8, gbc.setgridy(11));
-        panel.add(txt9, gbc.setgridy(12));
-        panel.add(txt10, gbc.setgridy(13));
-        panel.add(txt11, gbc.setgridy(14));
-        panel.add(txt12, gbc.setgridy(15));
-        panel.add(txt13, gbc.setgridy(16));
-        panel.add(Box.createGlue(), gbc.setgridy(17).setWeighty(12));
-        panel.add(txt14, gbc.setgridy(18));
-        panel.add(txt15, gbc.setgridy(19));
-        panel.add(txt16, gbc.setgridy(20));
-        panel.add(txt17, gbc.setgridy(21));
-        panel.add(txt18, gbc.setgridy(22));
-        panel.add(txt19, gbc.setgridy(23));
-        panel.add(txt20, gbc.setgridy(24));
-        panel.add(Box.createGlue(), gbc.setgridy(25).setWeighty(12));
-        panel.add(boutonRetour, gbc.setgridy(26).setFill(GBC.VERTICAL));
+        GBC gbc = new GBC(1, 0).setWeightx(80).setFill(GBC.BOTH);
+        for (int i = 0; i < textes.length; i++)
+            panel.add(textes[i], gbc.setgridy(i + 1));
+
+        panel.add(boutonRetour, new GBC(1, textes.length + 1).setWeightx(80).setAnchor(GBC.CENTER));
 
         add(Box.createGlue(), new GBC(0, 0, 1, 3).setWeightx(46));
         add(Box.createGlue(), new GBC(2, 0, 1, 3).setWeightx(46));
-        add(Box.createGlue(), new GBC(1, 0).setWeight(8, 20));
-        add(Box.createGlue(), new GBC(1, 2).setWeight(8, 20));
-        add(panel, new GBC(1, 1).setWeight(8, 60).setFill(GBC.BOTH));
+        add(Box.createGlue(), new GBC(1, 0).setWeight(8, 40));
+        add(Box.createGlue(), new GBC(1, 2).setWeight(8, 40));
+        add(panel, new GBC(1, 1).setWeight(8, 20).setFill(GBC.BOTH));
 
         /* Retransmission des événements au contrôleur */
         boutonRetour.addActionListener(new AdaptateurBoutons(ctrl, fenetre, prog));

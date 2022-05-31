@@ -2,6 +2,7 @@ package Vue.Composants.ComposantsJeu;
 
 import Global.Images;
 import Modele.Paquet;
+import Modele.Plateau;
 import Modele.Programme;
 import Vue.Composants.TexteAContour;
 import Vue.GBC;
@@ -28,16 +29,16 @@ public class PiocheVue extends JPanel {
         setLayout(new GridBagLayout());
 
         nbCartes = new TexteAContour("", 0);
-        nbCartes.setLeftShadow(2,2,Color.BLACK);
-        nbCartes.setRightShadow(2,2, Color.BLACK);
-        nbCartes.setForeground(Color.white);
+        nbCartes.setForeground(Color.WHITE);
+        nbCartes.setCouleurContour(Color.BLACK);
+        nbCartes.setEpaisseur(new BasicStroke(4f));
 
         nbCartes.setVisible(false);
 
         add(nbCartes, new GBC(0,0).setWeight(1,1).setAnchor(GBC.CENTER));
     }
 
-    public TexteAContour getTxtNbCartes() {
+    public JLabel getTxtNbCartes() {
         return nbCartes;
     }
 
@@ -52,13 +53,17 @@ public class PiocheVue extends JPanel {
 
     public void mettreAJour() {
         Paquet paquet = pioche ? prog.getJeu().getPioche() : prog.getJeu().getDefausse();
+
         if (paquet.estVide())
             img = Images.getImageCarte("Vide");
         else if (pioche)
             img = Images.getImageCarte("Dos");
         else
             img = Images.getImageCarte(paquet.getCarte(paquet.getTaille() - 1).toString());
+
         nbCartes.setText(Integer.toString(paquet.getTaille()));
+        nbCartes.setVisible(pioche && paquet.getTaille() <= 8 && prog.getJeu().getPlateau().getFaceCouronne() == Plateau.FACE_PTT_CRN);
+
         repaint();
     }
 

@@ -1,7 +1,6 @@
 package Vue.PanelsEtats;
 
 import Controleur.ControleurMediateur;
-import Global.Images;
 import Modele.*;
 import Vue.Adaptateurs.AdaptateurBoutons;
 import Vue.*;
@@ -47,11 +46,11 @@ public class PanelFinPartie extends JPanel {
         panel.add(Box.createGlue(), new GBC(1, 0, 3, 1).setWeight(80, 10));
         panel.add(Box.createGlue(), new GBC(1, 4, 1, 3).setWeight(80, 10));
 
-        panel.add(img, new GBC(1, 1, 3, 1).setWeight(80, 40).setFill(GBC.BOTH));
+        panel.add(img, new GBC(1, 1, 3, 1).setWeight(80, 50).setFill(GBC.BOTH));
         panel.add(Box.createGlue(), new GBC(1, 2, 3, 1).setWeight(80, 10));
-        panel.add(boutonNouvellePartie, new GBC(1, 3).setWeight(30, 30).setFill(GBC.BOTH));
-        panel.add(Box.createGlue(), new GBC(2, 3).setWeight(10, 30));
-        panel.add(boutonRetour, new GBC(3, 3).setWeight(40, 30).setFill(GBC.BOTH));
+        panel.add(boutonNouvellePartie, new GBC(1, 3).setWeight(30, 20).setFill(GBC.BOTH));
+        panel.add(Box.createGlue(), new GBC(2, 3).setWeight(10, 20));
+        panel.add(boutonRetour, new GBC(3, 3).setWeight(40, 20).setFill(GBC.BOTH));
 
         add(Box.createGlue(), new GBC(0, 0, 1, 3).setWeightx(20));
         add(Box.createGlue(), new GBC(2, 0, 1, 3).setWeightx(20));
@@ -72,6 +71,11 @@ public class PanelFinPartie extends JPanel {
 
     public BoutonMenu getBoutonRetour() {
         return boutonRetour;
+    }
+
+    public void redimensionner() {
+        boutonNouvellePartie.setFont(new Font(null).deriveFont(Font.BOLD, (float) boutonNouvellePartie.getHeight() / 3));
+        boutonRetour.setFont(new Font(null).deriveFont(Font.BOLD, (float) boutonRetour.getHeight() / 3));
     }
 
     public void mettreAJour() {

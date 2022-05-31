@@ -55,12 +55,15 @@ public class PionVue extends JPanel {
 
         dessin.drawImage(img, 2, 2, getWidth() - 4, getHeight() - 4, null);
         if (selectionne || selectionnable) {
-            dessin.setColor(selectionne ? Color.BLUE : (dessus ? Color.WHITE : Color.YELLOW));
-            dessin.setStroke(new BasicStroke(3));
-            dessin.drawOval(1, 1, getWidth() - 3, getHeight() - 3);
+            dessin.setColor(selectionne ? new Color(255, 166, 0, 255) : (dessus ? new Color(255, 97, 90, 255) : new Color(243, 11, 2, 255)));
+            dessin.setStroke(new BasicStroke(4));
+            dessin.drawOval(4, 4, getWidth() - 8, getHeight() - 8);
         } else {
             dessin.setColor(new Color(0, 0, 0, 10));
             dessin.fillOval(2, 2, getWidth() - 4, getHeight() - 4);
         }
+        dessin.setColor(Color.BLACK);
+        dessin.setStroke(new BasicStroke(1));
+        dessin.drawOval(2, 2, getWidth() - 4, getHeight() - 4);
     }
 }

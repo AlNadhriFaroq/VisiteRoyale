@@ -67,6 +67,7 @@ public class PanelMenuOptions extends JPanel {
         volumeMusique.setPaintTicks(true);
         volumeMusique.setPaintLabels(true);
         volumeMusique.setSnapToTicks(true);
+        volumeMusique.setFocusable(false);
         volumeMusique.setValue(Integer.parseInt(Configuration.instance().lire("VolumeMusique")));
 
         volumeSons = new JSlider();
@@ -80,28 +81,34 @@ public class PanelMenuOptions extends JPanel {
         volumeSons.setPaintTicks(true);
         volumeSons.setPaintLabels(true);
         volumeSons.setSnapToTicks(true);
+        volumeSons.setFocusable(false);
         volumeSons.setValue(Integer.parseInt(Configuration.instance().lire("VolumeSons")));
 
         musique = new JComboBox<>();
+        musique.setFocusable(false);
         musique.setModel(new DefaultComboBoxModel<>(Audios.MUSIQUES));
         musique.setSelectedItem(Configuration.instance().lire("Musique"));
 
         niveau = new JComboBox<>();
+        niveau.setFocusable(false);
         niveau.setModel(new DefaultComboBoxModel<>(new String[] {"Débutant", "Amateur", "Intermédiaire", "Professionnel", "Expert"}));
         niveau.setSelectedItem(IA.IAenTexte(Integer.parseInt(Configuration.instance().lire("NiveauDifficulteIA"))));
 
         texture = new JComboBox<>();
+        texture.setFocusable(false);
         texture.setModel(new DefaultComboBoxModel<>(new String[] {"Normal", "Daltonien"}));
         texture.setSelectedItem(Configuration.instance().lire("Texture"));
 
         pleinEcran = new JCheckBox();
         pleinEcran.setBackground(new Color(0, 0, 0, 0));
         pleinEcran.setOpaque(false);
+        pleinEcran.setFocusable(false);
         pleinEcran.setSelected(Boolean.parseBoolean(Configuration.instance().lire("PleinEcran")));
 
         mainCachee = new JCheckBox();
         mainCachee.setBackground(new Color(0, 0, 0, 0));
         mainCachee.setOpaque(false);
+        mainCachee.setFocusable(false);
         mainCachee.setSelected(Boolean.parseBoolean(Configuration.instance().lire("MainCachee")));
 
         boutonRetour = new BoutonMenu("Retour");

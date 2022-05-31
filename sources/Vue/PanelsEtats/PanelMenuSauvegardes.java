@@ -101,6 +101,14 @@ public class PanelMenuSauvegardes extends JPanel {
         return boutonMenuRetour;
     }
 
+
+    public void redimensionner() {
+        for (BoutonSauvegarde bouton : boutonsSauvegardes)
+            bouton.setFont(new Font(null).deriveFont(Font.BOLD, (float) bouton.getHeight() / 3));
+        for (BoutonSupprimer bouton : boutonsSupprimer)
+            bouton.setFont(new Font(null).deriveFont(Font.BOLD, (float) bouton.getHeight() / 3));
+    }
+
     public void mettreAJour() {
         for (int i = 0; i < prog.getSauvegardes().length; i++) {
             boutonsSauvegardes[i].setEnabled(true);
@@ -112,5 +120,9 @@ public class PanelMenuSauvegardes extends JPanel {
             boutonsSupprimer[i].setEnabled(false);
             boutonsSauvegardes[i].setText("Sauvegarde vide");
         }
+        for (BoutonSauvegarde bouton : boutonsSauvegardes)
+            bouton.setFont(new Font(null).deriveFont(Font.BOLD, (float) bouton.getHeight() / 3));
+        for (BoutonSupprimer bouton : boutonsSupprimer)
+            bouton.setFont(new Font(null).deriveFont(Font.BOLD, (float) bouton.getHeight() / 3));
     }
 }

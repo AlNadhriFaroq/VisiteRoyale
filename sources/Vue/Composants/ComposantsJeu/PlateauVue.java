@@ -87,7 +87,7 @@ public class PlateauVue extends JPanel {
         }
         for (int c = Plateau.BORDURE_VRT; c < Plateau.BORDURE_RGE + 1; c++) {
             boolean bool1 = (destinationVrt != -1 && c < position) || (destinationRge != -1 && c > position);
-            boolean bool2 = c == destinationVrt || c == destinationRge;
+            boolean bool2 = (c == destinationVrt && jeu.peutSelectionnerDirection(Plateau.DIRECTION_VRT)) || (c == destinationRge && jeu.peutSelectionnerDirection(Plateau.DIRECTION_RGE));
             boolean bool3 = c == destinationChoisie;
             casesVue[c].mettreAJour(bool1, bool2, false, bool3);
         }

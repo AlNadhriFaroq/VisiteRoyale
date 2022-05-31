@@ -49,12 +49,12 @@ public class PanelChoixJoueur extends JPanel {
         panel.add(Box.createGlue(), new GBC(1, 0, 3, 0).setWeight(80, 10));
         panel.add(Box.createGlue(), new GBC(1, 5, 3, 1).setWeight(80, 10));
 
-        panel.add(txt1, new GBC(1, 1, 3, 1).setWeight(80, 23).setFill(GBC.BOTH));
-        panel.add(txt2, new GBC(1, 2, 3, 1).setWeight(80, 23).setFill(GBC.BOTH));
-        panel.add(Box.createGlue(), new GBC(1, 3, 3, 1).setWeight(80, 23));
-        panel.add(boutonGauche, new GBC(1, 4).setWeight(35, 23).setFill(GBC.BOTH));
-        panel.add(Box.createGlue(), new GBC(2, 4).setWeight(10, 23));
-        panel.add(boutonDroite, new GBC(3, 4).setWeight(35, 23).setFill(GBC.BOTH));
+        panel.add(txt1, new GBC(1, 1, 3, 1).setWeight(80, 25).setFill(GBC.BOTH));
+        panel.add(txt2, new GBC(1, 2, 3, 1).setWeight(80, 25).setFill(GBC.BOTH));
+        panel.add(Box.createGlue(), new GBC(1, 3, 3, 1).setWeight(80, 10));
+        panel.add(boutonGauche, new GBC(1, 4).setWeight(35, 30).setFill(GBC.BOTH));
+        panel.add(Box.createGlue(), new GBC(2, 4).setWeight(10, 30));
+        panel.add(boutonDroite, new GBC(3, 4).setWeight(35, 30).setFill(GBC.BOTH));
 
         add(Box.createGlue(), new GBC(0, 0, 1, 3).setWeightx(35));
         add(Box.createGlue(), new GBC(2, 0, 1, 3).setWeightx(35));
@@ -75,5 +75,10 @@ public class PanelChoixJoueur extends JPanel {
 
     public BoutonMenu getBoutonDroite() {
         return boutonDroite;
+    }
+
+    public void redimensionner() {
+        boutonGauche.setFont(new Font(null).deriveFont(Font.BOLD, (float) boutonGauche.getHeight() / 3));
+        boutonDroite.setFont(new Font(null).deriveFont(Font.BOLD, (float) boutonDroite.getHeight() / 3));
     }
 }

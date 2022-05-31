@@ -44,11 +44,13 @@ public class Images {
     public static final Image TEXTE_OUVRIR_MENU = lireImage("Textes/OuvrirMenu");
     public static final Image TEXTE_INDICE = lireImage("Textes/Ampoule");
     public static final Image TEXTE_SUPPRIMER = lireImage("Textes/Supprimer");
+    public static final Image TEXTE_FIN_TOUR = lireImage("Textes/FinTour");
 
     public static final Image CHATEAU_VRT = lireImage("Decors/ChateauVrt");
     public static final Image CHATEAU_RGE = lireImage("Decors/ChateauRge");
     public static final Image POUVOIR_SOR = lireImage("Decors/PouvoirSor");
     public static final Image POUVOIR_FOU = lireImage("Decors/PouvoirFou");
+    public static final Image ICONE = lireImage("Decors/Icone");
 
     public static final Image FOND_JEU = lireImage("Fonds/FondBoisFonce");
     public static final Image FOND_MENU = lireImage("Fonds/FondDosCarte");

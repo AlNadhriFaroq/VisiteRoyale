@@ -14,7 +14,9 @@ public class CaseVue extends JPanel {
     boolean selectionne;
 
     Color couleurLignes;
+    Color couleurLignesDest;
     Color couleurLignesDessus;
+    Color couleurLignesSelect;
 
     public CaseVue(int c) {
         this.c = c;
@@ -23,8 +25,10 @@ public class CaseVue extends JPanel {
         dessus = false;
         selectionne = false;
 
-        couleurLignes = (c <= Plateau.CHATEAU_VRT || c >= Plateau.CHATEAU_RGE || c == Plateau.FONTAINE) ? new Color(200, 240, 200) : Color.BLACK;
-        couleurLignesDessus = (c <= Plateau.CHATEAU_VRT || c >= Plateau.CHATEAU_RGE || c == Plateau.FONTAINE) ? new Color(126, 231, 126) : Color.WHITE;
+        couleurLignes = (c <= Plateau.CHATEAU_VRT || c >= Plateau.CHATEAU_RGE || c == Plateau.FONTAINE) ? new Color(126, 231, 126) : Color.BLACK;
+        couleurLignesDest = (c <= Plateau.CHATEAU_VRT || c >= Plateau.CHATEAU_RGE || c == Plateau.FONTAINE) ? new Color(243, 11, 2) : new Color(243, 11, 2, 255);
+        couleurLignesDessus = (c <= Plateau.CHATEAU_VRT || c >= Plateau.CHATEAU_RGE || c == Plateau.FONTAINE) ? new Color(255, 97, 90) : new Color(255, 97, 90, 255);
+        couleurLignesSelect = (c <= Plateau.CHATEAU_VRT || c >= Plateau.CHATEAU_RGE || c == Plateau.FONTAINE) ? new Color(255, 166, 0) : new Color(255, 166, 0, 255);
         setLayout(new GridLayout(4, 1));
     }
 
@@ -56,9 +60,9 @@ public class CaseVue extends JPanel {
 
         setBackground(Format.getCouleurCase(c));
 
-        dessin.setColor(selectionne ? Color.BLUE : (dessus ? (destination ? Color.WHITE : couleurLignesDessus) : (destination ? Color.YELLOW : couleurLignes)));
+        dessin.setColor(selectionne ? couleurLignesSelect : (dessus ? couleurLignesDessus : (destination ? couleurLignesDest : couleurLignes)));
         dessin.setStroke(new BasicStroke(5));
-        dessin.drawRect(0, 0, getWidth(), getHeight());
+        dessin.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
         dessin.drawLine(0, getHeight() / 4, getWidth(), getHeight() / 4);
     }
 }

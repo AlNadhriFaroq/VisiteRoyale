@@ -29,14 +29,17 @@ public class AdaptateurSouris extends MouseAdapter {
         } else if (e.getSource() instanceof PionVue && ((PionVue) e.getSource()).estSelectionnable()) {
             ((PionVue) e.getSource()).mettreAJour(true, true, false);
         } else if (e.getSource() instanceof CaseVue && ((CaseVue) e.getSource()).estSelectionnable()) {
+            Carte carte = prog.getJeu().getSelectionCartes(prog.getJeu().getJoueurCourant()).estVide() ? null : prog.getJeu().getSelectionCartes(prog.getJeu().getJoueurCourant()).getCarte(prog.getJeu().getSelectionCartes(prog.getJeu().getJoueurCourant()).getTaille() - 1);
+            int deplacement = carte.estDeplacementGar1Plus1() && prog.getJeu().getSelectionPions(1) != null ? 1 : carte.getDeplacement();
             int positionPion = prog.getJeu().getPlateau().getPositionPion(prog.getJeu().getSelectionPions(prog.getJeu().getSelectionDirections(0) == Plateau.DIRECTION_IND ? 0 : 1));
             int positionCase = ((CaseVue) e.getSource()).getCase();
-            if (positionCase < positionPion)
-                for (int i = Plateau.BORDURE_VRT; i < positionPion; i++)
-                    fenetre.getPanelJeu().getPlateauVue().getCaseVue(i).mettreAJour(true);
-            else if (positionCase > positionPion)
-                for (int i = positionPion + 1; i < Plateau.BORDURE_RGE + 1; i++)
-                    fenetre.getPanelJeu().getPlateauVue().getCaseVue(i).mettreAJour(true);
+            if (positionCase < positionPion) {
+                int destination = positionPion - deplacement;
+                fenetre.getPanelJeu().getPlateauVue().getCaseVue(destination).mettreAJour(prog.getJeu().peutSelectionnerDirection(Plateau.DIRECTION_VRT));
+            } else if (positionCase > positionPion) {
+                int destination = positionPion + deplacement;
+                fenetre.getPanelJeu().getPlateauVue().getCaseVue(destination).mettreAJour(prog.getJeu().peutSelectionnerDirection(Plateau.DIRECTION_RGE));
+            }
         } else if (e.getSource() instanceof BoutonMenu) {
             ((BoutonMenu) e.getSource()).setForeground(BoutonMenu.couleurFoncee);
             ((BoutonMenu) e.getSource()).setBackground(BoutonMenu.couleurClaire);
@@ -64,14 +67,16 @@ public class AdaptateurSouris extends MouseAdapter {
         } else if (e.getSource() instanceof PionVue && ((PionVue) e.getSource()).estSelectionnable()) {
             ((PionVue) e.getSource()).mettreAJour(true, false, false);
         } else if (e.getSource() instanceof CaseVue && ((CaseVue) e.getSource()).estSelectionnable()) {
+            Carte carte = prog.getJeu().getSelectionCartes(prog.getJeu().getJoueurCourant()).estVide() ? null : prog.getJeu().getSelectionCartes(prog.getJeu().getJoueurCourant()).getCarte(prog.getJeu().getSelectionCartes(prog.getJeu().getJoueurCourant()).getTaille() - 1);
+            int deplacement = carte.estDeplacementGar1Plus1() && prog.getJeu().getSelectionPions(1) != null ? 1 : carte.getDeplacement();
             int positionPion = prog.getJeu().getPlateau().getPositionPion(prog.getJeu().getSelectionPions(prog.getJeu().getSelectionDirections(0) == Plateau.DIRECTION_IND ? 0 : 1));
             int positionCase = ((CaseVue) e.getSource()).getCase();
+            int destination = Plateau.FONTAINE;
             if (positionCase < positionPion)
-                for (int i = Plateau.BORDURE_VRT; i < positionPion; i++)
-                    fenetre.getPanelJeu().getPlateauVue().getCaseVue(i).mettreAJour(false);
+                destination = positionPion - deplacement;
             else if (positionCase > positionPion)
-                for (int i = positionPion + 1; i < Plateau.BORDURE_RGE + 1; i++)
-                    fenetre.getPanelJeu().getPlateauVue().getCaseVue(i).mettreAJour(false);
+                destination = positionPion + deplacement;
+            fenetre.getPanelJeu().getPlateauVue().getCaseVue(destination).mettreAJour(false);
         } else if (e.getSource() instanceof BoutonMenu) {
             ((BoutonMenu) e.getSource()).setForeground(BoutonMenu.couleurClaire);
             ((BoutonMenu) e.getSource()).setBackground(BoutonMenu.couleurNormal);
@@ -85,7 +90,7 @@ public class AdaptateurSouris extends MouseAdapter {
             ((BoutonJeu) e.getSource()).setForeground(BoutonJeu.couleurClaire);
             ((BoutonJeu) e.getSource()).setBackground(BoutonJeu.couleurNormal);
         } else if (e.getSource().equals(fenetre.getPanelJeu().getPiocheVue())) {
-            fenetre.getPanelJeu().getPiocheVue().getTxtNbCartes().setVisible(false);
+            fenetre.getPanelJeu().getPiocheVue().getTxtNbCartes().setVisible(prog.getJeu().getPioche().getTaille() <= 8 && prog.getJeu().getPlateau().getFaceCouronne() == Plateau.FACE_PTT_CRN);
             fenetre.repaint();
         }
     }

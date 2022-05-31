@@ -46,6 +46,8 @@ public class Fenetre extends JFrame {
         hauteur = largeur * Images.TEXTE_TITRE.getHeight(null) / Images.TEXTE_TITRE.getWidth(null);
 
         setUndecorated(true);
+        setTitle("Visite Royale");
+        setIconImage(Images.ICONE);
         setBackground(new Color(0, 0, 0, 0));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(largeur, hauteur);
@@ -99,8 +101,6 @@ public class Fenetre extends JFrame {
         int hauteur = Integer.parseInt(Configuration.instance().lire("FenetreHauteur"));
 
         setVisible(false);
-        setTitle("Visite Royale");
-        setIconImage(Images.COURONNE_GRD);
         setBackground(Color.GRAY);
         setSize(largeur, hauteur);
         setLocationRelativeTo(getParent());
@@ -180,7 +180,12 @@ public class Fenetre extends JFrame {
         panelTutoriel.setBounds(0, 0, largeur, hauteur);
         panelCredits.setBounds(0, 0, largeur, hauteur);
 
+        panelChoixJoueur.redimensionner();
         panelJeu.redimensionner();
+        panelFinPartie.redimensionner();
+        panelMenuPrincipal.redimensionner();
+        panelMenuJeu.redimensionner();
+        panelMenuSauvegardes.redimensionner();
     }
 
     public void mettreAJour() {

@@ -63,7 +63,7 @@ public class PanelJeu extends JPanel {
         boutonPouvoirFou = new BoutonJeu("");
         boutonFinTour = new BoutonJeu("Fin de tour");
 
-        chateauVrt = new ImageChateau(Images.CHATEAU_VRT, true);
+        chateauVrt = new ImageChateau(Images.CHATEAU_VRT, false);
         chateauRge = new ImageChateau(Images.CHATEAU_RGE, false);
 
         /* Disposition des composants dans le panel */
@@ -81,11 +81,11 @@ public class PanelJeu extends JPanel {
         add(boutonPause, new GBC(6, 0).setWeight(1, 1).setAnchor(GBC.FIRST_LINE_END));
         add(boutonPouvoirSor, new GBC(5, 2, 2, 1).setWeight(1, 1));
         add(boutonPouvoirFou, new GBC(5, 3, 2, 1).setWeight(1, 1));
-        add(boutonFinTour, new GBC(5, 4, 2, 1).setWeight(1, 1).setAnchor(GBC.PAGE_END));
-        add(boutonAnnuler, new GBC(5, 5).setWeight(1, 1));
-        add(boutonRefaire, new GBC(6, 5).setWeight(1, 1));
+        add(boutonFinTour, new GBC(5, 4, 2, 1).setWeight(1, 1).setAnchor(GBC.CENTER));
+        add(boutonAnnuler, new GBC(5, 5, 1, 2).setWeight(1, 1).setAnchor(GBC.CENTER));
+        add(boutonRefaire, new GBC(6, 5, 1, 2).setWeight(1, 1).setAnchor(GBC.CENTER));
 
-        add(chateauVrt, new GBC(2, 0, 1, 2).setWeight(1, 1).setAnchor(GBC.PAGE_START));
+        add(chateauVrt, new GBC(2, 0, 1, 2).setWeight(1, 1).setAnchor(GBC.PAGE_END));
         add(chateauRge, new GBC(4, 4, 1, 2).setWeight(1, 1).setAnchor(GBC.PAGE_END));
 
         /* Retransmission des événements au contrôleur */
@@ -184,8 +184,8 @@ public class PanelJeu extends JPanel {
         boutonAnnuler.redimensionner(tailleBouton, tailleBouton);
         boutonRefaire.redimensionner(tailleBouton, tailleBouton);
 
-        chateauVrt.redimensionner(hauteurPlateau * 3 / 4);
-        chateauRge.redimensionner(hauteurPlateau * 3 / 4);
+        chateauVrt.redimensionner(hauteurPlateau * 4 / 5);
+        chateauRge.redimensionner(hauteurPlateau * 4 / 5);
 
         boutonPause.setIcon(new ImageIcon(Images.TEXTE_OUVRIR_MENU.getScaledInstance(tailleBouton - 10, tailleBouton - 10, 0)));
         boutonIndice.setIcon(new ImageIcon(Images.TEXTE_INDICE.getScaledInstance(tailleBouton - 10, tailleBouton - 10, 0)));
@@ -222,6 +222,18 @@ public class PanelJeu extends JPanel {
 
         piocheVue.mettreAJour();
         defausseVue.mettreAJour();
+
+        boutonAnnuler.setEnabled(prog.getJeu().peutAnnuler());
+        boutonRefaire.setEnabled(prog.getJeu().peutRefaire());
+        boutonPouvoirSor.setEnabled(prog.getJeu().peutUtiliserPouvoirSorcier());
+        boutonPouvoirFou.setEnabled(prog.getJeu().peutUtiliserPouvoirFou());
+        boutonFinTour.setEnabled(prog.getJeu().peutFinirTour());
+
+        boutonAnnuler.repaint();
+        boutonRefaire.repaint();
+        boutonPouvoirSor.repaint();
+        boutonPouvoirFou.repaint();
+        boutonFinTour.repaint();
 
         repaint();
     }

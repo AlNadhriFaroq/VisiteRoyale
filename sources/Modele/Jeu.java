@@ -140,7 +140,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
                 return JOUEUR_VRT;
             else if (pionDansChateau(JOUEUR_RGE, Pion.ROI) || couronneDansChateau(JOUEUR_RGE))
                 return JOUEUR_RGE;
-            else if (pioche.estVide() && plateau.getFaceCouronne() == Plateau.FACE_PTT_CRN)
+            else
                 return pionDansDuche(JOUEUR_VRT, Pion.ROI) ? JOUEUR_VRT : JOUEUR_RGE;
         return -1;
     }

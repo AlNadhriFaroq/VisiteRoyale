@@ -42,7 +42,7 @@ public class PanelMenuJeu extends JPanel {
         boutons[retour] = new BoutonMenu("Retour au menu principal");
 
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(0, 0, 0, 205));
+        panel.setBackground(new Color(0, 0, 0, 210));
         panel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         panel.setLayout(new GridBagLayout());
 
@@ -73,5 +73,10 @@ public class PanelMenuJeu extends JPanel {
 
     public BoutonMenu getBouton(int indice) {
         return boutons[indice];
+    }
+
+    public void redimensionner() {
+        for (BoutonMenu bouton : boutons)
+            bouton.setFont(new Font(null).deriveFont(Font.BOLD, (float) bouton.getHeight() / 3));
     }
 }
