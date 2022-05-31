@@ -1,12 +1,12 @@
-package Vue.Composants.ComposantsJeu;
+package Vue.Composants;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.LineMetrics;
 
-public class TexteEntoure extends JLabel {
+public class TexteAContour extends JLabel {
 
-    public TexteEntoure(String text, int horizontalAlignement) {
+    public TexteAContour(String text, int horizontalAlignement) {
         super(text, horizontalAlignement);
     }
 
@@ -40,8 +40,7 @@ public class TexteEntoure extends JLabel {
     }
 
     public void paintComponent(Graphics g) {
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         char[] chars = getText().toCharArray();
 

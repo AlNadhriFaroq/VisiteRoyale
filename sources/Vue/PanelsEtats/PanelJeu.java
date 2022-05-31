@@ -32,6 +32,9 @@ public class PanelJeu extends JPanel {
     BoutonJeu boutonPouvoirFou;
     BoutonJeu boutonFinTour;
 
+    ImageChateau chateauVrt;
+    ImageChateau chateauRge;
+
     public PanelJeu(ControleurMediateur ctrl, Fenetre fenetre, Programme prog) {
         super();
         this.ctrl = ctrl;
@@ -53,43 +56,37 @@ public class PanelJeu extends JPanel {
         defausseVue = new PiocheVue(prog, false);
 
         boutonPause = new BoutonJeu("");
-        boutonPause.setIcon(new ImageIcon(Images.TEXTE_OUVRIR_MENU.getScaledInstance(30, 30, 0)));
         boutonIndice = new BoutonJeu("");
-        boutonIndice.setIcon(new ImageIcon(Images.TEXTE_INDICE.getScaledInstance(30, 30, 0)));
         boutonAnnuler = new BoutonJeu("");
-        boutonAnnuler.setIcon(new ImageIcon(Images.TEXTE_ANNULER_REFAIRE.getScaledInstance(30, 30, 0)));
         boutonRefaire = new BoutonJeu("");
-        boutonRefaire.setIcon(new ImageIcon(Images.tournerImage(Images.TEXTE_ANNULER_REFAIRE, 180).getScaledInstance(30, 30, 0)));
         boutonPouvoirSor = new BoutonJeu("");
-        boutonPouvoirSor.setIcon(new ImageIcon(Images.POUVOIR_SOR.getScaledInstance(60, 60, 0)));
         boutonPouvoirFou = new BoutonJeu("");
-        boutonPouvoirFou.setIcon(new ImageIcon(Images.POUVOIR_FOU.getScaledInstance(60, 60, 0)));
         boutonFinTour = new BoutonJeu("Fin de tour");
 
-        ImageChateau chateauVrt = new ImageChateau(Images.CHATEAU_VRT, true);
-        ImageChateau chateauRge = new ImageChateau(Images.CHATEAU_RGE, false);
+        chateauVrt = new ImageChateau(Images.CHATEAU_VRT, true);
+        chateauRge = new ImageChateau(Images.CHATEAU_RGE, false);
 
         /* Disposition des composants dans le panel */
-        add(plateauVue, new GBC(2, 2, 3, 2).setWeightx(1));
+        add(plateauVue, new GBC(2, 2, 3, 2));
 
         add(mainVrtVue, new GBC(3, 0).setAnchor(GBC.PAGE_START));
         add(mainRgeVue, new GBC(3, 5).setAnchor(GBC.PAGE_END));
         add(selectionVrtVue, new GBC(3, 1).setAnchor(GBC.PAGE_START));
         add(selectionRgeVue, new GBC(3, 4).setAnchor(GBC.PAGE_END));
 
-        add(piocheVue, new GBC(0, 2, 2, 1).setWeight(1, 16));
-        add(defausseVue, new GBC(0, 3, 2, 1).setWeight(1, 16));
+        add(piocheVue, new GBC(0, 2, 2, 1).setWeight(1, 1));
+        add(defausseVue, new GBC(0, 3, 2, 1).setWeight(1, 1));
 
-        add(boutonIndice, new GBC(5, 0).setWeight(8, 16).setAnchor(GBC.FIRST_LINE_END));
-        add(boutonPause, new GBC(6, 0).setWeight(8, 16).setAnchor(GBC.FIRST_LINE_END));
-        add(boutonPouvoirSor, new GBC(5, 2, 2, 1).setWeight(1, 16));
-        add(boutonPouvoirFou, new GBC(5, 3, 2, 1).setWeight(1, 16));
-        add(boutonFinTour, new GBC(5, 4, 2, 1).setWeighty(16).setAnchor(GBC.PAGE_END));
-        add(boutonAnnuler, new GBC(5, 5).setWeighty(16));
-        add(boutonRefaire, new GBC(6, 5).setWeighty(16));
+        add(boutonIndice, new GBC(5, 0).setWeight(1, 1).setAnchor(GBC.FIRST_LINE_END));
+        add(boutonPause, new GBC(6, 0).setWeight(1, 1).setAnchor(GBC.FIRST_LINE_END));
+        add(boutonPouvoirSor, new GBC(5, 2, 2, 1).setWeight(1, 1));
+        add(boutonPouvoirFou, new GBC(5, 3, 2, 1).setWeight(1, 1));
+        add(boutonFinTour, new GBC(5, 4, 2, 1).setWeight(1, 1).setAnchor(GBC.PAGE_END));
+        add(boutonAnnuler, new GBC(5, 5).setWeight(1, 1));
+        add(boutonRefaire, new GBC(6, 5).setWeight(1, 1));
 
-        add(chateauVrt, new GBC(2, 0, 1, 2).setWeightx(1).setAnchor(GBC.FIRST_LINE_START).setFill(GBC.BOTH));
-        add(chateauRge, new GBC(4, 4, 1, 2).setWeightx(1).setAnchor(GBC.LAST_LINE_START).setFill(GBC.BOTH));
+        add(chateauVrt, new GBC(2, 0, 1, 2).setWeight(1, 1).setAnchor(GBC.PAGE_START));
+        add(chateauRge, new GBC(4, 4, 1, 2).setWeight(1, 1).setAnchor(GBC.PAGE_END));
 
         /* Retransmission des événements au contrôleur */
         for (int i = 0; i < Jeu.TAILLE_MAIN; i++) {
@@ -163,13 +160,40 @@ public class PanelJeu extends JPanel {
     }
 
     public void redimensionner() {
-        plateauVue.redimensionner(getHeight() / 3);
-        mainVrtVue.redimensionner(getHeight() / 6);
-        mainRgeVue.redimensionner(getHeight() / 6);
-        selectionVrtVue.redimensionner(getHeight() / 6);
-        selectionRgeVue.redimensionner(getHeight() / 6);
-        piocheVue.redimensionner((8 * getHeight()) / (6 * 9));
-        defausseVue.redimensionner((8 * getHeight()) / (6 * 9));
+        int hauteurPlateau = getHeight() / 3;
+        int hauteurPaquet = getHeight() / 6;
+        int hauteurCarte = (8 * getHeight()) / (6 * 9);
+        int largeurCarte = hauteurCarte * Images.CARTE_VIDE.getWidth(null) / Images.CARTE_VIDE.getHeight(null);
+        int tailleBouton = largeurCarte * 3 / 5;
+        int tailleBoutonPouvoir = largeurCarte * 5 / 6;
+
+        plateauVue.redimensionner(hauteurPlateau);
+        mainVrtVue.redimensionner(hauteurPaquet);
+        mainRgeVue.redimensionner(hauteurPaquet);
+        selectionVrtVue.redimensionner(hauteurPaquet);
+        selectionRgeVue.redimensionner(hauteurPaquet);
+
+        piocheVue.redimensionner(hauteurCarte);
+        defausseVue.redimensionner(hauteurCarte);
+
+        boutonPause.redimensionner(tailleBouton, tailleBouton);
+        boutonIndice.redimensionner(tailleBouton, tailleBouton);
+        boutonPouvoirSor.redimensionner(tailleBoutonPouvoir, tailleBoutonPouvoir);
+        boutonPouvoirFou.redimensionner(tailleBoutonPouvoir, tailleBoutonPouvoir);
+        boutonFinTour.redimensionner(tailleBoutonPouvoir * 2, tailleBoutonPouvoir);
+        boutonAnnuler.redimensionner(tailleBouton, tailleBouton);
+        boutonRefaire.redimensionner(tailleBouton, tailleBouton);
+
+        chateauVrt.redimensionner(hauteurPlateau * 3 / 4);
+        chateauRge.redimensionner(hauteurPlateau * 3 / 4);
+
+        boutonPause.setIcon(new ImageIcon(Images.TEXTE_OUVRIR_MENU.getScaledInstance(tailleBouton - 10, tailleBouton - 10, 0)));
+        boutonIndice.setIcon(new ImageIcon(Images.TEXTE_INDICE.getScaledInstance(tailleBouton - 10, tailleBouton - 10, 0)));
+        boutonAnnuler.setIcon(new ImageIcon(Images.TEXTE_ANNULER_REFAIRE.getScaledInstance(tailleBouton - 10, tailleBouton - 10, 0)));
+        boutonRefaire.setIcon(new ImageIcon(Images.tournerImage(Images.TEXTE_ANNULER_REFAIRE, 180).getScaledInstance(tailleBouton - 10, tailleBouton - 10, 0)));
+        boutonPouvoirSor.setIcon(new ImageIcon(Images.POUVOIR_SOR.getScaledInstance(tailleBoutonPouvoir - 3, tailleBoutonPouvoir - 3, 0)));
+        boutonPouvoirFou.setIcon(new ImageIcon(Images.POUVOIR_FOU.getScaledInstance(tailleBoutonPouvoir - 3, tailleBoutonPouvoir - 3, 0)));
+        boutonFinTour.setFont(new Font(null).deriveFont(Font.BOLD, (float) tailleBoutonPouvoir / 4));
     }
 
     public void mettreAJour() {
