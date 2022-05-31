@@ -8,8 +8,6 @@ import java.util.List;
 
 public class IAMinMaxTest extends IA {
     private static final int PROFONDEUR = 3;
-    Tas<List<Coup>> lj;
-    Tas<List<Coup>> lj2;
     int poidsPlateauMax;
     int nombrePas;
     List<Coup> lcf;
@@ -19,8 +17,6 @@ public class IAMinMaxTest extends IA {
 
     public IAMinMaxTest(Jeu jeu) {
         super(jeu);
-        lj = new Tas<>(true);
-        lj2 = new Tas<>(false);
         lcf = new ArrayList<>();
         poidsPlateauMax = 0;
         nombrePas = 0;
@@ -28,7 +24,7 @@ public class IAMinMaxTest extends IA {
     }
 
     @Override
-    public Coup calculerCoup() {
+    public Coup calculerCoup(){
         Coup cp = null;
         nombrePas = 0;
 
@@ -43,7 +39,6 @@ public class IAMinMaxTest extends IA {
         if (cp.getTypeCoup() == Coup.FINIR_TOUR) {
             tailleLcf = 0;
             lcf.clear();
-            lj = new Tas<>(true);
             poidsPlateauMax = 0;
             nombrePas = 0;
         }
@@ -151,7 +146,7 @@ public class IAMinMaxTest extends IA {
         }
         Coup prec = null;
         for (Coup coup : lc) {
-            if(poidsPlateauMax > 500 || nombrePas > 1500000)
+            if(poidsPlateauMax > 500 || nombrePas > 1000000)
                 return;
             if(jeu.getEtatJeu() == Jeu.ETAT_CHOIX_CARTE){
                 if(coup.getCarte() != null)
@@ -179,9 +174,13 @@ public class IAMinMaxTest extends IA {
                     else if(jeu.getPlateau().pionDansChateauVrt(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT){
                         valeur += 3000;
                     }
+                    if(jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE)
+                        valeur += 3000;
+                    if(jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT)
+                        valeur += 3000;
                 }
-                if(evaluerPlateau() > plateauActuel)
-                    tas.inserer(new ArrayList<>(listeCoup), evaluerPlateau());
+
+                tas.inserer(new ArrayList<>(listeCoup), evaluerPlateau());
                 poidsPlateauMax = valeur;
                 valeur = 0;
             }

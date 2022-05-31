@@ -122,7 +122,6 @@ public class IAMeilleureEval extends IA {
 
     private int evaluerPlateau() {
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_RGE) {
-            //System.out.println("joueur rouge");
             if(jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE)
                 valeur += 1000;
             if(jeu.getPlateau().getPositionPion(Pion.SOR) <= Plateau.CHATEAU_VRT)
@@ -149,7 +148,6 @@ public class IAMeilleureEval extends IA {
         }
 
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_VRT) {
-            //System.out.println("au joueur vert");
             if(jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
                 valeur += 1000;
             if(jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)
