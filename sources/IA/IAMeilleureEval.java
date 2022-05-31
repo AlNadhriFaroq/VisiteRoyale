@@ -9,7 +9,6 @@ import java.util.List;
 
 public class IAMeilleureEval extends IA {
     Tas<List<Coup>> lj;
-    Tas<List<Coup>> lj2;
     int poidsPlateauMax;
     int nombrePas;
     List<Coup> lcf;
@@ -22,7 +21,6 @@ public class IAMeilleureEval extends IA {
     public IAMeilleureEval(Jeu jeu) {
         super(jeu);
         lj = new Tas<>(true);
-        lj2 = new Tas<>(false);
         lcf = new ArrayList<>();
         minMaxA = new ArrayList<>();
         minMaxB = new ArrayList<>();
@@ -98,13 +96,13 @@ public class IAMeilleureEval extends IA {
             if (coup.getTypeCoup() == Coup.FINIR_TOUR || jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE){
                 nombrePas ++;
                 if(jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE){
-                    if(jeu.getPlateau().pionDansChateauRge(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT ){
+                    if(jeu.getPlateau().pionDansChateauRge(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT){
                         valeur -= 3000;
                     }
                     else if(jeu.getPlateau().pionDansChateauVrt(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE){
                         valeur -= 3000;
                     }
-                    else if(jeu.getPlateau().pionDansChateauRge(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE ){
+                    else if(jeu.getPlateau().pionDansChateauRge(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE){
                         valeur += 3000;
                     }
                     else if(jeu.getPlateau().pionDansChateauVrt(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT){
