@@ -16,8 +16,6 @@ public class PanelJeu extends JPanel {
     Fenetre fenetre;
     Programme prog;
 
-    Jeu jeu;
-
     PlateauVue plateauVue;
     PaquetVue mainVrtVue;
     PaquetVue mainRgeVue;
@@ -40,21 +38,19 @@ public class PanelJeu extends JPanel {
         this.fenetre = fenetre;
         this.prog = prog;
 
-        jeu = prog.getJeu();
-
         setBackground(new Color(0, 0, 0, 0));
         setOpaque(false);
         setLayout(new GridBagLayout());
 
         /* Construction des composants */
-        plateauVue = new PlateauVue(jeu, jeu.getPlateau());
-        mainVrtVue = new PaquetVue(jeu, jeu.getMain(Jeu.JOUEUR_VRT), GBC.PAGE_START);
-        mainRgeVue = new PaquetVue(jeu, jeu.getMain(Jeu.JOUEUR_RGE), GBC.PAGE_END);
-        selectionVrtVue = new PaquetVue(jeu, jeu.getSelectionCartes(Jeu.JOUEUR_VRT), GBC.CENTER);
-        selectionRgeVue = new PaquetVue(jeu, jeu.getSelectionCartes(Jeu.JOUEUR_RGE), GBC.CENTER);
+        plateauVue = new PlateauVue(prog);
+        mainVrtVue = new PaquetVue(prog, PaquetVue.MAIN_VRT);
+        mainRgeVue = new PaquetVue(prog, PaquetVue.MAIN_RGE);
+        selectionVrtVue = new PaquetVue(prog, PaquetVue.SELECTION_VRT);
+        selectionRgeVue = new PaquetVue(prog, PaquetVue.SELECTION_RGE);
 
-        piocheVue = new PiocheVue(jeu.getPioche(), true);
-        defausseVue = new PiocheVue(jeu.getDefausse(), false);
+        piocheVue = new PiocheVue(prog, true);
+        defausseVue = new PiocheVue(prog, false);
 
         boutonPause = new BoutonJeu("");
         boutonPause.setIcon(new ImageIcon(Images.TEXTE_OUVRIR_MENU.getScaledInstance(30, 30, 0)));
@@ -74,26 +70,26 @@ public class PanelJeu extends JPanel {
         ImageChateau chateauRge = new ImageChateau(Images.CHATEAU_RGE, false);
 
         /* Disposition des composants dans le panel */
-        add(plateauVue, new GBC(2, 2, 3, 3).setAnchor(GBC.CENTER));
+        add(plateauVue, new GBC(2, 2, 3, 2).setWeightx(1));
 
         add(mainVrtVue, new GBC(3, 0).setAnchor(GBC.PAGE_START));
-        add(mainRgeVue, new GBC(3, 6).setAnchor(GBC.PAGE_END));
+        add(mainRgeVue, new GBC(3, 5).setAnchor(GBC.PAGE_END));
         add(selectionVrtVue, new GBC(3, 1).setAnchor(GBC.PAGE_START));
-        add(selectionRgeVue, new GBC(3, 5).setAnchor(GBC.PAGE_END));
+        add(selectionRgeVue, new GBC(3, 4).setAnchor(GBC.PAGE_END));
 
-        add(piocheVue, new GBC(0, 2, 2, 2).setWeight(1, 22).setAnchor(GBC.PAGE_START));
-        add(defausseVue, new GBC(0, 3, 2, 2).setWeight(1, 22).setAnchor(GBC.PAGE_END));
+        add(piocheVue, new GBC(0, 2, 2, 1).setWeight(1, 16));
+        add(defausseVue, new GBC(0, 3, 2, 1).setWeight(1, 16));
 
         add(boutonIndice, new GBC(5, 0).setWeight(8, 16).setAnchor(GBC.FIRST_LINE_END));
         add(boutonPause, new GBC(6, 0).setWeight(8, 16).setAnchor(GBC.FIRST_LINE_END));
-        add(boutonAnnuler, new GBC(5, 6).setWeight(8, 16).setAnchor(GBC.LAST_LINE_END));
-        add(boutonRefaire, new GBC(6, 6).setWeight(8, 16).setAnchor(GBC.LAST_LINE_END));
-        add(boutonPouvoirSor, new GBC(5, 2, 2, 1).setWeight(1, 11));
-        add(boutonPouvoirFou, new GBC(5, 3, 2, 1).setWeight(1, 11));
-        add(boutonFinTour, new GBC(5, 4, 2, 1).setWeight(1, 11));
+        add(boutonPouvoirSor, new GBC(5, 2, 2, 1).setWeight(1, 16));
+        add(boutonPouvoirFou, new GBC(5, 3, 2, 1).setWeight(1, 16));
+        add(boutonFinTour, new GBC(5, 4, 2, 1).setWeighty(16).setAnchor(GBC.PAGE_END));
+        add(boutonAnnuler, new GBC(5, 5).setWeighty(16));
+        add(boutonRefaire, new GBC(6, 5).setWeighty(16));
 
         add(chateauVrt, new GBC(2, 0, 1, 2).setWeightx(1).setAnchor(GBC.FIRST_LINE_START).setFill(GBC.BOTH));
-        add(chateauRge, new GBC(4, 5, 1, 2).setWeightx(1).setAnchor(GBC.LAST_LINE_START).setFill(GBC.BOTH));
+        add(chateauRge, new GBC(4, 4, 1, 2).setWeightx(1).setAnchor(GBC.LAST_LINE_START).setFill(GBC.BOTH));
 
         /* Retransmission des événements au contrôleur */
         for (int i = 0; i < Jeu.TAILLE_MAIN; i++) {
@@ -183,8 +179,8 @@ public class PanelJeu extends JPanel {
         boolean[] selectionnables = {false, false};
 
         if (!prog.getJoueurEstIA(Jeu.JOUEUR_VRT) && !prog.getJoueurEstIA(Jeu.JOUEUR_RGE)) {
-            facesCachees[1 - jeu.getJoueurCourant()] = mainCachee;
-            parcourables[1 - jeu.getJoueurCourant()] = false;
+            facesCachees[1 - prog.getJeu().getJoueurCourant()] = mainCachee;
+            parcourables[1 - prog.getJeu().getJoueurCourant()] = false;
         } else if (prog.getJoueurEstIA(Jeu.JOUEUR_VRT) && !prog.getJoueurEstIA(Jeu.JOUEUR_RGE)) {
             facesCachees[Jeu.JOUEUR_VRT] = mainCachee;
             parcourables[Jeu.JOUEUR_VRT] = false;
@@ -192,7 +188,7 @@ public class PanelJeu extends JPanel {
             facesCachees[Jeu.JOUEUR_RGE] = mainCachee;
             parcourables[Jeu.JOUEUR_RGE] = false;
         }
-        selectionnables[jeu.getJoueurCourant()] = true;
+        selectionnables[prog.getJeu().getJoueurCourant()] = true;
 
         plateauVue.mettreAJour();
         mainVrtVue.mettreAJour(facesCachees[Jeu.JOUEUR_VRT], parcourables[Jeu.JOUEUR_VRT], selectionnables[Jeu.JOUEUR_VRT]);

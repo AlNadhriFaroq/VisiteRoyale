@@ -6,16 +6,15 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PlateauVue extends JPanel {
-    Jeu jeu;
-    Plateau plateau;
+    Programme prog;
 
     JetonVue couronneVue;
     PionVue[] pionsVue;
     CaseVue[] casesVue;
 
-    public PlateauVue(Jeu jeu, Plateau plateau) {
-        this.jeu = jeu;
-        this.plateau = plateau;
+    public PlateauVue(Programme prog) {
+        this.prog = prog;
+        Plateau plateau = prog.getJeu().getPlateau();
 
         setBackground(new Color(0, 0, 0, 0));
         setOpaque(false);
@@ -50,10 +49,6 @@ public class PlateauVue extends JPanel {
         }
     }
 
-    public Plateau getPlateau() {
-        return plateau;
-    }
-
     public JetonVue getCouronneVue() {
         return couronneVue;
     }
@@ -75,6 +70,7 @@ public class PlateauVue extends JPanel {
     }
 
     public void mettreAJour() {
+        Jeu jeu = prog.getJeu();
         Carte carte = jeu.getSelectionCartes(jeu.getJoueurCourant()).estVide() ? null : jeu.getSelectionCartes(jeu.getJoueurCourant()).getCarte(jeu.getSelectionCartes(jeu.getJoueurCourant()).getTaille() - 1);
         int deplacement = carte != null ? (carte.estDeplacementGar1Plus1() && jeu.getSelectionPions(1) != null ? 1 : carte.getDeplacement()) : -1;
         int position = -1, destinationVrt = -1, destinationRge = -1, destinationChoisie = -1;
@@ -101,13 +97,14 @@ public class PlateauVue extends JPanel {
             boolean bool3 = pionVue.getPion().getType().equals(Type.GAR) && jeu.getActivationPrivilegeRoi() == 2;
             pionVue.mettreAJour(jeu.peutSelectionnerPion(pionVue.getPion()), false, bool1 || bool2 || bool3);
         }
-        couronneVue.mettreAJour(plateau.getFaceCouronne());
+        couronneVue.mettreAJour(prog.getJeu().getPlateau().getFaceCouronne());
         repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Plateau plateau = prog.getJeu().getPlateau();
 
         for (int c = Plateau.BORDURE_VRT; c <= Plateau.BORDURE_RGE; c++) {
             casesVue[c].removeAll();

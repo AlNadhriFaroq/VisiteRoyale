@@ -8,16 +8,19 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PaquetVue extends JPanel {
-    Jeu jeu;
-    Paquet paquet;
-    int position;
+    public static final int MAIN_VRT = 0;
+    public static final int MAIN_RGE = 1;
+    public static final int SELECTION_VRT = 2;
+    public static final int SELECTION_RGE = 3;
+
+    Programme prog;
+    int paquet;
 
     CarteVue[] cartesVue;
 
-    public PaquetVue(Jeu jeu, Paquet paquet, int position) {
-        this.jeu = jeu;
+    public PaquetVue(Programme prog, int paquet) {
+        this.prog = prog;
         this.paquet = paquet;
-        this.position = position;
 
         setBackground(new Color(0, 0, 0, 0));
         setLayout(new GridBagLayout());
@@ -25,10 +28,6 @@ public class PaquetVue extends JPanel {
         cartesVue = new CarteVue[Jeu.TAILLE_MAIN];
         for (int i = 0; i < Jeu.TAILLE_MAIN; i++)
             cartesVue[i] = new CarteVue();
-    }
-
-    public Paquet getPaquet() {
-        return paquet;
     }
 
     public CarteVue getCarteVue(int indice) {
@@ -54,10 +53,32 @@ public class PaquetVue extends JPanel {
 
     public void mettreAJour(boolean faceCachee, boolean parcourable, boolean selectionnable) {
         setVisible(false);
+
+        Paquet paquet = null;
+        int position = GBC.CENTER;
+        switch (this.paquet) {
+            case MAIN_VRT:
+                paquet = prog.getJeu().getMain(Jeu.JOUEUR_VRT);
+                position = GBC.PAGE_START;
+                break;
+            case MAIN_RGE:
+                paquet = prog.getJeu().getMain(Jeu.JOUEUR_RGE);
+                position = GBC.PAGE_END;
+                break;
+            case SELECTION_VRT:
+                paquet = prog.getJeu().getSelectionCartes(Jeu.JOUEUR_VRT);
+                break;
+            case SELECTION_RGE:
+                paquet = prog.getJeu().getSelectionCartes(Jeu.JOUEUR_RGE);
+                break;
+            default:
+                throw new RuntimeException("Vue.Composants.ComposantsJeu.PaquetVue.mettreAJour() : Paquet invalide.");
+        }
+
         removeAll();
         add(Box.createGlue(), new GBC(0, 0).setWeight(1, 1));
         for (int i = 0; i < paquet.getTaille(); i++) {
-            cartesVue[i].mettreAJour(paquet.getCarte(i), faceCachee, parcourable, selectionnable && jeu.peutSelectionnerCarte(paquet.getCarte(i)));
+            cartesVue[i].mettreAJour(paquet.getCarte(i), faceCachee, parcourable, selectionnable && prog.getJeu().peutSelectionnerCarte(paquet.getCarte(i)));
             add(cartesVue[i], new GBC(i + 1, 0).setWeighty(1).setAnchor(position));
         }
         add(Box.createGlue(), new GBC(paquet.getTaille() + 1, 0).setWeight(1, 1));

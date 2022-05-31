@@ -2,6 +2,7 @@ package Vue.Composants.ComposantsJeu;
 
 import Global.Images;
 import Modele.Paquet;
+import Modele.Programme;
 import Vue.GBC;
 
 import javax.swing.*;
@@ -9,16 +10,16 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class PiocheVue extends JPanel {
-    Paquet paquet;
-    boolean faceCachee;
+    Programme prog;
+    boolean pioche;
 
     Shape shape;
     Image img;
     TexteEntoure nbCartes;
 
-    public PiocheVue(Paquet paquet, boolean faceCachee) {
-        this.paquet = paquet;
-        this.faceCachee = faceCachee;
+    public PiocheVue(Programme prog, boolean pioche) {
+        this.prog = prog;
+        this.pioche = pioche;
         img = Images.CARTE_VIDE;
 
         setBackground(new Color(0, 0, 0, 0));
@@ -49,9 +50,10 @@ public class PiocheVue extends JPanel {
     }
 
     public void mettreAJour() {
+        Paquet paquet = pioche ? prog.getJeu().getPioche() : prog.getJeu().getDefausse();
         if (paquet.estVide())
             img = Images.getImageCarte("Vide");
-        else if (faceCachee)
+        else if (pioche)
             img = Images.getImageCarte("Dos");
         else
             img = Images.getImageCarte(paquet.getCarte(paquet.getTaille() - 1).toString());

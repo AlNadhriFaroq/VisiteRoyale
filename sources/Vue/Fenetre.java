@@ -187,8 +187,8 @@ public class Fenetre extends JFrame {
         imageFond.mettreAJour();
 
         if (prog.getEtat() == Programme.ETAT_EN_JEU || prog.getJeu().getEtatJeu() != Jeu.ETAT_FIN_DE_PARTIE) {
-            panelJeu.setVisible(true);
             panelJeu.mettreAJour();
+            panelJeu.setVisible(true);
         } else {
             panelJeu.setVisible(false);
         }
