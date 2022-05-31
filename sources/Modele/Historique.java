@@ -1,8 +1,7 @@
 package Modele;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Historique implements Serializable {
     private List<Coup> passe;
@@ -20,11 +19,11 @@ public class Historique implements Serializable {
     }
 
     public Coup getCoupPasse() {
-        return passe.get(passe.size()-1);
+        return passe.get(passe.size() - 1);
     }
 
     public Coup getCoupFutur() {
-        return futur.get(futur.size()-1);
+        return futur.get(futur.size() - 1);
     }
 
     public int getNbTour() {

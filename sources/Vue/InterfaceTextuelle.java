@@ -1,14 +1,13 @@
 package Vue;
 
 import Controleur.ControleurMediateur;
-import Global.Audios;
-import Global.Format;
+import Global.*;
 import IA.IA;
 import Modele.*;
 import Vue.Adaptateurs.AdaptateurTemps;
 
-import java.awt.*;
 import java.util.Scanner;
+import java.awt.*;
 import javax.swing.*;
 
 public class InterfaceTextuelle extends InterfaceUtilisateur {

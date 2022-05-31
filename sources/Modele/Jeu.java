@@ -512,7 +512,7 @@ public class Jeu extends Historique implements Cloneable, Serializable {
     @Override
     public String toString() {
         String txt = "";
-        txt += "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase() + "                    Tour : "+ getNbTour() + "\n";
+        txt += "AU TOUR DE : " + joueurEnTexte(joueurCourant).toUpperCase() + "                    Tour : " + getNbTour() + "\n";
         txt += "                                        Pioche : " + pioche.getTaille() + "\n";
         txt += "    Joueur    " + mainJoueurVrt.toString() + "\n";
         txt += "      vert    " + selectionCartesVrt + "\n";

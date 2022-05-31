@@ -1,16 +1,15 @@
 package Vue.PanelsEtats;
 
 import Controleur.ControleurMediateur;
-import Modele.Jeu;
-import Modele.Programme;
+import Modele.*;
 import Vue.*;
 import Vue.Adaptateurs.*;
 import Vue.Composants.ComposantsMenus.*;
 
+import java.util.regex.Pattern;
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
-import java.awt.*;
-import java.util.regex.Pattern;
 
 public class PanelMenuSauvegardes extends JPanel {
     ControleurMediateur ctrl;

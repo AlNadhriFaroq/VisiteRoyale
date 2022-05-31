@@ -91,12 +91,12 @@ public class PanelMenuOptions extends JPanel {
 
         niveau = new JComboBox<>();
         niveau.setFocusable(false);
-        niveau.setModel(new DefaultComboBoxModel<>(new String[] {"Débutant", "Amateur", "Intermédiaire", "Professionnel", "Expert"}));
+        niveau.setModel(new DefaultComboBoxModel<>(new String[]{"Débutant", "Amateur", "Intermédiaire", "Professionnel", "Expert"}));
         niveau.setSelectedItem(IA.IAenTexte(Integer.parseInt(Configuration.instance().lire("NiveauDifficulteIA"))));
 
         texture = new JComboBox<>();
         texture.setFocusable(false);
-        texture.setModel(new DefaultComboBoxModel<>(new String[] {"Normal", "Daltonien"}));
+        texture.setModel(new DefaultComboBoxModel<>(new String[]{"Normal", "Daltonien"}));
         texture.setSelectedItem(Configuration.instance().lire("Texture"));
 
         pleinEcran = new JCheckBox();

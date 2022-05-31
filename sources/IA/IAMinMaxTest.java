@@ -24,7 +24,7 @@ public class IAMinMaxTest extends IA {
     }
 
     @Override
-    public Coup calculerCoup(){
+    public Coup calculerCoup() {
         Coup cp = null;
         nombrePas = 0;
 
@@ -65,21 +65,21 @@ public class IAMinMaxTest extends IA {
             int plateauActuelle = evaluerPlateau();
             evaluerTour(new ArrayList<>(), tasA, plateauActuelle);
             int i = 0;
-            while(!tasA.estVide()){
+            while (!tasA.estVide()) {
                 this.valeur = 0;
                 tmp = tasA.extraire();
                 System.out.println("Meilleure eval " + tmp + " prof = " + profondeur);
-                if(i == 0){
+                if (i == 0) {
                     i++;
                 }
-                if(tmp != null){
+                if (tmp != null) {
                     executerCoups(tmp);
                     int minmaxB = minMaxB(profondeur + 1);
                     int plateau = evaluerPlateau();
                     val = Math.max(plateau, minmaxB);
-                    if(val > valeur){
+                    if (val > valeur) {
                         valeur = val;
-                        if(profondeur == 0){
+                        if (profondeur == 0) {
                             lcf = tmp;
                         }
                     }
@@ -90,8 +90,8 @@ public class IAMinMaxTest extends IA {
         return valeur;
     }
 
-    private int minMaxB(int profondeur){
-       // System.out.println("minMaxB");
+    private int minMaxB(int profondeur) {
+        // System.out.println("minMaxB");
         int valeur;
         if (estFeuille())
             return evaluerPlateau();
@@ -104,13 +104,13 @@ public class IAMinMaxTest extends IA {
             Tas<List<Coup>> tasB = new Tas<>(true);
             int plateauActuelle = evaluerPlateau();
             evaluerTour(new ArrayList<>(), tasB, plateauActuelle);
-            while(!tasB.estVide()){
+            while (!tasB.estVide()) {
                 this.valeur = 0;
                 tmp = tasB.extraire();
-                if(tmp != null){
+                if (tmp != null) {
                     executerCoups(tmp);
                     val = Math.min(evaluerPlateau(), minMaxA(profondeur + 1));
-                    if(val < valeur) {
+                    if (val < valeur) {
                         valeur = val;
                     }
                     desexecuterCoups(tmp);
@@ -122,21 +122,20 @@ public class IAMinMaxTest extends IA {
 
     private void evaluerTour(List<Coup> listeCoup, Tas<List<Coup>> tas, int plateauActuel) {
         List<Coup> lc = jeu.calculerListeCoup();
-        if(!aVuGc){
-            if(jeu.getMain(jeu.getJoueurCourant()).contientCarte(Carte.GC)){
+        if (!aVuGc) {
+            if (jeu.getMain(jeu.getJoueurCourant()).contientCarte(Carte.GC)) {
                 aVuGc = true;
                 int taille = lc.size();
                 List<Coup> tmp = new ArrayList<>();
-                for(int i = 0; i < taille; i ++){
-                    if(lc.get(i).getCarte() != null && lc.get(i).getCarte().estDeplacementGarCentre()){
+                for (int i = 0; i < taille; i++) {
+                    if (lc.get(i).getCarte() != null && lc.get(i).getCarte().estDeplacementGarCentre()) {
                         tmp.add(lc.get(i));
                         break;
                     }
                 }
-                for(int i = 0; i < taille; i ++){
-                    if(lc.get(i).getCarte() != null && lc.get(i).getCarte().estDeplacementGarCentre()){
-                    }
-                    else {
+                for (int i = 0; i < taille; i++) {
+                    if (lc.get(i).getCarte() != null && lc.get(i).getCarte().estDeplacementGarCentre()) {
+                    } else {
                         tmp.add(lc.get(i));
                     }
                 }
@@ -146,45 +145,40 @@ public class IAMinMaxTest extends IA {
         }
         Coup prec = null;
         for (Coup coup : lc) {
-            if(poidsPlateauMax > 500 || nombrePas > 1000000)
+            if (poidsPlateauMax > 500 || nombrePas > 1000000)
                 return;
-            if(jeu.getEtatJeu() == Jeu.ETAT_CHOIX_CARTE){
-                if(coup.getCarte() != null)
-                    if(prec == null || !prec.getCarte().equals(coup.getCarte())){
+            if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_CARTE) {
+                if (coup.getCarte() != null)
+                    if (prec == null || !prec.getCarte().equals(coup.getCarte())) {
                         prec = coup;
-                    }
-                    else{
+                    } else {
                         continue;
                     }
             }
             jeu.jouerCoup(coup);
             listeCoup.add(coup);
-            if (coup.getTypeCoup() == Coup.FINIR_TOUR || jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE){
-                nombrePas ++;
-                if(jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE){
-                    if(jeu.getPlateau().pionDansChateauRge(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT ){
+            if (coup.getTypeCoup() == Coup.FINIR_TOUR || jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE) {
+                nombrePas++;
+                if (jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE) {
+                    if (jeu.getPlateau().pionDansChateauRge(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT) {
                         valeur -= 3000;
-                    }
-                    else if(jeu.getPlateau().pionDansChateauVrt(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE){
+                    } else if (jeu.getPlateau().pionDansChateauVrt(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE) {
                         valeur -= 3000;
-                    }
-                    else if(jeu.getPlateau().pionDansChateauRge(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE ){
+                    } else if (jeu.getPlateau().pionDansChateauRge(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE) {
+                        valeur += 3000;
+                    } else if (jeu.getPlateau().pionDansChateauVrt(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT) {
                         valeur += 3000;
                     }
-                    else if(jeu.getPlateau().pionDansChateauVrt(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT){
+                    if (jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE)
                         valeur += 3000;
-                    }
-                    if(jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE)
-                        valeur += 3000;
-                    if(jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT)
+                    if (jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT)
                         valeur += 3000;
                 }
 
                 tas.inserer(new ArrayList<>(listeCoup), evaluerPlateau());
                 poidsPlateauMax = valeur;
                 valeur = 0;
-            }
-            else
+            } else
                 evaluerTour(listeCoup, tas, plateauActuel);
             listeCoup.remove(listeCoup.size() - 1);
             coup.desexecuter();
@@ -194,11 +188,11 @@ public class IAMinMaxTest extends IA {
     private int evaluerPlateau() {
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_RGE) {
             //System.out.println("joueur rouge");
-            if(jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE)
+            if (jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE)
                 valeur += 1000;
-            if(jeu.getPlateau().getPositionPion(Pion.SOR) <= Plateau.CHATEAU_VRT)
+            if (jeu.getPlateau().getPositionPion(Pion.SOR) <= Plateau.CHATEAU_VRT)
                 valeur -= 5;
-            if(jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)
+            if (jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)
                 valeur += 5;
             valeur += jeu.getPlateau().getPositionPion(Pion.GAR_VRT) - Plateau.FONTAINE;
             valeur += jeu.getPlateau().getPositionPion(Pion.GAR_RGE) - Plateau.FONTAINE;
@@ -209,23 +203,23 @@ public class IAMinMaxTest extends IA {
                 valeur += 1;
             else if (jeu.getPlateau().getPositionPion(Pion.FOU) < jeu.getPlateau().getPositionPion(Pion.ROI))
                 valeur -= 1;
-            if(jeu.getPlateau().getPositionPion(Pion.GAR_RGE) >= Plateau.CHATEAU_RGE)
+            if (jeu.getPlateau().getPositionPion(Pion.GAR_RGE) >= Plateau.CHATEAU_RGE)
                 valeur += 2;
-            if(jeu.getPlateau().getPositionPion(Pion.FOU) >= Plateau.CHATEAU_RGE)
+            if (jeu.getPlateau().getPositionPion(Pion.FOU) >= Plateau.CHATEAU_RGE)
                 valeur += 2;
-            if(jeu.getPlateau().getPositionPion(Pion.GAR_VRT) <= Plateau.CHATEAU_VRT)
+            if (jeu.getPlateau().getPositionPion(Pion.GAR_VRT) <= Plateau.CHATEAU_VRT)
                 valeur -= 2;
-            if(jeu.getPlateau().getPositionPion(Pion.FOU) <= Plateau.CHATEAU_VRT)
+            if (jeu.getPlateau().getPositionPion(Pion.FOU) <= Plateau.CHATEAU_VRT)
                 valeur += 2;
         }
 
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_VRT) {
             //System.out.println("au joueur vert");
-            if(jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
+            if (jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
                 valeur += 1000;
-            if(jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)
+            if (jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)
                 valeur -= 5;
-            if(jeu.getPlateau().getPositionPion(Pion.SOR) <= Plateau.CHATEAU_VRT)
+            if (jeu.getPlateau().getPositionPion(Pion.SOR) <= Plateau.CHATEAU_VRT)
                 valeur += 5;
             valeur += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.GAR_VRT);
             valeur += Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.GAR_RGE);
@@ -236,25 +230,25 @@ public class IAMinMaxTest extends IA {
                 valeur += 1;
             else if (jeu.getPlateau().getPositionPion(Pion.FOU) > jeu.getPlateau().getPositionPion(Pion.ROI))
                 valeur -= 1;
-            if(jeu.getPlateau().getPositionPion(Pion.GAR_VRT) <= Plateau.CHATEAU_VRT)
+            if (jeu.getPlateau().getPositionPion(Pion.GAR_VRT) <= Plateau.CHATEAU_VRT)
                 valeur += 2;
-            if(jeu.getPlateau().getPositionPion(Pion.FOU) <= Plateau.CHATEAU_VRT)
+            if (jeu.getPlateau().getPositionPion(Pion.FOU) <= Plateau.CHATEAU_VRT)
                 valeur += 2;
-            if(jeu.getPlateau().getPositionPion(Pion.GAR_RGE) >= Plateau.CHATEAU_RGE)
+            if (jeu.getPlateau().getPositionPion(Pion.GAR_RGE) >= Plateau.CHATEAU_RGE)
                 valeur -= 2;
-            if(jeu.getPlateau().getPositionPion(Pion.FOU) >= Plateau.CHATEAU_RGE)
+            if (jeu.getPlateau().getPositionPion(Pion.FOU) >= Plateau.CHATEAU_RGE)
                 valeur -= 2;
         }
         return valeur;
     }
 
-    private void executerCoups(List<Coup> l){
+    private void executerCoups(List<Coup> l) {
         for (Coup coup : l) {
             jeu.jouerCoup(coup);
         }
     }
 
-    private void desexecuterCoups(List<Coup> l){
+    private void desexecuterCoups(List<Coup> l) {
         int taille = l.size();
         for (int i = taille - 1; i >= 0; i--) {
             l.get(i).desexecuter();

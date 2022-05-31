@@ -1,9 +1,7 @@
 package Vue.Composants.ComposantsJeu;
 
 import Global.Images;
-import Modele.Paquet;
-import Modele.Plateau;
-import Modele.Programme;
+import Modele.*;
 import Vue.Composants.TexteAContour;
 import Vue.GBC;
 
@@ -35,7 +33,7 @@ public class PiocheVue extends JPanel {
 
         nbCartes.setVisible(false);
 
-        add(nbCartes, new GBC(0,0).setWeight(1,1).setAnchor(GBC.CENTER));
+        add(nbCartes, new GBC(0, 0).setWeight(1, 1).setAnchor(GBC.CENTER));
     }
 
     public JLabel getTxtNbCartes() {

@@ -1,9 +1,7 @@
 package Vue.Adaptateurs;
 
 import Controleur.ControleurMediateur;
-import Global.Audios;
-import Global.Configuration;
-import Global.Images;
+import Global.*;
 import IA.IA;
 import Modele.Programme;
 import Vue.Fenetre;

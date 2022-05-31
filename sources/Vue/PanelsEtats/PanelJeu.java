@@ -1,8 +1,7 @@
 package Vue.PanelsEtats;
 
 import Controleur.ControleurMediateur;
-import Global.Configuration;
-import Global.Images;
+import Global.*;
 import Modele.*;
 import Vue.*;
 import Vue.Adaptateurs.*;

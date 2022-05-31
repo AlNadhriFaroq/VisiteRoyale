@@ -3,8 +3,7 @@ package Vue.PanelsEtats;
 import Controleur.ControleurMediateur;
 import Modele.Programme;
 import Vue.*;
-import Vue.Adaptateurs.AdaptateurBoutons;
-import Vue.Adaptateurs.AdaptateurSouris;
+import Vue.Adaptateurs.*;
 import Vue.Composants.ComposantsMenus.BoutonMenu;
 
 import javax.swing.*;

@@ -2,10 +2,8 @@ package Vue;
 
 import Controleur.ControleurMediateur;
 import Global.*;
-import Modele.Jeu;
-import Modele.Programme;
-import Vue.Adaptateurs.AdaptateurClavier;
-import Vue.Adaptateurs.AdaptateurComposant;
+import Modele.*;
+import Vue.Adaptateurs.*;
 import Vue.Composants.ImageFond;
 import Vue.PanelsEtats.*;
 

@@ -47,7 +47,6 @@ public class IAAleatoirePonderee extends IAAleatoire {
             }
         }
 
-        Coup coup = coups.get(r.nextInt(coups.size()));
-        return coup;
+        return coups.get(r.nextInt(coups.size()));
     }
 }

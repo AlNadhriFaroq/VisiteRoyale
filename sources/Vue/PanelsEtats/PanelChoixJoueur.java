@@ -2,9 +2,8 @@ package Vue.PanelsEtats;
 
 import Controleur.ControleurMediateur;
 import Modele.*;
-import Vue.Adaptateurs.AdaptateurBoutons;
 import Vue.*;
-import Vue.Adaptateurs.AdaptateurSouris;
+import Vue.Adaptateurs.*;
 import Vue.Composants.ComposantsMenus.BoutonMenu;
 
 import javax.swing.*;

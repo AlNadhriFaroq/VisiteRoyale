@@ -2,8 +2,7 @@ package Vue.Adaptateurs;
 
 import Controleur.ControleurMediateur;
 import Global.Configuration;
-import Modele.Jeu;
-import Modele.Programme;
+import Modele.*;
 import Vue.Fenetre;
 import Vue.Composants.ComposantsMenus.*;
 import Vue.PanelsEtats.*;

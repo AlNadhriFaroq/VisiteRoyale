@@ -9,7 +9,7 @@ public abstract class IA {
     public static final int PROFESSIONNEL = 3;
     public static final int EXPERT = 4;
 
-    private Jeu jeuReel;
+    private final Jeu jeuReel;
     protected Jeu jeu;
 
     IA(Jeu jeu) {

@@ -3,9 +3,9 @@ package Vue.PanelsEtats;
 import Controleur.ControleurMediateur;
 import Global.Images;
 import Modele.Programme;
+import Vue.*;
 import Vue.Adaptateurs.*;
 import Vue.Composants.ComposantsMenus.BoutonMenu;
-import Vue.*;
 
 import javax.swing.*;
 import java.awt.*;

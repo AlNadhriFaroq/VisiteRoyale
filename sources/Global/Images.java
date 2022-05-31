@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.util.Objects;
 
 public class Images {
     private static String texture = "Images";
@@ -58,7 +59,7 @@ public class Images {
     private static Image lireImage(String nom) {
         String chemin = "/" + texture + "/" + nom + ".png";
         try {
-            return ImageIO.read(new BufferedInputStream(Images.class.getResourceAsStream(chemin)));
+            return ImageIO.read(new BufferedInputStream(Objects.requireNonNull(Images.class.getResourceAsStream(chemin))));
         } catch (Exception e) {
             throw new RuntimeException("Global.Images.lireImage() : Impossible d'ouvrir l'image '" + chemin + "'.\n" + e);
         }

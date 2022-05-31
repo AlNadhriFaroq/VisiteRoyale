@@ -7,9 +7,12 @@ public class Tas<E> {
     List<Integer> poids;
     int taille;
 
-    public Tas() {
+    boolean minOuMax;
+
+    public Tas(boolean minOuMax) {
         valeurs = new ArrayList<>();
         poids = new ArrayList<>();
+        this.minOuMax = minOuMax;
     }
 
     public int getTaille() {
@@ -35,13 +38,19 @@ public class Tas<E> {
 
         ind1 = taille;
         ind2 = (ind1 - 1) / 2;
-        while (poids.get(ind1) > poids.get(ind2)) {
+        while (minOuMax ? poids.get(ind1) > poids.get(ind2) : poids.get(ind1) < poids.get(ind2)) {
             echanger(ind1, ind2);
             ind1 = ind2;
             ind2 = (ind1 - 1) / 2;
         }
 
         taille++;
+    }
+
+    public int getPoidsPremier() {
+        if (taille == 0)
+            return 0;
+        return poids.get(0);
     }
 
     public E extraire() {
@@ -58,8 +67,8 @@ public class Tas<E> {
         ind = 0;
         ind1 = 1;
         ind2 = 2;
-        while ((ind1 < taille && (poids.get(ind1) > poids.get(ind))) || (ind2 < taille && (poids.get(ind2) > poids.get(ind)))) {
-            if ((ind2 >= taille) || (poids.get(ind1) > poids.get(ind2))) {
+        while (minOuMax ? (ind1 < taille && (poids.get(ind1) > poids.get(ind))) || (ind2 < taille && (poids.get(ind2) > poids.get(ind))) : (ind1 < taille && (poids.get(ind1) < poids.get(ind))) || (ind2 < taille && (poids.get(ind2) < poids.get(ind)))) {
+            if (minOuMax ? (ind2 >= taille) || (poids.get(ind1) > poids.get(ind2)) : (ind2 >= taille) || (poids.get(ind1) < poids.get(ind2))) {
                 echanger(ind, ind1);
                 ind = ind1;
             } else {

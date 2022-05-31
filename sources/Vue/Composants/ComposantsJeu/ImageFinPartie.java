@@ -1,8 +1,7 @@
 package Vue.Composants.ComposantsJeu;
 
 import Global.Images;
-import Modele.Jeu;
-import Modele.Programme;
+import Modele.*;
 
 import javax.swing.*;
 import java.awt.*;

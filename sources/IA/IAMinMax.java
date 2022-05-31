@@ -21,7 +21,7 @@ public class IAMinMax extends IA {
 
     public IAMinMax(Jeu jeu) {
         super(jeu);
-        lj = new Tas<>();
+        lj = new Tas<>(true);
         lcf = new ArrayList<>();
         poidsPlateauMax = 0;
         nombrePas = 0;
@@ -42,7 +42,7 @@ public class IAMinMax extends IA {
         if (cp.getTypeCoup() == Coup.FINIR_TOUR) {
             tailleLcf = 0;
             lcf.clear();
-            lj = new Tas<>();
+            lj = new Tas<>(true);
             poidsPlateauMax = 0;
             nombrePas = 0;
         }

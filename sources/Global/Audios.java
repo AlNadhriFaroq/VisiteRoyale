@@ -1,6 +1,7 @@
 package Global;
 
 import java.io.BufferedInputStream;
+import java.util.Objects;
 import javax.sound.sampled.*;
 
 public class Audios {
@@ -21,7 +22,7 @@ public class Audios {
         String chemin = "/Audios/" + (typeAudio == MUSIQUE ? "Musiques/" : "Sons/") + nom + ".wav";
         try {
             clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(new BufferedInputStream(Audios.class.getResourceAsStream(chemin))));
+            clip.open(AudioSystem.getAudioInputStream(new BufferedInputStream(Objects.requireNonNull(Audios.class.getResourceAsStream(chemin)))));
             float decibel = 20f * (float) Math.log10(((float) getVolume(typeAudio)) / 10f);
             ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
         } catch (Exception e) {
