@@ -222,8 +222,8 @@ public class PanelJeu extends JPanel {
         piocheVue.mettreAJour();
         defausseVue.mettreAJour();
 
-        boutonAnnuler.setEnabled(prog.getJeu().peutAnnuler());
-        boutonRefaire.setEnabled(prog.getJeu().peutRefaire());
+        boutonAnnuler.setEnabled(prog.peutAnnuler());
+        boutonRefaire.setEnabled(prog.peutRefaire());
         boutonPouvoirSor.setEnabled(prog.getJeu().peutUtiliserPouvoirSorcier());
         boutonPouvoirFou.setEnabled(prog.getJeu().peutUtiliserPouvoirFou());
         boutonFinTour.setEnabled(prog.getJeu().peutFinirTour());

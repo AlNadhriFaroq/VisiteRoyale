@@ -10,8 +10,11 @@ public class Audios {
 
     public static final String[] MUSIQUES = {"Michael Praetorius - Bransle de la Torche", "Mozart - Butterflies"};
     public static Audios MUSIQUE_MENU;
+    public static Audios MUSIQUE_JEU;
     public static final Audios MUSIQUE_MENUS1 = new Audios("BransleDeLaTorche", MUSIQUE);
     public static final Audios MUSIQUE_MENUS2 = new Audios("Butterflies", MUSIQUE);
+    public static final Audios MUSIQUE_JEU1 = new Audios("PippinTheHunchback", MUSIQUE);
+    public static final Audios MUSIQUE_JEU2 = new Audios("LaFestaDeComiat", MUSIQUE);
 
     public static final Audios SON_DEFAITE = new Audios("Defaite", SONS);
     public static final Audios SON_VICTOIRE = new Audios("Victoire", SONS);
@@ -35,8 +38,11 @@ public class Audios {
         clip.start();
     }
 
+    public void reinit(){
+        clip.setMicrosecondPosition(0);
+    }
+
     public void boucler() {
-        //clip.setMicrosecondPosition(0);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 

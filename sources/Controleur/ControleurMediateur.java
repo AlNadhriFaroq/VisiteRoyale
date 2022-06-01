@@ -46,6 +46,9 @@ public class ControleurMediateur {
         definirJoueurIA(Jeu.JOUEUR_RGE, joueurRgeEstIA);
         prog.nouvellePartie(joueurVrtEstIA, joueurRgeEstIA);
         Audios.MUSIQUE_MENU.arreter();
+        Audios.MUSIQUE_JEU = new Random().nextBoolean() ? Audios.MUSIQUE_JEU1: Audios.MUSIQUE_JEU2 ;
+        Audios.MUSIQUE_JEU.reinit();
+        Audios.MUSIQUE_JEU.boucler();
     }
 
     private void definirJoueurIA(int joueur, boolean estIA) {
@@ -140,15 +143,18 @@ public class ControleurMediateur {
     public void reprendrePartie() {
         prog.changerEtat(Programme.ETAT_EN_JEU);
         Audios.MUSIQUE_MENU.arreter();
+        Audios.MUSIQUE_JEU.boucler();
     }
 
     public void ouvrirMenuJeu() {
         prog.changerEtat(Programme.ETAT_MENU_JEU);
+        Audios.MUSIQUE_JEU.arreter();
         Audios.MUSIQUE_MENU.boucler();
     }
 
     public void ouvrirMenuSauvegardes() {
         prog.changerEtat(Programme.ETAT_MENU_SAUVEGARDES);
+        Audios.MUSIQUE_JEU.arreter();
         Audios.MUSIQUE_MENU.boucler();
     }
 
@@ -175,7 +181,9 @@ public class ControleurMediateur {
 
     public void retourMenuPrecedant() {
         prog.retourMenuPrecedant();
+        Audios.MUSIQUE_JEU.arreter();
         Audios.MUSIQUE_MENU.boucler();
+
     }
 
     public void quitter() {
