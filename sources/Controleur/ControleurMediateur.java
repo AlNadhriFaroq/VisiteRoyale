@@ -57,19 +57,19 @@ public class ControleurMediateur {
             String difficulte = Configuration.instance().lire(joueur == Jeu.JOUEUR_VRT ? "NiveauDifficulteIA" : "NiveauDifficulteIA2");
             switch (Integer.parseInt(difficulte)) {
                 case IA.DEBUTANT:
-                    joueursIA[joueur] = new IAAleatoire(prog.getJeu());
-                    break;
-                case IA.AMATEUR:
                     joueursIA[joueur] = new IAAleatoirePonderee(prog.getJeu());
                     break;
-                case IA.INTERMEDIAIRE:
+                case IA.AMATEUR:
                     joueursIA[joueur] = new IAStrategieSansPouvoirFou(prog.getJeu());
                     break;
-                case IA.PROFESSIONNEL:
+                case IA.INTERMEDIAIRE:
                     joueursIA[joueur] = new IAStrategie(prog.getJeu());
                     break;
-                case IA.EXPERT:
+                case IA.PROFESSIONNEL:
                     joueursIA[joueur] = new IAMeilleureEval(prog.getJeu());
+                    break;
+                case IA.EXPERT:
+                    joueursIA[joueur] = new IAMinMaxTest(prog.getJeu());
                     break;
                 default:
                     throw new RuntimeException("Controleur.JoueurIA() : Difficulté de l'IA introuvable.");

@@ -45,12 +45,12 @@ public class Tas<E> {
         }
 
         taille++;
-    }
 
-    public int getPoidsPremier() {
-        if (taille == 0)
-            return 0;
-        return poids.get(0);
+        if (taille == 101) {
+            valeurs.remove(100);
+            poids.remove(100);
+            taille--;
+        }
     }
 
     public E extraire() {
