@@ -77,7 +77,7 @@ public class IAMeilleureEval extends IA {
         }
         Coup prec = null;
         for (Coup coup : lc) {
-            if (poidsPlateauMax > 500 || nombrePas > 1500000)
+            if (poidsPlateauMax > 500 || nombrePas > 1400000)
                 return;
             if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_CARTE) {
                 if (coup.getCarte() != null)
@@ -92,13 +92,17 @@ public class IAMeilleureEval extends IA {
             if (coup.getTypeCoup() == Coup.FINIR_TOUR || jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE) {
                 nombrePas++;
                 if (jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE) {
+
                     if (jeu.getPlateau().pionDansChateauRge(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT) {
+                        System.out.println("joueur vert, roi chateau rouge");
                         valeur -= 3000;
                     } else if (jeu.getPlateau().pionDansChateauVrt(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE) {
                         valeur -= 3000;
                     } else if (jeu.getPlateau().pionDansChateauRge(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_RGE) {
+                        System.out.println("joueur rouge, roi chateau rouge");
                         valeur += 3000;
                     } else if (jeu.getPlateau().pionDansChateauVrt(Pion.ROI) && jeu.getJoueurCourant() == Jeu.JOUEUR_VRT) {
+                        System.out.println("joueur vert, roi chateau vert");
                         valeur += 3000;
                     }
                 }
@@ -114,8 +118,18 @@ public class IAMeilleureEval extends IA {
 
     private int evaluerPlateau() {
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_RGE) {
+            if(jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE && Plateau.FACE_PTT_CRN && jeu.getDefausse().getTaille() == 0){
+                if(jeu.getPlateau().getPositionPion(Pion.ROI) > Plateau.FONTAINE){
+                    valeur += 3000;
+                }
+                else if(jeu.getPlateau().getPositionPion(Pion.ROI) < Plateau.FONTAINE){
+                    valeur -= 3000;
+                }
+            }
             if (jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE)
-                valeur += 1000;
+                valeur += 3000;
+            else if (jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
+                valeur -= 3000;
             if (jeu.getPlateau().getPositionPion(Pion.SOR) <= Plateau.CHATEAU_VRT)
                 valeur -= 5;
             if (jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)
@@ -140,6 +154,18 @@ public class IAMeilleureEval extends IA {
         }
 
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_VRT) {
+            if(jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE && Plateau.FACE_PTT_CRN && jeu.getDefausse().getTaille() == 0){
+                if(jeu.getPlateau().getPositionPion(Pion.ROI) < Plateau.FONTAINE){
+                    valeur += 3000;
+                }
+                else if(jeu.getPlateau().getPositionPion(Pion.ROI) > Plateau.FONTAINE){
+                    valeur -= 3000;
+                }
+            }
+            if (jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
+                valeur += 3000;
+            else if (jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE)
+                valeur -= 3000;
             if (jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
                 valeur += 1000;
             if (jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)

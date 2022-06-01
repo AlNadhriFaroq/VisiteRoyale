@@ -114,8 +114,16 @@ public class IAStrategie extends IA {
         }
 
         if (defausseCarte){
-            if(joueRoiPiocheGagnante)
-                return choisirCarte(Type.ROI);
+            if(joueRoiPiocheGagnante){
+                if(posRoi + nbRoi * Jeu.getDirectionJoueur(joueurCourant) - 1 > posGardeVert && posRoi + nbRoi * Jeu.getDirectionJoueur(joueurCourant) + 1 < posGardeRouge)
+                    return choisirCarte(Type.ROI);
+                else {
+                    for(Coup c : lc){
+                        if(c.getTypeCoup() == Coup.FINIR_TOUR)
+                            return c;
+                    }
+                }
+            }
             else
                 return choisirCarte(jeu.getTypeCourant());
         }
@@ -1103,9 +1111,17 @@ public class IAStrategie extends IA {
     }
 
     private Coup choisirDirection() {
-        if(joueRoiPiocheGagnante){
+        if(joueRoiPiocheGagnante && posRoi + nbRoi * Jeu.getDirectionJoueur(joueurCourant) - 1 > posGardeVert && posRoi + nbRoi * Jeu.getDirectionJoueur(joueurCourant) + 1 < posGardeRouge){
+            System.out.println("test 1");
             for(Coup c : lc){
                 if(c.getDirection() != Plateau.DIRECTION_IND && c.getDirection() == Jeu.getDirectionJoueur(joueurCourant))
+                    return c;
+            }
+        }
+        if(joueRoiPiocheGagnante && (posRoi + Jeu.getDirectionJoueur(joueurCourant) == posGardeVert || posRoi + Jeu.getDirectionJoueur(joueurCourant) == posGardeRouge)){
+            System.out.println("test 2");
+            for(Coup c : lc){
+                if(c.getCarte() != null && c.getCarte().equals(Carte.R1))
                     return c;
             }
         }
@@ -1404,7 +1420,10 @@ public class IAStrategie extends IA {
                 if(piocheRoiGagnant()){
                     System.out.println("pioche roi gagnant");
                     defausseCarte = true;
-                    return retournerCarteType(nbMAxEnMain());
+                    if(!joueRoiPiocheGagnante)
+                        return retournerCarteType(nbMAxEnMain());
+                    else
+                        return retournerCarteType(Type.ROI);
                 }
             }
         }
@@ -1412,11 +1431,13 @@ public class IAStrategie extends IA {
     }
 
     private boolean piocheRoiGagnant(){
+        if(nbRoi == 0)
+            return false;
         if ((pionsDuche & roi) == roi){
             return true;
         }
         if(jeu.getJoueurCourant() == Jeu.JOUEUR_VRT) {
-            if(nbRoi >= posRoi - Plateau.FONTAINE && (posRoi - (nbRoi - Plateau.FONTAINE) > posGardeVert || posRoi - (nbRoi/2 - Plateau.FONTAINE) > posGardeVert)){
+            if(posRoi - nbRoi <= Plateau.FONTAINE && (posRoi - nbRoi > posGardeVert || (posRoi - nbRoi/2 <= Plateau.FONTAINE && posGardeVert + nbRoi / 2 >= Plateau.BORDURE_VRT))){
                 joueRoiPiocheGagnante = true;
                 return true;
         }
@@ -1424,7 +1445,8 @@ public class IAStrategie extends IA {
                 return false;
         }
         if(jeu.getJoueurCourant() == Jeu.JOUEUR_RGE) {
-            if(nbRoi >= Plateau.FONTAINE - posRoi && posRoi + (Plateau.FONTAINE - nbRoi) < posGardeRouge){
+            if((posRoi + nbRoi >= Plateau.FONTAINE || posRoi + nbRoi / 2 >= Plateau.FONTAINE) && (posRoi + nbRoi < posGardeRouge || (posRoi + nbRoi / 2 >= Plateau.FONTAINE && posGardeRouge + nbRoi / 2 <= Plateau.BORDURE_RGE))){
+                System.out.println("pioche gagant roi ");
                 joueRoiPiocheGagnante = true;
                 return true;
             }

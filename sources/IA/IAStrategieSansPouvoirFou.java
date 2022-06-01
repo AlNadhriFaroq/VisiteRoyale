@@ -122,8 +122,18 @@ public class IAStrategieSansPouvoirFou extends IA {
 
     private int evaluerPlateau() {
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_RGE) {
+            if(jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE && Plateau.FACE_PTT_CRN && jeu.getDefausse().getTaille() == 0){
+                if(jeu.getPlateau().getPositionPion(Pion.ROI) > Plateau.FONTAINE){
+                    valeur += 3000;
+                }
+                else if(jeu.getPlateau().getPositionPion(Pion.ROI) < Plateau.FONTAINE){
+                    valeur -= 3000;
+                }
+            }
             if (jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE)
-                valeur += 1000;
+                valeur += 3000;
+            else if (jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
+                valeur -= 3000;
             if (jeu.getPlateau().getPositionPion(Pion.SOR) <= Plateau.CHATEAU_VRT)
                 valeur -= 5;
             if (jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)
@@ -148,6 +158,18 @@ public class IAStrategieSansPouvoirFou extends IA {
         }
 
         if (jeu.getJoueurCourant() != Jeu.JOUEUR_VRT) {
+            if(jeu.getEtatJeu() == Jeu.ETAT_FIN_DE_PARTIE && Plateau.FACE_PTT_CRN && jeu.getDefausse().getTaille() == 0){
+                if(jeu.getPlateau().getPositionPion(Pion.ROI) < Plateau.FONTAINE){
+                    valeur += 3000;
+                }
+                else if(jeu.getPlateau().getPositionPion(Pion.ROI) > Plateau.FONTAINE){
+                    valeur -= 3000;
+                }
+            }
+            if (jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
+                valeur += 3000;
+            else if (jeu.getPlateau().getPositionCouronne() >= Plateau.CHATEAU_RGE)
+                valeur -= 3000;
             if (jeu.getPlateau().getPositionCouronne() <= Plateau.CHATEAU_VRT)
                 valeur += 1000;
             if (jeu.getPlateau().getPositionPion(Pion.SOR) >= Plateau.CHATEAU_RGE)
