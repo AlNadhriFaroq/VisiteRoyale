@@ -34,7 +34,7 @@ public class IAStrategie extends IA {
     boolean fouSurRoi;
     boolean fouSurSorcier;
     boolean fmPouvoirFou;
-
+    boolean joueRoiPiocheGagnante;
     List<Coup> lc;
 
     public IAStrategie(Jeu jeu) {
@@ -47,6 +47,7 @@ public class IAStrategie extends IA {
         fouSurRoi = false;
         fouSurSorcier = false;
         fmPouvoirFou = false;
+        joueRoiPiocheGagnante = false;
     }
 
     @Override
@@ -106,13 +107,18 @@ public class IAStrategie extends IA {
             fouSurRoi = false;
             fouSurSorcier = false;
             fmPouvoirFou = false;
+            joueRoiPiocheGagnante = false;
             coup = choisirCartePouvoirDebutTour(); //coup gagnant ou type gagnant s il y a sinon pouvoir sorcier si ca vaut le coup sinon le max de carte en main
             if (coup != null)
                 return coup;
         }
 
-        if (defausseCarte)
-            return choisirCarte(jeu.getTypeCourant());
+        if (defausseCarte){
+            if(joueRoiPiocheGagnante)
+                return choisirCarte(Type.ROI);
+            else
+                return choisirCarte(jeu.getTypeCourant());
+        }
 
         if (!jeu.getTypeCourant().equals(Type.IND) && !jeu.getActivationPouvoirFou())
             coup = choisirCarte(jeu.getTypeCourant());
@@ -1097,6 +1103,12 @@ public class IAStrategie extends IA {
     }
 
     private Coup choisirDirection() {
+        if(joueRoiPiocheGagnante){
+            for(Coup c : lc){
+                if(c.getDirection() != Plateau.DIRECTION_IND && c.getDirection() == Jeu.getDirectionJoueur(joueurCourant))
+                    return c;
+            }
+        }
         Coup coup = null;
         //privilege du roi des 2 cartes roi si possible
         if (jeu.getTypeCourant().equals(Type.ROI))
@@ -1389,11 +1401,28 @@ public class IAStrategie extends IA {
 
         if (jeu.getPlateau().getFaceCouronne() == Plateau.FACE_PTT_CRN) {
             if (jeu.getPioche().getTaille() <= (Math.max(nbFou, Math.max(nbGarde, Math.max(nbRoi, nbSor))))) {
-                defausseCarte = true;
-                return retournerCarteType(nbMAxEnMain());
+                if(piocheRoiGagnant()){
+                    defausseCarte = true;
+                    return retournerCarteType(nbMAxEnMain());
+                }
             }
         }
         return null;
+    }
+
+    private boolean piocheRoiGagnant(){
+        if ((pionsDuche & roi) == roi){
+            return true;
+        }
+        if(jeu.getJoueurCourant() == Jeu.JOUEUR_VRT) {
+            joueRoiPiocheGagnante = true;
+            return nbRoi >= jeu.getPlateau().getPositionPion(Pion.ROI) - Plateau.FONTAINE;
+        }
+        if(jeu.getJoueurCourant() == Jeu.JOUEUR_RGE) {
+            joueRoiPiocheGagnante = true;
+            return nbRoi >= Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.ROI);
+        }
+        return false;
     }
 
     private int coupGagnantRoiChateau() {
