@@ -486,27 +486,23 @@ public class Jeu extends Historique implements Cloneable, Serializable {
 
     @Override
     public Jeu clone() {
-        try {
-            Jeu resultat = (Jeu) super.clone();
-            resultat.joueurCourant = joueurCourant;
-            resultat.typeCourant = typeCourant.clone();
-            resultat.plateau = plateau.clone();
-            resultat.pioche = pioche.clone();
-            resultat.defausse = defausse.clone();
-            resultat.mainJoueurVrt = mainJoueurVrt.clone();
-            resultat.mainJoueurRge = mainJoueurRge.clone();
-            resultat.etatJeu = etatJeu;
-            resultat.activationPrivilegeRoi = activationPrivilegeRoi;
-            resultat.activationPouvoirSor = activationPouvoirSor;
-            resultat.activationPouvoirFou = activationPouvoirFou;
-            resultat.selectionCartesVrt = selectionCartesVrt.clone();
-            resultat.selectionCartesRge = selectionCartesRge.clone();
-            resultat.selectionPions = selectionPions.clone();
-            resultat.selectionDirections = selectionDirections.clone();
-            return resultat;
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Modele.Jeu.clone() : Jeu non clonable.");
-        }
+        Jeu resultat = (Jeu) super.clone();
+        resultat.joueurCourant = joueurCourant;
+        resultat.typeCourant = typeCourant.clone();
+        resultat.plateau = plateau.clone();
+        resultat.pioche = pioche.clone();
+        resultat.defausse = defausse.clone();
+        resultat.mainJoueurVrt = mainJoueurVrt.clone();
+        resultat.mainJoueurRge = mainJoueurRge.clone();
+        resultat.etatJeu = etatJeu;
+        resultat.activationPrivilegeRoi = activationPrivilegeRoi;
+        resultat.activationPouvoirSor = activationPouvoirSor;
+        resultat.activationPouvoirFou = activationPouvoirFou;
+        resultat.selectionCartesVrt = selectionCartesVrt.clone();
+        resultat.selectionCartesRge = selectionCartesRge.clone();
+        resultat.selectionPions = selectionPions.clone();
+        resultat.selectionDirections = selectionDirections.clone();
+        return resultat;
     }
 
     @Override

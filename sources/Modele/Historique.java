@@ -12,7 +12,7 @@ public class Historique implements Serializable {
         initialiser();
     }
 
-    void initialiser() {
+    public void initialiser() {
         passe = new ArrayList<>();
         futur = new ArrayList<>();
         tour = 0;
@@ -64,5 +64,17 @@ public class Historique implements Serializable {
 
     public boolean peutRefaire() {
         return !futur.isEmpty();
+    }
+
+    @Override
+    public Historique clone() {
+        try {
+            Historique histo = (Historique) super.clone();
+            histo.initialiser();
+            histo.tour = tour;
+            return histo;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Modele.Jeu.clone() : Jeu non clonable.");
+        }
     }
 }

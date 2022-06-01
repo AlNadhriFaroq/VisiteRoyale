@@ -79,9 +79,8 @@ public class IAMinMaxTest extends IA {
                     val = Math.max(plateau, minmaxB);
                     if (val > valeur) {
                         valeur = val;
-                        if (profondeur == 0) {
+                        if (profondeur == 0)
                             lcf = tmp;
-                        }
                     }
                     desexecuterCoups(tmp);
                 }
@@ -110,9 +109,8 @@ public class IAMinMaxTest extends IA {
                 if (tmp != null) {
                     executerCoups(tmp);
                     val = Math.min(evaluerPlateau(), minMaxA(profondeur + 1));
-                    if (val < valeur) {
+                    if (val < valeur)
                         valeur = val;
-                    }
                     desexecuterCoups(tmp);
                 }
             }

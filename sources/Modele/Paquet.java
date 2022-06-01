@@ -56,7 +56,7 @@ public class Paquet implements Cloneable, Serializable {
 
     Carte extraire(Carte carte) {
         if (!cartes.contains(carte))
-            throw new RuntimeException("Modele.Main.defausser() : Carte:"+ carte.toString() + " non présente dans la main" + cartes.toString());
+            throw new RuntimeException("Modele.Main.defausser() : Carte " + carte.toString() + " non présente dans la main " + cartes.toString() + ".");
         cartes.remove(carte);
         return carte;
     }

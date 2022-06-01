@@ -38,7 +38,7 @@ public class Audios {
         clip.start();
     }
 
-    public void reinit(){
+    public void reinit() {
         clip.setMicrosecondPosition(0);
     }
 
@@ -75,6 +75,8 @@ public class Audios {
                 Configuration.instance().ecrire("VolumeMusique", Integer.toString(volume));
                 ((FloatControl) MUSIQUE_MENUS1.clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
                 ((FloatControl) MUSIQUE_MENUS2.clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
+                ((FloatControl) MUSIQUE_JEU1.clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
+                ((FloatControl) MUSIQUE_JEU2.clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);
             } else {
                 Configuration.instance().ecrire("VolumeSons", Integer.toString(volume));
                 ((FloatControl) SON_DEFAITE.clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(decibel);

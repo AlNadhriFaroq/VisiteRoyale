@@ -18,6 +18,7 @@ public class ControleurMediateur {
         joueursIA = new IA[2];
         Audios.setVolume(Audios.getVolume(Audios.MUSIQUE), Audios.MUSIQUE);
         Audios.setVolume(Audios.getVolume(Audios.SONS), Audios.SONS);
+        Audios.MUSIQUE_JEU = Audios.MUSIQUE_JEU1;
     }
 
     public void clicSouris(int x, int y) {

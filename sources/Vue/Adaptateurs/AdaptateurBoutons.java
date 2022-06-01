@@ -58,10 +58,10 @@ public class AdaptateurBoutons implements ActionListener {
         else if (e.getSource().equals(fenetre.getPanelJeu().getBoutonPause()))
             ctrl.ouvrirMenuJeu();
         else if (e.getSource().equals(fenetre.getPanelJeu().getBoutonAnnuler()) &&
-                prog.getJeu().peutAnnuler())
+                prog.peutAnnuler())
             ctrl.annuler();
         else if (e.getSource().equals(fenetre.getPanelJeu().getBoutonRefaire()) &&
-                prog.getJeu().peutRefaire())
+                prog.peutRefaire())
             ctrl.refaire();
         else if (e.getSource().equals(fenetre.getPanelJeu().getBoutonFinTour()) &&
                 prog.getJeu().peutFinirTour())
