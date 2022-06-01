@@ -1374,7 +1374,7 @@ public class IAStrategie extends IA {
                 }
                 return null;
             default:
-                System.out.println("pas de coup gagnant Roi");
+                break;
         }
 
         int gagnantCouronne = coupGagnantCouronne();
@@ -1396,12 +1396,13 @@ public class IAStrategie extends IA {
                 }
                 break;
             default:
-                System.out.println("pas de coup gagnant couronne");
+                break;
         }
 
         if (jeu.getPlateau().getFaceCouronne() == Plateau.FACE_PTT_CRN) {
             if (jeu.getPioche().getTaille() <= (Math.max(nbFou, Math.max(nbGarde, Math.max(nbRoi, nbSor))))) {
                 if(piocheRoiGagnant()){
+                    System.out.println("pioche roi gagnant");
                     defausseCarte = true;
                     return retournerCarteType(nbMAxEnMain());
                 }
@@ -1415,12 +1416,20 @@ public class IAStrategie extends IA {
             return true;
         }
         if(jeu.getJoueurCourant() == Jeu.JOUEUR_VRT) {
-            joueRoiPiocheGagnante = true;
-            return nbRoi >= jeu.getPlateau().getPositionPion(Pion.ROI) - Plateau.FONTAINE;
+            if(nbRoi >= posRoi - Plateau.FONTAINE && (posRoi - (nbRoi - Plateau.FONTAINE) > posGardeVert || posRoi - (nbRoi/2 - Plateau.FONTAINE) > posGardeVert)){
+                joueRoiPiocheGagnante = true;
+                return true;
+        }
+            else
+                return false;
         }
         if(jeu.getJoueurCourant() == Jeu.JOUEUR_RGE) {
-            joueRoiPiocheGagnante = true;
-            return nbRoi >= Plateau.FONTAINE - jeu.getPlateau().getPositionPion(Pion.ROI);
+            if(nbRoi >= Plateau.FONTAINE - posRoi && posRoi + (Plateau.FONTAINE - nbRoi) < posGardeRouge){
+                joueRoiPiocheGagnante = true;
+                return true;
+            }
+            else
+                return false;
         }
         return false;
     }

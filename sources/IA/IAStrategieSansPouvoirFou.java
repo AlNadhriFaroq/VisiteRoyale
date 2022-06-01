@@ -30,7 +30,6 @@ public class IAStrategieSansPouvoirFou extends IA {
 
     @Override
     public Coup calculerCoup() {
-        System.out.println("IA meilleure eval");
         Coup cp = null;
         nombrePas = 0;
 

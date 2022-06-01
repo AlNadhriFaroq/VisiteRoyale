@@ -30,14 +30,12 @@ public class IAMeilleureEval extends IA {
 
     @Override
     public Coup calculerCoup() {
-        System.out.println("IA meilleure eval");
         Coup cp = null;
         nombrePas = 0;
 
         if (tailleLcf == lcf.size()) {
             evaluerTour(new ArrayList<>(), lj);
             lcf = lj.extraire();
-            System.out.println(lcf);
         }
         if (tailleLcf != lcf.size()) {
             cp = lcf.get(tailleLcf);
