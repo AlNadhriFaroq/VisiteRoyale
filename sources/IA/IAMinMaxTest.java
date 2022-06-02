@@ -27,8 +27,10 @@ public class IAMinMaxTest extends IA {
         Coup cp = null;
         nombrePas = 0;
 
-        if (tailleLcf == lcf.size())
+        if (tailleLcf == lcf.size()){
+            jeu.initialiser();
             minMaxA(0);
+        }
 
         if (tailleLcf != lcf.size()) {
             cp = lcf.get(tailleLcf);
@@ -59,23 +61,20 @@ public class IAMinMaxTest extends IA {
             valeur = Integer.MIN_VALUE;
             int val;
             Tas<List<Coup>> tasA = new Tas<>(true);
-            int plateauActuelle = evaluerPlateau();
+            nombrePas = 0;
             evaluerTour(new ArrayList<>(), tasA);
-            int i = 0;
             while (!tasA.estVide()) {
                 this.valeur = 0;
                 tmp = tasA.extraire();
-                if (i == 0)
-                    i++;
                 if (tmp != null) {
                     executerCoups(tmp);
-                    int minmaxB = minMaxB(profondeur + 1);
-                    int plateau = evaluerPlateau();
-                    val = Math.max(plateau, minmaxB);
-                    if (val > valeur) {
+                    val = Math.max(evaluerPlateau(), minMaxB(profondeur + 1));
+                    if (val >= valeur) {
                         valeur = val;
-                        if (profondeur == 0)
+                        if (profondeur == 0){
                             lcf = tmp;
+                            System.out.println(tmp);
+                        }
                     }
                     desexecuterCoups(tmp);
                 }
@@ -95,7 +94,7 @@ public class IAMinMaxTest extends IA {
             valeur = Integer.MAX_VALUE;
             int val;
             Tas<List<Coup>> tasB = new Tas<>(true);
-            int plateauActuelle = evaluerPlateau();
+            nombrePas = 0;
             evaluerTour(new ArrayList<>(), tasB);
             while (!tasB.estVide()) {
                 this.valeur = 0;
@@ -103,8 +102,9 @@ public class IAMinMaxTest extends IA {
                 if (tmp != null) {
                     executerCoups(tmp);
                     val = Math.min(evaluerPlateau(), minMaxA(profondeur + 1));
-                    if (val < valeur)
+                    if (val <= valeur){
                         valeur = val;
+                    }
                     desexecuterCoups(tmp);
                 }
             }
@@ -133,7 +133,7 @@ public class IAMinMaxTest extends IA {
         }
         Coup prec = null;
         for (Coup coup : lc) {
-            if (poidsPlateauMax > 500 || nombrePas > 1000000)
+            if (poidsPlateauMax > 500 || nombrePas > 1500000)
                 return;
             if (jeu.getEtatJeu() == Jeu.ETAT_CHOIX_CARTE) {
                 if (coup.getCarte() != null)
